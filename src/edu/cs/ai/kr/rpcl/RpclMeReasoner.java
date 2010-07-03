@@ -1,0 +1,382 @@
+package edu.cs.ai.kr.rpcl;
+
+import java.util.*;
+
+import edu.cs.ai.kr.Answer;
+import edu.cs.ai.kr.BeliefBase;
+import edu.cs.ai.kr.Formula;
+import edu.cs.ai.kr.Reasoner;
+import edu.cs.ai.kr.fol.semantics.*;
+import edu.cs.ai.kr.fol.syntax.*;
+import edu.cs.ai.kr.fol.syntax.Constant;
+import edu.cs.ai.kr.rcl.syntax.RelationalConditional;
+import edu.cs.ai.kr.rpcl.parser.*;
+import edu.cs.ai.kr.rpcl.semantics.*;
+import edu.cs.ai.kr.rpcl.syntax.*;
+import edu.cs.ai.math.*;
+import edu.cs.ai.math.equation.*;
+import edu.cs.ai.math.opt.*;
+import edu.cs.ai.math.opt.solver.*;
+import edu.cs.ai.math.term.*;
+import edu.cs.ai.math.term.Term;
+import edu.cs.ai.math.term.Variable;
+import edu.cs.ai.util.Probability;
+
+/**
+ * General ME-reasoner for RPCL.
+ * 
+ * @author Matthias Thimm
+ */
+public class RpclMeReasoner extends Reasoner {
+	
+	/**
+	 * Integer constant for standard inference.
+	 */
+	public static final int STANDARD_INFERENCE = 1;
+	
+	/**
+	 * Integer constant for lifted inference.
+	 */
+	public static final int LIFTED_INFERENCE = 2;
+
+	/**
+	 * The semantics used for this reasoner.
+	 */
+	private RpclSemantics semantics;
+	
+	/**
+	 * The signature for this reasoner.
+	 */
+	private FolSignature signature;
+	
+	/**
+	 * The ME-distribution for this reasoner.
+	 */
+	private ProbabilityDistribution meDistribution;
+	
+	/**
+	 * Whether this reasoner should use lifted inference for reasoning.
+	 */
+	private int inferenceType;
+	
+	/**
+	 * Creates a new reasoner for the given knowledge base.
+	 * @param beliefBase a knowledge base.
+	 * @param semantics the semantics for this reasoner.
+	 * @param signature the fol signature for this reasoner.
+	 * @param inferenceType one of RpclMeReasoner.STANDARD_INFERENCE or RpclMeReasoner.LIFTED_INFERENCE 
+	 */
+	public RpclMeReasoner(BeliefBase beliefBase, RpclSemantics semantics, FolSignature signature, int inferenceType){
+		super(beliefBase);
+		if(inferenceType != RpclMeReasoner.STANDARD_INFERENCE && inferenceType != RpclMeReasoner.LIFTED_INFERENCE)
+			throw new IllegalArgumentException("The inference type must be either standard or lifted.");
+		this.signature = signature;
+		this.semantics = semantics;
+		this.inferenceType = inferenceType;
+		if(!(beliefBase instanceof RpclBeliefSet))
+			throw new IllegalArgumentException("Knowledge base of class RpclBeliefSet expected.");
+		RpclBeliefSet beliefSet = (RpclBeliefSet) beliefBase;
+		if(!beliefSet.getSignature().isSubSignature(signature))
+			throw new IllegalArgumentException("Signature must be super-signature of the belief set's signature.");
+		if(inferenceType == RpclMeReasoner.LIFTED_INFERENCE)
+			for(Predicate p: ((FolSignature)beliefSet.getSignature()).getPredicates())
+				if(p.getArity()>1)
+					throw new IllegalArgumentException("Lifted inference only applicable for signatures containing only unary predicates.");
+	}
+	
+	/**
+	 * Creates a new reasoner for the given knowledge base.
+	 * @param beliefBase a knowledge base.
+	 * @param semantics the semantics for this reasoner.
+	 * @param signature the fol signature for this reasoner.
+	 */
+	public RpclMeReasoner(BeliefBase beliefBase, RpclSemantics semantics, FolSignature signature){
+		this(beliefBase,semantics,signature,RpclMeReasoner.STANDARD_INFERENCE);
+	}
+	
+	/**
+	 * Returns the inference type of this reasoner, i.e. one of
+	 * RpclMeReasoner.STANDARD_INFERENCE or RpclMeReasoner.LIFTED_INFERENCE 
+	 * @return the inference type of this reasoner.
+	 */
+	public int getInferenceType(){
+		return this.inferenceType;
+	}
+	
+	/**
+	 * Returns the ME-distribution this reasoner bases on.
+	 * @return the ME-distribution this reasoner bases on.
+	 */
+	public ProbabilityDistribution getMeDistribution(){
+		if(this.meDistribution == null)
+			this.meDistribution = this.computeMeDistribution();
+		return this.meDistribution;		
+	}
+
+	/**
+	 * Computes the ME-distribution for this reasoner's knowledge base. 
+	 * @return the ME-distribution for this reasoner's knowledge base.
+	 */	
+	private ProbabilityDistribution computeMeDistribution(){
+		RpclBeliefSet kb = ((RpclBeliefSet)this.getKnowledgBase());
+		// TODO extract common parts from the following if/else
+		if(this.inferenceType == RpclMeReasoner.LIFTED_INFERENCE){
+			// determine equivalence classes of the knowledge base
+			Set<Set<Constant>> equivalenceClasses = kb.getEquivalenceClasses(this.getSignature());
+			// determine the reference worlds needed to represent a probability distribution on the knowledge base.
+			Set<ReferenceWorld> worlds = ReferenceWorld.enumerateReferenceWorlds(this.getSignature().getPredicates(), equivalenceClasses);
+			int numberOfInterpretations = 0;
+			for(ReferenceWorld w: worlds)
+				numberOfInterpretations += w.spanNumber();
+			// Generate Variables for the probability of each reference world,
+			// range constraints for probabilities, and construct normalization sum
+			Map<ReferenceWorld,FloatVariable> worlds2vars = new HashMap<ReferenceWorld,FloatVariable>();
+			// check for empty kb
+			if(kb.size() == 0)
+				return CondensedProbabilityDistribution.getUniformDistribution(this.semantics, this.getSignature(), equivalenceClasses);
+			int i=0;
+			// We first construct the necessary constraints for the optimization problem
+			Set<Statement> constraints = new HashSet<Statement>();
+			Term normalization_sum = null;
+			for(ReferenceWorld world: worlds){
+				// variables representing probabilities should be in [0,1]
+				FloatVariable v = new FloatVariable("X"+i++,0,1);
+				worlds2vars.put(world, v);			
+				// add term for normalization sum
+				Term t = new FloatConstant(world.spanNumber()).mult(v);
+				if(normalization_sum == null)
+					normalization_sum = t;
+				else normalization_sum = normalization_sum.add(t);
+			}
+			// add normalization constraint for probabilities
+			Statement norm = new Equation(normalization_sum,new FloatConstant(1));
+			constraints.add(norm);
+			//for each conditional, add the corresponding constraint		
+			// TODO remove conditionals with probability 0 or 1		
+			for(RelationalProbabilisticConditional r: kb)
+				constraints.add(this.semantics.getSatisfactionStatement(r, this.signature, worlds2vars));	
+			// optimize for entropy
+			OptimizationProblem problem = new OptimizationProblem(OptimizationProblem.MAXIMIZE);
+			problem.addAll(constraints);
+			Term targetFunction = null;
+			for(ReferenceWorld w: worlds2vars.keySet()){
+				Term t = new IntegerConstant(-w.spanNumber()).mult(worlds2vars.get(w).mult(new Logarithm(worlds2vars.get(w))));
+				if(targetFunction == null)
+					targetFunction = t;
+				else targetFunction = targetFunction.add(t);
+			}
+			problem.setTargetFunction(targetFunction);			
+			try{
+				Solver solver = new OpenOptSolver(problem,this.getFeasibleStartingPoint(problem));				
+				Map<Variable,Term> solution = solver.solve();
+				CondensedProbabilityDistribution p = new CondensedProbabilityDistribution(this.semantics,this.getSignature());
+				for(ReferenceWorld w: worlds2vars.keySet()){
+					edu.cs.ai.math.term.Constant c = solution.get(worlds2vars.get(w)).value();
+					Double value = new Double(c.doubleValue());
+					p.put(w, new Probability(value));			
+				}
+				return p;
+			}catch(GeneralMathException e){
+				throw new ProblemInconsistentException();				
+			}
+		}else{
+			// get interpretations
+			Set<HerbrandInterpretation> worlds = new HerbrandBase(this.signature).allHerbrandInterpretations();
+			// Generate Variables for the probability of each world,
+			// range constraints for probabilities, and construct normalization sum
+			Map<HerbrandInterpretation,FloatVariable> worlds2vars = new HashMap<HerbrandInterpretation,FloatVariable>();
+			// check for empty kb
+			if(kb.size() == 0)
+				return ProbabilityDistribution.getUniformDistribution(this.semantics, this.getSignature());
+			int i=0;
+			// We first construct the necessary constraints for the optimization problem
+			Set<Statement> constraints = new HashSet<Statement>();
+			Term normalization_sum = null;
+			for(HerbrandInterpretation world: worlds){
+				// variables representing probabilities should be in [0,1]
+				FloatVariable v = new FloatVariable("X"+i++,0,1);
+				worlds2vars.put(world, v);			
+				if(normalization_sum == null)
+					normalization_sum = v;
+				else normalization_sum = normalization_sum.add(v);
+			}
+			// add normalization constraint for probabilities
+			Statement norm = new Equation(normalization_sum,new FloatConstant(1));
+			constraints.add(norm);
+			//for each conditional, add the corresponding constraint		
+			// TODO remove conditionals with probability 0 or 1		
+			for(RelationalProbabilisticConditional r: kb)
+				constraints.add(this.semantics.getSatisfactionStatement(r, this.signature, worlds2vars));	
+			// optimize for entropy
+			OptimizationProblem problem = new OptimizationProblem(OptimizationProblem.MAXIMIZE);
+			problem.addAll(constraints);
+			Term targetFunction = null;
+			for(HerbrandInterpretation w: worlds2vars.keySet()){
+				Term t = new IntegerConstant(-1).mult(worlds2vars.get(w).mult(new Logarithm(worlds2vars.get(w))));
+				if(targetFunction == null)
+					targetFunction = t;
+				else targetFunction = targetFunction.add(t);
+			}
+			problem.setTargetFunction(targetFunction);
+			try{
+				Solver solver = new OpenOptSolver(problem,this.getFeasibleStartingPoint(problem));
+				Map<Variable,Term> solution = solver.solve();
+				ProbabilityDistribution p = new ProbabilityDistribution(this.semantics,this.getSignature());
+				for(HerbrandInterpretation w: worlds2vars.keySet()){
+					edu.cs.ai.math.term.Constant c = solution.get(worlds2vars.get(w)).value();
+					Double value = new Double(c.doubleValue());
+					p.put(w, new Probability(value));			
+				}
+				return p;
+			}catch(GeneralMathException e){
+				throw new ProblemInconsistentException();				
+			}
+		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.cs.ai.kr.Reasoner#query(edu.cs.ai.kr.Formula)
+	 */
+	@Override
+	public Answer query(Formula query) {
+		if(!(query instanceof RelationalConditional) && !(query instanceof FolFormula))
+			throw new IllegalArgumentException("Reasoning in relational probabilistic conditional logic is only defined for conditional and first-order queries.");
+		ProbabilityDistribution meDistribution = this.getMeDistribution();
+		RelationalConditional re;
+		if(query instanceof FolFormula)
+			re = new RelationalConditional((FolFormula)query);
+		else re = (RelationalConditional) query;
+		Probability prob = meDistribution.probability(re);
+		Answer answer = new Answer(this.getKnowledgBase(),query);			
+		answer.setAnswer(prob.getValue());
+		answer.appendText("The probability of the query is " + prob + ".");
+		return answer;		
+	}
+	
+	/**
+	 * Finds a feasible starting point for the given optimization problem.
+	 * @param problem an optimization problem
+	 * @return a feasible starting point.
+	 * @throws GeneralMathException iff something went wrong.
+	 */
+	private Map<Variable,Term> getFeasibleStartingPoint(OptimizationProblem problem) throws GeneralMathException{
+		ConstraintSatisfactionProblem csp = new ConstraintSatisfactionProblem();
+		csp.addAll(problem);
+		if(csp.isLinear())
+			return new ApacheCommonsSimplex(csp).solve();
+		else{
+			//TODO
+			Map<Variable,Term> startingPoint = new HashMap<Variable,Term>();
+			for(Variable v: problem.getVariables())
+				startingPoint.put(v, new FloatConstant(0.5));
+			List<Term> functions = new ArrayList<Term>();
+			//every s is an equation
+			for(Statement s: problem)
+				functions.add(s.toNormalizedForm().getLeftTerm());
+			RootFinder rootFinder = new GradientDescentRootFinder(functions,startingPoint);	
+			return rootFinder.randomRoot();			
+		}		
+	}
+
+	/**
+	 * Returns the signature of this reasoner.
+	 * @return the signature of this reasoner.
+	 */
+	public FolSignature getSignature(){
+		return this.signature;
+	}
+		
+	public static void main(String[] args){
+		/*try{
+			System.out.println();
+			System.out.println();
+			RpclParser parser = new RpclParser();			
+			RpclBeliefSet beliefSet = (RpclBeliefSet) parser.parseBeliefBaseFromFile("/Users/mthimm/Desktop/test");
+			RpclMeReasoner reasoner = new RpclMeReasoner(beliefSet,new AggregatingSemantics(),parser.getSignature(),RpclMeReasoner.LIFTED_INFERENCE);
+			long millis = System.currentTimeMillis(); 
+			ProbabilityDistribution p = reasoner.computeMeDistribution();
+					
+			// some sample queries
+			Set<FolFormula> queries = new java.util.HashSet<FolFormula>();
+			Predicate bird = parser.getSignature().getPredicate("bird");
+			Predicate flies = parser.getSignature().getPredicate("flies");
+			Predicate penguin = parser.getSignature().getPredicate("penguin");
+			java.util.Iterator<edu.cs.ai.kr.fol.syntax.Term> it = parser.getSignature().getConstants().iterator();
+			Constant a = (Constant) it.next();
+			Constant b = (Constant) it.next();
+//			Constant c = (Constant) it.next();
+			java.util.List<edu.cs.ai.kr.fol.syntax.Term> l1 = new java.util.ArrayList<edu.cs.ai.kr.fol.syntax.Term>();
+			l1.add(a);
+			java.util.List<edu.cs.ai.kr.fol.syntax.Term> l2 = new java.util.ArrayList<edu.cs.ai.kr.fol.syntax.Term>();
+			l2.add(b);
+//			java.util.List<edu.cs.ai.kr.fol.syntax.Term> l3 = new java.util.ArrayList<edu.cs.ai.kr.fol.syntax.Term>();
+//			l3.add(c);
+			queries.add(new edu.cs.ai.kr.fol.syntax.Atom(bird,l1));
+			//queries.add(new edu.cs.ai.kr.fol.syntax.Atom(bird,l2));
+			//queries.add(new edu.cs.ai.kr.fol.syntax.Atom(bird,l3));
+			queries.add(new edu.cs.ai.kr.fol.syntax.Atom(flies,l1));
+			queries.add(new edu.cs.ai.kr.fol.syntax.Atom(flies,l2));
+	//		queries.add(new edu.cs.ai.kr.fol.syntax.Atom(flies,l3));			
+			queries.add(new edu.cs.ai.kr.fol.syntax.Atom(penguin,l1));
+			//queries.add(new edu.cs.ai.kr.fol.syntax.Atom(penguin,l2));
+	//		queries.add(new edu.cs.ai.kr.fol.syntax.Atom(penguin,l3));
+			queries.add(new edu.cs.ai.kr.fol.syntax.Atom(flies,l1).combineWithAnd(new edu.cs.ai.kr.fol.syntax.Atom(penguin,l1)));
+			queries.add(new edu.cs.ai.kr.fol.syntax.Atom(flies,l2).combineWithAnd(new edu.cs.ai.kr.fol.syntax.Atom(penguin,l2)));
+	//		queries.add(new edu.cs.ai.kr.fol.syntax.Atom(flies,l3).combineWithAnd(new edu.cs.ai.kr.fol.syntax.Atom(penguin,l3)));
+			System.out.println("P satisfies belief base: " + p.satisfies((BeliefBase)beliefSet));
+			System.out.println("Entropy of P: " + p.entropy());
+			System.out.println("Size of condensed probability distribution: " + p.keySet().size());
+			System.out.println("Time: " + (System.currentTimeMillis() - millis));
+			for(FolFormula f: queries)
+				System.out.println(f + "\t\t" + p.probability(f));
+		}catch(Exception e){
+			e.printStackTrace();
+		}*/
+		try{
+			System.out.println();
+			System.out.println();
+			RpclParser parser = new RpclParser();			
+			RpclBeliefSet beliefSet = (RpclBeliefSet) parser.parseBeliefBaseFromFile("/Users/mthimm/Desktop/test");
+			RpclMeReasoner reasoner = new RpclMeReasoner(beliefSet,new AggregatingSemantics(),parser.getSignature(),RpclMeReasoner.LIFTED_INFERENCE);
+			long millis = System.currentTimeMillis(); 
+			ProbabilityDistribution p = reasoner.computeMeDistribution();
+					
+			// some sample queries
+			Set<FolFormula> queries = new java.util.HashSet<FolFormula>();
+			Predicate bird = parser.getSignature().getPredicate("bird");
+			Predicate flies = parser.getSignature().getPredicate("flies");
+			Predicate penguin = parser.getSignature().getPredicate("penguin");
+			java.util.Iterator<edu.cs.ai.kr.fol.syntax.Term> it = parser.getSignature().getConstants().iterator();
+			Constant a = (Constant) it.next();
+			//Constant b = (Constant) it.next();
+//			Constant c = (Constant) it.next();
+			java.util.List<edu.cs.ai.kr.fol.syntax.Term> l1 = new java.util.ArrayList<edu.cs.ai.kr.fol.syntax.Term>();
+			l1.add(a);
+			//java.util.List<edu.cs.ai.kr.fol.syntax.Term> l2 = new java.util.ArrayList<edu.cs.ai.kr.fol.syntax.Term>();
+			//l2.add(b);
+//			java.util.List<edu.cs.ai.kr.fol.syntax.Term> l3 = new java.util.ArrayList<edu.cs.ai.kr.fol.syntax.Term>();
+//			l3.add(c);
+			queries.add(new edu.cs.ai.kr.fol.syntax.Atom(bird,l1));
+			//queries.add(new edu.cs.ai.kr.fol.syntax.Atom(bird,l2));
+			//queries.add(new edu.cs.ai.kr.fol.syntax.Atom(bird,l3));
+			queries.add(new edu.cs.ai.kr.fol.syntax.Atom(flies,l1));
+			//queries.add(new edu.cs.ai.kr.fol.syntax.Atom(flies,l2));
+	//		queries.add(new edu.cs.ai.kr.fol.syntax.Atom(flies,l3));			
+			queries.add(new edu.cs.ai.kr.fol.syntax.Atom(penguin,l1));
+			//queries.add(new edu.cs.ai.kr.fol.syntax.Atom(penguin,l2));
+	//		queries.add(new edu.cs.ai.kr.fol.syntax.Atom(penguin,l3));
+			queries.add(new edu.cs.ai.kr.fol.syntax.Atom(flies,l1).combineWithAnd(new edu.cs.ai.kr.fol.syntax.Atom(penguin,l1)));
+			//queries.add(new edu.cs.ai.kr.fol.syntax.Atom(flies,l2).combineWithAnd(new edu.cs.ai.kr.fol.syntax.Atom(penguin,l2)));
+	//		queries.add(new edu.cs.ai.kr.fol.syntax.Atom(flies,l3).combineWithAnd(new edu.cs.ai.kr.fol.syntax.Atom(penguin,l3)));
+			System.out.println("P satisfies belief base: " + p.satisfies((BeliefBase)beliefSet));
+			System.out.println("Entropy of P: " + p.entropy());
+			System.out.println("Size of condensed probability distribution: " + p.keySet().size());
+			System.out.println("Time: " + (System.currentTimeMillis() - millis));
+			for(FolFormula f: queries)
+				System.out.println(f + "\t\t" + p.probability(f));
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+}

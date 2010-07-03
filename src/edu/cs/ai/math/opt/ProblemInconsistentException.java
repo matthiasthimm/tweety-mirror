@@ -1,0 +1,15 @@
+package edu.cs.ai.math.opt;
+
+/**
+ * This exception is thrown when a problem cannot be solved due to its inconsistency.
+ * 
+ * @author Matthias Thimm
+ */
+public class ProblemInconsistentException extends RuntimeException {
+
+	/**
+	 * For serialization.
+	 */
+	private static final long serialVersionUID = 1L;
+
+}

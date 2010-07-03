@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/Users/mthimm/Projects/research/Tweety/lib/qoca.jar"/>
+	<classpathentry kind="lib" path="/Users/mthimm/Projects/research/Tweety/lib/cream106.jar"/>
+	<classpathentry kind="lib" path="/Users/mthimm/Projects/research/Tweety/lib/choco-1_2_03.jar"/>
+	<classpathentry kind="lib" path="/Users/mthimm/Projects/research/Tweety/lib/commons-math-2.1-javadoc.jar"/>
+	<classpathentry kind="lib" path="/Users/mthimm/Projects/research/Tweety/lib/commons-math-2.1-sources.jar"/>
+	<classpathentry kind="lib" path="/Users/mthimm/Projects/research/Tweety/lib/commons-math-2.1.jar"/>
+	<classpathentry kind="lib" path="/Users/mthimm/Projects/research/Tweety/lib/LBFGS-java-class.jar"/>
+	<classpathentry kind="lib" path="/Users/mthimm/Projects/research/Tweety/lib/LBFGS-java-src.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
