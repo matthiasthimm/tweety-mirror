@@ -33,7 +33,7 @@ public class Atom extends FolFormula {
 	 * @param predicate the predicate of the atom
 	 * @param arguments the arguments (terms) of the atom
 	 */
-	public Atom(Predicate predicate, List<Term> arguments){
+	public Atom(Predicate predicate, List<? extends Term> arguments){
 		this.predicate = predicate;
 		this.arguments = new ArrayList<Term>();
 		for(Term t: arguments)

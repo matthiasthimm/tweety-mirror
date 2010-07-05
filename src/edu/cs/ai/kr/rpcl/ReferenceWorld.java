@@ -29,12 +29,12 @@ public class ReferenceWorld extends Interpretation implements Map<Predicate,Inst
 	/**
 	 * The equivalence classes this reference world bases on.
 	 */
-	private Set<Set<Constant>> equivalenceClasses;
+	private Collection<? extends Collection<? extends Constant>> equivalenceClasses;
 	
 	/**
 	 * The set of predicates this reference world bases on.
 	 */
-	private Set<Predicate> predicates;
+	private Collection<Predicate> predicates;
 	
 	/**
 	 * The span number of this reference world; saved for efficiency.
@@ -51,7 +51,7 @@ public class ReferenceWorld extends Interpretation implements Map<Predicate,Inst
 	 * @param equivalenceClasses a set of set of constants.
 	 * @param predicates a set of predicates
 	 */
-	private ReferenceWorld(Set<Set<Constant>> equivalenceClasses, Set<Predicate> predicates){
+	public ReferenceWorld(Collection<? extends Collection<? extends Constant>> equivalenceClasses, Collection<Predicate> predicates){
 		super();
 		this.assignments = new HashMap<Predicate,InstanceAssignment>();
 		this.equivalenceClasses = equivalenceClasses;
@@ -124,7 +124,7 @@ public class ReferenceWorld extends Interpretation implements Map<Predicate,Inst
 	private Integer getMultiplicatorForConjunction(FolFormula f){
 		Integer result = 1;
 		for(Predicate p: this.predicates)
-			for(Set<Constant> equivalenceClass: this.equivalenceClasses)
+			for(Collection<? extends Constant> equivalenceClass: this.equivalenceClasses)
 				result *= MathTools.binomial(
 						equivalenceClass.size()-this.getNumberOfOccurences(f, p, equivalenceClass, true)-this.getNumberOfOccurences(f, p, equivalenceClass, false),
 						this.get(p, equivalenceClass)-this.getNumberOfOccurences(f, p, equivalenceClass, true));
@@ -141,7 +141,7 @@ public class ReferenceWorld extends Interpretation implements Map<Predicate,Inst
 	 * @param positive whether the instances are to be positive.
 	 * @return an integer describing the number of occurrences of instances of predicate "p" with a constant in "constants".
 	 */
-	private Integer getNumberOfOccurences(FolFormula f, Predicate p,Set<Constant> constants, boolean positive){
+	private Integer getNumberOfOccurences(FolFormula f, Predicate p, Collection<? extends Constant> constants, boolean positive){
 		if(f instanceof Tautology)
 			return this.spanNumber;
 		if(f instanceof Contradiction)

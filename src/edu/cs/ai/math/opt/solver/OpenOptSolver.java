@@ -15,7 +15,7 @@ import edu.cs.ai.math.term.*;
  *
  */
 public class OpenOptSolver extends Solver {
-
+	
 	// TODO make the following private and add getter/setter
 	public double contol = 1e-8;
 	public double ftol = 1e-8;
@@ -77,18 +77,19 @@ public class OpenOptSolver extends Solver {
 			// Write to temp file
 			BufferedWriter out = new BufferedWriter(new FileWriter(ooFile));
 			out.write(this.buildOpenOptCode());			
-			out.close();		
-			//execute openopt on problem and retrieve console output					
+			out.close();
+			//execute openopt on problem and retrieve console output
 			Process child = Runtime.getRuntime().exec("python " + ooFile.getAbsolutePath());
-			int c;				
-	        InputStream in = child.getInputStream();
-	        while ((c = in.read()) != -1)
+			int c;		
+			InputStream in = child.getInputStream();
+	        while ((c = in.read()) != -1){
 	            output += ((char)c);
-	        in.close();		        		        
+	        }
+			in.close();		        		        
 	        in = child.getErrorStream();
 	        while ((c = in.read()) != -1)
 	            error += (char)c;
-	        in.close();	       
+	        in.close();  
 		}catch(IOException e){
 			//TODO add error handling
 			e.printStackTrace();
@@ -97,7 +98,6 @@ public class OpenOptSolver extends Solver {
 		// TODO check error appropriately
 		if(output.contains("NO FEASIBLE SOLUTION"))
 			throw new ProblemInconsistentException();
-		System.out.println(error);
 		// parser output
 		double[] values = this.parseOutput(output, this.idx2newVars.keySet().size());
 		Map<Variable,Term> result = new HashMap<Variable,Term>();
@@ -190,7 +190,7 @@ public class OpenOptSolver extends Solver {
 		code += "p.maxIter = " + this.maxIter + "\n";
 		code += "p.maxFunEvals = " + this.maxFunEvals + "\n";
 		code += "r = p.solve('" + this.solver + "')\n";
-		code += "print r.xf";		
+		code += "print r.xf";
 		return code;
 	}
 	

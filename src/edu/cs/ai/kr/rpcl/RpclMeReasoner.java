@@ -22,12 +22,20 @@ import edu.cs.ai.math.term.Term;
 import edu.cs.ai.math.term.Variable;
 import edu.cs.ai.util.Probability;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * General ME-reasoner for RPCL.
  * 
  * @author Matthias Thimm
  */
 public class RpclMeReasoner extends Reasoner {
+	
+	/**
+	 * Logger.
+	 */
+	private Log log = LogFactory.getLog(RpclMeReasoner.class);
 	
 	/**
 	 * Integer constant for standard inference.
@@ -68,20 +76,30 @@ public class RpclMeReasoner extends Reasoner {
 	 */
 	public RpclMeReasoner(BeliefBase beliefBase, RpclSemantics semantics, FolSignature signature, int inferenceType){
 		super(beliefBase);
-		if(inferenceType != RpclMeReasoner.STANDARD_INFERENCE && inferenceType != RpclMeReasoner.LIFTED_INFERENCE)
-			throw new IllegalArgumentException("The inference type must be either standard or lifted.");
+		this.log.trace("Creating instance of 'RpclMeReasoner'.");
+		if(inferenceType != RpclMeReasoner.STANDARD_INFERENCE && inferenceType != RpclMeReasoner.LIFTED_INFERENCE){
+			this.log.error("The inference type must be either 'standard' or 'lifted'.");
+			throw new IllegalArgumentException("The inference type must be either 'standard' or 'lifted'.");
+		}
 		this.signature = signature;
 		this.semantics = semantics;
 		this.inferenceType = inferenceType;
-		if(!(beliefBase instanceof RpclBeliefSet))
-			throw new IllegalArgumentException("Knowledge base of class RpclBeliefSet expected.");
+		if(!(beliefBase instanceof RpclBeliefSet)){
+			this.log.error("Knowledge base of class 'RpclBeliefSet' expected but encountered '" + beliefBase.getClass() + "'.");
+			throw new IllegalArgumentException("Knowledge base of class 'RpclBeliefSet' expected but encountered '" + beliefBase.getClass() + "'.");
+		}
 		RpclBeliefSet beliefSet = (RpclBeliefSet) beliefBase;
-		if(!beliefSet.getSignature().isSubSignature(signature))
+		if(!beliefSet.getSignature().isSubSignature(signature)){
+			this.log.error("Signature must be super-signature of the belief set's signature.");
 			throw new IllegalArgumentException("Signature must be super-signature of the belief set's signature.");
+		}
 		if(inferenceType == RpclMeReasoner.LIFTED_INFERENCE)
 			for(Predicate p: ((FolSignature)beliefSet.getSignature()).getPredicates())
-				if(p.getArity()>1)
+				if(p.getArity()>1){
+					this.log.error("Lifted inference only applicable for signatures containing only unary predicates.");
 					throw new IllegalArgumentException("Lifted inference only applicable for signatures containing only unary predicates.");
+				}
+		this.log.trace("Finished creating instance of 'RpclReasoner'.");
 	}
 	
 	/**
@@ -117,10 +135,11 @@ public class RpclMeReasoner extends Reasoner {
 	 * Computes the ME-distribution for this reasoner's knowledge base. 
 	 * @return the ME-distribution for this reasoner's knowledge base.
 	 */	
-	private ProbabilityDistribution computeMeDistribution(){
+	private ProbabilityDistribution computeMeDistribution(){		
 		RpclBeliefSet kb = ((RpclBeliefSet)this.getKnowledgBase());
+		this.log.info("Computing ME-distribution for the knowledge base " + kb.toString() + ".");
 		// TODO extract common parts from the following if/else
-		if(this.inferenceType == RpclMeReasoner.LIFTED_INFERENCE){
+		if(this.inferenceType == RpclMeReasoner.LIFTED_INFERENCE){			
 			// determine equivalence classes of the knowledge base
 			Set<Set<Constant>> equivalenceClasses = kb.getEquivalenceClasses(this.getSignature());
 			// determine the reference worlds needed to represent a probability distribution on the knowledge base.
@@ -337,7 +356,7 @@ public class RpclMeReasoner extends Reasoner {
 			System.out.println();
 			RpclParser parser = new RpclParser();			
 			RpclBeliefSet beliefSet = (RpclBeliefSet) parser.parseBeliefBaseFromFile("/Users/mthimm/Desktop/test");
-			RpclMeReasoner reasoner = new RpclMeReasoner(beliefSet,new AveragingSemantics(),parser.getSignature(),RpclMeReasoner.LIFTED_INFERENCE);
+			RpclMeReasoner reasoner = new RpclMeReasoner(beliefSet,new AggregatingSemantics(),parser.getSignature(),RpclMeReasoner.LIFTED_INFERENCE);
 			long millis = System.currentTimeMillis(); 
 			ProbabilityDistribution p = reasoner.computeMeDistribution();
 					

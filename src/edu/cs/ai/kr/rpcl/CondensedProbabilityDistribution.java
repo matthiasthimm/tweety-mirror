@@ -129,6 +129,16 @@ public class CondensedProbabilityDistribution extends ProbabilityDistribution {
 		return p;
 	}
 	
+	/**
+	 * Converts this condensed probability distribution into an ordinary
+	 * probability distribution.
+	 * @return a probability distribution.
+	 */
+	public ProbabilityDistribution toProbabilityDistribution(){
+		//TODO implement me
+		return null;
+	}
+	
 	/* (non-Javadoc)
 	 * @see edu.cs.ai.kr.rpcl.semantics.ProbabilityDistribution#put(edu.cs.ai.kr.Interpretation, edu.cs.ai.util.Probability)
 	 */
