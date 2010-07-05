@@ -16,6 +16,15 @@ import edu.cs.ai.math.term.*;
  */
 public class OpenOptSolver extends Solver {
 
+	// TODO make the following private and add getter/setter
+	public double contol = 1e-8;
+	public double ftol = 1e-8;
+	public double gtol = 1e-8;
+	public double xtol = 1e-8;
+	public double maxIter = 1e16;
+	public double maxFunEvals = 1e16;
+	public String solver = "lincher";
+	
 	/**
 	 * A starting point for the optimization.
 	 */
@@ -61,8 +70,6 @@ public class OpenOptSolver extends Solver {
 		}
 		String output = "";
 		String error = "";
-		//System.out.println(this.buildOpenOptCode());
-		//return this.startingPoint;
 		try{
 			File ooFile = File.createTempFile("ootmp", null);
 			// Delete temp file when program exits.
@@ -174,17 +181,15 @@ public class OpenOptSolver extends Solver {
 				throw new UnsupportedOperationException("Inequality constraints not supported yet: IMPLEMENT ME!");
 			}
 		}
-		code += "\np.h = " + equalities + "\n\n";
-		
+		code += "\np.h = " + equalities + "\n\n";		
 		// write commands			
-		//TODO add the following as configuration options
-		code += "p.contol = 1e-8\n";
-		code += "p.ftol = 1e-8\n";
-		code += "p.gtol = 1e-8\n";
-		code += "p.xtol = 1e-8\n";
-		code += "p.maxIter = 1e16\n";
-		code += "p.maxFunEvals = 1e16\n";
-		code += "r = p.solve('lincher')\n";
+		code += "p.contol = " + this.contol + "\n";
+		code += "p.ftol = " + this.ftol + "\n";
+		code += "p.gtol = " + this.gtol + "\n";
+		code += "p.xtol = " + this.xtol + "\n";
+		code += "p.maxIter = " + this.maxIter + "\n";
+		code += "p.maxFunEvals = " + this.maxFunEvals + "\n";
+		code += "r = p.solve('" + this.solver + "')\n";
 		code += "print r.xf";		
 		return code;
 	}

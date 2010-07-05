@@ -167,8 +167,8 @@ public class RpclMeReasoner extends Reasoner {
 			}
 			problem.setTargetFunction(targetFunction);			
 			try{
-				Solver solver = new OpenOptSolver(problem,this.getFeasibleStartingPoint(problem));				
-				Map<Variable,Term> solution = solver.solve();
+				Solver solver = new OpenOptSolver(problem,this.getFeasibleStartingPoint(problem));
+				Map<Variable,Term> solution = solver.solve();				
 				CondensedProbabilityDistribution p = new CondensedProbabilityDistribution(this.semantics,this.getSignature());
 				for(ReferenceWorld w: worlds2vars.keySet()){
 					edu.cs.ai.math.term.Constant c = solution.get(worlds2vars.get(w)).value();
@@ -217,7 +217,7 @@ public class RpclMeReasoner extends Reasoner {
 					targetFunction = t;
 				else targetFunction = targetFunction.add(t);
 			}
-			problem.setTargetFunction(targetFunction);
+			problem.setTargetFunction(targetFunction);			
 			try{
 				Solver solver = new OpenOptSolver(problem,this.getFeasibleStartingPoint(problem));
 				Map<Variable,Term> solution = solver.solve();
@@ -268,12 +268,12 @@ public class RpclMeReasoner extends Reasoner {
 			//TODO
 			Map<Variable,Term> startingPoint = new HashMap<Variable,Term>();
 			for(Variable v: problem.getVariables())
-				startingPoint.put(v, new FloatConstant(0.5));
+				startingPoint.put(v, new FloatConstant(1));
 			List<Term> functions = new ArrayList<Term>();
 			//every s is an equation
 			for(Statement s: problem)
 				functions.add(s.toNormalizedForm().getLeftTerm());
-			RootFinder rootFinder = new GradientDescentRootFinder(functions,startingPoint);	
+			RootFinder rootFinder = new OpenOptRootFinder(functions,startingPoint);	
 			return rootFinder.randomRoot();			
 		}		
 	}
@@ -337,14 +337,14 @@ public class RpclMeReasoner extends Reasoner {
 			System.out.println();
 			RpclParser parser = new RpclParser();			
 			RpclBeliefSet beliefSet = (RpclBeliefSet) parser.parseBeliefBaseFromFile("/Users/mthimm/Desktop/test");
-			RpclMeReasoner reasoner = new RpclMeReasoner(beliefSet,new AggregatingSemantics(),parser.getSignature(),RpclMeReasoner.LIFTED_INFERENCE);
+			RpclMeReasoner reasoner = new RpclMeReasoner(beliefSet,new AveragingSemantics(),parser.getSignature(),RpclMeReasoner.LIFTED_INFERENCE);
 			long millis = System.currentTimeMillis(); 
 			ProbabilityDistribution p = reasoner.computeMeDistribution();
 					
 			// some sample queries
 			Set<FolFormula> queries = new java.util.HashSet<FolFormula>();
 			Predicate bird = parser.getSignature().getPredicate("bird");
-			Predicate flies = parser.getSignature().getPredicate("flies");
+			//Predicate flies = parser.getSignature().getPredicate("flies");
 			Predicate penguin = parser.getSignature().getPredicate("penguin");
 			java.util.Iterator<edu.cs.ai.kr.fol.syntax.Term> it = parser.getSignature().getConstants().iterator();
 			Constant a = (Constant) it.next();
@@ -359,13 +359,13 @@ public class RpclMeReasoner extends Reasoner {
 			queries.add(new edu.cs.ai.kr.fol.syntax.Atom(bird,l1));
 			//queries.add(new edu.cs.ai.kr.fol.syntax.Atom(bird,l2));
 			//queries.add(new edu.cs.ai.kr.fol.syntax.Atom(bird,l3));
-			queries.add(new edu.cs.ai.kr.fol.syntax.Atom(flies,l1));
+			//queries.add(new edu.cs.ai.kr.fol.syntax.Atom(flies,l1));
 			//queries.add(new edu.cs.ai.kr.fol.syntax.Atom(flies,l2));
 	//		queries.add(new edu.cs.ai.kr.fol.syntax.Atom(flies,l3));			
 			queries.add(new edu.cs.ai.kr.fol.syntax.Atom(penguin,l1));
 			//queries.add(new edu.cs.ai.kr.fol.syntax.Atom(penguin,l2));
 	//		queries.add(new edu.cs.ai.kr.fol.syntax.Atom(penguin,l3));
-			queries.add(new edu.cs.ai.kr.fol.syntax.Atom(flies,l1).combineWithAnd(new edu.cs.ai.kr.fol.syntax.Atom(penguin,l1)));
+			//queries.add(new edu.cs.ai.kr.fol.syntax.Atom(flies,l1).combineWithAnd(new edu.cs.ai.kr.fol.syntax.Atom(penguin,l1)));
 			//queries.add(new edu.cs.ai.kr.fol.syntax.Atom(flies,l2).combineWithAnd(new edu.cs.ai.kr.fol.syntax.Atom(penguin,l2)));
 	//		queries.add(new edu.cs.ai.kr.fol.syntax.Atom(flies,l3).combineWithAnd(new edu.cs.ai.kr.fol.syntax.Atom(penguin,l3)));
 			System.out.println("P satisfies belief base: " + p.satisfies((BeliefBase)beliefSet));

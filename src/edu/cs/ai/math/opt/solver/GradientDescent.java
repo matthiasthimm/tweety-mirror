@@ -96,6 +96,7 @@ public class GradientDescent extends Solver {
 				if(step < GradientDescent.MIN_STEP_LENGTH)
 					throw new GeneralMathException();
 			}			
+		System.out.println(VectorTools.manhattanDistanceToZero(currentGradient));
 		}while(VectorTools.manhattanDistanceToZero(currentGradient) > actualPrecision);
 		return currentGuess;
 	}

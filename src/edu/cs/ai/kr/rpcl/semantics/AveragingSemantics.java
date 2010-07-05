@@ -63,7 +63,7 @@ public class AveragingSemantics extends AbstractRpclSemantics {
 			Set<Product> summands = new HashSet<Product>();
 			Product denoms = new Product();
 			// The term should look like (a1/b1)+(a2/b2)+(a2/b2) = K*n
-			// but we write it as a1b2b3 + a2b1b3 + a3b1b2 = K*n*b1b2b3 for compuation issues
+			// but we write it as a1b2b3 + a2b1b3 + a3b1b2 = K*n*b1b2b3 for computation issues
 			for(RelationalFormula rf: groundInstances){
 				RelationalProbabilisticConditional rfg = (RelationalProbabilisticConditional)rf;
 				FolFormula body = rfg.getPremise().iterator().next();
