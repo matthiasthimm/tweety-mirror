@@ -12,4 +12,11 @@ public class ProblemInconsistentException extends RuntimeException {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	/* (non-Javadoc)
+	 * @see java.lang.Throwable#getMessage()
+	 */
+	@Override
+	public String getMessage(){
+		return "The problem is inconsistent.";
+	}
 }

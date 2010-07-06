@@ -329,7 +329,7 @@ public class RpclProbabilityDistributionParser implements RpclProbabilityDistrib
       return (jj_ntk = jj_nt.kind);
   }
 
-  static private java.util.List<int[]> jj_expentries = new java.util.ArrayList<int[]>();
+  static private java.util.List jj_expentries = new java.util.ArrayList();
   static private int[] jj_expentry;
   static private int jj_kind = -1;
 
@@ -359,7 +359,7 @@ public class RpclProbabilityDistributionParser implements RpclProbabilityDistrib
     }
     int[][] exptokseq = new int[jj_expentries.size()][];
     for (int i = 0; i < jj_expentries.size(); i++) {
-      exptokseq[i] = jj_expentries.get(i);
+      exptokseq[i] = (int[])jj_expentries.get(i);
     }
     return new ParseException(token, exptokseq, tokenImage);
   }

@@ -10,7 +10,6 @@ import edu.cs.ai.kr.fol.semantics.*;
 import edu.cs.ai.kr.fol.syntax.*;
 import edu.cs.ai.kr.fol.syntax.Constant;
 import edu.cs.ai.kr.rcl.syntax.RelationalConditional;
-import edu.cs.ai.kr.rpcl.parser.*;
 import edu.cs.ai.kr.rpcl.semantics.*;
 import edu.cs.ai.kr.rpcl.syntax.*;
 import edu.cs.ai.math.*;
@@ -125,7 +124,7 @@ public class RpclMeReasoner extends Reasoner {
 	 * Returns the ME-distribution this reasoner bases on.
 	 * @return the ME-distribution this reasoner bases on.
 	 */
-	public ProbabilityDistribution getMeDistribution(){
+	public ProbabilityDistribution getMeDistribution() throws ProblemInconsistentException{
 		if(this.meDistribution == null)
 			this.meDistribution = this.computeMeDistribution();
 		return this.meDistribution;		
@@ -135,11 +134,12 @@ public class RpclMeReasoner extends Reasoner {
 	 * Computes the ME-distribution for this reasoner's knowledge base. 
 	 * @return the ME-distribution for this reasoner's knowledge base.
 	 */	
-	private ProbabilityDistribution computeMeDistribution(){		
+	private ProbabilityDistribution computeMeDistribution() throws ProblemInconsistentException{		
 		RpclBeliefSet kb = ((RpclBeliefSet)this.getKnowledgBase());
 		this.log.info("Computing ME-distribution for the knowledge base " + kb.toString() + ".");
 		// TODO extract common parts from the following if/else
-		if(this.inferenceType == RpclMeReasoner.LIFTED_INFERENCE){			
+		this.log.info("Constructing optimization problem for finding the ME-distribution.");
+		if(this.inferenceType == RpclMeReasoner.LIFTED_INFERENCE){
 			// determine equivalence classes of the knowledge base
 			Set<Set<Constant>> equivalenceClasses = kb.getEquivalenceClasses(this.getSignature());
 			// determine the reference worlds needed to represent a probability distribution on the knowledge base.
@@ -186,6 +186,7 @@ public class RpclMeReasoner extends Reasoner {
 			}
 			problem.setTargetFunction(targetFunction);			
 			try{
+				this.log.info("Applying the OpenOpt optimization library to find the ME-distribution.");
 				Solver solver = new OpenOptSolver(problem,this.getFeasibleStartingPoint(problem));
 				Map<Variable,Term> solution = solver.solve();				
 				CondensedProbabilityDistribution p = new CondensedProbabilityDistribution(this.semantics,this.getSignature());
@@ -196,6 +197,7 @@ public class RpclMeReasoner extends Reasoner {
 				}
 				return p;
 			}catch(GeneralMathException e){
+				this.log.error("The knowledge base " + kb + " is inconsistent.");
 				throw new ProblemInconsistentException();				
 			}
 		}else{
@@ -238,6 +240,7 @@ public class RpclMeReasoner extends Reasoner {
 			}
 			problem.setTargetFunction(targetFunction);			
 			try{
+				this.log.info("Applying the OpenOpt optimization library to find the ME-distribution.");
 				Solver solver = new OpenOptSolver(problem,this.getFeasibleStartingPoint(problem));
 				Map<Variable,Term> solution = solver.solve();
 				ProbabilityDistribution p = new ProbabilityDistribution(this.semantics,this.getSignature());
@@ -248,6 +251,7 @@ public class RpclMeReasoner extends Reasoner {
 				}
 				return p;
 			}catch(GeneralMathException e){
+				this.log.error("The knowledge base " + kb + " is inconsistent.");
 				throw new ProblemInconsistentException();				
 			}
 		}
@@ -279,12 +283,14 @@ public class RpclMeReasoner extends Reasoner {
 	 * @throws GeneralMathException iff something went wrong.
 	 */
 	private Map<Variable,Term> getFeasibleStartingPoint(OptimizationProblem problem) throws GeneralMathException{
+		this.log.info("Determining feasible starting point for optimizing entropy.");
 		ConstraintSatisfactionProblem csp = new ConstraintSatisfactionProblem();
 		csp.addAll(problem);
-		if(csp.isLinear())
+		if(csp.isLinear()){
+			this.log.info("The problem is linear, we use a simplex algorithm.");
 			return new ApacheCommonsSimplex(csp).solve();
-		else{
-			//TODO
+		}else{
+			this.log.info("The problem is not linear, we use the OpenOpt optimization library.");			
 			Map<Variable,Term> startingPoint = new HashMap<Variable,Term>();
 			for(Variable v: problem.getVariables())
 				startingPoint.put(v, new FloatConstant(1));
@@ -303,99 +309,5 @@ public class RpclMeReasoner extends Reasoner {
 	 */
 	public FolSignature getSignature(){
 		return this.signature;
-	}
-		
-	public static void main(String[] args){
-		/*try{
-			System.out.println();
-			System.out.println();
-			RpclParser parser = new RpclParser();			
-			RpclBeliefSet beliefSet = (RpclBeliefSet) parser.parseBeliefBaseFromFile("/Users/mthimm/Desktop/test");
-			RpclMeReasoner reasoner = new RpclMeReasoner(beliefSet,new AggregatingSemantics(),parser.getSignature(),RpclMeReasoner.LIFTED_INFERENCE);
-			long millis = System.currentTimeMillis(); 
-			ProbabilityDistribution p = reasoner.computeMeDistribution();
-					
-			// some sample queries
-			Set<FolFormula> queries = new java.util.HashSet<FolFormula>();
-			Predicate bird = parser.getSignature().getPredicate("bird");
-			Predicate flies = parser.getSignature().getPredicate("flies");
-			Predicate penguin = parser.getSignature().getPredicate("penguin");
-			java.util.Iterator<edu.cs.ai.kr.fol.syntax.Term> it = parser.getSignature().getConstants().iterator();
-			Constant a = (Constant) it.next();
-			Constant b = (Constant) it.next();
-//			Constant c = (Constant) it.next();
-			java.util.List<edu.cs.ai.kr.fol.syntax.Term> l1 = new java.util.ArrayList<edu.cs.ai.kr.fol.syntax.Term>();
-			l1.add(a);
-			java.util.List<edu.cs.ai.kr.fol.syntax.Term> l2 = new java.util.ArrayList<edu.cs.ai.kr.fol.syntax.Term>();
-			l2.add(b);
-//			java.util.List<edu.cs.ai.kr.fol.syntax.Term> l3 = new java.util.ArrayList<edu.cs.ai.kr.fol.syntax.Term>();
-//			l3.add(c);
-			queries.add(new edu.cs.ai.kr.fol.syntax.Atom(bird,l1));
-			//queries.add(new edu.cs.ai.kr.fol.syntax.Atom(bird,l2));
-			//queries.add(new edu.cs.ai.kr.fol.syntax.Atom(bird,l3));
-			queries.add(new edu.cs.ai.kr.fol.syntax.Atom(flies,l1));
-			queries.add(new edu.cs.ai.kr.fol.syntax.Atom(flies,l2));
-	//		queries.add(new edu.cs.ai.kr.fol.syntax.Atom(flies,l3));			
-			queries.add(new edu.cs.ai.kr.fol.syntax.Atom(penguin,l1));
-			//queries.add(new edu.cs.ai.kr.fol.syntax.Atom(penguin,l2));
-	//		queries.add(new edu.cs.ai.kr.fol.syntax.Atom(penguin,l3));
-			queries.add(new edu.cs.ai.kr.fol.syntax.Atom(flies,l1).combineWithAnd(new edu.cs.ai.kr.fol.syntax.Atom(penguin,l1)));
-			queries.add(new edu.cs.ai.kr.fol.syntax.Atom(flies,l2).combineWithAnd(new edu.cs.ai.kr.fol.syntax.Atom(penguin,l2)));
-	//		queries.add(new edu.cs.ai.kr.fol.syntax.Atom(flies,l3).combineWithAnd(new edu.cs.ai.kr.fol.syntax.Atom(penguin,l3)));
-			System.out.println("P satisfies belief base: " + p.satisfies((BeliefBase)beliefSet));
-			System.out.println("Entropy of P: " + p.entropy());
-			System.out.println("Size of condensed probability distribution: " + p.keySet().size());
-			System.out.println("Time: " + (System.currentTimeMillis() - millis));
-			for(FolFormula f: queries)
-				System.out.println(f + "\t\t" + p.probability(f));
-		}catch(Exception e){
-			e.printStackTrace();
-		}*/
-		try{
-			System.out.println();
-			System.out.println();
-			RpclParser parser = new RpclParser();			
-			RpclBeliefSet beliefSet = (RpclBeliefSet) parser.parseBeliefBaseFromFile("/Users/mthimm/Desktop/test");
-			RpclMeReasoner reasoner = new RpclMeReasoner(beliefSet,new AggregatingSemantics(),parser.getSignature(),RpclMeReasoner.LIFTED_INFERENCE);
-			long millis = System.currentTimeMillis(); 
-			ProbabilityDistribution p = reasoner.computeMeDistribution();
-					
-			// some sample queries
-			Set<FolFormula> queries = new java.util.HashSet<FolFormula>();
-			Predicate bird = parser.getSignature().getPredicate("bird");
-			//Predicate flies = parser.getSignature().getPredicate("flies");
-			Predicate penguin = parser.getSignature().getPredicate("penguin");
-			java.util.Iterator<edu.cs.ai.kr.fol.syntax.Term> it = parser.getSignature().getConstants().iterator();
-			Constant a = (Constant) it.next();
-			//Constant b = (Constant) it.next();
-//			Constant c = (Constant) it.next();
-			java.util.List<edu.cs.ai.kr.fol.syntax.Term> l1 = new java.util.ArrayList<edu.cs.ai.kr.fol.syntax.Term>();
-			l1.add(a);
-			//java.util.List<edu.cs.ai.kr.fol.syntax.Term> l2 = new java.util.ArrayList<edu.cs.ai.kr.fol.syntax.Term>();
-			//l2.add(b);
-//			java.util.List<edu.cs.ai.kr.fol.syntax.Term> l3 = new java.util.ArrayList<edu.cs.ai.kr.fol.syntax.Term>();
-//			l3.add(c);
-			queries.add(new edu.cs.ai.kr.fol.syntax.Atom(bird,l1));
-			//queries.add(new edu.cs.ai.kr.fol.syntax.Atom(bird,l2));
-			//queries.add(new edu.cs.ai.kr.fol.syntax.Atom(bird,l3));
-			//queries.add(new edu.cs.ai.kr.fol.syntax.Atom(flies,l1));
-			//queries.add(new edu.cs.ai.kr.fol.syntax.Atom(flies,l2));
-	//		queries.add(new edu.cs.ai.kr.fol.syntax.Atom(flies,l3));			
-			queries.add(new edu.cs.ai.kr.fol.syntax.Atom(penguin,l1));
-			//queries.add(new edu.cs.ai.kr.fol.syntax.Atom(penguin,l2));
-	//		queries.add(new edu.cs.ai.kr.fol.syntax.Atom(penguin,l3));
-			//queries.add(new edu.cs.ai.kr.fol.syntax.Atom(flies,l1).combineWithAnd(new edu.cs.ai.kr.fol.syntax.Atom(penguin,l1)));
-			//queries.add(new edu.cs.ai.kr.fol.syntax.Atom(flies,l2).combineWithAnd(new edu.cs.ai.kr.fol.syntax.Atom(penguin,l2)));
-	//		queries.add(new edu.cs.ai.kr.fol.syntax.Atom(flies,l3).combineWithAnd(new edu.cs.ai.kr.fol.syntax.Atom(penguin,l3)));
-			System.out.println("P satisfies belief base: " + p.satisfies((BeliefBase)beliefSet));
-			System.out.println("Entropy of P: " + p.entropy());
-			System.out.println("Size of condensed probability distribution: " + p.keySet().size());
-			System.out.println("Time: " + (System.currentTimeMillis() - millis));
-			for(FolFormula f: queries)
-				System.out.println(f + "\t\t" + p.probability(f));
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-	}
-	
+	}	
 }

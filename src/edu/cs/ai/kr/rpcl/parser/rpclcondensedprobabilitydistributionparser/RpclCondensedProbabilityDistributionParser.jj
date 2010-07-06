@@ -121,7 +121,8 @@ Pair<ReferenceWorld,Probability> ProbabilityAssignment(FolSignature signature) :
 	Token probability;
 }
 {
-	world=Interpretation(signature) "=" probability=<PROBABILITY>
+	// NOTE: probability might be "0" or "1" => maybe parse as multiplicator
+	world=Interpretation(signature) "=" (probability=<PROBABILITY> | probability=<MULTIPLICATOR>)
 	{
 		return new Pair<ReferenceWorld,Probability>(world,new Probability(new Double(token.image)));
 	} 	 

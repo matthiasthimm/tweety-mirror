@@ -3,6 +3,8 @@ package edu.cs.ai.math.opt.solver;
 import java.io.*;
 import java.util.*;
 
+import org.apache.commons.logging.*;
+
 import edu.cs.ai.math.GeneralMathException;
 import edu.cs.ai.math.NonDifferentiableException;
 import edu.cs.ai.math.equation.*;
@@ -15,6 +17,11 @@ import edu.cs.ai.math.term.*;
  *
  */
 public class OpenOptSolver extends Solver {
+	
+	/**
+	 * Logger.
+	 */
+	private Log log = LogFactory.getLog(OpenOptSolver.class);
 	
 	// TODO make the following private and add getter/setter
 	public double contol = 1e-8;
@@ -58,8 +65,8 @@ public class OpenOptSolver extends Solver {
 	 * @see edu.cs.ai.math.opt.Solver#solve()
 	 */
 	@Override
-	public Map<Variable, Term> solve() throws GeneralMathException {		
-		// do a renaming of variables
+	public Map<Variable, Term> solve() throws GeneralMathException {
+		// do a renaming of variables		
 		int idx = 0;
 		for(Variable v: this.getProblem().getVariables()){
 			Variable newV = new FloatVariable("x[" + idx + "]");
@@ -76,9 +83,11 @@ public class OpenOptSolver extends Solver {
 			ooFile.deleteOnExit();    
 			// Write to temp file
 			BufferedWriter out = new BufferedWriter(new FileWriter(ooFile));
+			this.log.info("Building Python code for OpenOpt.");
 			out.write(this.buildOpenOptCode());			
 			out.close();
 			//execute openopt on problem and retrieve console output
+			this.log.info("Calling OpenOpt optimization library.");
 			Process child = Runtime.getRuntime().exec("python " + ooFile.getAbsolutePath());
 			int c;		
 			InputStream in = child.getInputStream();
@@ -91,19 +100,26 @@ public class OpenOptSolver extends Solver {
 	            error += (char)c;
 	        in.close();  
 		}catch(IOException e){
-			//TODO add error handling
-			e.printStackTrace();
+			log.error(e.getMessage());
 			return null;
 		}
 		// TODO check error appropriately
-		if(output.contains("NO FEASIBLE SOLUTION"))
-			throw new ProblemInconsistentException();
+		if(output.contains("NO FEASIBLE SOLUTION")){
+			this.log.info("The optimization problem seems to be unfeasible.");
+			throw new GeneralMathException("The optimization problem seems to be unfeasible.");
+		}
 		// parser output
-		double[] values = this.parseOutput(output, this.idx2newVars.keySet().size());
-		Map<Variable,Term> result = new HashMap<Variable,Term>();
-		for(Integer i: this.idx2newVars.keySet())
-			result.put(this.newVars2oldVars.get(this.idx2newVars.get(i)), new FloatConstant(values[i]));
-		return result;
+		this.log.info("Parsing solution from OpenOpt.");
+		try{
+			double[] values = this.parseOutput(output, this.idx2newVars.keySet().size());
+			Map<Variable,Term> result = new HashMap<Variable,Term>();
+			for(Integer i: this.idx2newVars.keySet())
+				result.put(this.newVars2oldVars.get(this.idx2newVars.get(i)), new FloatConstant(values[i]));
+			return result;
+		}catch(Exception e){
+			this.log.error(e.getMessage());
+			throw new GeneralMathException(e.getMessage());
+		}
 	}
 	
 	private String buildOpenOptCode() throws NonDifferentiableException{
@@ -201,20 +217,25 @@ public class OpenOptSolver extends Solver {
 	 * @return an array of double
 	 */
 	private double[] parseOutput(String output, int length){
-		int valuesBegin = output.lastIndexOf("[");
-		int valuesEnd = output.lastIndexOf("]");
-		String values = output.substring(valuesBegin+1, valuesEnd);
-		String[] tokens = values.split(" ");
-		double[] result = new double[length];
-		int i = 0;
-		for(String token : tokens){
-			if(token.trim().equals(""))
-				continue;
-			result[i] = new Double(token.trim());
-			i++;
-			if(i==length) break;
+		try{
+			int valuesBegin = output.lastIndexOf("[");
+			int valuesEnd = output.lastIndexOf("]");
+			String values = output.substring(valuesBegin+1, valuesEnd);
+			String[] tokens = values.split(" ");
+			double[] result = new double[length];
+			int i = 0;
+			for(String token : tokens){
+				if(token.trim().equals(""))
+					continue;
+				result[i] = new Double(token.trim());
+				i++;
+				if(i==length) break;
+			}
+			return result;
+		}catch(Exception e){
+			this.log.error(e.getMessage());
+			throw new RuntimeException(e.getMessage());
 		}
-		return result;
 	}
 
 }

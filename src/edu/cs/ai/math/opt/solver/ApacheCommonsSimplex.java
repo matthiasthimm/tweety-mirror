@@ -6,6 +6,7 @@ import edu.cs.ai.math.equation.*;
 import edu.cs.ai.math.opt.*;
 import edu.cs.ai.math.term.*;
 
+import org.apache.commons.logging.*;
 import org.apache.commons.math.optimization.*;
 import org.apache.commons.math.optimization.linear.*;
 
@@ -16,6 +17,11 @@ import org.apache.commons.math.optimization.linear.*;
  */
 public class ApacheCommonsSimplex extends Solver {
 
+	/**
+	 * Logger.
+	 */
+	private Log log = LogFactory.getLog(ApacheCommonsSimplex.class);
+	
 	/**
 	 * The maximum number of iterations of the simplex algorithm.
 	 */
@@ -35,7 +41,8 @@ public class ApacheCommonsSimplex extends Solver {
 	 * @see edu.cs.ai.math.opt.Solver#solve()
 	 */
 	@Override
-	public Map<Variable, Term> solve() {		
+	public Map<Variable, Term> solve() {	
+		this.log.info("Wrapping optimization problem for calling the Apache Commons Simplex algorithm.");
 		// 1.) bring all constraints in linear and normalized form
 		Set<Statement> constraints = new HashSet<Statement>();
 		for(Statement s: this.getProblem())
@@ -109,6 +116,7 @@ public class ApacheCommonsSimplex extends Solver {
 		}
 		// 6.) Optimize.
 		try{
+			this.log.info("Calling the Apache Commons Simplex algorithm.");
 			SimplexSolver solver = new SimplexSolver(0.01);
 			solver.setMaxIterations(ApacheCommonsSimplex.MAXITERATIONS);
 			RealPointValuePair r = null;
@@ -118,12 +126,13 @@ public class ApacheCommonsSimplex extends Solver {
 				int type = ((OptimizationProblem)this.getProblem()).getType();
 				r = solver.optimize(target, finalConstraints, (type == OptimizationProblem.MINIMIZE)?(GoalType.MINIMIZE):(GoalType.MAXIMIZE), justPositive);
 			}else r = solver.optimize(target, finalConstraints, GoalType.MINIMIZE, justPositive);
+			this.log.info("Parsing output from the Apache Commons Simplex algorithm.");
 			Map<Variable, Term> result = new HashMap<Variable, Term>();
 			for(Variable v: origVars2Idx.keySet())
 				result.put(v, new FloatConstant(r.getPoint()[origVars2Idx.get(v)]));
 			return result;
 		}catch(OptimizationException e){
-			e.printStackTrace();
+			log.error(e.getMessage());
 			throw new ProblemInconsistentException();
 		}
 	}

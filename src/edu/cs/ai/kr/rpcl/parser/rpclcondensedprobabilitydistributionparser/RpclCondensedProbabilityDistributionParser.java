@@ -95,9 +95,21 @@ public class RpclCondensedProbabilityDistributionParser implements RpclCondensed
   static final public Pair<ReferenceWorld,Probability> ProbabilityAssignment(FolSignature signature) throws ParseException {
         ReferenceWorld world;
         Token probability;
-    world = Interpretation(signature);
+    // NOTE: probability might be "0" or "1" => maybe parse as multiplicator
+            world = Interpretation(signature);
     jj_consume_token(8);
-    probability = jj_consume_token(PROBABILITY);
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case PROBABILITY:
+      probability = jj_consume_token(PROBABILITY);
+      break;
+    case MULTIPLICATOR:
+      probability = jj_consume_token(MULTIPLICATOR);
+      break;
+    default:
+      jj_la1[1] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
                 {if (true) return new Pair<ReferenceWorld,Probability>(world,new Probability(new Double(token.image)));}
     throw new Error("Missing return statement in function");
   }
@@ -121,7 +133,7 @@ public class RpclCondensedProbabilityDistributionParser implements RpclCondensed
           ;
           break;
         default:
-          jj_la1[1] = jj_gen;
+          jj_la1[2] = jj_gen;
           break label_2;
         }
         jj_consume_token(10);
@@ -131,7 +143,7 @@ public class RpclCondensedProbabilityDistributionParser implements RpclCondensed
       }
       break;
     default:
-      jj_la1[2] = jj_gen;
+      jj_la1[3] = jj_gen;
       ;
     }
     jj_consume_token(11);
@@ -172,7 +184,7 @@ public class RpclCondensedProbabilityDistributionParser implements RpclCondensed
           ;
           break;
         default:
-          jj_la1[3] = jj_gen;
+          jj_la1[4] = jj_gen;
           break label_3;
         }
         jj_consume_token(10);
@@ -183,7 +195,7 @@ public class RpclCondensedProbabilityDistributionParser implements RpclCondensed
       }
       break;
     default:
-      jj_la1[4] = jj_gen;
+      jj_la1[5] = jj_gen;
       ;
     }
     jj_consume_token(11);
@@ -211,7 +223,7 @@ public class RpclCondensedProbabilityDistributionParser implements RpclCondensed
         ;
         break;
       default:
-        jj_la1[5] = jj_gen;
+        jj_la1[6] = jj_gen;
         break label_4;
       }
       jj_consume_token(10);
@@ -239,13 +251,13 @@ public class RpclCondensedProbabilityDistributionParser implements RpclCondensed
   static public Token jj_nt;
   static private int jj_ntk;
   static private int jj_gen;
-  static final private int[] jj_la1 = new int[6];
+  static final private int[] jj_la1 = new int[7];
   static private int[] jj_la1_0;
   static {
       jj_la1_init_0();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x200,0x400,0x1000,0x400,0x200,0x400,};
+      jj_la1_0 = new int[] {0x200,0xc0,0x400,0x1000,0x400,0x200,0x400,};
    }
 
   /** Constructor with InputStream. */
@@ -266,7 +278,7 @@ public class RpclCondensedProbabilityDistributionParser implements RpclCondensed
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 6; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 7; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -280,7 +292,7 @@ public class RpclCondensedProbabilityDistributionParser implements RpclCondensed
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 6; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 7; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -297,7 +309,7 @@ public class RpclCondensedProbabilityDistributionParser implements RpclCondensed
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 6; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 7; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -307,7 +319,7 @@ public class RpclCondensedProbabilityDistributionParser implements RpclCondensed
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 6; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 7; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -323,7 +335,7 @@ public class RpclCondensedProbabilityDistributionParser implements RpclCondensed
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 6; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 7; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -332,7 +344,7 @@ public class RpclCondensedProbabilityDistributionParser implements RpclCondensed
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 6; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 7; i++) jj_la1[i] = -1;
   }
 
   static private Token jj_consume_token(int kind) throws ParseException {
@@ -376,7 +388,7 @@ public class RpclCondensedProbabilityDistributionParser implements RpclCondensed
       return (jj_ntk = jj_nt.kind);
   }
 
-  static private java.util.List<int[]> jj_expentries = new java.util.ArrayList<int[]>();
+  static private java.util.List jj_expentries = new java.util.ArrayList();
   static private int[] jj_expentry;
   static private int jj_kind = -1;
 
@@ -388,7 +400,7 @@ public class RpclCondensedProbabilityDistributionParser implements RpclCondensed
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < 7; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {
@@ -406,7 +418,7 @@ public class RpclCondensedProbabilityDistributionParser implements RpclCondensed
     }
     int[][] exptokseq = new int[jj_expentries.size()][];
     for (int i = 0; i < jj_expentries.size(); i++) {
-      exptokseq[i] = jj_expentries.get(i);
+      exptokseq[i] = (int[])jj_expentries.get(i);
     }
     return new ParseException(token, exptokseq, tokenImage);
   }

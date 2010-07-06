@@ -14,6 +14,7 @@ import edu.cs.ai.kr.rpcl.parser.rpclcondensedprobabilitydistributionparser.*;
 import edu.cs.ai.kr.rpcl.parser.rpclprobabilitydistributionparser.*;
 import edu.cs.ai.kr.rpcl.semantics.*;
 import edu.cs.ai.kr.rpcl.writers.*;
+import edu.cs.ai.math.opt.*;
 import edu.cs.ai.util.*;
 
 /**
@@ -70,9 +71,9 @@ public class TweetyCli {
 	
 	
 	/** The input file */
-	private static String[] inputFiles = null;
+	private static String[] inputFiles = new String[1];
 	/** The parser used for reading the input file */
-	private static Object[] inputParser = null;
+	private static Object[] inputParser = new Object[1];
 	/** The output file */
 	private static String outputFile = null;
 	/** The writer used for writing the output file. */
@@ -95,7 +96,7 @@ public class TweetyCli {
 	 * Current program call:<br>
 	 * - java -jar TweetyCLI.jar --input RPCLKBFILE --parser rpclme --output RPCLPROBFILE --writer X
 	 * 		--options [rpcl.semantics=Y,rpcl.inference=Z]<br>	 * 
-	 * - java  -jar TweetyCLI.jar --input RPCLKBFILE RPCLPROBFILE --parser rpclme X --query=SOMEQUERY
+	 * - java -jar TweetyCLI.jar --input RPCLKBFILE RPCLPROBFILE --parser rpclme X --query=SOMEQUERY
 	 * 		--options [rpcl.semantics=Y,rpcl.inference=Z] 
 	 * 		
 	 * with X\in{rpclmeProb, rpclmeCondProb}, Y\in {averaging,aggregating}, Z\in{standard,lifted}<br>
@@ -152,12 +153,6 @@ public class TweetyCli {
 				query = args[++i];
 		}
 		
-		inputFiles = new String[2]; inputFiles[0] = "/Users/mthimm/Desktop/test"; inputFiles[1] = "/Users/mthimm/Desktop/output";
-		options = "[rpcl.semantics=averaging,rpcl.inference=lifted]";
-		inputParser = new Object[2]; inputParser[0] = new RpclParser(); inputParser[1] = new RpclCondensedProbabilityDistributionParser();
-		query = "bird(a)";
-		logLevel = TweetyConfiguration.LogLevel.INFO; 
-		
 		// TODO customize the following
 		Properties properties = new Properties();
 		properties.put("log4j.rootLogger", logLevel.toString() + ",mainlogger");
@@ -187,11 +182,12 @@ public class TweetyCli {
 		// perform inference
 		try{
 			RpclBeliefSet kb = (RpclBeliefSet)((RpclParser) inputParser[0]).parseBeliefBaseFromFile(inputFiles[0]);
-			if(inputFiles.length == 1){
+			if(inputFiles.length == 1){				
 				RpclMeReasoner reasoner = new RpclMeReasoner(kb,semantics,(FolSignature)((RpclParser) inputParser[0]).getSignature(),inferenceType);
 				ProbabilityDistribution p = reasoner.getMeDistribution();
 				outputWriter.setObject(p);
-				outputWriter.writeToFile(outputFile);			
+				outputWriter.writeToFile(outputFile);
+				System.exit(0);
 			}else if(inputParser[1] instanceof RpclProbabilityDistributionParser) {
 				((RpclProbabilityDistributionParser)inputParser[1]).setSemantics(semantics);
 				((RpclProbabilityDistributionParser)inputParser[1]).setSignature((FolSignature)((RpclParser) inputParser[0]).getSignature());
@@ -199,7 +195,9 @@ public class TweetyCli {
 				FolParser folParser = new FolParser();
 				folParser.setSignature((FolSignature)((RpclParser) inputParser[0]).getSignature());
 				Probability result = p.probability((FolFormula)folParser.parseFormula(query));
-				log.info("Probability of " + query + " is: " + result.getValue());
+				log.info("Probability of '" + query + "' on knowledge base '" + kb + "'  is: " + result.getValue());
+				System.out.println(result.getValue());
+				System.exit(0);
 			}else if(inputParser[1] instanceof RpclCondensedProbabilityDistributionParser) {
 				((RpclCondensedProbabilityDistributionParser)inputParser[1]).setSemantics(semantics);
 				((RpclCondensedProbabilityDistributionParser)inputParser[1]).setSignature((FolSignature)((RpclParser) inputParser[0]).getSignature());
@@ -207,18 +205,21 @@ public class TweetyCli {
 				FolParser folParser = new FolParser();
 				folParser.setSignature((FolSignature)((RpclParser) inputParser[0]).getSignature());
 				Probability result = p.probability((FolFormula)folParser.parseFormula(query));
-				log.info("Probability of " + query + " is: " + result.getValue());
+				log.info("Probability of '" + query + "' on knowledge base '" + kb + "' is: " + result.getValue());
+				System.out.println(result.getValue());
+				System.exit(0);
 			}else log.error("Wrong parser");
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.getMessage());			
 		} catch (ParserException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.getMessage());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.getMessage());
+		} catch (ProblemInconsistentException e){
+			log.error(e.getMessage());
 		}
-		log.info("Application terminated.");		
+		log.info("Application terminated with errors.");
+		System.err.println("Error: see log for details.");
+		System.exit(1);
 	}
 }
