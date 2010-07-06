@@ -75,6 +75,32 @@ public class InstanceAssignment extends HashMap<Collection<? extends Constant>,I
 	}
 	
 	/* (non-Javadoc)
+	 * @see java.util.AbstractMap#toString()
+	 */
+	public String toString(){
+		String result = "<" + this.predicate.toString() + ", {";
+		boolean first1 = true;
+		for(Collection<? extends Constant> constants: this.keySet()){
+			String constantString = "{";
+			boolean first2 = true;
+			for(Constant c: constants)
+				if(first2){
+					constantString += c.toString();
+					first2 = false;
+				}else constantString += "," + c.toString();
+			constantString += "}";
+			if(first1){
+				result += constantString + " = " + this.get(constants); 
+				first1 = false;
+			}else {
+				result += "," + constantString + " = " + this.get(constants);
+			}
+		}
+		result += "}>";
+		return result;
+	}
+	
+	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override

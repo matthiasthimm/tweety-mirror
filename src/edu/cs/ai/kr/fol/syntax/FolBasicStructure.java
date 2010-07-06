@@ -92,13 +92,13 @@ public abstract class FolBasicStructure {
 	 */
 	public String toString(){
 		String s = this.name;
-		Iterator<Sort> it = this.arguments.iterator();
+		/*Iterator<Sort> it = this.arguments.iterator();
 		if(!it.hasNext())
 			return s;
 		s += "(" + it.next();
 		while(it.hasNext())
 			s += "," + it.next();
-		s += ")";		
+		s += ")";*/		
 		return s;
 	}
 

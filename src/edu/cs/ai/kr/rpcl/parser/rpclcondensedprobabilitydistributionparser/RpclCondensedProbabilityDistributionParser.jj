@@ -13,7 +13,6 @@ import java.io.*;
 import java.util.*;
 import edu.cs.ai.kr.*;
 import edu.cs.ai.kr.fol.syntax.*;
-import edu.cs.ai.kr.fol.semantics.*;
 import edu.cs.ai.kr.rpcl.*;
 import edu.cs.ai.kr.rpcl.semantics.*;
 import edu.cs.ai.util.*;
@@ -43,6 +42,9 @@ public class RpclCondensedProbabilityDistributionParser {
 	 * The signature for this parser (if one has been given)
 	 */
 	private FolSignature signature = null;
+
+	public RpclCondensedProbabilityDistributionParser(){
+	}
 	
 	public RpclCondensedProbabilityDistributionParser(RpclSemantics semantics){
 		this(semantics,null);		
@@ -53,6 +55,14 @@ public class RpclCondensedProbabilityDistributionParser {
 		this.signature = signature;
 	}
 
+	public void setSemantics(RpclSemantics semantics){
+	 	this.semantics = semantics;
+	}
+
+	public void setSignature(FolSignature signature){
+	 	this.signature = signature;
+	}
+	
   	public CondensedProbabilityDistribution parseCondensedProbabilityDistribution(Reader reader) throws ParserException{
   	  	try
   	  	{

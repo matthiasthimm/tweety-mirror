@@ -4,7 +4,6 @@ import java.io.*;
 import java.util.*;
 import edu.cs.ai.kr.*;
 import edu.cs.ai.kr.fol.syntax.*;
-import edu.cs.ai.kr.fol.semantics.*;
 import edu.cs.ai.kr.rpcl.*;
 import edu.cs.ai.kr.rpcl.semantics.*;
 import edu.cs.ai.util.*;
@@ -180,7 +179,7 @@ public static final String[] jjstrLiteralImages = {
 
 /** Lexer state names. */
 public static final String[] lexStateNames = {
-   "DEFAULT", 
+   "DEFAULT",
 };
 static final long[] jjtoToken = {
    0x3fe1L, 
@@ -276,13 +275,13 @@ public static Token getNextToken()
 
   EOFLoop :
   for (;;)
-  {   
-   try   
-   {     
+  {
+   try
+   {
       curChar = input_stream.BeginToken();
-   }     
+   }
    catch(java.io.IOException e)
-   {        
+   {
       jjmatchedKind = 0;
       matchedToken = jjFillToken();
       return matchedToken;

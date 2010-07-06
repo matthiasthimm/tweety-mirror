@@ -5,7 +5,6 @@ import java.io.*;
 import java.util.*;
 import edu.cs.ai.kr.*;
 import edu.cs.ai.kr.fol.syntax.*;
-import edu.cs.ai.kr.fol.semantics.*;
 import edu.cs.ai.kr.rpcl.*;
 import edu.cs.ai.kr.rpcl.semantics.*;
 import edu.cs.ai.util.*;
@@ -37,12 +36,23 @@ public class RpclCondensedProbabilityDistributionParser implements RpclCondensed
 	 */
         private FolSignature signature = null;
 
+        public RpclCondensedProbabilityDistributionParser(){
+        }
+
         public RpclCondensedProbabilityDistributionParser(RpclSemantics semantics){
                 this(semantics,null);
         }
 
         public RpclCondensedProbabilityDistributionParser(RpclSemantics semantics, FolSignature signature){
                 this.semantics = semantics;
+                this.signature = signature;
+        }
+
+        public void setSemantics(RpclSemantics semantics){
+                this.semantics = semantics;
+        }
+
+        public void setSignature(FolSignature signature){
                 this.signature = signature;
         }
 
@@ -366,7 +376,7 @@ public class RpclCondensedProbabilityDistributionParser implements RpclCondensed
       return (jj_ntk = jj_nt.kind);
   }
 
-  static private java.util.List jj_expentries = new java.util.ArrayList();
+  static private java.util.List<int[]> jj_expentries = new java.util.ArrayList<int[]>();
   static private int[] jj_expentry;
   static private int jj_kind = -1;
 
@@ -396,7 +406,7 @@ public class RpclCondensedProbabilityDistributionParser implements RpclCondensed
     }
     int[][] exptokseq = new int[jj_expentries.size()][];
     for (int i = 0; i < jj_expentries.size(); i++) {
-      exptokseq[i] = (int[])jj_expentries.get(i);
+      exptokseq[i] = jj_expentries.get(i);
     }
     return new ParseException(token, exptokseq, tokenImage);
   }

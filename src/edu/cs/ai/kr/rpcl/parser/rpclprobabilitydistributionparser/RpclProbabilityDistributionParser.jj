@@ -35,13 +35,15 @@ public class RpclProbabilityDistributionParser {
 	/**
      * The semantics used for the distribution to be read. 
      */
-	private RpclSemantics semantics;
+	private RpclSemantics semantics = null;
 	
 	/**
 	 * The signature for this parser (if one has been given)
 	 */
 	private FolSignature signature = null;
-	
+
+	public RpclProbabilityDistributionParser(){
+	}	
 	public RpclProbabilityDistributionParser(RpclSemantics semantics){
 		this(semantics,null);		
 	}
@@ -49,6 +51,13 @@ public class RpclProbabilityDistributionParser {
 	public RpclProbabilityDistributionParser(RpclSemantics semantics, FolSignature signature){
 		this.semantics = semantics;		
 		this.signature = signature;
+	}
+
+	public void setSemantics(RpclSemantics semantics){
+	 	this.semantics = semantics;	}	  
+
+	public void setSignature(FolSignature signature){
+	 	this.signature = signature;
 	}
 
   	public ProbabilityDistribution parseProbabilityDistribution(Reader reader) throws ParserException{

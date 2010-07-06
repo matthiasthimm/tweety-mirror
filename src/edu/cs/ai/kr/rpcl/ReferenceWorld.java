@@ -2,6 +2,8 @@ package edu.cs.ai.kr.rpcl;
 
 import java.util.*;
 
+import org.apache.commons.logging.*;
+
 import edu.cs.ai.kr.*;
 import edu.cs.ai.kr.fol.*;
 import edu.cs.ai.kr.fol.semantics.*;
@@ -16,6 +18,11 @@ import edu.cs.ai.util.*;
  */
 public class ReferenceWorld extends Interpretation implements Map<Predicate,InstanceAssignment>{
 
+	/**
+	 * Logger.
+	 */
+	private Log log = LogFactory.getLog(ReferenceWorld.class); 
+	
 	/**
 	 * The instance assignments of this reference worlds
 	 */
@@ -128,6 +135,7 @@ public class ReferenceWorld extends Interpretation implements Map<Predicate,Inst
 				result *= MathTools.binomial(
 						equivalenceClass.size()-this.getNumberOfOccurences(f, p, equivalenceClass, true)-this.getNumberOfOccurences(f, p, equivalenceClass, false),
 						this.get(p, equivalenceClass)-this.getNumberOfOccurences(f, p, equivalenceClass, true));
+		log.debug("Determined multiplicator for formula '" + f + "': " + result);
 		return result;
 	}
 	
@@ -142,25 +150,25 @@ public class ReferenceWorld extends Interpretation implements Map<Predicate,Inst
 	 * @return an integer describing the number of occurrences of instances of predicate "p" with a constant in "constants".
 	 */
 	private Integer getNumberOfOccurences(FolFormula f, Predicate p, Collection<? extends Constant> constants, boolean positive){
+		Integer result = 0;
 		if(f instanceof Tautology)
-			return this.spanNumber;
-		if(f instanceof Contradiction)
-			return 0;
-		if(f instanceof Atom){
+			result = this.spanNumber;
+		else if(f instanceof Contradiction)
+			result = 0;
+		else if(f instanceof Atom){
 			Atom a = (Atom) f;
-			return (a.getPredicate().equals(p) && constants.contains(a.getArguments().get(0)) && positive)?(1):(0);
-		}
-		if(f instanceof Negation){
-			return this.getNumberOfOccurences(((Negation)f).getFormula(), p, constants, !positive);
-		}
-		if(f instanceof Conjunction){
-			Integer result = 0;
+			result = (a.getPredicate().equals(p) && constants.contains(a.getArguments().get(0)) && positive)?(1):(0);
+		}else if(f instanceof Negation){
+			result = this.getNumberOfOccurences(((Negation)f).getFormula(), p, constants, !positive);
+		}else if(f instanceof Conjunction){
+			result = 0;
 			for(RelationalFormula g: (Conjunction)f ){
 				result += this.getNumberOfOccurences((FolFormula)g, p, constants, positive);
-			}
-			return result;
-		}
-		throw new IllegalArgumentException("The given formula is neither a literal nor a conjunction.");
+			}			
+		}else 
+			throw new IllegalArgumentException("The given formula is neither a literal nor a conjunction.");
+		log.debug("Determined number of occurences of '" + f + "' in reference world '" + this + "' in " + ((positive)?("positive"):("negative")) + " form: " + result );
+		return result;
 	}
 		
 	/**
