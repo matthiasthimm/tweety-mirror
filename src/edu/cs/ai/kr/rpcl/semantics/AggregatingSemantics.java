@@ -76,5 +76,12 @@ public class AggregatingSemantics extends AbstractRpclSemantics {
 			return new Equation(nominator,denominator.mult(new FloatConstant(r.getProbability().getValue())));
 		}
 	}
+	
+	/* (non-Javadoc)
+	 * @see edu.cs.ai.kr.rpcl.semantics.AbstractRpclSemantics#toString()
+	 */
+	public String toString(){
+		return "Aggregating Semantics";
+	}
 
 }

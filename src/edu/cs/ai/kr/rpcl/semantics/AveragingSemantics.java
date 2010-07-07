@@ -79,5 +79,12 @@ public class AveragingSemantics extends AbstractRpclSemantics {
 			return new Equation(new Sum(summands),rightTerm);
 		}
 	}
+	
+	/* (non-Javadoc)
+	 * @see edu.cs.ai.kr.rpcl.semantics.AbstractRpclSemantics#toString()
+	 */
+	public String toString(){
+		return "Averaging Semantics";
+	}
 
 }

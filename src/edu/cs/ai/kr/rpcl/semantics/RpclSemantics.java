@@ -34,4 +34,9 @@ public interface RpclSemantics {
 	 * of the given conditional wrt. this semantics and the given signature.
 	 */
 	public Statement getSatisfactionStatement(RelationalProbabilisticConditional r, FolSignature signature, Map<? extends Interpretation,FloatVariable> worlds2vars);
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString();
 }

@@ -26,6 +26,11 @@ public abstract class AbstractRpclSemantics implements RpclSemantics {
 	public abstract boolean satisfies(ProbabilityDistribution p, RelationalProbabilisticConditional r);
 
 	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	public abstract String toString();
+	
+	/* (non-Javadoc)
 	 * @see edu.cs.ai.kr.rpcl.semantics.RpclSemantics#getSatisfactionStatement(edu.cs.ai.kr.rpcl.syntax.RelationalProbabilisticConditional, edu.cs.ai.kr.fol.syntax.FolSignature, java.util.Map)
 	 */
 	@Override

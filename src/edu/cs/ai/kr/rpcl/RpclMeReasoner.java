@@ -136,7 +136,7 @@ public class RpclMeReasoner extends Reasoner {
 	 */	
 	private ProbabilityDistribution computeMeDistribution() throws ProblemInconsistentException{		
 		RpclBeliefSet kb = ((RpclBeliefSet)this.getKnowledgBase());
-		this.log.info("Computing ME-distribution for the knowledge base " + kb.toString() + ".");
+		this.log.info("Computing ME-distribution using \"" + this.semantics.toString() + "\" and " + ((this.inferenceType==RpclMeReasoner.LIFTED_INFERENCE)?("lifted"):("standard")) + " inference for the knowledge base " + kb.toString() + ".");
 		// TODO extract common parts from the following if/else
 		this.log.info("Constructing optimization problem for finding the ME-distribution.");
 		if(this.inferenceType == RpclMeReasoner.LIFTED_INFERENCE){
