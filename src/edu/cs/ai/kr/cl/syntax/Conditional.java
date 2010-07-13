@@ -22,8 +22,8 @@ public class Conditional implements ClassicalFormula, Rule {
 	private PropositionalFormula conclusion;
 	
 	/**
-	 * Creates a new conditional with a tautological given premise
-	 * andgiven  conclusion.
+	 * Creates a new conditional with a tautological premise
+	 * and given conclusion.
 	 * @param conclusion the conclusion (a formula) of this conditional.
 	 */
 	public Conditional(PropositionalFormula conclusion){
@@ -58,6 +58,15 @@ public class Conditional implements ClassicalFormula, Rule {
 		return this.conclusion;
 	}
 		
+	/**
+	 * Checks whether this conditional is a fact, i.e.
+	 * has a tautological premise.
+	 * @return "true" iff this conditional is a fact.
+	 */
+	public boolean isFact(){
+		return (this.premise instanceof Tautology);
+	}
+	
 	/* (non-Javadoc)
 	 * @see edu.cs.ai.kr.Formula#getSignature()
 	 */

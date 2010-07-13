@@ -13,7 +13,7 @@ import edu.cs.ai.util.*;
  * This class implements a parser for relational probabilistic conditional logic. The BNF for a conditional
  * knowledge base is given by (starting symbol is KB)
  * <br>
- * <br> KB 			::== SORTSDEC PREDDECS CONDITIONALS
+ * <br> KB 			::== SORTSDEC PREDDECS (CONDITIONAL "\n")*
  * <br> SORTSDEC    ::== ( SORTNAME "=" "{" (CONSTANTNAME ("," CONSTANTNAME)*)? "}" "\n" )*
  * <br> PREDDECS	::== ( "type" "(" PREDICATENAME "(" (SORTNAME ("," SORTNAME)*)? ")" ")" "\n" )*
  * <br> CONDITIONAL ::== "(" FORMULA ")" "[" PROB "]" | "(" FORMULA "|" FORMULA ")" "[" PROB "]" 
