@@ -91,6 +91,24 @@ public class TweetyCli {
 	private static String query = null;
 	
 	/**
+	 * Initialize the logging system.
+	 */
+	public static void initLogging(){
+		// TODO customize the following
+		Properties properties = new Properties();
+		properties.put("log4j.rootLogger", logLevel.toString() + ",mainlogger");
+		properties.put("log4j.appender.mainlogger.layout","org.apache.log4j.PatternLayout");
+		properties.put("log4j.appender.mainlogger.layout.ConversionPattern","%5p [%t] %C{1}.%M%n      %m%n");
+
+		if(logFile != null){
+			properties.put("log4j.appender.mainlogger","org.apache.log4j.RollingFileAppender");
+			properties.put("log4j.appender.mainlogger.File",logFile);
+		}else
+			properties.put("log4j.appender.mainlogger","org.apache.log4j.ConsoleAppender");
+		PropertyConfigurator.configure(properties);
+	}
+	
+	/**
 	 * Program entry.<br>
 	 * <br>
 	 * Current program call:<br>
@@ -153,18 +171,7 @@ public class TweetyCli {
 				query = args[++i];
 		}
 		
-		// TODO customize the following
-		Properties properties = new Properties();
-		properties.put("log4j.rootLogger", logLevel.toString() + ",mainlogger");
-		properties.put("log4j.appender.mainlogger.layout","org.apache.log4j.PatternLayout");
-		properties.put("log4j.appender.mainlogger.layout.ConversionPattern","%5p [%t] %C{1}.%M%n      %m%n");
-
-		if(logFile != null){
-			properties.put("log4j.appender.mainlogger","org.apache.log4j.RollingFileAppender");
-			properties.put("log4j.appender.mainlogger.File",logFile);
-		}else
-			properties.put("log4j.appender.mainlogger","org.apache.log4j.ConsoleAppender");
-		PropertyConfigurator.configure(properties);
+		TweetyCli.initLogging();
 		
 		log.info("Start logging.");
 		

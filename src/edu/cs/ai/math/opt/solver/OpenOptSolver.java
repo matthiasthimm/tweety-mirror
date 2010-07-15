@@ -57,6 +57,7 @@ public class OpenOptSolver extends Solver {
 	 * @param problem a csp.
 	 */
 	public OpenOptSolver(OptimizationProblem problem, Map<Variable,Term> startingPoint) {
+		// TODO add constructor without starting point and compute starting point using a rootFinder 
 		super(problem);
 		this.startingPoint = startingPoint;
 	}

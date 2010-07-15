@@ -68,9 +68,11 @@ public class PclDefaultConsistencyTester implements ConsistencyTester {
 						if(rightSide == null)
 							rightSide = worlds2vars.get(w);
 						else rightSide = rightSide.add(worlds2vars.get(w));
-					}
-					rightSide = rightSide.mult(new FloatConstant(c.getProbability().getValue()));
+					}					
 				}
+				if(rightSide == null)
+					rightSide = new FloatConstant(0);
+				else rightSide = rightSide.mult(new FloatConstant(c.getProbability().getValue()));
 			}
 			functions.add(leftSide.minus(rightSide));			
 		}

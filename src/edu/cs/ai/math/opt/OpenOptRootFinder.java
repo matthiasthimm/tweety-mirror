@@ -42,7 +42,14 @@ public class OpenOptRootFinder extends OptimizationRootFinder {
 		solver.xtol = 1e-16;
 		solver.ftol = 1e-16;
 		solver.gtol = 1e-16;
-		return solver.solve();
+		Map<Variable,Term> solution = solver.solve();
+		// Check whether the solution is really a root
+		for(Term t: this.getFunctions()){
+			Double val = t.replaceAllTerms(solution).doubleValue();
+			if(val < -RootFinder.PRECISION || val > RootFinder.PRECISION  )
+				throw new GeneralMathException("The given function has no root.");
+		}
+		return solution;
 	}
 
 }

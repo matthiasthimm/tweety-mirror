@@ -1,4 +1,4 @@
-package edu.cs.ai.kr.pcl.syntax.parser;
+package edu.cs.ai.kr.pcl.parser;
 
 import java.io.*;
 
