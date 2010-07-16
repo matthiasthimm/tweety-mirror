@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="update_latest_build" name="Update the latest build (JAR) in the latest builds folder">
+	<target name="update_latest_build" description="Update the latest build (JAR) in the latest builds folder">
+		<jar destfile="../../latestBuild/net-sf-tweety-math.jar">
+	    	<fileset dir="bin" includes="**/*.class"/>
+			<zipfileset dir="lib" includes="choco-1_2_03.jar"/>
+			<zipfileset dir="lib" includes="commons-math-2.1-javadoc.jar"/>
+			<zipfileset dir="lib" includes="commons-math-2.1-sources.jar"/>
+			<zipfileset dir="lib" includes="commons-math-2.1.jar"/>
+			<zipfileset dir="lib" includes="cream106.jar"/>
+			<zipfileset dir="lib" includes="LBFGS-java-class.jar"/>
+			<zipfileset dir="lib" includes="LBFGS-java-src.jar"/>
+			<zipfileset dir="lib" includes="qoca.jar"/>
+		</jar>
+	</target>	
+</project>

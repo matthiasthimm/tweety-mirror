@@ -1,0 +1,30 @@
+package net.sf.tweety.agents.structuredargumentationsystems;
+
+import java.util.*;
+
+import net.sf.tweety.agents.*;
+import net.sf.tweety.argumentation.dung.semantics.*;
+import net.sf.tweety.argumentation.dung.syntax.*;
+
+/**
+ * This class packs an extension into an executable object.
+ * 
+ * @author Matthias Thimm
+ */
+public class ExecutableExtension extends Extension implements Executable {
+
+	/**
+	 * Creates a new empty extension.
+	 */
+	public ExecutableExtension() {
+		super();
+	}
+	
+	/**
+	 * Creates a new extension for the given arguments.
+	 * @param arguments a collection of arguments.
+	 */
+	public ExecutableExtension(Collection<? extends Argument> arguments) {
+		super(arguments);
+	}
+}
