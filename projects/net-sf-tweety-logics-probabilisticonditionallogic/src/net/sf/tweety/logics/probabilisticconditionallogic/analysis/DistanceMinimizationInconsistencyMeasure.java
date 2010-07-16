@@ -67,7 +67,7 @@ public class DistanceMinimizationInconsistencyMeasure implements InconsistencyMe
 			else normConstraint = normConstraint.add(var);
 		}		
 		problem.add(new Equation(normConstraint, new IntegerConstant(1)));
-		// For each conditional add variables tau and eta
+		// For each conditional add variables tau and eta and
 		// add constraints implied by the conditionals
 		Map<ProbabilisticConditional,Variable> taus = new HashMap<ProbabilisticConditional,Variable>();
 		Map<ProbabilisticConditional,Variable> etas = new HashMap<ProbabilisticConditional,Variable>();
@@ -118,13 +118,13 @@ public class DistanceMinimizationInconsistencyMeasure implements InconsistencyMe
 		Map<Variable,Term> startingPoint = new HashMap<Variable,Term>();
 		for(Variable v: problem.getVariables())
 			startingPoint.put(v, new FloatConstant(0));
-		// all statement are equations
+		// all statements are equations
 		for(Statement s: problem)
 			functions.add(s.getLeftTerm().minus(s.getRightTerm()));
 		RootFinder rootFinder = new OpenOptRootFinder(functions,startingPoint);
 		// Solve the problem using the OpenOpt library
 		this.log.trace("Problem prepared, now finding feasible starting point.");
-		try{
+		try{			
 			Map<Variable,Term> startingPointForOptimization = rootFinder.randomRoot();
 			this.log.trace("Starting point found, now solving the main problem.");
 			Solver solver = new OpenOptSolver(problem,startingPointForOptimization);
@@ -140,7 +140,6 @@ public class DistanceMinimizationInconsistencyMeasure implements InconsistencyMe
 			throw new RuntimeException("Fatal error: Optimization problem to compute the minimal distance to a consistent knowledge base is not feasible.");
 		}		
 	}
-
 	
 	public static void main(String[] args){
 		//TweetyCli.initLogging();
@@ -148,10 +147,14 @@ public class DistanceMinimizationInconsistencyMeasure implements InconsistencyMe
 		try {
 			long millis = System.currentTimeMillis();
 			PclBeliefSet beliefSet = (PclBeliefSet) new net.sf.tweety.logics.probabilisticconditionallogic.parser.PclParser().parseBeliefBaseFromFile(file);
-			System.out.println(new DistanceMinimizationInconsistencyMeasure().inconsistencyMeasure(beliefSet));
+			//System.out.println(new DistanceMinimizationInconsistencyMeasure().inconsistencyMeasure(beliefSet));
 			ShapleyCulpabilityMeasure shapley = new ShapleyCulpabilityMeasure(new DistanceMinimizationInconsistencyMeasure());
-			for(ProbabilisticConditional pc: beliefSet)
+			System.out.println(beliefSet);
+			System.out.println(new PclBeliefSetQuadraticErrorMinimizationMachineShop(shapley).repair(beliefSet));
+			/*for(ProbabilisticConditional pc: beliefSet)
 				System.out.println(pc + " - " +  shapley.culpabilityMeasure(beliefSet, pc));
+			for(Set<Formula> f: new PclDefaultConsistencyTester().minimalInconsistentSubsets(beliefSet))
+				System.out.println("MinIncon " + f);*/
 			System.out.println("Time: " + (System.currentTimeMillis()-millis) + "ms");
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block

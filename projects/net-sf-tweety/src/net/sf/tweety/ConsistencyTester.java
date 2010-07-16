@@ -7,7 +7,7 @@ package net.sf.tweety;
  * @author Matthias Thimm
  */
 public interface ConsistencyTester {
-
+	
 	/**
 	 * Checks whether the given belief base is consistent.
 	 * @param beliefBase a belief base.

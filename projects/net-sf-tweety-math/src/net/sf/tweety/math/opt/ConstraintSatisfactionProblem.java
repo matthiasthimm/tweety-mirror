@@ -18,6 +18,21 @@ public class ConstraintSatisfactionProblem extends HashSet<Statement>{
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * Creates a new and empty csp.
+	 */
+	public ConstraintSatisfactionProblem(){
+		super();
+	}
+	
+	/**
+	 * Creates a new csp with the given statements
+	 * @param statements a collection of statements.
+	 */
+	public ConstraintSatisfactionProblem(Collection<? extends Statement> statements){
+		super(statements);
+	}
+	
+	/**
 	 * Normalizes this problem, i.e. every constraint is brought into
 	 * an equivalent form "T > 0" or "T >= 0" or "T = 0" or "T != 0". 
 	 * @return a csp.
@@ -28,7 +43,7 @@ public class ConstraintSatisfactionProblem extends HashSet<Statement>{
 			csp.add(s.toNormalizedForm());
 		return csp;
 	}
-	
+		
 	/**
 	 * Checks whether every constraint of this problem is linear.
 	 * @return "true" if every constraint of this problem is linear.
@@ -139,6 +154,14 @@ public class ConstraintSatisfactionProblem extends HashSet<Statement>{
 		for(Statement c: this)
 			s += c + "\n";
 		return s;
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.util.HashSet#clone()
+	 */
+	@SuppressWarnings("unchecked")
+	public ConstraintSatisfactionProblem clone(){
+		return new ConstraintSatisfactionProblem((Set<Statement>)super.clone());
 	}
 		
 }

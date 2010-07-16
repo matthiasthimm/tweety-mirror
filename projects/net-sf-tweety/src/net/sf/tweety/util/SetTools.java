@@ -33,6 +33,49 @@ public class SetTools<E> {
 	}	
 	
 	/**
+	 * This method computes all subsets of the given set of elements
+	 * of class "E" with the given size.
+	 * @param elements a set of elements of class "E".
+	 * @param size some int.
+	 * @return all subsets of "elements" of the given size.
+	 */
+	public Set<Set<E>> subsets(Collection<? extends E> elements, int size){
+		if(size < 0)
+			throw new IllegalArgumentException("Size must be at least zero.");
+		Set<Set<E>> subsets = new HashSet<Set<E>>();		
+		if(size == 0){
+			subsets.add(new HashSet<E>());
+			return subsets;
+		}		
+		if(elements.size() < size)
+			return subsets;		
+		if(elements.size() == size){
+			subsets.add(new HashSet<E>(elements));
+			return subsets;
+		}			
+		if(size == 1){
+			for(E e: elements){
+				Set<E> set = new HashSet<E>();
+				set.add(e);
+				subsets.add(set);
+			}
+			return subsets;				
+		}
+		E element = elements.iterator().next();
+		Set<E> remainingElements = new HashSet<E>(elements);
+		remainingElements.remove(element);
+		Set<Set<E>> subsubsets = this.subsets(remainingElements,size-1);
+		for(Set<E> subsubset: subsubsets){
+			subsubset.add(element);
+			subsets.add(new HashSet<E>(subsubset));				
+		}
+		subsubsets = this.subsets(remainingElements,size);
+		for(Set<E> subsubset: subsubsets)		
+			subsets.add(new HashSet<E>(subsubset));		
+		return subsets;
+	}	
+	
+	/**
 	 * Computes all permutations of elements in partitions as follows.
 	 * For any set A in the result and any set B in partitions it holds,
 	 * that exactly one element of B is in A. For example<br>

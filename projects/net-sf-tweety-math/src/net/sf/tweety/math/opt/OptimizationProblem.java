@@ -334,4 +334,15 @@ public class OptimizationProblem extends ConstraintSatisfactionProblem {
 		s += super.toString();
 		return s;
 	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.opt.ConstraintSatisfactionProblem#clone()
+	 */
+	public OptimizationProblem clone(){
+		OptimizationProblem clone = new OptimizationProblem(this.type);
+		clone.addAll(this);
+		clone.setTargetFunction(this.targetFunction);
+		clone.setPenalty(this.penalty);
+		return clone;
+	}
 }

@@ -58,15 +58,8 @@ public class OpenOptSolver extends Solver {
 	 */
 	public OpenOptSolver(OptimizationProblem problem, Map<Variable,Term> startingPoint) {
 		// TODO add constructor without starting point and compute starting point using a rootFinder 
-		super(problem);
+		super(problem.clone());
 		this.startingPoint = startingPoint;
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.math.opt.Solver#solve()
-	 */
-	@Override
-	public Map<Variable, Term> solve() throws GeneralMathException {
 		// do a renaming of variables		
 		int idx = 0;
 		for(Variable v: this.getProblem().getVariables()){
@@ -76,6 +69,13 @@ public class OpenOptSolver extends Solver {
 			this.idx2newVars.put(idx,newV);
 			idx++;
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.opt.Solver#solve()
+	 */
+	@Override
+	public Map<Variable, Term> solve() throws GeneralMathException {		
 		String output = "";
 		String error = "";
 		try{
@@ -85,7 +85,7 @@ public class OpenOptSolver extends Solver {
 			// Write to temp file
 			BufferedWriter out = new BufferedWriter(new FileWriter(ooFile));
 			this.log.info("Building Python code for OpenOpt.");
-			out.write(this.buildOpenOptCode());			
+			out.write(this.getOpenOptCode());			
 			out.close();
 			//execute openopt on problem and retrieve console output
 			this.log.info("Calling OpenOpt optimization library.");
@@ -123,8 +123,13 @@ public class OpenOptSolver extends Solver {
 			throw new GeneralMathException(e.getMessage());
 		}
 	}
-	
-	private String buildOpenOptCode() throws NonDifferentiableException{
+
+	/**
+	 * Builds the OpenOpt code for the given problem which can be interpreted
+	 * by a python.
+	 * @return the python code for the given problem
+	 */
+	public String getOpenOptCode(){
 		OptimizationProblem problem = (OptimizationProblem)this.getProblem();
 		// replace vars
 		problem.setTargetFunction(problem.getTargetFunction().replaceAllTerms(this.oldVars2newVars));

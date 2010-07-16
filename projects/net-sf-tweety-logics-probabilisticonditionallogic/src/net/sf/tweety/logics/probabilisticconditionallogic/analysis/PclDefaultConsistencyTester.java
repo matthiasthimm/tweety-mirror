@@ -18,8 +18,8 @@ import net.sf.tweety.math.term.*;
  * 
  * @author Matthias Thimm
  */
-public class PclDefaultConsistencyTester implements ConsistencyTester {
-
+public class PclDefaultConsistencyTester extends BeliefSetConsistencyTester {
+	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.kr.ConsistencyTester#isConsistent(net.sf.tweety.kr.BeliefBase)
 	 */
@@ -88,6 +88,20 @@ public class PclDefaultConsistencyTester implements ConsistencyTester {
 			return false;
 		}
 		return true;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.BeliefSetConsistencyTester#isConsistent(java.util.Set)
+	 */
+	@Override
+	public boolean isConsistent(Set<? extends Formula> beliefs) {
+		PclBeliefSet beliefSet = new PclBeliefSet();
+		for(Formula f: beliefs){
+			if(!(f instanceof ProbabilisticConditional))
+				throw new IllegalArgumentException("Formula of type probabilistic conditional expected.");
+			beliefSet.add((ProbabilisticConditional)f);
+		}
+		return this.isConsistent(beliefSet);
 	}
 
 }

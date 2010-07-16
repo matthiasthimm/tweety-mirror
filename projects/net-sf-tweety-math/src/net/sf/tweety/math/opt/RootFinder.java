@@ -17,7 +17,7 @@ public abstract class RootFinder {
 	/**
 	 * The precision for finding roots.
 	 */
-	public static final double PRECISION = 0.0000001;
+	public static double PRECISION = 0.00001;
 	
 	/**
 	 * The (multi-dimensional) function of this root finder.
