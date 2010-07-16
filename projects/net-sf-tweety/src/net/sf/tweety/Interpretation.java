@@ -19,7 +19,7 @@ public abstract class Interpretation {
 	
 	/**
 	 * Checks whether this interpretation satisfies all given formulas.
-	 * @param formula a collection of formulas.
+	 * @param formulas a collection of formulas.
 	 * @return "true" if this interpretation satisfies all given formulas. 
 	 * @throws IllegalArgumentException if at least one formula does not correspond
 	 * 		to the expected language.

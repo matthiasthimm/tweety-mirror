@@ -22,4 +22,18 @@ public class MathTools {
 		if(n == 0) return 0;		
 		return MathTools.binomial(n-1,k-1) + MathTools.binomial(n-1,k);		
 	}
+	
+	/**
+	 * Computes the faculty of the given number.
+	 * @param i an integer.
+	 * @return the value 1*...*i or 1 if i==0.
+	 */
+	public static int faculty(int i){
+		if(i < 0) return 0;
+		if(i == 0) return 1;
+		int result = 1;
+		for(int j = 2; j <= i; j++)
+			result *= j;
+		return result;
+	}
 }

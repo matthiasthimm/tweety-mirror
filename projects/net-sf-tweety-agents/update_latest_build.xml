@@ -3,6 +3,7 @@
 	<target name="update_latest_build" description="Update the latest build (JAR) in the latest builds folder">
 		<jar destfile="../../latestBuild/net-sf-tweety-agents.jar">
 	    	<fileset dir="bin" includes="**/*.class"/>
+			<fileset dir="src" includes="**/*.java"/>
 		</jar>
 	</target>	
 </project>

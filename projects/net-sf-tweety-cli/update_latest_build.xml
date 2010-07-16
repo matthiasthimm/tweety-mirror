@@ -5,6 +5,7 @@
 	    	<fileset dir="bin" includes="**/*.class"/>
 			<manifest>
 				<attribute name="Main-Class" value="net.sf.tweety.cli.TweetyCli" />
+				<fileset dir="src" includes="**/*.java"/>
 			</manifest>
 		</jar>
 	</target>	

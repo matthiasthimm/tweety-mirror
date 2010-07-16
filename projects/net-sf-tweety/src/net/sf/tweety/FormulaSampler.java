@@ -47,7 +47,6 @@ public abstract class FormulaSampler<T extends Formula> {
 	/**
 	 * This method randomly samples a single formula of the given signature
 	 * with the default maximal formula length. 
-	 * @param signature a signature.
 	 * @return a single formula.
 	 */
 	public T randomSample(){

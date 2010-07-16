@@ -100,6 +100,7 @@ public class OpenOptSolver extends Solver {
 	        while ((c = in.read()) != -1)
 	            error += (char)c;
 	        in.close();  
+	        child.destroy();
 		}catch(IOException e){
 			log.error(e.getMessage());
 			return null;

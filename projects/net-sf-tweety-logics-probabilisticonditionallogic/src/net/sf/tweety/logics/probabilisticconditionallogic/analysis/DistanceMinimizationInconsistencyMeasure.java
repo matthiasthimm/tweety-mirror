@@ -29,16 +29,27 @@ public class DistanceMinimizationInconsistencyMeasure implements InconsistencyMe
 	 */
 	private Log log = LogFactory.getLog(DistanceMinimizationInconsistencyMeasure.class);
 	
+	/**
+	 * For archiving.
+	 */
+	private Map<PclBeliefSet,Double> archive = new HashMap<PclBeliefSet,Double>();
+	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.probabilisticconditionallogic.analysis.InconsistencyMeasure#inconsistencyMeasure(net.sf.tweety.logics.probabilisticconditionallogic.PclBeliefSet)
 	 */
 	@Override
 	public Double inconsistencyMeasure(PclBeliefSet beliefSet) {
 		this.log.trace("Starting to compute minimal distance inconsistency measure for '" + beliefSet + "'.");
+		// check archive
+		if(this.archive.containsKey(beliefSet))
+			return this.archive.get(beliefSet);
 		// first check whether the belief set is consistent		
 		this.log.trace("Checking whether '" + beliefSet + "' is inconsistent.");
-		if(new PclDefaultConsistencyTester().isConsistent(beliefSet))
+		if(beliefSet.size() == 0 || new PclDefaultConsistencyTester().isConsistent(beliefSet)){
+			// update archive
+			this.archive.put(beliefSet, new Double(0));
 			return new Double(0);
+		}
 		this.log.trace("'" + beliefSet + "' is inconsistent, preparing optimization problem for computing the measure.");
 		// Create variables for the probability of each possible world and
 		// set up the optimization problem for computing the minimal
@@ -114,13 +125,15 @@ public class DistanceMinimizationInconsistencyMeasure implements InconsistencyMe
 		// Solve the problem using the OpenOpt library
 		this.log.trace("Problem prepared, now finding feasible starting point.");
 		try{
-			Map<Variable,Term> startingPointForOptimization =rootFinder.randomRoot();
+			Map<Variable,Term> startingPointForOptimization = rootFinder.randomRoot();
 			this.log.trace("Starting point found, now solving the main problem.");
 			Solver solver = new OpenOptSolver(problem,startingPointForOptimization);
 			Map<Variable,Term> solution = solver.solve();
 			Double result = targetFunction.replaceAllTerms(solution).doubleValue();
 			this.log.trace("Problem solved, the measure is '" + result + "'.");
-			//return value of target function
+			// update archive
+			this.archive.put(beliefSet, result);
+			// return value of target function
 			return result;
 		}catch (GeneralMathException e){
 			// This should not happen as the optimization problem is guaranteed to be feasible
@@ -133,9 +146,13 @@ public class DistanceMinimizationInconsistencyMeasure implements InconsistencyMe
 		//TweetyCli.initLogging();
 		String file = "/Users/mthimm/Desktop/pcl_test";
 		try {
+			long millis = System.currentTimeMillis();
 			PclBeliefSet beliefSet = (PclBeliefSet) new net.sf.tweety.logics.probabilisticconditionallogic.parser.PclParser().parseBeliefBaseFromFile(file);
 			System.out.println(new DistanceMinimizationInconsistencyMeasure().inconsistencyMeasure(beliefSet));
-			
+			ShapleyCulpabilityMeasure shapley = new ShapleyCulpabilityMeasure(new DistanceMinimizationInconsistencyMeasure());
+			for(ProbabilisticConditional pc: beliefSet)
+				System.out.println(pc + " - " +  shapley.culpabilityMeasure(beliefSet, pc));
+			System.out.println("Time: " + (System.currentTimeMillis()-millis) + "ms");
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

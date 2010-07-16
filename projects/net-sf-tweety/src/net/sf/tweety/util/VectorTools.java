@@ -14,7 +14,7 @@ public class VectorTools {
 	 * Computes the midpoint of the two given vectors.
 	 * @param left
 	 * @param right
-	 * @return
+	 * @return the midpoint of the two given vectors.
 	 */
 	public static double[] midPoint(double[] left, double[] right){
 		if(left.length != right.length)
@@ -28,7 +28,7 @@ public class VectorTools {
 	/**
 	 * Computes the sum of the elements in v
 	 * @param v
-	 * @return
+	 * @return the sum of the elements in v
 	 */
 	public static double sum(double[] v){
 		double result = 0;
@@ -41,7 +41,7 @@ public class VectorTools {
 	 * Computes the Manhattan distance between the two given vectors.
 	 * @param left
 	 * @param right
-	 * @return
+	 * @return the Manhattan distance between the two given vectors.
 	 */
 	public static double manhattanDistance(double[] left, double[] right){
 		if(left.length != right.length)
@@ -53,10 +53,10 @@ public class VectorTools {
 	}
 	
 	/**
-	 * Computes the Manhattan distance between the two given vectors.
+	 * Computes the Manhattan distance between the two given lists.
 	 * @param left
 	 * @param right
-	 * @return
+	 * @return the Manhattan distance between the two given lists.
 	 */
 	public static double manhattanDistance(List<Double> left, List<Double> right){
 		if(left.size() != right.size())
@@ -96,7 +96,7 @@ public class VectorTools {
 	 * equals "sum"
 	 * @param v
 	 * @param sum
-	 * @return
+	 * @return the normalized array
 	 */
 	public static double[] normalize(double[] v, double sum){
 		double[] result = new double[v.length];

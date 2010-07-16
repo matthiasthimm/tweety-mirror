@@ -39,10 +39,10 @@ public class OpenOptRootFinder extends OptimizationRootFinder {
 	public Map<Variable, Term> randomRoot() throws GeneralMathException {
 		OpenOptSolver solver = new OpenOptSolver(this.buildOptimizationProblem(),this.getStartingPoint());
 		// set some parameters
-		solver.contol = 1e-16;
-		solver.xtol = 1e-16;
-		solver.ftol = 1e-16;
-		solver.gtol = 1e-16;
+		solver.contol = 1e-15;
+		solver.xtol = 1e-15;
+		solver.ftol = 1e-15;
+		solver.gtol = 1e-15;
 		Map<Variable,Term> solution = solver.solve();
 		// Check whether the solution is really a root
 		for(Term t: this.getFunctions()){
