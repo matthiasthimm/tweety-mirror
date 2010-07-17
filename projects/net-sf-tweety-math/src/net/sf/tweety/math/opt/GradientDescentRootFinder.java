@@ -2,6 +2,8 @@ package net.sf.tweety.math.opt;
 
 import java.util.*;
 
+import org.apache.commons.logging.*;
+
 import net.sf.tweety.math.*;
 import net.sf.tweety.math.opt.solver.*;
 import net.sf.tweety.math.term.*;
@@ -15,6 +17,11 @@ import net.sf.tweety.math.term.*;
  *
  */
 public class GradientDescentRootFinder extends OptimizationRootFinder {
+	
+	/**
+	 * Logger.
+	 */
+	private Log log = LogFactory.getLog(GradientDescentRootFinder.class);
 	
 	/**
 	 * Creates a new root finder for the given starting point and the given function
@@ -37,7 +44,8 @@ public class GradientDescentRootFinder extends OptimizationRootFinder {
 	 * @see net.sf.tweety.math.opt.RootFinder#randomRoot()
 	 */
 	@Override
-	public Map<Variable, Term> randomRoot() throws GeneralMathException {			
+	public Map<Variable, Term> randomRoot() throws GeneralMathException {		
+		this.log.trace("Determining a random root of the function '" + this.getFunctions() + "' using the gradient descent root finder.");
 		return new GradientDescent(this.buildOptimizationProblem(),this.getStartingPoint()).solve();
 	}
 

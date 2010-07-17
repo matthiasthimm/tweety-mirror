@@ -2,6 +2,8 @@ package net.sf.tweety.math.opt.solver;
 
 import java.util.*;
 
+import org.apache.commons.logging.*;
+
 import net.sf.tweety.math.*;
 import net.sf.tweety.math.opt.*;
 import net.sf.tweety.math.term.*;
@@ -16,7 +18,12 @@ import net.sf.tweety.util.*;
  *
  */
 public class GradientDescent extends Solver {
-
+	
+	/**
+	 * Logger.
+	 */
+	private Log log = LogFactory.getLog(GradientDescent.class);
+	
 	/**
 	 * The precision of the approximation.
 	 * The actual used precision depends on the number of variables. 
@@ -26,7 +33,7 @@ public class GradientDescent extends Solver {
 	/**
 	 * The max step length for the gradient descent.
 	 */
-	private static final double MAX_STEP_LENGTH = 0.1;
+	private static final double MAX_STEP_LENGTH = 0.01;
 	
 	/**
 	 * The min step length for the gradient descent.
@@ -54,6 +61,7 @@ public class GradientDescent extends Solver {
 	 */
 	@Override
 	public Map<Variable, Term> solve() throws GeneralMathException {
+		this.log.trace("Solving the following optimization problem using gradient descent:\n===BEGIN===\n" + this.getProblem() + "\n===END===");
 		Term f = ((OptimizationProblem)this.getProblem()).getTargetFunction();
 		if(((OptimizationProblem)this.getProblem()).getType() == OptimizationProblem.MAXIMIZE)
 			f = new IntegerConstant(-1).mult(f);	
@@ -69,6 +77,7 @@ public class GradientDescent extends Solver {
 		double actualPrecision = GradientDescent.PRECISION * variables.size();
 		int idx;
 		double step,val;
+		this.log.trace("Starting optimization.");
 		do{
 			// find the best step length
 			step = GradientDescent.MAX_STEP_LENGTH;			
@@ -92,8 +101,9 @@ public class GradientDescent extends Solver {
 				if(step < GradientDescent.MIN_STEP_LENGTH)
 					throw new GeneralMathException();
 			}			
-		System.out.println(VectorTools.manhattanDistanceToZero(currentGradient));
+			this.log.trace("Current manhattan distance of gradient to zero: " + VectorTools.manhattanDistanceToZero(currentGradient));
 		}while(VectorTools.manhattanDistanceToZero(currentGradient) > actualPrecision);
+		this.log.trace("Optimum found: " + currentGuess);
 		return currentGuess;
 	}
 

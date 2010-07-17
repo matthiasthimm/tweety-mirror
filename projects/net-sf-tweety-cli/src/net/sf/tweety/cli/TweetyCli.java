@@ -17,8 +17,6 @@ import net.sf.tweety.math.opt.*;
 import net.sf.tweety.util.*;
 
 import org.apache.commons.logging.*;
-import org.apache.log4j.*;
-
 
 /**
  * This class implements a simple command line interface for accessing
@@ -81,35 +79,12 @@ public class TweetyCli {
 	private static String outputFile = null;
 	/** The writer used for writing the output file. */
 	private static Writer outputWriter = null;
-	/** The log level (The possible values are described
-	 *  by <code>TweetyConfiguration.LogLevel</code>, default
-	 *  is <code>TweetyConfiguration.LogLevel.INFO</code>) */
-	private static TweetyConfiguration.LogLevel logLevel = TweetyConfiguration.LogLevel.INFO;
-	/** The file used for logging (if this parameter is not set,
-	 *  logging is performed on the standard output) */
-	private static String logFile = null;
 	/** Advanced options */
 	private static String options = null;
 	/** The query */
 	private static String query = null;
 	
-	/**
-	 * Initialize the logging system.
-	 */
-	public static void initLogging(){
-		// TODO customize the following
-		Properties properties = new Properties();
-		properties.put("log4j.rootLogger", logLevel.toString() + ",mainlogger");
-		properties.put("log4j.appender.mainlogger.layout","org.apache.log4j.PatternLayout");
-		properties.put("log4j.appender.mainlogger.layout.ConversionPattern","%5p [%t] %C{1}.%M%n      %m%n");
 
-		if(logFile != null){
-			properties.put("log4j.appender.mainlogger","org.apache.log4j.RollingFileAppender");
-			properties.put("log4j.appender.mainlogger.File",logFile);
-		}else
-			properties.put("log4j.appender.mainlogger","org.apache.log4j.ConsoleAppender");
-		PropertyConfigurator.configure(properties);
-	}
 	
 	/**
 	 * Program entry.<br>
@@ -165,16 +140,16 @@ public class TweetyCli {
 					System.exit(1);
 				}
 			}else if(args[i].equals(ARG__LOG_LEVEL) || args[i].equals(ARG__LOG_LEVEL_SHORT))
-				logLevel = TweetyConfiguration.LogLevel.getLogLevel(args[++i]);
+				TweetyLogging.logLevel = TweetyConfiguration.LogLevel.getLogLevel(args[++i]);
 			else if(args[i].equals(ARG__LOG_FILE) || args[i].equals(ARG__LOG_FILE_SHORT))
-				logFile = args[++i];
+				TweetyLogging.logFile = args[++i];
 			else if(args[i].equals(ARG__OPTIONS) || args[i].equals(ARG__OPTIONS_SHORT))
 				options = args[++i];
 			if(args[i].equals(ARG__QUERY) || args[i].equals(ARG__QUERY_SHORT))
 				query = args[++i];
 		}
 		
-		TweetyCli.initLogging();
+		TweetyLogging.initLogging();
 		
 		log.info("Start logging.");
 		

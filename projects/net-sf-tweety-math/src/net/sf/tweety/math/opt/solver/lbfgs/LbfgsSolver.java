@@ -2,9 +2,12 @@ package net.sf.tweety.math.opt.solver.lbfgs;
 
 import java.util.*;
 
+import org.apache.commons.logging.*;
+
 import net.sf.tweety.math.*;
 import net.sf.tweety.math.opt.*;
 import net.sf.tweety.math.term.*;
+import net.sf.tweety.util.*;
 
 
 /**
@@ -13,6 +16,11 @@ import net.sf.tweety.math.term.*;
  * @author Matthias Thimm
  */
 public class LbfgsSolver extends Solver {
+	
+	/**
+	 * Logger.
+	 */
+	private Log log = LogFactory.getLog(LbfgsSolver.class);
 	
 	/**
 	 * The starting point for the solver.
@@ -31,6 +39,7 @@ public class LbfgsSolver extends Solver {
 	 */
 	@Override
 	public Map<Variable, Term> solve() throws GeneralMathException {
+		this.log.trace("Solving the following optimization problem using L-BFGS:\n===BEGIN===\n" + this.getProblem() + "\n===END===");
 		Term func = ((OptimizationProblem)this.getProblem()).getTargetFunction();
 		if(((OptimizationProblem)this.getProblem()).getType() == OptimizationProblem.MAXIMIZE)
 			func = new IntegerConstant(-1).mult(func);	
@@ -55,13 +64,15 @@ public class LbfgsSolver extends Solver {
 		int[] iprint = new int[2];
 		iprint[0] = -1;
 		iprint[1] = 3;
-		double eps = 0.000000000001;
+		double eps = 0.00001;
 		double xtol = 10e-16;
 		int[] iflag = new int[1];
 		iflag[0] = 0;
+		this.log.trace("Starting optimization.");
 		while(iflag[0] >= 0){
 			try{
 				Lbfgs.lbfgs(n, m, x, f, g, diagco, diag, iprint, eps, xtol, iflag);
+				this.log.trace("Current manhattan distance of gradient to zero: " + VectorTools.manhattanDistanceToZero(g));
 			}catch(Exception e){
 				throw new GeneralMathException("Call to L-BFGS failed.");
 			}
@@ -70,6 +81,7 @@ public class LbfgsSolver extends Solver {
 			}else if(iflag[0] == 1){				
 				int i = 0;
 				for(Variable v: variables){
+					/*
 					// if the variable should be positive, make some corrections
 					// NOTE: this is a workaround.
 					if(v.isPositive() && x[i]<0){
@@ -77,7 +89,8 @@ public class LbfgsSolver extends Solver {
 						x[i] = -x[i]/2;
 						// restart optimization
 						iflag[0] = 0;						
-					}else currentGuess.put(v, new FloatConstant(x[i]));
+					}else*/ 
+					currentGuess.put(v, new FloatConstant(x[i]));
 					i++;
 				}
 				f = func.replaceAllTerms(currentGuess).doubleValue();
@@ -85,6 +98,7 @@ public class LbfgsSolver extends Solver {
 					g[i] = gradient.get(i).replaceAllTerms(currentGuess).doubleValue();					
 			}
 		}
+		this.log.trace("Optimum found: " + currentGuess);
 		return currentGuess;
 	}	
 }

@@ -2,6 +2,8 @@ package net.sf.tweety.math.opt.solver;
 
 import java.util.*;
 
+import org.apache.commons.logging.*;
+
 import net.sf.tweety.math.*;
 import net.sf.tweety.math.matrix.*;
 import net.sf.tweety.math.opt.*;
@@ -15,6 +17,11 @@ import net.sf.tweety.math.term.*;
  */
 public class BfgsSolver extends Solver {
 
+	/**
+	 * Logger.
+	 */
+	private Log log = LogFactory.getLog(BfgsSolver.class);
+	
 	private static final double PRECISION = 0.000000000000000001;
 	
 	/**
@@ -54,7 +61,7 @@ public class BfgsSolver extends Solver {
 		while(true){
 			evaluatedGradient = this.evaluate(gradient, currentGuess, variables);
 			distanceToZero = evaluatedGradient.distanceToZero();
-			System.out.println(distanceToZero);
+			this.log.trace("Current manhattan distance of gradient to zero: " + distanceToZero);
 			if(distanceToZero < actualPrecision)
 				break;
 			searchDirection = approxInverseHessian.mult(evaluatedGradient.mult(new IntegerConstant(-1))).simplify();			

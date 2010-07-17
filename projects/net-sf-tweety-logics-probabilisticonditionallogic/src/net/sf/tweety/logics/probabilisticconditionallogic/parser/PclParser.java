@@ -2,6 +2,8 @@ package net.sf.tweety.logics.probabilisticconditionallogic.parser;
 
 import java.io.*;
 
+import org.apache.commons.logging.*;
+
 import net.sf.tweety.*;
 import net.sf.tweety.logics.probabilisticconditionallogic.*;
 import net.sf.tweety.logics.probabilisticconditionallogic.syntax.*;
@@ -24,6 +26,11 @@ import net.sf.tweety.util.*;
  */
 public class PclParser extends Parser{
 
+	/**
+	 * Logger.
+	 */
+	private Log log = LogFactory.getLog(PclParser.class);
+	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.kr.Parser#parseBeliefBase(java.io.Reader)
 	 */
@@ -61,6 +68,7 @@ public class PclParser extends Parser{
 		}catch(Exception e){
 			throw new ParserException(e);
 		}
+		this.log.trace("Parsing conditional '" + s + "'");
 		// check probability 
 		if(!s.contains("[")) throw new ParserException("Missing '[' in conditional definition.");
 		if(!s.contains("]")) throw new ParserException("Missing ']' in conditional definition.");
@@ -78,8 +86,9 @@ public class PclParser extends Parser{
 		int idx = 0;		
 		while(idx != -1){
 			idx = condString.indexOf("|", idx);
-			if(condString.charAt(idx+1) != '|')
-				break;			
+			if(idx != -1 && condString.charAt(idx+1) != '|')
+				break;	
+			if(idx != -1) idx+=2;
 		}		
 		PlParser parser = new PlParser();
 		
