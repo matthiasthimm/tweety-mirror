@@ -64,6 +64,14 @@ public abstract class SpecialFormula extends FolFormula{
 	public boolean isWellBound(Set<Variable> boundVariables) {
 		return true;
 	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#isLiteral()
+	 */
+	public boolean isLiteral(){
+		//TODO is this correct?
+		return true;
+	}
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula#substitute(net.sf.tweety.logics.firstorderlogic.syntax.Term, net.sf.tweety.logics.firstorderlogic.syntax.Term)

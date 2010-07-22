@@ -75,4 +75,11 @@ public abstract class FolFormula extends RelationalFormula{
 	 * @return "true" iff this formula is in disjunctive normal form.
 	 */
 	public abstract boolean isDnf();
+	
+	/**
+	 * Checks whether this formula is a literal, i.e.
+	 * whether it is an atom or a negated atom.
+	 * @return "true" iff this formula is a literal.
+	 */
+	public abstract boolean isLiteral();
 }

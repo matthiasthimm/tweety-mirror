@@ -114,6 +114,13 @@ public class Negation extends FolFormula{
 	}
 	
 	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#isLiteral()
+	 */
+	public boolean isLiteral(){
+		return (this.folFormula instanceof Atom);
+	}
+	
+	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString(){

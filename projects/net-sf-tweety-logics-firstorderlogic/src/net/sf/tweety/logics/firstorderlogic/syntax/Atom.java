@@ -222,6 +222,13 @@ public class Atom extends FolFormula {
 	}
 	
 	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#isLiteral()
+	 */
+	public boolean isLiteral(){
+		return true;
+	}
+	
+	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#toString()
 	 */
 	public String toString(){

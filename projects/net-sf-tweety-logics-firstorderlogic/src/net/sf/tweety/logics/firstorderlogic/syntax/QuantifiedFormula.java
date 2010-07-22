@@ -189,6 +189,13 @@ public abstract class QuantifiedFormula extends FolFormula{
 	}
 	
 	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#isLiteral()
+	 */
+	public boolean isLiteral(){
+		return false;
+	}
+	
+	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override

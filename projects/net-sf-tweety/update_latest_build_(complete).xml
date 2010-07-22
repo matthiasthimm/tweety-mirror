@@ -5,6 +5,7 @@
 			<zipfileset dir="../../latestBuild" includes="net-sf-tweety-agents-structuredargumentationsystems.jar"/>
 			<zipfileset dir="../../latestBuild" includes="net-sf-tweety-agents.jar"/>
 			<zipfileset dir="../../latestBuild" includes="net-sf-tweety-argumentation-dung.jar"/>
+			<zipfileset dir="../../latestBuild" includes="net-sf-tweety-argumentation-delp.jar"/>
 			<zipfileset dir="../../latestBuild" includes="net-sf-tweety-argumentation-structuredargumentationframeworks.jar"/>
 			<zipfileset dir="../../latestBuild" includes="net-sf-tweety-cli.jar"/>
 			<zipfileset dir="../../latestBuild" includes="net-sf-tweety-logics-conditionallogic.jar"/>

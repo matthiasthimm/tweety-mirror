@@ -16,6 +16,13 @@ public class RuleSet<T extends Rule> extends HashSet<T>{
 	private static final long serialVersionUID = 1L;
 	
 	/**
+	 * Creates a new empty rule set.
+	 */
+	public RuleSet(){
+		super();
+	}
+	
+	/**
 	 * Creates a new rule set with the given rules
 	 * @param rules a collection of rules.
 	 */

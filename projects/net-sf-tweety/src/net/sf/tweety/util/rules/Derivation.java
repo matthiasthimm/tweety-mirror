@@ -28,6 +28,18 @@ public class Derivation<T extends Rule> extends ArrayList<T>{
 	}
 	
 	/**
+	 * Returns the conclusion of this derivation.
+	 * @return the conclusion of this derivation.
+	 */
+	public Formula getConclusion(){
+		RuleSet<T> ruleSet = new RuleSet<T>(this);
+		Set<Formula> conclusions = ruleSet.getConclusions();
+		Set<Formula> premises = ruleSet.getPremises();
+		conclusions.removeAll(premises);
+		return conclusions.iterator().next();
+	}
+	
+	/**
 	 * Returns the set of all possible derivations from the set of rules. 
 	 * @param rules a set of rules
 	 * @return the set of all possible derivations

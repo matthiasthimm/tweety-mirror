@@ -184,6 +184,13 @@ public abstract class AssociativeFormula extends FolFormula implements Collectio
 			if(!f.isWellBound(boundVariables)) return false;
 		return true;
 	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#isLiteral()
+	 */
+	public boolean isLiteral(){
+		return false;
+	}
 
 	/* (non-Javadoc)
 	 * @see java.util.Collection#add(java.lang.Object)
