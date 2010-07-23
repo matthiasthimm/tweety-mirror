@@ -29,7 +29,7 @@ public class Disjunction extends AssociativeFormula {
 	 */
 	public PropositionalFormula collapseAssociativeFormulas(){
 		if(this.isEmpty())
-			return new Tautology();
+			return new Contradiction();
 		if(this.size() == 1)
 			return this.iterator().next().collapseAssociativeFormulas();
 		Disjunction newMe = new Disjunction();
@@ -69,5 +69,17 @@ public class Disjunction extends AssociativeFormula {
 			s += f.toString();
 		}
 		return s;
+	}
+	 
+  /* (non-Javadoc)
+   * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#toNNF()
+   */
+	@Override
+	public PropositionalFormula toNNF() {
+	  Disjunction d = new Disjunction();
+    for(PropositionalFormula p : this) {
+      d.add( p.toNNF() );
+    }
+    return d;
 	}
 }

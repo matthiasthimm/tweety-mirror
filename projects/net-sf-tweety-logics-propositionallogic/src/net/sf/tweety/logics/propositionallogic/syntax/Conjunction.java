@@ -40,7 +40,7 @@ public class Conjunction extends AssociativeFormula {
 	 */
 	public PropositionalFormula collapseAssociativeFormulas(){
 		if(this.isEmpty())
-			return new Contradiction();
+			return new Tautology();
 		if(this.size() == 1)
 			return this.iterator().next().collapseAssociativeFormulas();
 		Conjunction newMe = new Conjunction();
@@ -72,5 +72,17 @@ public class Conjunction extends AssociativeFormula {
 			else s += f.toString();
 		}
 		return s;
+	}
+	
+  /* (non-Javadoc)
+   * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#toNNF()
+   */
+	@Override
+	public PropositionalFormula toNNF() {
+    Conjunction c = new Conjunction();
+    for(PropositionalFormula p : this) {
+      c.add( p.toNNF() );
+    }
+    return c;
 	}
 }

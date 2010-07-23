@@ -85,4 +85,12 @@ public class Proposition extends PropositionalFormula {
 		return true;
 	}
 	
+  /* (non-Javadoc)
+   * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#toNNF()
+   */
+	@Override
+	public PropositionalFormula toNNF() {
+	  return this;
+	}
+	
 }

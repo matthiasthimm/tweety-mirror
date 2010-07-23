@@ -60,4 +60,38 @@ public class Negation extends PropositionalFormula {
 			return PropositionalSignature.CLASSICAL_NEGATION + "(" + this.formula + ")";
 		return PropositionalSignature.CLASSICAL_NEGATION + this.formula;
 	}
+	
+  /* (non-Javadoc)
+   * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#toNNF()
+   */
+	@Override
+	public PropositionalFormula toNNF() {
+    // remove double negation    
+    if(formula instanceof Negation)
+      return ((Negation)formula).formula.toNNF();
+
+     // Distribute negation inside conjunctions or disjunctions according to deMorgan's laws:
+     // -(p & q)  = -p || -q
+     // -(p || q) = -p & -q
+    if(formula instanceof Conjunction) {
+      Conjunction c = (Conjunction)formula;
+      Disjunction d = new Disjunction();
+      
+      for(PropositionalFormula p : c) {
+        d.add( new Negation( p ).toNNF() );
+      }
+      return d;
+    }
+    
+    if(formula instanceof Disjunction) {
+       Disjunction d = (Disjunction)formula;
+       Conjunction c = new Conjunction();
+       
+       for(PropositionalFormula p : d) {
+         c.add( new Negation( p ).toNNF() );
+       }
+       return c;
+    }
+    return this;
+	}
 }

@@ -25,4 +25,12 @@ public abstract class SpecialFormula extends PropositionalFormula {
 		return new HashSet<Proposition>();
 	}
 	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#toNNF()
+	 */
+  @Override
+  public PropositionalFormula toNNF() {
+    return this;
+  }
+
 }
