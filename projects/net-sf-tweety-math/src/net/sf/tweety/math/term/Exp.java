@@ -30,7 +30,7 @@ public class Exp extends FunctionalTerm {
 	 */
 	@Override
 	public String toString() {
-		return "e^(" + this.getTerm() + ")";
+		return "exp(" + this.getTerm() + ")";
 	}
 
 	/* (non-Javadoc)

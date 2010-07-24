@@ -75,6 +75,10 @@ public class PclDefaultConsistencyTester extends BeliefSetConsistencyTester {
 					rightSide = new FloatConstant(0);
 				else rightSide = rightSide.mult(new FloatConstant(c.getProbability().getValue()));
 			}
+			if(leftSide == null)
+				leftSide = new FloatConstant(0);
+			if(rightSide == null)
+				rightSide = new FloatConstant(0);
 			functions.add(leftSide.minus(rightSide));			
 		}
 		// Search for a root of "functions" using OpenOpt

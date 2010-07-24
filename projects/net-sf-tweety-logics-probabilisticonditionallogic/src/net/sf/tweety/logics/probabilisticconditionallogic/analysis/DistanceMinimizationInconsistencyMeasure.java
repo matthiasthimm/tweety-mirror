@@ -110,27 +110,22 @@ public class DistanceMinimizationInconsistencyMeasure implements InconsistencyMe
 					rightSide = new FloatConstant(0);
 				else rightSide = rightSide.mult(new FloatConstant(c.getProbability().getValue()).add(eta).minus(tau));
 			}
-			problem.add(new Equation(leftSide,rightSide));
+			if(leftSide == null)
+				leftSide = new FloatConstant(0);
+			if(rightSide == null)
+				rightSide = new FloatConstant(0);
+			problem.add(new Equation(leftSide,rightSide));			
 		}			
 		problem.setTargetFunction(targetFunction);		
-		// Get a feasible starting point for the optimization
-		List<Term> functions = new ArrayList<Term>();
-		Map<Variable,Term> startingPoint = new HashMap<Variable,Term>();
-		for(Variable v: problem.getVariables())
-			startingPoint.put(v, new FloatConstant(0));
-		// all statements are equations
-		for(Statement s: problem)
-			functions.add(s.getLeftTerm().minus(s.getRightTerm()));
-		RootFinder rootFinder = new GradientDescentRootFinder(functions,startingPoint);//OpenOptRootFinder(functions,startingPoint);
-		// Solve the problem using the OpenOpt library
-		this.log.trace("Problem prepared, now finding feasible starting point.");
 		try{			
-			Map<Variable,Term> startingPointForOptimization = rootFinder.randomRoot();
-			this.log.trace("Starting point found, now solving the main problem.");
-			Solver solver = new OpenOptSolver(problem,startingPointForOptimization);
+			OpenOptSolver solver = new OpenOptSolver(problem);
+			solver.contol = 1e-3;
+			solver.gtol = 1e-16;
+			solver.ftol = 1e-16;
+			solver.xtol = 1e-16;
 			Map<Variable,Term> solution = solver.solve();
 			Double result = targetFunction.replaceAllTerms(solution).doubleValue();
-			this.log.trace("Problem solved, the measure is '" + result + "'.");
+			this.log.debug("Problem solved, the measure is '" + result + "'.");
 			// update archive
 			this.archive.put(beliefSet, result);
 			// return value of target function
@@ -142,16 +137,17 @@ public class DistanceMinimizationInconsistencyMeasure implements InconsistencyMe
 	}
 	
 	public static void main(String[] args){
-		TweetyLogging.logLevel = TweetyConfiguration.LogLevel.TRACE;
+		TweetyLogging.logLevel = TweetyConfiguration.LogLevel.ERROR;
 		TweetyLogging.initLogging();		
 		String file = "/Users/mthimm/Desktop/pcl_test";
 		try {
 			long millis = System.currentTimeMillis();
 			PclBeliefSet beliefSet = (PclBeliefSet) new net.sf.tweety.logics.probabilisticconditionallogic.parser.PclParser().parseBeliefBaseFromFile(file);
 			System.out.println(new DistanceMinimizationInconsistencyMeasure().inconsistencyMeasure(beliefSet));
-			//ShapleyCulpabilityMeasure shapley = new ShapleyCulpabilityMeasure(new DistanceMinimizationInconsistencyMeasure());
-			//System.out.println(beliefSet);
-			//System.out.println(new PclBeliefSetQuadraticErrorMinimizationMachineShop(shapley).repair(beliefSet));
+			ShapleyCulpabilityMeasure shapley = new ShapleyCulpabilityMeasure(new DistanceMinimizationInconsistencyMeasure());
+			for(ProbabilisticConditional pc: beliefSet)
+				System.out.println(pc + " - " +  shapley.culpabilityMeasure(beliefSet, pc));
+			System.out.println(new PclBeliefSetQuadraticErrorMinimizationMachineShop(shapley).repair(beliefSet));
 			/*for(ProbabilisticConditional pc: beliefSet)
 				System.out.println(pc + " - " +  shapley.culpabilityMeasure(beliefSet, pc));
 			for(Set<Formula> f: new PclDefaultConsistencyTester().minimalInconsistentSubsets(beliefSet))

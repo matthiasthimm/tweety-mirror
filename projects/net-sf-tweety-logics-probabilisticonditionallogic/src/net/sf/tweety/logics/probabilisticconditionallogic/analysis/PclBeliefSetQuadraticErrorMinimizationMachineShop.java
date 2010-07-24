@@ -70,22 +70,19 @@ public class PclBeliefSetQuadraticErrorMinimizationMachineShop implements Belief
 			else normConstraint = normConstraint.add(var);
 		}		
 		problem.add(new Equation(normConstraint, new IntegerConstant(1)));
-		// For each conditional add variables tau and eta and
+		// For each conditional add a variable tau and
 		// add constraints implied by the conditionals
 		Map<ProbabilisticConditional,Variable> taus = new HashMap<ProbabilisticConditional,Variable>();
-		Map<ProbabilisticConditional,Variable> etas = new HashMap<ProbabilisticConditional,Variable>();
 		Term targetFunction = null;
 		i = 0;		
 		for(ProbabilisticConditional c: beliefSet){
 			//TODO '1000' -> infinity
-			FloatVariable eta = new FloatVariable("e" + i,0,1000);
-			FloatVariable tau = new FloatVariable("t" + i++,0,1000);
+			FloatVariable tau = new FloatVariable("t" + i++,-1000,1000);
 			taus.put(c, tau);
-			etas.put(c, eta);
 			// the target function is the quadratic sums of the deviations
 			if(targetFunction == null)
-				targetFunction = tau.add(eta).mult(tau.add(eta));
-			else targetFunction = targetFunction.add(tau.add(eta).mult(tau.add(eta)));
+				targetFunction = new Exp(new Exp(tau.mult(tau)));
+			else targetFunction = targetFunction.add(new Exp(new Exp(tau.mult(tau))));
 			Term leftSide = null;
 			Term rightSide = null;
 			if(c.isFact()){
@@ -95,7 +92,7 @@ public class PclBeliefSetQuadraticErrorMinimizationMachineShop implements Belief
 							leftSide = worlds2vars.get(w);
 						else leftSide = leftSide.add(worlds2vars.get(w));
 					}
-				rightSide = new FloatConstant(c.getProbability().getValue()).add(new FloatConstant(this.culpabilityMeasure.culpabilityMeasure(beliefSet, c)).mult(eta.minus(tau)));
+				rightSide = new FloatConstant(c.getProbability().getValue()).add(new FloatConstant(this.culpabilityMeasure.culpabilityMeasure(beliefSet, c)).mult(tau));
 			}else{				
 				PropositionalFormula body = c.getPremise().iterator().next();
 				PropositionalFormula head_and_body = (PropositionalFormula) c.getConclusion().combineWithAnd(body);
@@ -113,44 +110,30 @@ public class PclBeliefSetQuadraticErrorMinimizationMachineShop implements Belief
 				}
 				if(rightSide == null)
 					rightSide = new FloatConstant(0);
-				else rightSide = rightSide.mult(new FloatConstant(c.getProbability().getValue()).add(new FloatConstant(this.culpabilityMeasure.culpabilityMeasure(beliefSet, c)).mult(eta.minus(tau))));
+				else rightSide = rightSide.mult(new FloatConstant(c.getProbability().getValue()).add(new FloatConstant(this.culpabilityMeasure.culpabilityMeasure(beliefSet, c)).mult(tau)));
 			}
+			if(leftSide == null)
+				leftSide = new FloatConstant(0);
+			if(rightSide == null)
+				rightSide = new FloatConstant(0);
 			problem.add(new Equation(leftSide,rightSide));
 		}			
 		problem.setTargetFunction(targetFunction);		
-		// Get a feasible starting point for the optimization
-		List<Term> functions = new ArrayList<Term>();
-		Map<Variable,Term> startingPoint = new HashMap<Variable,Term>();
-		for(Variable v: problem.getVariables())
-			startingPoint.put(v, new FloatConstant(0));
-		// all statements are equations
-		for(Statement s: problem)
-			functions.add(s.getLeftTerm().minus(s.getRightTerm()));
-		OpenOptRootFinder rootFinder = new OpenOptRootFinder(functions,startingPoint);
-		// Solve the problem using the OpenOpt library
-		this.log.trace("Problem prepared, now finding feasible starting point.");
-		// TODO make the following a little better
-		rootFinder.contol = 1e-8;
-		rootFinder.xtol = 1e-8;
-		rootFinder.ftol = 1e-8;
-		rootFinder.gtol = 1e-8;
 		try{
-			// TODO the following should be changed
-			RootFinder.PRECISION = 0.01;
-			Map<Variable,Term> startingPointForOptimization = rootFinder.randomRoot();
-			this.log.trace("Starting point found, now solving the main problem.");
-			Solver solver = new OpenOptSolver(problem,startingPointForOptimization);
+			OpenOptSolver solver = new OpenOptSolver(problem);
+			solver.contol = 1e-4;
+			solver.gtol = 1e-60;
+			solver.xtol = 1e-60;
+			solver.ftol = 1e-60;
 			Map<Variable,Term> solution = solver.solve();
 			this.log.trace("Problem solved, modifying belief set.");
 			// Modify belief set
 			PclBeliefSet newBeliefSet = new PclBeliefSet();
 			for(ProbabilisticConditional pc: beliefSet){
 				Double p = pc.getProbability().getValue();
-				p += this.culpabilityMeasure.culpabilityMeasure(beliefSet, pc) * (solution.get(etas.get(pc)).doubleValue() - solution.get(taus.get(pc)).doubleValue());
-				//System.out.println(p + " = " + this.culpabilityMeasure.culpabilityMeasure(beliefSet, pc)  + " * ( "+ solution.get(etas.get(pc)).doubleValue() + " - " + solution.get(taus.get(pc)).doubleValue() + " )");
+				p += this.culpabilityMeasure.culpabilityMeasure(beliefSet, pc) * solution.get(taus.get(pc)).doubleValue();
 				newBeliefSet.add(new ProbabilisticConditional(pc,new Probability(p)));
 			}
-			System.out.println("Really consistent: " + new PclDefaultConsistencyTester().isConsistent(newBeliefSet));
 			return newBeliefSet;
 		}catch (GeneralMathException e){
 			// This should not happen as the optimization problem is guaranteed to be feasible

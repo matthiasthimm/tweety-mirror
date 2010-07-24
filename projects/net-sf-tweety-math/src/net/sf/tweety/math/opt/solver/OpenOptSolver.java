@@ -56,6 +56,15 @@ public class OpenOptSolver extends Solver {
 	 * Creates a new solver for the given problem.
 	 * @param problem a csp.
 	 */
+	public OpenOptSolver(OptimizationProblem problem) {
+		this(problem,null);
+	}
+	
+	/**
+	 * Creates a new solver for the given problem.
+	 * @param problem a csp.
+	 * @param a starting point.
+	 */
 	public OpenOptSolver(OptimizationProblem problem, Map<Variable,Term> startingPoint) {
 		// TODO add constructor without starting point and compute starting point using a rootFinder 
 		super(problem.clone());
@@ -162,14 +171,16 @@ public class OpenOptSolver extends Solver {
 		
 		code += problem.getTargetFunction().toString().replace("log", "log_mod") + "\n\n";
 		// write startingpoint
-		code += "startingpoint = [";
 		boolean first = true;
-		for(int i = 0; i < this.idx2newVars.keySet().size(); i++)
-			if(first){
-				first = false;
-				code += startingPoint.get(this.newVars2oldVars.get(this.idx2newVars.get(i))).doubleValue();
-			}else code += "," + startingPoint.get(this.newVars2oldVars.get(this.idx2newVars.get(i))).doubleValue();
-		code += "]\n\n";
+		if(this.startingPoint != null){
+			code += "startingpoint = [";			
+			for(int i = 0; i < this.idx2newVars.keySet().size(); i++)
+				if(first){
+					first = false;
+					code += startingPoint.get(this.newVars2oldVars.get(this.idx2newVars.get(i))).doubleValue();
+				}else code += "," + startingPoint.get(this.newVars2oldVars.get(this.idx2newVars.get(i))).doubleValue();
+			code += "]\n\n";
+		}
 		// add box constraints
 		code += "lb = [";
 		first = true;
@@ -188,7 +199,9 @@ public class OpenOptSolver extends Solver {
 			}else code += "," + this.newVars2oldVars.get((this.idx2newVars.get(i))).getUpperBound();
 		code += "]\n";
 		// specify problem
-		code += "p = NLP(objective,startingpoint,lb=lb,ub=ub)\n\n";
+		if(this.startingPoint != null)
+			code += "p = NLP(objective,startingpoint,lb=lb,ub=ub)\n\n";
+		else code += "p = NLP(objective,lb=lb,ub=ub)\n\n";
 		// add constraints		
 		int idx = 0;
 		List<String> equalities = new ArrayList<String>();
@@ -214,6 +227,7 @@ public class OpenOptSolver extends Solver {
 		code += "p.maxFunEvals = " + this.maxFunEvals + "\n";
 		code += "r = p.solve('" + this.solver + "')\n";
 		code += "print r.xf";
+		this.log.trace("Generated the OpenOpt code:\n===BEGIN===\n" + code + "\n===END===");
 		return code;
 	}
 	
