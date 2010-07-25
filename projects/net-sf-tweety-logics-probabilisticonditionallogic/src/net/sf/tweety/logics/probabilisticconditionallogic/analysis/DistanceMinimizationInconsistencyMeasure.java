@@ -67,20 +67,17 @@ public class DistanceMinimizationInconsistencyMeasure implements InconsistencyMe
 			else normConstraint = normConstraint.add(var);
 		}		
 		problem.add(new Equation(normConstraint, new IntegerConstant(1)));
-		// For each conditional add variables tau and eta and
+		// For each conditional add variable eta and
 		// add constraints implied by the conditionals
-		Map<ProbabilisticConditional,Variable> taus = new HashMap<ProbabilisticConditional,Variable>();
 		Map<ProbabilisticConditional,Variable> etas = new HashMap<ProbabilisticConditional,Variable>();
 		Term targetFunction = null;
 		i = 0;		
 		for(ProbabilisticConditional c: beliefSet){
-			FloatVariable eta = new FloatVariable("e" + i,0,1);
-			FloatVariable tau = new FloatVariable("t" + i++,0,1);
-			taus.put(c, tau);
+			FloatVariable eta = new FloatVariable("e" + i++,-1,1);
 			etas.put(c, eta);
 			if(targetFunction == null)
-				targetFunction = tau.add(eta);
-			else targetFunction = targetFunction.add(tau).add(eta);
+				targetFunction = new AbsoluteValue(eta);
+			else targetFunction = targetFunction.add(new AbsoluteValue(eta));
 			Term leftSide = null;
 			Term rightSide = null;
 			if(c.isFact()){
@@ -90,7 +87,7 @@ public class DistanceMinimizationInconsistencyMeasure implements InconsistencyMe
 							leftSide = worlds2vars.get(w);
 						else leftSide = leftSide.add(worlds2vars.get(w));
 					}
-				rightSide = new FloatConstant(c.getProbability().getValue()).add(eta).minus(tau);
+				rightSide = new FloatConstant(c.getProbability().getValue()).add(eta);
 			}else{				
 				PropositionalFormula body = c.getPremise().iterator().next();
 				PropositionalFormula head_and_body = (PropositionalFormula) c.getConclusion().combineWithAnd(body);
@@ -108,24 +105,29 @@ public class DistanceMinimizationInconsistencyMeasure implements InconsistencyMe
 				}
 				if(rightSide == null)
 					rightSide = new FloatConstant(0);
-				else rightSide = rightSide.mult(new FloatConstant(c.getProbability().getValue()).add(eta).minus(tau));
+				else rightSide = rightSide.mult(new FloatConstant(c.getProbability().getValue()).add(eta));
 			}
 			if(leftSide == null)
 				leftSide = new FloatConstant(0);
 			if(rightSide == null)
 				rightSide = new FloatConstant(0);
 			problem.add(new Equation(leftSide,rightSide));			
-		}			
+		}
 		problem.setTargetFunction(targetFunction);		
 		try{			
 			OpenOptSolver solver = new OpenOptSolver(problem);
-			solver.contol = 1e-3;
-			solver.gtol = 1e-16;
-			solver.ftol = 1e-16;
-			solver.xtol = 1e-16;
+			solver.contol = 1e-2;
+			solver.gtol = 1e-60;
+			solver.ftol = 1e-60;
+			solver.xtol = 1e-60;
 			Map<Variable,Term> solution = solver.solve();
 			Double result = targetFunction.replaceAllTerms(solution).doubleValue();
 			this.log.debug("Problem solved, the measure is '" + result + "'.");
+			String etaValues = "Eta-values for the solution:\n===BEGIN===\n";
+			for(ProbabilisticConditional pc: beliefSet)
+				etaValues += pc + "\t" + solution.get(etas.get(pc)) + "\n";
+			etaValues += "===END===";
+			this.log.debug(etaValues);
 			// update archive
 			this.archive.put(beliefSet, result);
 			// return value of target function
@@ -137,17 +139,18 @@ public class DistanceMinimizationInconsistencyMeasure implements InconsistencyMe
 	}
 	
 	public static void main(String[] args){
-		TweetyLogging.logLevel = TweetyConfiguration.LogLevel.ERROR;
+		TweetyLogging.logLevel = TweetyConfiguration.LogLevel.DEBUG;
 		TweetyLogging.initLogging();		
 		String file = "/Users/mthimm/Desktop/pcl_test";
 		try {
 			long millis = System.currentTimeMillis();
 			PclBeliefSet beliefSet = (PclBeliefSet) new net.sf.tweety.logics.probabilisticconditionallogic.parser.PclParser().parseBeliefBaseFromFile(file);
-			System.out.println(new DistanceMinimizationInconsistencyMeasure().inconsistencyMeasure(beliefSet));
-			ShapleyCulpabilityMeasure shapley = new ShapleyCulpabilityMeasure(new DistanceMinimizationInconsistencyMeasure());
+			//System.out.println(new DistanceMinimizationInconsistencyMeasure().inconsistencyMeasure(beliefSet));
+			//AverageDistanceCulpabilityMeasure adMeasure = new AverageDistanceCulpabilityMeasure();
+			//ShapleyCulpabilityMeasure shapley = new ShapleyCulpabilityMeasure(new DistanceMinimizationInconsistencyMeasure());
 			for(ProbabilisticConditional pc: beliefSet)
-				System.out.println(pc + " - " +  shapley.culpabilityMeasure(beliefSet, pc));
-			System.out.println(new PclBeliefSetQuadraticErrorMinimizationMachineShop(shapley).repair(beliefSet));
+				System.out.println(pc + " - " +  pc.getUniformProbability());
+			System.out.println(new UnbiasedCreepingMachineShop().repair(beliefSet));
 			/*for(ProbabilisticConditional pc: beliefSet)
 				System.out.println(pc + " - " +  shapley.culpabilityMeasure(beliefSet, pc));
 			for(Set<Formula> f: new PclDefaultConsistencyTester().minimalInconsistentSubsets(beliefSet))

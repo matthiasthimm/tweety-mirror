@@ -9,8 +9,7 @@ public class Contradiction extends SpecialFormula{
 	/**
 	 * Creates a new contradiction.
 	 */
-	public Contradiction() {
-		
+	public Contradiction() {		
 	}
 
 	/* (non-Javadoc)

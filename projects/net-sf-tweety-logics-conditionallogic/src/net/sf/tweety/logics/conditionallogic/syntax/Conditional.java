@@ -4,6 +4,7 @@ import java.util.*;
 
 import net.sf.tweety.*;
 import net.sf.tweety.logics.propositionallogic.syntax.*;
+import net.sf.tweety.util.*;
 import net.sf.tweety.util.rules.*;
 
 /**
@@ -57,6 +58,18 @@ public class Conditional implements ClassicalFormula, Rule {
 	 */
 	public PropositionalFormula getConclusion(){
 		return this.conclusion;
+	}
+	
+	/**
+	 * Returns this conditional's probability in the uniform distribution. 
+	 * @return this conditional's probability in the uniform distribution.
+	 */
+	public Probability getUniformProbability(){
+		Double n = ((PropositionalFormula)this.conclusion.combineWithAnd(this.premise)).getUniformProbability().getValue();
+		Double d = this.premise.getUniformProbability().getValue();
+		if(d == 0)
+			return new Probability(0d);
+		return new Probability(n/d);
 	}
 		
 	/**

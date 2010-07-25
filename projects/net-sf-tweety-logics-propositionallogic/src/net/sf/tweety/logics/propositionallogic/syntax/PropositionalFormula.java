@@ -3,6 +3,7 @@ package net.sf.tweety.logics.propositionallogic.syntax;
 import java.util.*;
 
 import net.sf.tweety.*;
+import net.sf.tweety.logics.propositionallogic.semantics.*;
 import net.sf.tweety.util.*;
 
 /**
@@ -51,30 +52,42 @@ public abstract class PropositionalFormula implements ClassicalFormula {
 	 */
 	public abstract PropositionalFormula collapseAssociativeFormulas();
 	
-  /**
-   * This method returns this formula in negation normal form (NNF).
-   * A formula is in NNF iff negations occur only directly in front of a proposition.
-   * @return the formula in NNF.
-   */
-  public abstract PropositionalFormula toNNF();
+	/**
+	 * Returns this formula's probability in the uniform distribution. 
+	 * @return this formula's probability in the uniform distribution.
+	 */
+	public Probability getUniformProbability(){
+		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PropositionalSignature)this.getSignature());
+		int cnt = 0;
+		for(PossibleWorld world: worlds)
+			if(world.satisfies(this))
+				cnt++;
+		return new Probability(new Double(cnt)/new Double(worlds.size()));
+	}
 	
-  /**
-   * This method returns this formula in disjunctive normal form (DNF).
-   * A formula is in DNF iff it is a disjunction of conjunctive clauses.
-   * @return the formula in DNF.
-   */
-  public PropositionalFormula toDNF() {
-    PropositionalFormula nnf = this.toNNF();
-
-    // DNF( P || Q) = DNF(P) || DNF(Q)
-    if(nnf instanceof Disjunction) {
-      Disjunction d = (Disjunction) nnf;
-      Disjunction dnf = new Disjunction();
-      for(PropositionalFormula f : d) {
-        dnf.add( f.toDNF() );
-      }
-      return dnf;
-    }
+    /**
+     * This method returns this formula in negation normal form (NNF).
+     * A formula is in NNF iff negations occur only directly in front of a proposition.
+     * @return the formula in NNF.
+     */
+	public abstract PropositionalFormula toNNF();
+	
+    /**
+	 * This method returns this formula in disjunctive normal form (DNF).
+	 * A formula is in DNF iff it is a disjunction of conjunctive clauses.
+	 * @return the formula in DNF.
+	 */
+	public PropositionalFormula toDNF(){
+		PropositionalFormula nnf = this.toNNF();
+	    // DNF( P || Q) = DNF(P) || DNF(Q)
+	    if(nnf instanceof Disjunction) {
+	      Disjunction d = (Disjunction) nnf;
+	      Disjunction dnf = new Disjunction();
+	      for(PropositionalFormula f : d) {
+	        dnf.add( f.toDNF() );
+	      }
+	    return dnf;
+	}
     
     /* DNF( P_1 && P_2 && ... && P_k) is calculated as follows:
      * 1. DNF(P_1) = P_11 || P_12 || ... || P_1l

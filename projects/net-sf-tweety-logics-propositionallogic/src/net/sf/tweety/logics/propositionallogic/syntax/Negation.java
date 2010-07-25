@@ -51,7 +51,7 @@ public class Negation extends PropositionalFormula {
 	public Set<Proposition> getPropositions(){
 		return this.formula.getPropositions();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */

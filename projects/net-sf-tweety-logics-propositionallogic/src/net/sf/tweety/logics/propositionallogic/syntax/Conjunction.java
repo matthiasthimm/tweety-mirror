@@ -34,7 +34,7 @@ public class Conjunction extends AssociativeFormula {
 		this.add(first);
 		this.add(second);
 	}	
-	
+
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#collapseAssociativeFormulas()
 	 */

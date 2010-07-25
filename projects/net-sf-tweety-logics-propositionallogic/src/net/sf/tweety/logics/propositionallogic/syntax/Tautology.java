@@ -12,7 +12,7 @@ public class Tautology extends SpecialFormula {
 	public Tautology() {
 		
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
