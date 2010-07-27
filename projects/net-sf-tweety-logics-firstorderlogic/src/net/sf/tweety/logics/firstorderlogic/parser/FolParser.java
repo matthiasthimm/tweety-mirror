@@ -16,12 +16,12 @@ import net.sf.tweety.logics.firstorderlogic.syntax.*;
  * <br> KB 			::== SORTSDEC DECLAR FORMULAS
  * <br> DECLAR		::== (FUNCTORDEC | PREDDEC)*
  * <br> SORTSDEC    ::== ( SORTNAME "=" "{" (CONSTANTNAME ("," CONSTANTNAME)*)? "}" "\n" )*
- * <br> PREDDEC		::== "type" "(" PREDICATENAME "(" (SORTNAME ("," SORTNAME)*)? ")" ")" "\n"
+ * <br> PREDDEC		::== "type" "(" PREDICATENAME ("(" SORTNAME ("," SORTNAME)* ")")? ")" "\n"
  * <br> FUNCTORDEC	::== "type" "(" SORTNAME "=" FUNCTORNAME "(" (SORTNAME ("," SORTNAME)*)? ")" ")" "\n"
  * <br> FORMULAS    ::== ( "\n" FORMULA)*
  * <br> FORMULA     ::== ATOM | "forall" VARIABLENAME ":" "(" FORMULA ")" | "exists" VARIABLENAME ":" FORMULA |
  * <br>					 "(" FORMULA ")" | FORMULA "&&" FORMULA | FORMULA "||" FORMULA | "!" FORMULA | "+" | "-"
- * <br> ATOM		::== PREDICATENAME "(" (TERM ("," TERM)*)? ")"
+ * <br> ATOM		::== PREDICATENAME ("(" TERM ("," TERM)* ")")?
  * <br> TERM		::== VARIABLENAME | CONSTANTNAME | FUNCTORNAME "(" (TERM ("," TERM)*)?  ")" 
  * <br> 
  * <br> where SORTNAME, PREDICATENAME, CONSTANTNAME, VARIABLENAME, and FUNCTORNAME are sequences of
@@ -134,18 +134,25 @@ public class FolParser extends Parser {
 			if(!this.signature.containsSort(sortname))
 				throw new ParserException("Sort '" + sortname + "' has not been declared before.");
 			targetSort = this.signature.getSort(sortname);
+		} else if(!dec.contains( "(" )) {
+		  if(dec.contains( ")")) throw new ParserException("Unexpected ')' in type declaration.");
+      String name = dec.trim();
+      this.signature.add( new Predicate(name) );
+      return;
 		}
 		if(!dec.contains("(")) throw new ParserException("Missing '(' in type declaration.");
 		if(!dec.contains(")")) throw new ParserException("Missing ')' in type declaration.");
 		String name = dec.substring(0, dec.indexOf("(")).trim();
 		String sorts = dec.substring(dec.indexOf("(")+1,dec.lastIndexOf(")"));
-		String[] tokens = sorts.split(",");
-		List<Sort> theSorts = new ArrayList<Sort>();
-		for(String token: tokens){
-			String sort = token.trim();
-			if(!this.signature.containsSort(sort))
-				throw new ParserException("Sort '" + sort + "' has not been declared before.");
-			theSorts.add(this.signature.getSort(sort));
+    List<Sort> theSorts = new ArrayList<Sort>();
+		if(!sorts.trim().equals( "" )) {
+  		String[] tokens = sorts.split(",");
+  		for(String token: tokens){
+  			String sort = token.trim();
+  			if(!this.signature.containsSort(sort))
+  				throw new ParserException("Sort '" + sort + "' has not been declared before.");
+  			theSorts.add(this.signature.getSort(sort));
+  		}
 		}
 		if(targetSort == null)
 			this.signature.add(new Predicate(name,theSorts));
@@ -445,6 +452,9 @@ public class FolParser extends Parser {
 				else s += (String) o;
 			}
 			if(this.signature.containsPredicate(s)){
+			  // check for zero-arity predicate
+			  if(terms == null) 
+			    terms = new LinkedList<Term>(); 
 				// check correct sorts of terms
 				Predicate p = this.signature.getPredicate(s);
 				List<Term> args = new ArrayList<Term>();

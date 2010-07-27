@@ -3,6 +3,7 @@ package net.sf.tweety.logics.firstorderlogic.syntax;
 import java.util.*;
 
 import net.sf.tweety.*;
+import net.sf.tweety.util.SetTools;
 
 
 /**
@@ -46,11 +47,75 @@ public abstract class FolFormula extends RelationalFormula{
 	/**
 	 * Makes a disjunctive normal form of this formula.
 	 */
-	public FolFormula toDnf(){
+	public FolFormula toDNF(){
 		if(this.isDnf()) return this;
-		//TODO: implement
-		throw new UnsupportedOperationException("Implement me!");
+		if(this.containsQuantifier()) throw new UnsupportedOperationException("Cannot convert quantified formula into DNF.");
+		FolFormula nnf = this.toNNF();
+
+    // DNF( P || Q) = DNF(P) || DNF(Q)
+    if(nnf instanceof Disjunction) {
+      Disjunction d = (Disjunction) nnf;
+      Disjunction dnf = new Disjunction();
+      for(RelationalFormula f : d) {
+        if(f instanceof FolFormula)
+          dnf.add( ((FolFormula)f).toDNF() );
+        else throw new IllegalStateException("Can not convert disjunctions containing non-first-order formulae to NNF.");
+      }
+      return dnf.collapseAssociativeFormulas();
+    }
+    
+    /* DNF( P_1 && P_2 && ... && P_k) is calculated as follows:
+     * 1. DNF(P_1) = P_11 || P_12 || ... || P_1l
+     *    DNF(P_2) = P_21 || P_22 || ... || P_2m
+     *    ...
+     *    DNF(P_k) = P_k1 || P_k2 || ... || P_kn
+     *    each P_ij is a conjunction of literals (propositions or negations of propositions)
+     * 2. the dnf is then the disjunction of all possible permutations of distributed conjunctions of P_ij, eg:
+     *    DNF(P) = p1 || p2 || p3
+     *    DNF(Q) = q1 || q2
+     *    DNF(R) = r1
+     *    DNF(P && Q && R) = (p1 && q1 && r1) || (p1 && q2 && r1) || 
+     *                       (p2 && q1 && r1) || (p2 && q2 && r1) || 
+     *                       (p3 && q1 && r1) || (p3 && q2 && r1)
+     */
+    if(nnf instanceof Conjunction) {
+      Conjunction c = (Conjunction) nnf;
+      Set<Set<RelationalFormula>> disjunctions = new HashSet<Set<RelationalFormula>>();
+      for(RelationalFormula f : c) {
+        if(! (f instanceof FolFormula)) throw new IllegalStateException("Can not convert conjunctions containing non-first-order formulae to NNF.");
+        FolFormula fdnf = ((FolFormula)f).toDNF();
+        Set<RelationalFormula> elems = new HashSet<RelationalFormula>();
+        if(fdnf instanceof Disjunction) {
+          elems.addAll( (Disjunction)fdnf );
+        } else {
+          elems.add( fdnf );
+        }
+        disjunctions.add( elems );
+      }
+      
+     // the dnf is the disjunction of all possible combinations of distributed conjunctions
+      Set<Set<RelationalFormula>> permutations = new SetTools< RelationalFormula >().permutations( disjunctions );
+      Disjunction dnf = new Disjunction();
+      for(Set<RelationalFormula> elems : permutations) {
+        dnf.add( new Conjunction( elems ) );
+      }
+      return dnf.collapseAssociativeFormulas();
+    }
+    return nnf;
 	}
+	
+	/**
+	 * Makes the negation normal form of this formula.
+	 */
+	public abstract FolFormula toNNF();
+	 
+  /**
+   * This method collapses all associative operations appearing
+   * in this term, e.g. every a||(b||c) becomes a||b||c.
+   * @return the collapsed formula.
+   */
+  public abstract FolFormula collapseAssociativeFormulas();
+  
 	
 	/**
 	 * Returns all quantified formulas appearing in this formula.

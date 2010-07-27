@@ -146,5 +146,22 @@ public abstract class SpecialFormula extends FolFormula{
 	public boolean isDnf(){
 		return true;
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#toNNF()
+	 */
+	@Override
+	public FolFormula toNNF() {
+	  return this;
+	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#collapseAssociativeFormulas()
+	 */
+	@Override
+	public FolFormula collapseAssociativeFormulas() {
+	  return this;
+	}
 }

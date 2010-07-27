@@ -185,4 +185,64 @@ public class Negation extends FolFormula{
 	public boolean isDnf() {
 		return (this.folFormula instanceof Atom);
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#toNNF()
+	 */
+	@Override
+	public FolFormula toNNF() {
+    // remove double negation    
+    if(folFormula instanceof Negation)
+      return ((Negation)folFormula).folFormula.toNNF();
+
+     // Distribute negation inside conjunctions or disjunctions according to deMorgan's laws:
+     // -(p & q)  = -p || -q
+     // -(p || q) = -p & -q
+    if(folFormula instanceof Conjunction) {
+      Conjunction c = (Conjunction)folFormula;
+      Disjunction d = new Disjunction();
+      
+      for(RelationalFormula p : c) {
+        d.add( new Negation( p ).toNNF() );
+      }
+      return d;
+    }
+    if(folFormula instanceof Disjunction) {
+       Disjunction d = (Disjunction)folFormula;
+       Conjunction c = new Conjunction();
+       
+       for(RelationalFormula p : d) {
+         c.add( new Negation( p ).toNNF() );
+       }
+       return c;
+    }
+    
+    // Distribute negation inside quantifiers:
+    // NNF(! FORALL x : R(x)) = EXISTS x : NNF( ! R(x) )
+    if(folFormula instanceof ForallQuantifiedFormula) {
+      ForallQuantifiedFormula q = (ForallQuantifiedFormula) folFormula;
+      return new ExistsQuantifiedFormula( new Negation(q.getFormula()).toNNF(), q.getQuantifierVariables() );
+    }
+    // NNF(! EXISTS x : R(x)) = FORALL x : NNF( ! R(x) )
+    if(folFormula instanceof ExistsQuantifiedFormula) {
+      ExistsQuantifiedFormula q = (ExistsQuantifiedFormula) folFormula;
+      return new ForallQuantifiedFormula( new Negation(q.getFormula()).toNNF(), q.getQuantifierVariables() );
+    }
+    if(folFormula instanceof Tautology)
+      return new Contradiction();
+    if(folFormula instanceof Contradiction)
+      return new Tautology();
+    
+    return new Negation(this.folFormula.toNNF());
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#collapseAssociativeFormulas()
+	 */
+	@Override
+	public FolFormula collapseAssociativeFormulas() {
+	  return new Negation( folFormula.collapseAssociativeFormulas() );
+	}
 }

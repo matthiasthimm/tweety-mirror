@@ -242,6 +242,24 @@ public class Atom extends FolFormula {
 		output += ")";
 		return output;
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#toNNF()
+	 */
+	@Override
+	public FolFormula toNNF() {
+	  return this;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#collapseAssociativeFormulas()
+	 */
+	@Override
+	public FolFormula collapseAssociativeFormulas() {
+    return this;
+	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()

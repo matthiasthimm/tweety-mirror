@@ -31,6 +31,24 @@ public class ExistsQuantifiedFormula extends QuantifiedFormula{
 		return new ExistsQuantifiedFormula(this.getFormula().substitute(v, t),this.getQuantifierVariables());
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#toNNF()
+	 */
+  @Override
+  public FolFormula toNNF() {
+    return new ExistsQuantifiedFormula( getFormula().toNNF(), getQuantifierVariables() );
+  }
+	
+  /*
+   * (non-Javadoc)
+   * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#collapseAssociativeFormulas()
+   */
+  @Override
+  public FolFormula collapseAssociativeFormulas() {
+    return new ExistsQuantifiedFormula( this.getFormula().collapseAssociativeFormulas(), this.getQuantifierVariables() );
+  }
+  
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#toString()
 	 */

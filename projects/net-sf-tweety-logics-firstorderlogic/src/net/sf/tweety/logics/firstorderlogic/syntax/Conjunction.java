@@ -2,7 +2,6 @@ package net.sf.tweety.logics.firstorderlogic.syntax;
 
 import java.util.*;
 
-
 /**
  * The classical conjunction of first-order logic.
  * @author Matthias Thimm
@@ -82,4 +81,40 @@ public class Conjunction extends AssociativeFormula {
 		return new Conjunction(newFormulas);
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#toNNF()
+	 */
+	@Override
+	public FolFormula toNNF() {
+    Conjunction c = new Conjunction();
+    for(RelationalFormula p : this) {
+      if(p instanceof FolFormula)
+        c.add( ((FolFormula) p).toNNF() );
+      else
+        throw new IllegalStateException("Can not convert conjunctions containing non-first-order formulae to NNF.");
+    }
+    return c;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#collapseAssociativeFormulas()
+	 */
+	@Override
+	public FolFormula collapseAssociativeFormulas() {
+    if(this.isEmpty())
+      return new Tautology();
+    if(this.size() == 1)
+      return ((FolFormula)this.iterator().next()).collapseAssociativeFormulas();
+    Conjunction newMe = new Conjunction();
+    for(RelationalFormula f: this){
+      if(! (f instanceof FolFormula)) throw new IllegalStateException("Can not collapse conjunctions containing non-first-order formulae.");
+      FolFormula newF = ((FolFormula)f).collapseAssociativeFormulas();
+      if(newF instanceof Conjunction)
+        newMe.addAll((Conjunction) newF);
+      else newMe.add(newF);
+    }
+    return newMe;
+  }
 }

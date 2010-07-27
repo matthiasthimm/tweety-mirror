@@ -82,4 +82,41 @@ public class Disjunction extends AssociativeFormula{
 			newFormulas.add((RelationalFormula)f.substitute(v, t));
 		return new Disjunction(newFormulas);
 	}
+	
+	 /*
+   * (non-Javadoc)
+   * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#toNNF()
+   */
+  @Override
+  public FolFormula toNNF() {
+    Disjunction d = new Disjunction();
+    for(RelationalFormula p : this) {
+      if(p instanceof FolFormula)
+        d.add( ((FolFormula) p).toNNF() );
+      else
+        throw new IllegalStateException("Can not convert conjunctions containing non-first-order formulae to NNF.");
+    }
+    return d;
+  }
+  
+  /*
+   * (non-Javadoc)
+   * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#collapseAssociativeFormulas()
+   */
+  @Override
+  public FolFormula collapseAssociativeFormulas() {
+    if(this.isEmpty())
+      return new Contradiction();
+    if(this.size() == 1)
+      return ((FolFormula)this.iterator().next()).collapseAssociativeFormulas();
+    Disjunction newMe = new Disjunction();
+    for(RelationalFormula f: this){
+      if(! (f instanceof FolFormula)) throw new IllegalStateException("Can not collapse disjunctions containing non-first-order formulae.");
+      FolFormula newF = ((FolFormula)f).collapseAssociativeFormulas();
+      if(newF instanceof Disjunction)
+        newMe.addAll((Disjunction) newF);
+      else newMe.add(newF);
+    }
+    return newMe;
+  }
 }

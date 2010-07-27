@@ -34,6 +34,24 @@ public class ForallQuantifiedFormula extends QuantifiedFormula{
 			return new ForallQuantifiedFormula(this.getFormula(),this.getQuantifierVariables());
 		return new ForallQuantifiedFormula(this.getFormula().substitute(v, t),this.getQuantifierVariables());
 	}
+  
+  /*
+   * (non-Javadoc)
+   * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#collapseAssociativeFormulas()
+   */
+  @Override
+  public FolFormula collapseAssociativeFormulas() {
+    return new ForallQuantifiedFormula( this.getFormula().collapseAssociativeFormulas(), this.getQuantifierVariables() );
+  }
+  
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#toNNF()
+	 */
+	@Override
+	public FolFormula toNNF() {
+	  return new ForallQuantifiedFormula( getFormula().toNNF(), getQuantifierVariables() );
+	}
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#toString()
