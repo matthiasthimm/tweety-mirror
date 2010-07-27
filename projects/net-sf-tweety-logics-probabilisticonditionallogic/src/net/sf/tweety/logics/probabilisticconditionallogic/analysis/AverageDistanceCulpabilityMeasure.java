@@ -37,7 +37,9 @@ public class AverageDistanceCulpabilityMeasure implements SignableCulpabilityMea
 	 */
 	@Override
 	public Double culpabilityMeasure(PclBeliefSet beliefSet, ProbabilisticConditional conditional) {
-		return Math.abs((this.getMinimumDistance(beliefSet, conditional)+this.getMaximumDistance(beliefSet, conditional))/2);
+		Double result = Math.abs((this.getMinimumDistance(beliefSet, conditional)+this.getMaximumDistance(beliefSet, conditional))/2);
+		this.log.debug("Culpability of '" + conditional + "' is '" + result + "'.");
+		return result;
 	}
 
 	/* (non-Javadoc)
@@ -57,8 +59,8 @@ public class AverageDistanceCulpabilityMeasure implements SignableCulpabilityMea
 	 * @return the minimum necessary deviation.
 	 */
 	private Double getMinimumDistance(PclBeliefSet beliefSet, ProbabilisticConditional conditional){
-		Double d1 = this.getWeightedDistance(beliefSet, conditional, 0.00005);
-		Double d2 = this.getWeightedDistance(beliefSet, conditional, 2);
+		Double d1 = this.getWeightedDistance(beliefSet, conditional, 0.0000005);
+		Double d2 = this.getWeightedDistance(beliefSet, conditional, 1.5);
 		return (d1>d2)?(d2):(d1);
 	}
 
@@ -71,8 +73,8 @@ public class AverageDistanceCulpabilityMeasure implements SignableCulpabilityMea
 	 * @return the maximal minimal deviation.
 	 */
 	private Double getMaximumDistance(PclBeliefSet beliefSet, ProbabilisticConditional conditional){
-		Double d1 = this.getWeightedDistance(beliefSet, conditional, 0.00005);
-		Double d2 = this.getWeightedDistance(beliefSet, conditional, 2);
+		Double d1 = this.getWeightedDistance(beliefSet, conditional, 0.0000005);
+		Double d2 = this.getWeightedDistance(beliefSet, conditional, 1.5);
 		return (d1>d2)?(d1):(d2);
 	}
 	

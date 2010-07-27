@@ -120,6 +120,7 @@ public class DistanceMinimizationInconsistencyMeasure implements InconsistencyMe
 			solver.gtol = 1e-60;
 			solver.ftol = 1e-60;
 			solver.xtol = 1e-60;
+			//solver.ignoreNotFeasibleError = true;
 			Map<Variable,Term> solution = solver.solve();
 			Double result = targetFunction.replaceAllTerms(solution).doubleValue();
 			this.log.debug("Problem solved, the measure is '" + result + "'.");
@@ -139,18 +140,18 @@ public class DistanceMinimizationInconsistencyMeasure implements InconsistencyMe
 	}
 	
 	public static void main(String[] args){
-		TweetyLogging.logLevel = TweetyConfiguration.LogLevel.DEBUG;
+		TweetyLogging.logLevel = TweetyConfiguration.LogLevel.TRACE;
 		TweetyLogging.initLogging();		
 		String file = "/Users/mthimm/Desktop/pcl_test";
 		try {
 			long millis = System.currentTimeMillis();
 			PclBeliefSet beliefSet = (PclBeliefSet) new net.sf.tweety.logics.probabilisticconditionallogic.parser.PclParser().parseBeliefBaseFromFile(file);
-			//System.out.println(new DistanceMinimizationInconsistencyMeasure().inconsistencyMeasure(beliefSet));
+			System.out.println(new PclDefaultConsistencyTester().isConsistent(beliefSet));//;new DistanceMinimizationInconsistencyMeasure().inconsistencyMeasure(beliefSet));
 			//AverageDistanceCulpabilityMeasure adMeasure = new AverageDistanceCulpabilityMeasure();
 			//ShapleyCulpabilityMeasure shapley = new ShapleyCulpabilityMeasure(new DistanceMinimizationInconsistencyMeasure());
-			for(ProbabilisticConditional pc: beliefSet)
-				System.out.println(pc + " - " +  pc.getUniformProbability());
-			System.out.println(new UnbiasedCreepingMachineShop().repair(beliefSet));
+			//for(ProbabilisticConditional pc: beliefSet)
+			//	System.out.println(pc + " - " +  pc.getUniformProbability() + " - " + adMeasure.culpabilityMeasure(beliefSet, pc));
+			//System.out.println(new PenalizingCreepingMachineShop().repair(beliefSet));
 			/*for(ProbabilisticConditional pc: beliefSet)
 				System.out.println(pc + " - " +  shapley.culpabilityMeasure(beliefSet, pc));
 			for(Set<Formula> f: new PclDefaultConsistencyTester().minimalInconsistentSubsets(beliefSet))

@@ -31,6 +31,7 @@ public class OpenOptSolver extends Solver {
 	public double maxIter = 1e16;
 	public double maxFunEvals = 1e16;
 	public String solver = "lincher";
+	public boolean ignoreNotFeasibleError = false;
 	
 	/**
 	 * A starting point for the optimization.
@@ -115,7 +116,7 @@ public class OpenOptSolver extends Solver {
 			return null;
 		}
 		// TODO check error appropriately
-		if(output.contains("NO FEASIBLE SOLUTION")){
+		if(output.contains("NO FEASIBLE SOLUTION") && !this.ignoreNotFeasibleError){
 			this.log.info("The optimization problem seems to be unfeasible.");
 			throw new GeneralMathException("The optimization problem seems to be unfeasible.");
 		}
