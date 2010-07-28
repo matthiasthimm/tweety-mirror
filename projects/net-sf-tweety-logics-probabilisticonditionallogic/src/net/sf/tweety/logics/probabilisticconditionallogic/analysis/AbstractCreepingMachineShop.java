@@ -43,6 +43,7 @@ public abstract class AbstractCreepingMachineShop implements BeliefBaseMachineSh
 		if(tester.isConsistent(beliefSet))
 			return beliefSet;
 		this.log.trace("'" + beliefSet + "' is inconsistent, preparing optimization problem to restore consistency.");
+		this.init(beliefSet);
 		double lowerBound = this.getLowerBound();
 		double upperBound = this.getUpperBound();
 		PclBeliefSet lastConsistentBeliefSet = beliefSet;
@@ -66,6 +67,13 @@ public abstract class AbstractCreepingMachineShop implements BeliefBaseMachineSh
 		this.log.debug("Repair complete, final knowledge base: " + lastConsistentBeliefSet);
 		return lastConsistentBeliefSet;
 	}
+	
+	/**
+	 * Performs some optional initializations before beginning
+	 * to restore consistency. 
+	 * @param beliefSet a PCL belief set.
+	 */
+	protected void init(PclBeliefSet beliefSet){ }
 	
 	/**
 	 * Returns a modified belief base that replaces each conditionals probability

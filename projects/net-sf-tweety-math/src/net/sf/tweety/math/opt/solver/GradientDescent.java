@@ -28,7 +28,7 @@ public class GradientDescent extends Solver {
 	 * The precision of the approximation.
 	 * The actual used precision depends on the number of variables. 
 	 */
-	public final static double PRECISION = 0.00001;
+	public double precision = 0.00001;
 	
 	/**
 	 * The max step length for the gradient descent.
@@ -74,7 +74,7 @@ public class GradientDescent extends Solver {
 		Map<Variable,Term> newGuess = new HashMap<Variable,Term>();
 		List<Double> currentGradient = Term.evaluateVector(gradient, currentGuess);
 		List<Double> newGradient; 
-		double actualPrecision = GradientDescent.PRECISION * variables.size();
+		double actualPrecision = this.precision * variables.size();
 		int idx;
 		double step,val;
 		this.log.trace("Starting optimization.");

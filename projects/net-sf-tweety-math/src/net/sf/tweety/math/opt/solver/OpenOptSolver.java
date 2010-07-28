@@ -206,19 +206,25 @@ public class OpenOptSolver extends Solver {
 		// add constraints		
 		int idx = 0;
 		List<String> equalities = new ArrayList<String>();
+		List<String> inequalities = new ArrayList<String>();
 		for(Statement s: problem){
 			if(s instanceof Equation){
 				// add equality constraints
 				Equation eq = (Equation)s.toNormalizedForm();
 				equalities.add("c" + idx);
 				code += "c" + idx + " = lambda x: " + eq.getLeftTerm().toString().replace("log", "log_mod") + "\n";
-				idx++;
+				
 			}else{
-				// TODO add inequality constraints
-				throw new UnsupportedOperationException("Inequality constraints not supported yet: IMPLEMENT ME!");
+				Inequation ineq = (Inequation) s.toNormalizedForm();
+				inequalities.add("i" + idx);
+				code += "i" + idx + " = lambda x: " + new FloatConstant(-1).mult(ineq.getLeftTerm()).toString().replace("log", "log_mod") + "\n";
 			}
+			idx++;
 		}
-		code += "\np.h = " + equalities + "\n\n";		
+		if(!equalities.isEmpty())
+			code += "\np.h = " + equalities + "\n\n";
+		if(!inequalities.isEmpty())
+			code += "\np.c = " + inequalities + "\n\n";
 		// write commands			
 		code += "p.contol = " + this.contol + "\n";
 		code += "p.ftol = " + this.ftol + "\n";

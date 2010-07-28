@@ -76,13 +76,12 @@ public class PclBeliefSetQuadraticErrorMinimizationMachineShop implements Belief
 		Term targetFunction = null;
 		i = 0;		
 		for(ProbabilisticConditional c: beliefSet){
-			//TODO '1000' -> infinity
-			FloatVariable tau = new FloatVariable("t" + i++,-1000,1000);
+			FloatVariable tau = new FloatVariable("t" + i++,-1,1);
 			taus.put(c, tau);
 			// the target function is the quadratic sums of the deviations
 			if(targetFunction == null)
-				targetFunction = new Exp(new Exp(tau.mult(tau)));
-			else targetFunction = targetFunction.add(new Exp(new Exp(tau.mult(tau))));
+				targetFunction = tau.mult(tau);
+			else targetFunction = targetFunction.add(tau.mult(tau));
 			Term leftSide = null;
 			Term rightSide = null;
 			if(c.isFact()){
@@ -92,7 +91,7 @@ public class PclBeliefSetQuadraticErrorMinimizationMachineShop implements Belief
 							leftSide = worlds2vars.get(w);
 						else leftSide = leftSide.add(worlds2vars.get(w));
 					}
-				rightSide = new FloatConstant(c.getProbability().getValue()).add(new FloatConstant(this.culpabilityMeasure.culpabilityMeasure(beliefSet, c)).mult(tau));
+				rightSide = new FloatConstant(c.getProbability().getValue()).add(tau);
 			}else{				
 				PropositionalFormula body = c.getPremise().iterator().next();
 				PropositionalFormula head_and_body = (PropositionalFormula) c.getConclusion().combineWithAnd(body);
@@ -110,14 +109,25 @@ public class PclBeliefSetQuadraticErrorMinimizationMachineShop implements Belief
 				}
 				if(rightSide == null)
 					rightSide = new FloatConstant(0);
-				else rightSide = rightSide.mult(new FloatConstant(c.getProbability().getValue()).add(new FloatConstant(this.culpabilityMeasure.culpabilityMeasure(beliefSet, c)).mult(tau)));
+				else rightSide = rightSide.mult(new FloatConstant(c.getProbability().getValue()).add(tau));
 			}
 			if(leftSide == null)
 				leftSide = new FloatConstant(0);
 			if(rightSide == null)
 				rightSide = new FloatConstant(0);
 			problem.add(new Equation(leftSide,rightSide));
-		}			
+		}		
+		// add constraints to ensure conformity
+		for(Set<ProbabilisticConditional> pair: new SetTools<ProbabilisticConditional>().subsets(beliefSet, 2)){
+			Iterator<ProbabilisticConditional> it = pair.iterator();
+			ProbabilisticConditional pc1 = it.next();
+			ProbabilisticConditional pc2 = it.next();
+			if(this.culpabilityMeasure.culpabilityMeasure(beliefSet, pc1).equals(this.culpabilityMeasure.culpabilityMeasure(beliefSet, pc2)))
+				problem.add(new Equation(taus.get(pc1).mult(taus.get(pc1)),taus.get(pc2).mult(taus.get(pc2))));
+			else if(this.culpabilityMeasure.culpabilityMeasure(beliefSet, pc1) > this.culpabilityMeasure.culpabilityMeasure(beliefSet, pc2))
+				problem.add(new Inequation(taus.get(pc1).mult(taus.get(pc1)),taus.get(pc2).mult(taus.get(pc2)),Inequation.GREATER));
+			else problem.add(new Inequation(taus.get(pc2).mult(taus.get(pc2)),taus.get(pc1).mult(taus.get(pc1)),Inequation.GREATER));
+		}		
 		problem.setTargetFunction(targetFunction);		
 		try{
 			OpenOptSolver solver = new OpenOptSolver(problem);
@@ -125,13 +135,14 @@ public class PclBeliefSetQuadraticErrorMinimizationMachineShop implements Belief
 			solver.gtol = 1e-60;
 			solver.xtol = 1e-60;
 			solver.ftol = 1e-60;
+			solver.solver = "ralg";
 			Map<Variable,Term> solution = solver.solve();
 			this.log.trace("Problem solved, modifying belief set.");
 			// Modify belief set
 			PclBeliefSet newBeliefSet = new PclBeliefSet();
 			for(ProbabilisticConditional pc: beliefSet){
 				Double p = pc.getProbability().getValue();
-				p += this.culpabilityMeasure.culpabilityMeasure(beliefSet, pc) * solution.get(taus.get(pc)).doubleValue();
+				p += solution.get(taus.get(pc)).doubleValue();
 				newBeliefSet.add(new ProbabilisticConditional(pc,new Probability(p)));
 			}
 			return newBeliefSet;

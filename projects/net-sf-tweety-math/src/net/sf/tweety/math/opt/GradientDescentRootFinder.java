@@ -24,6 +24,12 @@ public class GradientDescentRootFinder extends OptimizationRootFinder {
 	private Log log = LogFactory.getLog(GradientDescentRootFinder.class);
 	
 	/**
+	 * The precision of the approximation.
+	 * The actual used precision depends on the number of variables. 
+	 */
+	public double precision = 0.00001;
+	
+	/**
 	 * Creates a new root finder for the given starting point and the given function
 	 * @param startingPoint
 	 */
@@ -46,7 +52,9 @@ public class GradientDescentRootFinder extends OptimizationRootFinder {
 	@Override
 	public Map<Variable, Term> randomRoot() throws GeneralMathException {		
 		this.log.trace("Determining a random root of the function '" + this.getFunctions() + "' using the gradient descent root finder.");
-		return new GradientDescent(this.buildOptimizationProblem(),this.getStartingPoint()).solve();
+		GradientDescent solver = new GradientDescent(this.buildOptimizationProblem(),this.getStartingPoint());
+		solver.precision = this.precision;
+		return solver.solve();
 	}
 
 }

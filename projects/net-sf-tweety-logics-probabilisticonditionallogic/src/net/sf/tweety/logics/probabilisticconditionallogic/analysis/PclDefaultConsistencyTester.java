@@ -85,7 +85,8 @@ public class PclDefaultConsistencyTester extends BeliefSetConsistencyTester {
 		Map<Variable,Term> startingPoint = new HashMap<Variable,Term>();
 		for(PossibleWorld w: worlds)
 			startingPoint.put(worlds2vars.get(w), new IntegerConstant(1));
-		RootFinder rootFinder = new GradientDescentRootFinder(functions,startingPoint);
+		GradientDescentRootFinder rootFinder = new GradientDescentRootFinder(functions,startingPoint);
+		rootFinder.precision = 0.0001;
 		try {
 			rootFinder.randomRoot();
 		} catch (GeneralMathException e) {
