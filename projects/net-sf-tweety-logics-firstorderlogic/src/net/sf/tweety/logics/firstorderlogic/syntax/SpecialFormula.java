@@ -152,7 +152,7 @@ public abstract class SpecialFormula extends FolFormula{
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#toNNF()
 	 */
 	@Override
-	public FolFormula toNNF() {
+	public FolFormula toNnf() {
 	  return this;
 	}
 

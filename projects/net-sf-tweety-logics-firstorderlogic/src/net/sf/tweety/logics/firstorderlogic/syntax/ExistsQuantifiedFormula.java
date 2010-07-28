@@ -36,8 +36,8 @@ public class ExistsQuantifiedFormula extends QuantifiedFormula{
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#toNNF()
 	 */
   @Override
-  public FolFormula toNNF() {
-    return new ExistsQuantifiedFormula( getFormula().toNNF(), getQuantifierVariables() );
+  public FolFormula toNnf() {
+    return new ExistsQuantifiedFormula( getFormula().toNnf(), getQuantifierVariables() );
   }
 	
   /*

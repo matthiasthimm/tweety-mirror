@@ -70,21 +70,21 @@ public abstract class PropositionalFormula implements ClassicalFormula {
      * A formula is in NNF iff negations occur only directly in front of a proposition.
      * @return the formula in NNF.
      */
-	public abstract PropositionalFormula toNNF();
+	public abstract PropositionalFormula toNnf();
 	
     /**
 	 * This method returns this formula in disjunctive normal form (DNF).
 	 * A formula is in DNF iff it is a disjunction of conjunctive clauses.
 	 * @return the formula in DNF.
 	 */
-	public PropositionalFormula toDNF(){
-		PropositionalFormula nnf = this.toNNF();
+	public PropositionalFormula toDnf(){
+		PropositionalFormula nnf = this.toNnf();
 	    // DNF( P || Q) = DNF(P) || DNF(Q)
 	    if(nnf instanceof Disjunction) {
 	      Disjunction d = (Disjunction) nnf;
 	      Disjunction dnf = new Disjunction();
 	      for(PropositionalFormula f : d) {
-	        dnf.add( f.toDNF() );
+	        dnf.add( f.toDnf() );
 	      }
 	    return dnf;
 	}
@@ -107,7 +107,7 @@ public abstract class PropositionalFormula implements ClassicalFormula {
       Conjunction c = (Conjunction) nnf;
       Set<Set<PropositionalFormula>> disjunctions = new HashSet<Set<PropositionalFormula>>();
       for(PropositionalFormula f : c) {
-        PropositionalFormula fdnf = f.toDNF().collapseAssociativeFormulas();
+        PropositionalFormula fdnf = f.toDnf().collapseAssociativeFormulas();
         Set<PropositionalFormula> elems = new HashSet<PropositionalFormula>();
         disjunctions.add( elems );
         if(fdnf instanceof Disjunction) {

@@ -191,10 +191,10 @@ public class Negation extends FolFormula{
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#toNNF()
 	 */
 	@Override
-	public FolFormula toNNF() {
+	public FolFormula toNnf() {
     // remove double negation    
     if(folFormula instanceof Negation)
-      return ((Negation)folFormula).folFormula.toNNF();
+      return ((Negation)folFormula).folFormula.toNnf();
 
      // Distribute negation inside conjunctions or disjunctions according to deMorgan's laws:
      // -(p & q)  = -p || -q
@@ -204,7 +204,7 @@ public class Negation extends FolFormula{
       Disjunction d = new Disjunction();
       
       for(RelationalFormula p : c) {
-        d.add( new Negation( p ).toNNF() );
+        d.add( new Negation( p ).toNnf() );
       }
       return d;
     }
@@ -213,7 +213,7 @@ public class Negation extends FolFormula{
        Conjunction c = new Conjunction();
        
        for(RelationalFormula p : d) {
-         c.add( new Negation( p ).toNNF() );
+         c.add( new Negation( p ).toNnf() );
        }
        return c;
     }
@@ -222,19 +222,19 @@ public class Negation extends FolFormula{
     // NNF(! FORALL x : R(x)) = EXISTS x : NNF( ! R(x) )
     if(folFormula instanceof ForallQuantifiedFormula) {
       ForallQuantifiedFormula q = (ForallQuantifiedFormula) folFormula;
-      return new ExistsQuantifiedFormula( new Negation(q.getFormula()).toNNF(), q.getQuantifierVariables() );
+      return new ExistsQuantifiedFormula( new Negation(q.getFormula()).toNnf(), q.getQuantifierVariables() );
     }
     // NNF(! EXISTS x : R(x)) = FORALL x : NNF( ! R(x) )
     if(folFormula instanceof ExistsQuantifiedFormula) {
       ExistsQuantifiedFormula q = (ExistsQuantifiedFormula) folFormula;
-      return new ForallQuantifiedFormula( new Negation(q.getFormula()).toNNF(), q.getQuantifierVariables() );
+      return new ForallQuantifiedFormula( new Negation(q.getFormula()).toNnf(), q.getQuantifierVariables() );
     }
     if(folFormula instanceof Tautology)
       return new Contradiction();
     if(folFormula instanceof Contradiction)
       return new Tautology();
     
-    return new Negation(this.folFormula.toNNF());
+    return new Negation(this.folFormula.toNnf());
 	}
 	
 	/*

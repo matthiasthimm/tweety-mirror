@@ -75,10 +75,10 @@ public class Disjunction extends AssociativeFormula {
    * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#toNNF()
    */
 	@Override
-	public PropositionalFormula toNNF() {
+	public PropositionalFormula toNnf() {
 	  Disjunction d = new Disjunction();
     for(PropositionalFormula p : this) {
-      d.add( p.toNNF() );
+      d.add( p.toNnf() );
     }
     return d;
 	}

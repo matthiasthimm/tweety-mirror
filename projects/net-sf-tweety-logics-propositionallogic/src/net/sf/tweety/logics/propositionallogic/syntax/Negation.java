@@ -65,10 +65,10 @@ public class Negation extends PropositionalFormula {
    * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#toNNF()
    */
 	@Override
-	public PropositionalFormula toNNF() {
+	public PropositionalFormula toNnf() {
     // remove double negation    
     if(formula instanceof Negation)
-      return ((Negation)formula).formula.toNNF();
+      return ((Negation)formula).formula.toNnf();
 
      // Distribute negation inside conjunctions or disjunctions according to deMorgan's laws:
      // -(p & q)  = -p || -q
@@ -78,7 +78,7 @@ public class Negation extends PropositionalFormula {
       Disjunction d = new Disjunction();
       
       for(PropositionalFormula p : c) {
-        d.add( new Negation( p ).toNNF() );
+        d.add( new Negation( p ).toNnf() );
       }
       return d;
     }
@@ -88,7 +88,7 @@ public class Negation extends PropositionalFormula {
        Conjunction c = new Conjunction();
        
        for(PropositionalFormula p : d) {
-         c.add( new Negation( p ).toNNF() );
+         c.add( new Negation( p ).toNnf() );
        }
        return c;
     }

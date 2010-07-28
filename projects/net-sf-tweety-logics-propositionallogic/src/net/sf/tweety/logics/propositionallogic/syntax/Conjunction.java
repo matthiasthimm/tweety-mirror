@@ -78,10 +78,10 @@ public class Conjunction extends AssociativeFormula {
    * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#toNNF()
    */
 	@Override
-	public PropositionalFormula toNNF() {
+	public PropositionalFormula toNnf() {
     Conjunction c = new Conjunction();
     for(PropositionalFormula p : this) {
-      c.add( p.toNNF() );
+      c.add( p.toNnf() );
     }
     return c;
 	}

@@ -245,10 +245,10 @@ public class Atom extends FolFormula {
 	
 	/*
 	 * (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#toNNF()
+	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#toNnf()
 	 */
 	@Override
-	public FolFormula toNNF() {
+	public FolFormula toNnf() {
 	  return this;
 	}
 	

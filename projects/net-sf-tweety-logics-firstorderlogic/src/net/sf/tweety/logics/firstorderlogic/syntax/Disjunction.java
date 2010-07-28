@@ -88,11 +88,11 @@ public class Disjunction extends AssociativeFormula{
    * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#toNNF()
    */
   @Override
-  public FolFormula toNNF() {
+  public FolFormula toNnf() {
     Disjunction d = new Disjunction();
     for(RelationalFormula p : this) {
       if(p instanceof FolFormula)
-        d.add( ((FolFormula) p).toNNF() );
+        d.add( ((FolFormula) p).toNnf() );
       else
         throw new IllegalStateException("Can not convert conjunctions containing non-first-order formulae to NNF.");
     }

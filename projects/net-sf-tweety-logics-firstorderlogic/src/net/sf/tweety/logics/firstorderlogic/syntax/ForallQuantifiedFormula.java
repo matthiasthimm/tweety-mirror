@@ -49,8 +49,8 @@ public class ForallQuantifiedFormula extends QuantifiedFormula{
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#toNNF()
 	 */
 	@Override
-	public FolFormula toNNF() {
-	  return new ForallQuantifiedFormula( getFormula().toNNF(), getQuantifierVariables() );
+	public FolFormula toNnf() {
+	  return new ForallQuantifiedFormula( getFormula().toNnf(), getQuantifierVariables() );
 	}
 	
 	/* (non-Javadoc)

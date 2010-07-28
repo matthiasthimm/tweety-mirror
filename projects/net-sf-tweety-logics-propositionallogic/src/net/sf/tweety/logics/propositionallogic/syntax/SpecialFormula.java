@@ -29,7 +29,7 @@ public abstract class SpecialFormula extends PropositionalFormula {
 	 * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#toNNF()
 	 */
   @Override
-  public PropositionalFormula toNNF() {
+  public PropositionalFormula toNnf() {
     return this;
   }
 

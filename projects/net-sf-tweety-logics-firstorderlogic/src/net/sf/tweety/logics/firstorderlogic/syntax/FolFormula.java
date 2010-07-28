@@ -46,11 +46,12 @@ public abstract class FolFormula extends RelationalFormula{
 	
 	/**
 	 * Makes a disjunctive normal form of this formula.
+	 * @return the DNF of this formula
 	 */
-	public FolFormula toDNF(){
+	public FolFormula toDnf(){
 		if(this.isDnf()) return this;
 		if(this.containsQuantifier()) throw new UnsupportedOperationException("Cannot convert quantified formula into DNF.");
-		FolFormula nnf = this.toNNF();
+		FolFormula nnf = this.toNnf();
 
     // DNF( P || Q) = DNF(P) || DNF(Q)
     if(nnf instanceof Disjunction) {
@@ -58,7 +59,7 @@ public abstract class FolFormula extends RelationalFormula{
       Disjunction dnf = new Disjunction();
       for(RelationalFormula f : d) {
         if(f instanceof FolFormula)
-          dnf.add( ((FolFormula)f).toDNF() );
+          dnf.add( ((FolFormula)f).toDnf() );
         else throw new IllegalStateException("Can not convert disjunctions containing non-first-order formulae to NNF.");
       }
       return dnf.collapseAssociativeFormulas();
@@ -83,7 +84,7 @@ public abstract class FolFormula extends RelationalFormula{
       Set<Set<RelationalFormula>> disjunctions = new HashSet<Set<RelationalFormula>>();
       for(RelationalFormula f : c) {
         if(! (f instanceof FolFormula)) throw new IllegalStateException("Can not convert conjunctions containing non-first-order formulae to NNF.");
-        FolFormula fdnf = ((FolFormula)f).toDNF();
+        FolFormula fdnf = ((FolFormula)f).toDnf();
         Set<RelationalFormula> elems = new HashSet<RelationalFormula>();
         if(fdnf instanceof Disjunction) {
           elems.addAll( (Disjunction)fdnf );
@@ -106,8 +107,9 @@ public abstract class FolFormula extends RelationalFormula{
 	
 	/**
 	 * Makes the negation normal form of this formula.
+	 * @return the NNF of this formula
 	 */
-	public abstract FolFormula toNNF();
+	public abstract FolFormula toNnf();
 	 
   /**
    * This method collapses all associative operations appearing
