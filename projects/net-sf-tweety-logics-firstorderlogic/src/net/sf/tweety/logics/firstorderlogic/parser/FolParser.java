@@ -437,7 +437,13 @@ public class FolParser extends Parser {
 				if(s.equals(FolSignature.CONTRADICTION))
 					return new Contradiction();
 				if(s.equals(FolSignature.TAUTOLOGY))
-					return new Tautology();				
+					return new Tautology();
+				if(this.signature.containsPredicate( s )) {
+				  Predicate p = this.signature.getPredicate( s );
+				  if(p.getArity() > 0)
+				    throw new IllegalArgumentException("Predicate '" + p + "' has arity '" + p.getArity() + "'.");
+				  return new Atom(p);
+				}
 			}
 			throw new ParserException("Unknown object " + o);
 		}else{
