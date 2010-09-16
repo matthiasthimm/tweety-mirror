@@ -2,6 +2,10 @@
 <project default="update_latest_build" name="Update the latest build (JAR) in the latest builds folder">
 	<target name="update_latest_build" description="Update the latest build (JAR) in the latest builds folder">
 		<jar destfile="../../latestBuild/net-sf-tweety--complete.jar">
+			<zipfileset dir="../../latestBuild" includes="net-sf-tweety-action.jar"/>
+			<zipfileset dir="../../latestBuild" includes="net-sf-tweety-action-description-c.jar"/>
+			<zipfileset dir="../../latestBuild" includes="net-sf-tweety-action-query-s.jar"/>
+			<zipfileset dir="../../latestBuild" includes="net-sf-tweety-logicprogramming-asp.jar"/>
 			<zipfileset dir="../../latestBuild" includes="net-sf-tweety-agents-structuredargumentationsystems.jar"/>
 			<zipfileset dir="../../latestBuild" includes="net-sf-tweety-agents.jar"/>
 			<zipfileset dir="../../latestBuild" includes="net-sf-tweety-argumentation-dung.jar"/>
