@@ -5,12 +5,12 @@ import java.util.Collection;
 import net.sf.tweety.BeliefSet;
 
 /**
- * This class represents an action description as a set of causal rules.
+ * This class represents an action description as a set of causal laws.
  * 
  * @author Sebastian Homann
- * @param <T> Type of causal rule to be kept in this action description.
+ * @param <T> Type of causal law to be kept in this action description.
  */
-public abstract class ActionDescription< T extends CausalRule >
+public abstract class ActionDescription< T extends CausalLaw >
   extends BeliefSet< T >
 {
   
@@ -26,7 +26,7 @@ public abstract class ActionDescription< T extends CausalRule >
    * Creates a new action description containing all elements in the collection
    * given.
    * 
-   * @param c a collection of causal rules.
+   * @param c a collection of causal laws.
    */
   public ActionDescription( Collection< ? extends T > c )
   {

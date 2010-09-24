@@ -14,9 +14,9 @@ import net.sf.tweety.action.signature.parser.ActionSignatureParser;
 /**
  * This class implements a parser for an Action Description in C. 
  * The BNF is given by: (starting symbol is DESC) <br>
- * <br> DESC ::== ":- signature" "\n" SIGNATURE "\n" ":- rules" "\n" RULES
+ * <br> DESC ::== ":- signature" "\n" SIGNATURE "\n" ":- laws" "\n" LAWS
  * <br>
- * where SIGNATURE is parsed by CSignatureParser and RULES is parsed by CRuleParser.
+ * where SIGNATURE is parsed by CSignatureParser and LAWS is parsed by CLawParser.
  * @author Sebastian Homann
  */
 public class CParser
@@ -32,11 +32,11 @@ public class CParser
     throws IOException, ParserException {
     // State 0 : initialize
     // State 1 : read signature
-    // State 2 : read rulebase
+    // State 2 : read lawbase
     int state = 0;
     String s = "";
     String sig = "";
-    String rules = "";
+    String laws = "";
     // read from the reader and separate formulas by "\n"
     try {
       int c;
@@ -46,11 +46,11 @@ public class CParser
           if ( !s.trim().equals( "" ) ) {
             if(s.trim().contains( ":- signature" )) {
               state = 1;
-            } else if(s.trim().contains( ":- rules" )) {
+            } else if(s.trim().contains( ":- laws" )) {
               state = 2;
             } else {
               if(state == 1) sig += s+"\n";
-              else rules += s+"\n";
+              else laws += s+"\n";
             }
           }
           s = "";
@@ -60,7 +60,7 @@ public class CParser
       } while ( c != -1 );
       
       signature = new ActionSignatureParser().parseSignature( sig );
-      return new CRuleParser( signature ).parseBeliefBase( rules );
+      return new CLawParser( signature ).parseBeliefBase( laws );
     } catch ( Exception e ) {
       throw new ParserException( e );
     }
@@ -88,7 +88,7 @@ public class CParser
    */
   @Override
   public Formula parseFormula( String formula) throws ParserException, IOException {
-    return new CRuleParser( signature ).parseFormula( formula );
+    return new CLawParser( signature ).parseFormula( formula );
   }
   
   public void setSignature( ActionSignature signature) {

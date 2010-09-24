@@ -26,5 +26,5 @@ public interface ActionDescriptionConsistencyTester
    * @param causalRules a set of causal rules.
    * @return true iff the given set of causal rules is consistent.
    */
-  public boolean isConsistent( Set< CausalRule > causalRules );
+  public boolean isConsistent( Set< CausalLaw > causalRules );
 }

@@ -86,10 +86,7 @@ public class SActionQuerySatisfactionTester
       e.printStackTrace();
     }
     catch ( AspException e ) {
-      // May arise when the given transition system does not contain any transitions and
-      // the given actionQueries contain necessarily-expressions constituting constraints
-      // on transitions. In such cases, the querySet is not satisfied.
-      return false;
+      e.printStackTrace();
     }
     return result;
   }
@@ -131,7 +128,7 @@ public class SActionQuerySatisfactionTester
   }
   
   /**
-   * Returns the basic translation of action query rules to rules in the logic
+   * Returns the basic translation of action query laws to rules in the logic
    * program.
    * 
    * @param queries the set of queries that should be translated.
@@ -457,11 +454,11 @@ public class SActionQuerySatisfactionTester
    */
   private String removeIllegalCharacters( String s )
   {
-    return s.replace( "(", "_1_" ).replace( ")", "_2_" ).replace( ",", "_3_" )
-      .replace( "!", "_4_" ).replace( "&&", "_5_" ).replace( "||", "_6_" )
-      .replace( "[", "_7_" ).replace( "]", "_8_" ).replace( "{", "_9_" )
-      .replace( "}", "_10_" ).replace( " ", "_11_" ).replace( "+", "_12_" )
-      .replace( "-", "_13_" ).replace( ";", "_14_" );
+    return s.replace( "(", "xxx1xxx" ).replace( ")", "xxx2xxx" ).replace( ",", "xxx3xxx" )
+      .replace( "!", "xxx4xxx" ).replace( "&&", "xxx5xxx" ).replace( "||", "xxx6xxx" )
+      .replace( "[", "xxx7xxx" ).replace( "]", "xxx8xxx" ).replace( "{", "xxx9xxx" )
+      .replace( "}", "xxx10xxx" ).replace( " ", "xxx11xxx" ).replace( "+", "xxx12xxx" )
+      .replace( "-", "xxx13xxx" ).replace( ";", "xxx14xxx" );
   }
   
   /**
@@ -473,10 +470,10 @@ public class SActionQuerySatisfactionTester
    */
   public String regainIllegalCharacters( String s )
   {
-    return s.replace( "_1_", "(" ).replace( "_2_", ")" ).replace( "_3_", "," )
-      .replace( "_4_", "!" ).replace( "_5_", "&&" ).replace( "_6_", "||" )
-      .replace( "_7_", "[" ).replace( "_8_", "]" ).replace( "_9_", "{" )
-      .replace( "_10_", "}" ).replace( "_11_", " " ).replace( "_12_", "+" )
-      .replace( "_13_", "-" ).replace( "_14_", ";" );
+    return s.replace( "xxx1xxx", "(" ).replace( "xxx2xxx", ")" ).replace( "xxx3xxx", "," )
+      .replace( "xxx4xxx", "!" ).replace( "xxx5xxx", "&&" ).replace( "xxx6xxx", "||" )
+      .replace( "xxx7xxx", "[" ).replace( "xxx8xxx", "]" ).replace( "xxx9xxx", "{" )
+      .replace( "xxx10xxx", "}" ).replace( "xxx11xxx", " " ).replace( "xxx12xxx", "+" )
+      .replace( "xxx13xxx", "-" ).replace( "xxx14xxx", ";" );
   }
 }

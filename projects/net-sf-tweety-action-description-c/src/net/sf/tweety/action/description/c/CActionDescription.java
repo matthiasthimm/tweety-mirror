@@ -6,10 +6,10 @@ import java.util.Set;
 
 import net.sf.tweety.Signature;
 import net.sf.tweety.action.ActionDescription;
-import net.sf.tweety.action.CausalRule;
-import net.sf.tweety.action.description.c.syntax.CRule;
-import net.sf.tweety.action.description.c.syntax.DynamicRule;
-import net.sf.tweety.action.description.c.syntax.StaticRule;
+import net.sf.tweety.action.CausalLaw;
+import net.sf.tweety.action.description.c.syntax.CLaw;
+import net.sf.tweety.action.description.c.syntax.DynamicLaw;
+import net.sf.tweety.action.description.c.syntax.StaticLaw;
 import net.sf.tweety.action.signature.ActionSignature;
 
 /**
@@ -19,7 +19,7 @@ import net.sf.tweety.action.signature.ActionSignature;
  * @author Sebastian Homann
  */
 public class CActionDescription
-  extends ActionDescription< CRule >
+  extends ActionDescription< CLaw >
 {
   /**
    * Creates a new empty action description.
@@ -34,15 +34,15 @@ public class CActionDescription
    * 
    * @param c a collection of formulae.
    */
-  public CActionDescription( Collection< ? extends CausalRule > c )
+  public CActionDescription( Collection< ? extends CausalLaw > c )
   {
-    for ( CausalRule r : c ) {
-      if ( r instanceof CRule ) {
-        add( (CRule) r );
+    for ( CausalLaw r : c ) {
+      if ( r instanceof CLaw ) {
+        add( (CLaw) r );
       }
       else {
         throw new IllegalArgumentException(
-          "The action description given contains rules of a wrong type." );
+          "The action description given contains laws of a wrong type." );
       }
     }
   }
@@ -55,29 +55,29 @@ public class CActionDescription
   public Signature getSignature()
   {
     ActionSignature sig = new ActionSignature();
-    for ( CRule r : this )
+    for ( CLaw r : this )
       sig.addAll( r.getFormulas() );
     return sig;
   }
   
   /**
    * Calculates a new action description containing all ground instances of each
-   * rule in this action description.
+   * law in this action description.
    * 
-   * @return a new action description containing only ground rules.
+   * @return a new action description containing only ground laws.
    */
   public CActionDescription ground()
   {
-    Set< CRule > rules = new HashSet< CRule >();
-    for ( CRule rule : this ) {
-      rules.addAll( rule.getAllGrounded() );
+    Set< CLaw > laws = new HashSet< CLaw >();
+    for ( CLaw law : this ) {
+      laws.addAll( law.getAllGrounded() );
     }
-    return new CActionDescription( rules );
+    return new CActionDescription( laws );
   }
   
   /**
    * Calculates a new action description which descibes the same transition
-   * system and contains only definite causal rules.
+   * system and contains only definite causal laws.
    * 
    * @return a new definite action description.
    * @throws IllegalStateException when there is no equivalent definite action
@@ -86,65 +86,65 @@ public class CActionDescription
   public CActionDescription toDefinite()
     throws IllegalStateException
   {
-    Set< CRule > rules = new HashSet< CRule >();
-    for ( CRule rule : this ) {
-      rules.addAll( rule.toDefinite() );
+    Set< CLaw > laws = new HashSet< CLaw >();
+    for ( CLaw law : this ) {
+      laws.addAll( law.toDefinite() );
     }
-    return new CActionDescription( rules );
+    return new CActionDescription( laws );
   }
   
   /**
-   * Checks whether this action description contains any non-ground rules.
+   * Checks whether this action description contains any non-ground laws.
    * 
-   * @return true iff each rule in this action description is grounded.
+   * @return true iff each law in this action description is grounded.
    */
   public boolean isGround()
   {
-    for ( CRule rule : this )
-      if ( !rule.isGround() )
+    for ( CLaw law : this )
+      if ( !law.isGround() )
         return false;
     return true;
   }
   
   /**
-   * Checks whether this action description contains any non-definite rules.
+   * Checks whether this action description contains any non-definite laws.
    * 
-   * @return ture iff each rule in this action description is definite.
+   * @return ture iff each law in this action description is definite.
    */
   public boolean isDefinite()
   {
-    for ( CRule rule : this )
-      if ( !rule.isDefinite() )
+    for ( CLaw law : this )
+      if ( !law.isDefinite() )
         return false;
     return true;
   }
   
   /**
-   * Returns a set of all static rules contained in this action description.
+   * Returns a set of all static laws contained in this action description.
    * 
-   * @return a set of all static rules contained in this action description.
+   * @return a set of all static laws contained in this action description.
    */
-  public Set< StaticRule > getStaticRules()
+  public Set< StaticLaw > getStaticLaws()
   {
-    Set< StaticRule > result = new HashSet< StaticRule >();
-    for ( CRule r : this ) {
-      if ( r instanceof StaticRule )
-        result.add( (StaticRule) r );
+    Set< StaticLaw > result = new HashSet< StaticLaw >();
+    for ( CLaw r : this ) {
+      if ( r instanceof StaticLaw )
+        result.add( (StaticLaw) r );
     }
     return result;
   }
   
   /**
-   * Returns a set of all dynamic rules contained in this action description.
+   * Returns a set of all dynamic laws contained in this action description.
    * 
-   * @return a set of all dynamic rules contained in this action description.
+   * @return a set of all dynamic laws contained in this action description.
    */
-  public Set< DynamicRule > getDynamicRules()
+  public Set< DynamicLaw > getDynamicLaws()
   {
-    Set< DynamicRule > result = new HashSet< DynamicRule >();
-    for ( CRule r : this ) {
-      if ( r instanceof DynamicRule )
-        result.add( (DynamicRule) r );
+    Set< DynamicLaw > result = new HashSet< DynamicLaw >();
+    for ( CLaw r : this ) {
+      if ( r instanceof DynamicLaw )
+        result.add( (DynamicLaw) r );
     }
     return result;
   }
@@ -157,12 +157,12 @@ public class CActionDescription
    */
   public String toOutputString()
   {
-    String result = ":- rules\n";
-    // static rules first
-    for ( CRule r : this.getStaticRules() ) {
+    String result = ":- laws\n";
+    // static laws first
+    for ( CLaw r : this.getStaticLaws() ) {
       result += r.toString() + "\n";
     }
-    for ( CRule r : this.getDynamicRules() ) {
+    for ( CLaw r : this.getDynamicLaws() ) {
       result += r.toString() + "\n";
     }
     return result;

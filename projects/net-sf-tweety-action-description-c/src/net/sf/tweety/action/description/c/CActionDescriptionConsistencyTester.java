@@ -5,7 +5,7 @@ import java.util.Set;
 
 import net.sf.tweety.BeliefBase;
 import net.sf.tweety.action.ActionDescriptionConsistencyTester;
-import net.sf.tweety.action.CausalRule;
+import net.sf.tweety.action.CausalLaw;
 import net.sf.tweety.action.signature.ActionSignature;
 import net.sf.tweety.action.transitionsystem.State;
 import net.sf.tweety.logicprogramming.asp.AspInterface;
@@ -65,9 +65,9 @@ public class CActionDescriptionConsistencyTester
    * .util.Set)
    */
   @Override
-  public boolean isConsistent( Set< CausalRule > causalRules )
+  public boolean isConsistent( Set< CausalLaw > causalLaws )
   {
-    return isConsistent( new CActionDescription( causalRules ) );
+    return isConsistent( new CActionDescription( causalLaws ) );
   }
   
   /*

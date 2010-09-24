@@ -65,7 +65,8 @@ public class ClaspInterface
           "--verbose=0" };
     Pair< String, String > result =
       this.executeProgram( cmd, ground( program ) );
-    if ( !result.getSecond().trim().equals( "" ) )
+    if ( !result.getSecond().trim().equals( "" ) &&
+      !result.getSecond().toLowerCase().contains( "warning:" ) )
       throw new AspException( result.getSecond() );
     String[] r = result.getFirst().split( "\r\n|\r|\n" );
     if ( r[r.length - 1].trim().equals( "UNSATISFIABLE" ) )
@@ -84,7 +85,8 @@ public class ClaspInterface
     String[] cmd = { pathToClasp, "--verbose=0", "-q" };
     Pair< String, String > result =
       this.executeProgram( cmd, ground( program ) );
-    if ( !result.getSecond().trim().equals( "" ) )
+    if ( !result.getSecond().trim().equals( "" ) &&
+      !result.getSecond().toLowerCase().contains( "warning:" ) )
       throw new AspException( result.getSecond() );
     if ( result.getFirst().contains( "UNSATISFIABLE" ) )
       return false;
@@ -92,7 +94,7 @@ public class ClaspInterface
   }
   
   /**
-   * Uses external lparse compatible grounder to calculate all grounded
+   * Uses an external lparse compatible grounder to calculate all grounded
    * instances of the given extended logic program.
    * 
    * @param program
@@ -104,7 +106,8 @@ public class ClaspInterface
   {
     String[] cmd = { pathToGrounder };
     Pair< String, String > result = this.executeProgram( cmd, program );
-    if ( !result.getSecond().trim().equals( "" ) )
+    if ( !result.getSecond().trim().equals( "" ) &&
+      !result.getSecond().toLowerCase().contains( "warning:" ) )
       throw new AspException( result.getSecond() );
     return result.getFirst();
   }

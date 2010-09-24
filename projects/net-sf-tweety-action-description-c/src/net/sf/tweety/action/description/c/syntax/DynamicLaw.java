@@ -11,7 +11,7 @@ import net.sf.tweety.action.signature.ActionSignature;
 import net.sf.tweety.logics.firstorderlogic.syntax.*;
 
 /**
- * A dynamic rule in C has the form caused F if G after U where F is a
+ * A dynamic law in C has the form caused F if G after U where F is a
  * propositional formula over the set of fluent names (called headFormula) G is
  * a propositional formula over the set of fluent names (called ifFormula) U is
  * a propositional formula over the set of fluent names and the set of action
@@ -19,29 +19,29 @@ import net.sf.tweety.logics.firstorderlogic.syntax.*;
  * 
  * @author wutsch
  */
-public class DynamicRule
-  extends CRule
+public class DynamicLaw
+  extends CLaw
 {
   
   protected FolFormula afterFormula = new Tautology();
   
   /**
-   * Constructs a new empty dynamic rule.
+   * Constructs a new empty dynamic law.
    */
-  public DynamicRule()
+  public DynamicLaw()
   {
     super();
   }
   
   /**
-   * Creates a new dynamic rule of the form: caused headFormula if ifFormula
+   * Creates a new dynamic law of the form: caused headFormula if ifFormula
    * after afterFormula
    * 
    * @param headFormula
    * @param ifFormula
    * @param afterFormula
    */
-  public DynamicRule( FolFormula headFormula, FolFormula ifFormula,
+  public DynamicLaw( FolFormula headFormula, FolFormula ifFormula,
     FolFormula afterFormula )
   {
     super( headFormula, ifFormula );
@@ -49,7 +49,7 @@ public class DynamicRule
   }
   
   /**
-   * Creates a new dynamic rule of the form: caused headFormula if ifFormula
+   * Creates a new dynamic law of the form: caused headFormula if ifFormula
    * after afterFormula requires requirements
    * 
    * @param headFormula
@@ -57,7 +57,7 @@ public class DynamicRule
    * @param afterFormula
    * @param requirements
    */
-  public DynamicRule( FolFormula headFormula, FolFormula ifFormula,
+  public DynamicLaw( FolFormula headFormula, FolFormula ifFormula,
     FolFormula afterFormula, Set< GroundingRequirement > requirements )
   {
     super( headFormula, ifFormula, requirements );
@@ -65,27 +65,27 @@ public class DynamicRule
   }
   
   /**
-   * Creates a new dynamic rule of the form caused headFormula after
+   * Creates a new dynamic law of the form caused headFormula after
    * afterFormula
    * 
    * @param headFormula
    * @param afterFormula
    */
-  public DynamicRule( FolFormula headFormula, FolFormula afterFormula )
+  public DynamicLaw( FolFormula headFormula, FolFormula afterFormula )
   {
     super( headFormula );
     setAfterFormula( afterFormula );
   }
   
   /**
-   * Creates a new dynamic rule of the form caused headFormula after
+   * Creates a new dynamic law of the form caused headFormula after
    * afterFormula requires requirements
    * 
    * @param headFormula
    * @param afterFormula
    * @param requirements
    */
-  public DynamicRule( FolFormula headFormula, FolFormula afterFormula,
+  public DynamicLaw( FolFormula headFormula, FolFormula afterFormula,
     Set< GroundingRequirement > requirements )
   {
     super( headFormula, requirements );
@@ -93,9 +93,9 @@ public class DynamicRule
   }
   
   /**
-   * Sets the afterFormula of this causal Rule
+   * Sets the afterFormula of this causal law
    * 
-   * @param afterFormula The new afterFormula of this causal rule.
+   * @param afterFormula The new afterFormula of this causal law.
    */
   private void setAfterFormula( FolFormula afterFormula )
   {
@@ -111,9 +111,9 @@ public class DynamicRule
   }
   
   /**
-   * Returns the afterFormula of this causal rule.
+   * Returns the afterFormula of this causal law.
    * 
-   * @return the afterFormula of this causal rule.
+   * @return the afterFormula of this causal law.
    */
   public FolFormula getAfterFormula()
   {
@@ -192,13 +192,13 @@ public class DynamicRule
    * @see net.sf.tweety.action.desc.c.syntax.CausalRule#toDefinite()
    */
   @Override
-  public Set< CRule > toDefinite()
+  public Set< CLaw > toDefinite()
   {
     if ( !isValidDefiniteHead( headFormula ) ) {
       throw new IllegalStateException(
-        "Cannot convert causal rule with nonliteral head formula to definite form." );
+        "Cannot convert causal law with nonliteral head formula to definite form." );
     }
-    Set< CRule > definit = new HashSet< CRule >();
+    Set< CLaw > definit = new HashSet< CLaw >();
     Set< RelationalFormula > ifClauses = new HashSet< RelationalFormula >();
     Set< RelationalFormula > afterClauses = new HashSet< RelationalFormula >();
     
@@ -224,7 +224,7 @@ public class DynamicRule
     }
     for ( RelationalFormula ifClause : ifClauses ) {
       for ( RelationalFormula afterClause : afterClauses ) {
-        definit.add( new DynamicRule( headFormula, (FolFormula) ifClause,
+        definit.add( new DynamicLaw( headFormula, (FolFormula) ifClause,
           (FolFormula) afterClause, requirements ) );
       }
     }
@@ -237,9 +237,9 @@ public class DynamicRule
    * @see net.sf.tweety.action.desc.c.syntax.CausalRule#getAllGroundings()
    */
   @Override
-  public Set< CRule > getAllGrounded()
+  public Set< CLaw > getAllGrounded()
   {
-    Set< CRule > result = new HashSet< CRule >();
+    Set< CLaw > result = new HashSet< CLaw >();
     Set< Variable > variables = new HashSet< Variable >();
     
     for ( Atom a : getAtoms() ) {
@@ -250,7 +250,7 @@ public class DynamicRule
     
     for ( Map< Variable, Constant > map : substitutions ) {
       if ( GroundingTools.isValidGroundingApplication( map, requirements ) )
-        result.add( new DynamicRule(
+        result.add( new DynamicLaw(
           (FolFormula) headFormula.substitute( map ), (FolFormula) ifFormula
             .substitute( map ), (FolFormula) afterFormula.substitute( map ),
           requirements ) );

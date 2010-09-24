@@ -10,9 +10,9 @@ import net.sf.tweety.Formula;
 import net.sf.tweety.Parser;
 import net.sf.tweety.ParserException;
 import net.sf.tweety.action.description.c.CActionDescription;
-import net.sf.tweety.action.description.c.syntax.CRule;
-import net.sf.tweety.action.description.c.syntax.DynamicRule;
-import net.sf.tweety.action.description.c.syntax.StaticRule;
+import net.sf.tweety.action.description.c.syntax.CLaw;
+import net.sf.tweety.action.description.c.syntax.DynamicLaw;
+import net.sf.tweety.action.description.c.syntax.StaticLaw;
 import net.sf.tweety.action.grounding.GroundingRequirement;
 import net.sf.tweety.action.grounding.parser.GroundingRequirementsParser;
 import net.sf.tweety.action.signature.ActionSignature;
@@ -27,11 +27,11 @@ import net.sf.tweety.logics.firstorderlogic.syntax.Tautology;
 import net.sf.tweety.logics.firstorderlogic.syntax.Variable;
 
 /**
- * This class implements a parser for causal rules in C. The BNF of such rules is given by: (starting symbol is DESC) <br>
- * <br> DESC         ::== RULE ("\n" RULE)*
- * <br> RULE         ::== STATICRULE | DYNAMICRULE 
- * <br> STATICRULE   ::== "caused" FOLFORMULA ("if" FOLFORMULA)? ("requires" REQUIREMENTS)?
- * <br> DYNAMICRULE  ::== "caused" FOLFORMULA ("if" FOLFORMULA)? "after" FOLFORMULA ("requires" REQUIREMENTS)? 
+ * This class implements a parser for causal laws in C. The BNF of such rules is given by: (starting symbol is DESC) <br>
+ * <br> DESC         ::== LAW ("\n" LAW)*
+ * <br> LAW         ::== STATICLAW | DYNAMICLAW 
+ * <br> STATICLAW   ::== "caused" FOLFORMULA ("if" FOLFORMULA)? ("requires" REQUIREMENTS)?
+ * <br> DYNAMICLAW  ::== "caused" FOLFORMULA ("if" FOLFORMULA)? "after" FOLFORMULA ("requires" REQUIREMENTS)? 
  * <br> REQUIREMENTS ::== REQUIREMENT ("," REQUIREMENT)* 
  * <br> REQUIREMENT  ::== (VARIABLENAME "<>" VARIABLENAME | VARIABLENAME "<>" CONSTANTNAME)*
  * <br>
@@ -41,16 +41,16 @@ import net.sf.tweety.logics.firstorderlogic.syntax.Variable;
  * 
  * @author Sebastian Homann
  */
-public class CRuleParser
+public class CLawParser
   extends Parser {
 
   protected ActionSignature signature;
 
   /**
-   * This parser needs a valid action signature to parse causal rules.
+   * This parser needs a valid action signature to parse causal laws.
    * @param signature
    */
-  public CRuleParser( ActionSignature signature ) {
+  public CLawParser( ActionSignature signature ) {
     this.signature = signature;
   }
 
@@ -71,7 +71,7 @@ public class CRuleParser
         c = reader.read();
         if ( c == 10 || c == -1 ) {
           if ( !s.equals( "" ) && !s.trim().startsWith( "%" )) {
-            actionDescription.add( (CRule) this.parseFormula(  s ) );
+            actionDescription.add( (CLaw) this.parseFormula(  s ) );
           }
           s = "";
         } else {
@@ -147,21 +147,21 @@ public class CRuleParser
     if(s.contains( " may cause "))
       return parseMayCauseFormula( s, reqString );
     
-    throw new ParserException("Unsupported causal rule: "+s);
+    throw new ParserException("Unsupported causal law: "+s);
   }
    
   /**
-   * Parses a string containing a single causal rule of the form
+   * Parses a string containing a single causal law of the form
    *   caused A (if B)? (after C)?
-   * @param s a string containing a single causal rule.
-   * @param reqString the grounding requirements of this rule.
-   * @return the corresponding causal rule
+   * @param s a string containing a single causal law.
+   * @param reqString the grounding requirements of this law.
+   * @return the corresponding causal law
    * @throws ParserException
    * @throws IOException
    */
   private Formula parseCausedFormula(String s, String reqString) throws ParserException, IOException {
     if(!s.startsWith("caused "))
-      throw new ParserException("Missing 'caused' expression in causal rule: "+s);
+      throw new ParserException("Missing 'caused' expression in causal law: "+s);
     FolFormula afterFormula = null;
     FolFormula ifFormula = null;
     FolFormula headFormula = null;
@@ -200,25 +200,25 @@ public class CRuleParser
     requirements = new GroundingRequirementsParser().parseRequirements( reqString, variables );
     
     if(afterFormula != null)
-      return new DynamicRule(headFormula, ifFormula, afterFormula,  requirements);
+      return new DynamicLaw(headFormula, ifFormula, afterFormula,  requirements);
     else
-      return new StaticRule(headFormula, ifFormula, requirements);
+      return new StaticLaw(headFormula, ifFormula, requirements);
   }
   
   /**
-   * Parses a string containing a single causal rule of the form
+   * Parses a string containing a single causal law of the form
    *   inertial A
-   * which is converted to the causal rule
+   * which is converted to the causal law
    *   caused A if A after A
-   * @param s a string containing a single inertial rule.
-   * @param reqString the grounding requirements of this rule.
-   * @return the corresponding causal rule
+   * @param s a string containing a single inertial law.
+   * @param reqString the grounding requirements of this law.
+   * @return the corresponding causal law
    * @throws ParserException
    * @throws IOException
    */
   private Formula parseInertialFormula(String s, String reqString) throws ParserException, IOException {
     if(!s.startsWith("inertial "))
-      throw new ParserException("Missing 'inertial' expression in causal rule: "+s);
+      throw new ParserException("Missing 'inertial' expression in causal law: "+s);
     FolFormula formula = null;
     String headString = s.substring( s.indexOf("inertial ") + 9 );
     Set<String> wrongKey = containedKeywords( headString );
@@ -232,23 +232,23 @@ public class CRuleParser
         throw new ParserException( "Inertial expression contains illegal argument." );
     Set<GroundingRequirement> requirements = null;
     requirements = new GroundingRequirementsParser().parseRequirements( reqString, formula.getUnboundVariables() );
-    return new DynamicRule(formula, formula, formula, requirements);
+    return new DynamicLaw(formula, formula, formula, requirements);
   }
 
   /**
-   * Parses a string containing a single causal rule of the form
+   * Parses a string containing a single causal law of the form
    *   default A (if B)?
-   * which is converted to the causal rule
+   * which is converted to the causal law
    *   caused A if A && B
-   * @param s a string containing a single causal rule.
-   * @param reqString the grounding requirements of this rule.
-   * @return the corresponding causal rule
+   * @param s a string containing a single causal law.
+   * @param reqString the grounding requirements of this law.
+   * @return the corresponding causal law
    * @throws ParserException
    * @throws IOException
    */
   private Formula parseDefaultFormula(String s, String reqString) throws ParserException, IOException {
     if(!s.startsWith("default "))
-      throw new ParserException("Missing 'default' expression in causal rule: "+s);
+      throw new ParserException("Missing 'default' expression in causal law: "+s);
     FolFormula ifFormula = null;
     FolFormula headFormula = null;
     if(s.contains( " if " )) {
@@ -277,26 +277,26 @@ public class CRuleParser
       Conjunction c = new Conjunction();
       c.add( headFormula );
       c.add( ifFormula );
-      return new StaticRule( headFormula, c, requirements );
+      return new StaticLaw( headFormula, c, requirements );
     } else {
-      return new StaticRule( headFormula, requirements );
+      return new StaticLaw( headFormula, headFormula, requirements );
     }
   }
   
   /**
-   * Parses a string containing a single causal rule of the form
+   * Parses a string containing a single causal law of the form
    *   A causes B if C
    * which is converted to
    *   caused B if + after A && C
-   * @param s a string containing a single causal rule.
-   * @param reqString the grounding requirements of this rule.
-   * @return the corresponding causal rule
+   * @param s a string containing a single causal law.
+   * @param reqString the grounding requirements of this law.
+   * @return the corresponding causal law
    * @throws ParserException
    * @throws IOException
    */
   private Formula parseCausesFormula(String s, String reqString) throws ParserException, IOException {
     if(!s.contains( " causes " ))
-      throw new ParserException("Missing 'causes' expression in causal rule: "+s);
+      throw new ParserException("Missing 'causes' expression in causal law: "+s);
     FolFormula headFormula = null;
     FolFormula causesFormula = null;
     FolFormula ifFormula = null;
@@ -335,26 +335,26 @@ public class CRuleParser
       Conjunction c = new Conjunction();
       c.add( headFormula );
       c.add( ifFormula );
-      return new DynamicRule( causesFormula, new Tautology(), c, requirements );
+      return new DynamicLaw( causesFormula, new Tautology(), c, requirements );
     } else {
-      return new DynamicRule( causesFormula, new Tautology(), headFormula, requirements );
+      return new DynamicLaw( causesFormula, new Tautology(), headFormula, requirements );
     }
   }
   
   /**
-   * Parses a string containing a single causal rule of the form
+   * Parses a string containing a single causal law of the form
    *   always A
    * which is converted to
    *   caused - if !A
-   * @param s a string containing a single causal rule.
-   * @param reqString the grounding requirements of this rule.
-   * @return the corresponding causal rule
+   * @param s a string containing a single causal law.
+   * @param reqString the grounding requirements of this law.
+   * @return the corresponding causal law
    * @throws ParserException
    * @throws IOException
    */
   private Formula parseAlwaysFormula(String s, String reqString) throws ParserException, IOException {
     if(!s.startsWith( "always " ))
-      throw new ParserException("Missing 'always' expression in causal rule: "+s);
+      throw new ParserException("Missing 'always' expression in causal law: "+s);
     FolFormula headFormula = null;
 
     Set<String> wrongKey = containedKeywords( s );
@@ -368,23 +368,23 @@ public class CRuleParser
     Set<GroundingRequirement> requirements = null;
     requirements = new GroundingRequirementsParser().parseRequirements( reqString, variables );
     
-    return new StaticRule(new Contradiction(), new Negation( headFormula ), requirements);
+    return new StaticLaw(new Contradiction(), new Negation( headFormula ), requirements);
   }
   
   /**
-   * Parses a string containing a single causal rule of the form
+   * Parses a string containing a single causal law of the form
    *   nonexecutable A if B
    * which is converted to
    *   caused - after A && B
-   * @param s a string containing a single causal rule.
-   * @param reqString the grounding requirements of this rule.
-   * @return the corresponding causal rule
+   * @param s a string containing a single causal law.
+   * @param reqString the grounding requirements of this law.
+   * @return the corresponding causal law
    * @throws ParserException
    * @throws IOException
    */
   private Formula parseNonexecutableFormula(String s, String reqString) throws ParserException, IOException {
     if(!s.startsWith("nonexecutable "))
-      throw new ParserException("Missing 'nonexecutable' expression in causal rule: "+s);
+      throw new ParserException("Missing 'nonexecutable' expression in causal law: "+s);
     FolFormula ifFormula = null;
     FolFormula headFormula = null;
     if(s.contains( " if " )) {
@@ -413,26 +413,26 @@ public class CRuleParser
       Conjunction c = new Conjunction();
       c.add( headFormula );
       c.add( ifFormula );
-      return new DynamicRule( new Contradiction(), c, requirements );
+      return new DynamicLaw( new Contradiction(), c, requirements );
     } else {
-      return new DynamicRule( new Contradiction(), headFormula, requirements );
+      return new DynamicLaw( new Contradiction(), headFormula, requirements );
     }
   }
   
   /**
-   * Parses a string containing a single causal rule of the form
+   * Parses a string containing a single causal law of the form
    *   A may cause B if C
    * which is converted to
    *   caused B if B after A && C
-   * @param s a string containing a single causal rule.
-   * @param reqString the grounding requirements of this rule.
-   * @return the corresponding causal rule
+   * @param s a string containing a single causal law.
+   * @param reqString the grounding requirements of this law.
+   * @return the corresponding causal law
    * @throws ParserException
    * @throws IOException
    */
   private Formula parseMayCauseFormula(String s, String reqString) throws ParserException, IOException {
     if(!s.contains( " may cause " ))
-      throw new ParserException("Missing 'may cause' expression in causal rule: "+s);
+      throw new ParserException("Missing 'may cause' expression in causal law: "+s);
     FolFormula headFormula = null;
     FolFormula maycauseFormula = null;
     FolFormula ifFormula = null;
@@ -471,9 +471,9 @@ public class CRuleParser
       Conjunction c = new Conjunction();
       c.add( headFormula );
       c.add( ifFormula );
-      return new DynamicRule( maycauseFormula, maycauseFormula, c, requirements );
+      return new DynamicLaw( maycauseFormula, maycauseFormula, c, requirements );
     } else {
-      return new DynamicRule( maycauseFormula, maycauseFormula, headFormula, requirements );
+      return new DynamicLaw( maycauseFormula, maycauseFormula, headFormula, requirements );
     }
   }
   

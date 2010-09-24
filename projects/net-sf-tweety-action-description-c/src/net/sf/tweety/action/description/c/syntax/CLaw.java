@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.sf.tweety.Signature;
-import net.sf.tweety.action.CausalRule;
+import net.sf.tweety.action.CausalLaw;
 import net.sf.tweety.action.grounding.GroundingRequirement;
 import net.sf.tweety.action.signature.ActionSignature;
 import net.sf.tweety.action.signature.FolFluentName;
@@ -19,13 +19,13 @@ import net.sf.tweety.logics.firstorderlogic.syntax.Tautology;
 
 /**
  * The action description language C consists of two distinct expressions:
- * static rules and dynamic rules. Both share some common functionalities which
+ * static laws and dynamic laws. Both share some common functionalities which
  * are implemented in this base class.
  * 
  * @author Sebastian Homann
  */
-public abstract class CRule
-  implements CausalRule
+public abstract class CLaw
+  implements CausalLaw
 {
   protected FolFormula headFormula = new Contradiction();
   protected FolFormula ifFormula = new Tautology();
@@ -39,78 +39,78 @@ public abstract class CRule
   public abstract Signature getSignature();
   
   /**
-   * Returns true iff this rule is definite. A causal rule is definite if it's
+   * Returns true iff this law is definite. A causal law is definite if it's
    * head is a literal or a contradiction and all formulas are conjunctions of
    * literals.
    * 
-   * @return true, if this rule is definite, false otherwise.
+   * @return true, if this law is definite, false otherwise.
    */
   public abstract boolean isDefinite();
   
   /**
-   * Returns an equivalent definite causal rule. A causal rule is definite if
+   * Returns an equivalent definite causal law. A causal law is definite if
    * it's head is a literal or a contradiction and all formulas are conjunctions
    * of literals.
    * 
-   * @return the equivalent definite causal rule if one exists.
+   * @return the equivalent definite causal law if one exists.
    * @throws IllegalStateException when there is no equivalent definite causal
-   *           rule.
+   *           law.
    */
-  public abstract Set< CRule > toDefinite()
+  public abstract Set< CLaw > toDefinite()
     throws IllegalStateException;
   
   /**
-   * Returns the set of propositions in all formulas in this rule.
+   * Returns the set of propositions in all formulas in this law.
    * 
-   * @return the set of propositions in all formulas in this rule.
+   * @return the set of propositions in all formulas in this law.
    */
   public abstract Set< Atom > getAtoms();
   
   /**
-   * Returns the set of formulas contained in this causal rule, e.g. in a static
-   * rule, this contains the head formula and the if formula.
+   * Returns the set of formulas contained in this causal law, e.g. in a static
+   * law, this contains the head formula and the if formula.
    * 
-   * @return the set of formulas contained in this causal rule.
+   * @return the set of formulas contained in this causal law.
    */
   public abstract Set< FolFormula > getFormulas();
   
   /**
-   * Creates an empty causal rule.
+   * Creates an empty causal law.
    */
-  public CRule()
+  public CLaw()
   {
   }
   
   /**
-   * Creates a causal rule of the form caused headFormula if True
+   * Creates a causal law of the form caused headFormula if True
    * 
    * @param headFormula
    */
-  public CRule( FolFormula headFormula )
+  public CLaw( FolFormula headFormula )
   {
     setHeadFormula( headFormula );
   }
   
   /**
-   * Creates a causal rule of the form caused headFormula if True requires
+   * Creates a causal law of the form caused headFormula if True requires
    * requirements
    * 
    * @param headFormula
    * @param requirements
    */
-  public CRule( FolFormula headFormula, Set< GroundingRequirement > requirements )
+  public CLaw( FolFormula headFormula, Set< GroundingRequirement > requirements )
   {
     setHeadFormula( headFormula );
     setGroundingRequirements( requirements );
   }
   
   /**
-   * Creates a causal rule of the form caused headFormula if ifFormula requires
+   * Creates a causal law of the form caused headFormula if ifFormula requires
    * requirements
    * 
    * @param headFormula
    */
-  public CRule( FolFormula headFormula, FolFormula ifFormula,
+  public CLaw( FolFormula headFormula, FolFormula ifFormula,
     Set< GroundingRequirement > requirements )
   {
     setHeadFormula( headFormula );
@@ -119,11 +119,11 @@ public abstract class CRule
   }
   
   /**
-   * Creates a causal rule of the form caused headFormula if ifFormula
+   * Creates a causal law of the form caused headFormula if ifFormula
    * 
    * @param headFormula
    */
-  public CRule( FolFormula headFormula, FolFormula ifFormula )
+  public CLaw( FolFormula headFormula, FolFormula ifFormula )
   {
     setHeadFormula( headFormula );
     setIfFormula( ifFormula );
@@ -137,9 +137,9 @@ public abstract class CRule
   }
   
   /**
-   * Sets the headFormula of this causal Rule
+   * Sets the headFormula of this causal law
    * 
-   * @param headFormula The new headFormula of this causal rule.
+   * @param headFormula The new headFormula of this causal law.
    */
   private void setHeadFormula( FolFormula headFormula )
   {
@@ -156,9 +156,9 @@ public abstract class CRule
   }
   
   /**
-   * Sets the IfFormula of this causal rule
+   * Sets the IfFormula of this causal law
    * 
-   * @param IfFormula The new IfFormula of this causal rule.
+   * @param IfFormula The new IfFormula of this causal law.
    */
   private void setIfFormula( FolFormula ifFormula )
   {
@@ -179,9 +179,9 @@ public abstract class CRule
   }
   
   /**
-   * Returns the headFormula of this causal rule.
+   * Returns the headFormula of this causal law.
    * 
-   * @return the headFormula of this causal rule.
+   * @return the headFormula of this causal law.
    */
   public FolFormula getHeadFormula()
   {
@@ -189,9 +189,9 @@ public abstract class CRule
   }
   
   /**
-   * Returns the ifFormula of this causal rule.
+   * Returns the ifFormula of this causal law.
    * 
-   * @return the ifFormula of this causal rule.
+   * @return the ifFormula of this causal law.
    */
   public FolFormula getIfFormula()
   {
@@ -207,15 +207,15 @@ public abstract class CRule
   }
   
   /**
-   * Returns the set of all grounded instances of this causal rule.
+   * Returns the set of all grounded instances of this causal law.
    * 
-   * @return the set of all grounded instances of this causal rule.
+   * @return the set of all grounded instances of this causal law.
    */
-  public abstract Set< CRule > getAllGrounded();
+  public abstract Set< CLaw > getAllGrounded();
   
   /**
    * Checks if a propositional formula is a valid head formula for a definite
-   * causal rule, which means either a contradiction, a fluent or the negation
+   * causal law, which means either a contradiction, a fluent or the negation
    * of a fluent.
    * 
    * @param pl a propositional formula

@@ -7,8 +7,8 @@ import java.util.Map;
 import java.util.Set;
 
 import net.sf.tweety.ParserException;
-import net.sf.tweety.action.description.c.syntax.DynamicRule;
-import net.sf.tweety.action.description.c.syntax.StaticRule;
+import net.sf.tweety.action.description.c.syntax.DynamicLaw;
+import net.sf.tweety.action.description.c.syntax.StaticLaw;
 import net.sf.tweety.action.signature.ActionSignature;
 import net.sf.tweety.action.signature.FolAction;
 import net.sf.tweety.action.signature.FolActionName;
@@ -161,7 +161,7 @@ public class CTransitionSystemCalculator
     String result = "";
     Set< Atom > groundedFluentAtoms = signature.getAllGroundedFluentAtoms();
     
-    for ( StaticRule r : d.getStaticRules() ) {
+    for ( StaticLaw r : d.getStaticLaws() ) {
       for ( int t = 0; t <= T; t++ ) {
         result += this.getLiteralString( r.getHeadFormula(), t, false );
         if ( !( r.getIfFormula() instanceof Tautology ) ) {
@@ -175,7 +175,7 @@ public class CTransitionSystemCalculator
     result += getDefaultNegationRules( groundedFluentAtoms, 0 );
     
     if ( T > 0 ) {
-      for ( DynamicRule r : d.getDynamicRules() ) {
+      for ( DynamicLaw r : d.getDynamicLaws() ) {
         for ( int t = 0; t < T; t++ ) {
           result += this.getLiteralString( r.getHeadFormula(), t + 1, false );
           result += " :- ";
@@ -250,7 +250,7 @@ public class CTransitionSystemCalculator
    */
   private String removeIllegalChars( String s )
   {
-    return s.replace( "(", "_1_" ).replace( ")", "_2_" ).replace( ",", "_3_" );
+    return s.replace( "(", "xxx1xxx" ).replace( ")", "xxx2xxx" ).replace( ",", "xxx3xxx" );
   }
   
   /**
@@ -262,7 +262,7 @@ public class CTransitionSystemCalculator
    */
   private String regainIllegalChars( String s )
   {
-    return s.replace( "_1_", "(" ).replace( "_2_", ")" ).replace( "_3_", "," );
+    return s.replace( "xxx1xxx", "(" ).replace( "xxx2xxx", ")" ).replace( "xxx3xxx", "," );
   }
   
   /**

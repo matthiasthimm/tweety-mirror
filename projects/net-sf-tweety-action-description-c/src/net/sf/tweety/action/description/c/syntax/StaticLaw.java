@@ -17,61 +17,61 @@ import net.sf.tweety.logics.firstorderlogic.syntax.*;
  * 
  * @author Sebastian Homann
  */
-public class StaticRule
-  extends CRule
+public class StaticLaw
+  extends CLaw
 {
   
   /**
-   * Creates an empty static rule.
+   * Creates an empty static law.
    */
-  public StaticRule()
+  public StaticLaw()
   {
     super();
   }
   
   /**
-   * Creates an empty static rule of the form caused headFormula if True
+   * Creates an empty static law of the form caused headFormula if True
    * 
    * @param headFormula
    */
-  public StaticRule( FolFormula headFormula )
+  public StaticLaw( FolFormula headFormula )
   {
     super( headFormula );
   }
   
   /**
-   * Creates an empty static rule of the form caused headFormula if True
+   * Creates an empty static law of the form caused headFormula if True
    * requires requirements
    * 
    * @param headFormula
    * @param requirements
    */
-  public StaticRule( FolFormula headFormula,
+  public StaticLaw( FolFormula headFormula,
     Set< GroundingRequirement > requirements )
   {
     super( headFormula, requirements );
   }
   
   /**
-   * Creates an empty static rule of the form caused headFormula if ifFormula
+   * Creates an empty static law of the form caused headFormula if ifFormula
    * 
    * @param headFormula
    * @param ifFormula
    */
-  public StaticRule( FolFormula headFormula, FolFormula ifFormula )
+  public StaticLaw( FolFormula headFormula, FolFormula ifFormula )
   {
     super( headFormula, ifFormula );
   }
   
   /**
-   * Creates an empty static rule of the form caused headFormula if ifFormula
+   * Creates an empty static law of the form caused headFormula if ifFormula
    * requires requirements
    * 
    * @param headFormula
    * @param ifFormula
    * @param requirements
    */
-  public StaticRule( FolFormula headFormula, FolFormula ifFormula,
+  public StaticLaw( FolFormula headFormula, FolFormula ifFormula,
     Set< GroundingRequirement > requirements )
   {
     super( headFormula, ifFormula, requirements );
@@ -107,23 +107,23 @@ public class StaticRule
    * @see net.sf.tweety.action.desc.c.syntax.CausalRule#toDefinite()
    */
   @Override
-  public Set< CRule > toDefinite()
+  public Set< CLaw > toDefinite()
     throws IllegalStateException
   {
-    Set< CRule > result = new HashSet< CRule >();
+    Set< CLaw > result = new HashSet< CLaw >();
     if ( !isValidDefiniteHead( headFormula ) )
       throw new IllegalStateException(
-        "Cannot convert causal rule with nonliteral head formula to definite form." );
+        "Cannot convert causal law with nonliteral head formula to definite form." );
     FolFormula ifForm = ifFormula.toDnf();
     if ( ifForm instanceof Disjunction ) {
       Disjunction conjClause = (Disjunction) ifForm;
       for ( RelationalFormula p : conjClause ) {
         result
-          .add( new StaticRule( headFormula, (FolFormula) p, requirements ) );
+          .add( new StaticLaw( headFormula, (FolFormula) p, requirements ) );
       }
     }
     else {
-      result.add( new StaticRule( headFormula, ifForm, requirements ) );
+      result.add( new StaticLaw( headFormula, ifForm, requirements ) );
     }
     return result;
   }
@@ -158,9 +158,9 @@ public class StaticRule
    * @see net.sf.tweety.action.desc.c.syntax.CausalRule#getAllGroundings()
    */
   @Override
-  public Set< CRule > getAllGrounded()
+  public Set< CLaw > getAllGrounded()
   {
-    Set< CRule > result = new HashSet< CRule >();
+    Set< CLaw > result = new HashSet< CLaw >();
     Set< Variable > variables = new HashSet< Variable >();
     
     for ( Atom a : getAtoms() ) {
@@ -170,7 +170,7 @@ public class StaticRule
       GroundingTools.getAllSubstitutions( variables );
     for ( Map< Variable, Constant > map : substitutions ) {
       if ( GroundingTools.isValidGroundingApplication( map, requirements ) )
-        result.add( new StaticRule( (FolFormula) headFormula.substitute( map ),
+        result.add( new StaticLaw( (FolFormula) headFormula.substitute( map ),
           (FolFormula) ifFormula.substitute( map ), requirements ) );
     }
     return result;
