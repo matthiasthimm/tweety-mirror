@@ -26,7 +26,7 @@ public class DefaultProbabilityDistributionWriter extends Writer {
 	 * Creates a new writer for the given probability distribution.
 	 * @param distribution a probability distribution.
 	 */
-	public DefaultProbabilityDistributionWriter(ProbabilityDistribution distribution) {
+	public DefaultProbabilityDistributionWriter(RpclProbabilityDistribution distribution) {
 		super(distribution);	
 	}
 
@@ -36,7 +36,7 @@ public class DefaultProbabilityDistributionWriter extends Writer {
 	@Override
 	public String writeToString() {
 		String result = "";
-		ProbabilityDistribution distribution = (ProbabilityDistribution) this.getObject();
+		RpclProbabilityDistribution distribution = (RpclProbabilityDistribution) this.getObject();
 		NumberFormat formatter = new DecimalFormat("#.###################");
 		for(Interpretation interpretation: distribution.keySet()){
 			result += "{";

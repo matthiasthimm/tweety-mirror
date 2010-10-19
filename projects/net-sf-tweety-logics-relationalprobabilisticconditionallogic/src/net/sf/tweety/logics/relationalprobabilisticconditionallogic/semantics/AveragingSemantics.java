@@ -7,6 +7,7 @@ import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Tautology;
 import net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula;
+import net.sf.tweety.logics.probabilisticconditionallogic.semantics.*;
 import net.sf.tweety.logics.relationalprobabilisticconditionallogic.syntax.*;
 import net.sf.tweety.math.equation.*;
 import net.sf.tweety.math.term.*;
@@ -21,13 +22,13 @@ import net.sf.tweety.util.*;
 public class AveragingSemantics extends AbstractRpclSemantics {
 
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.relationalprobabilisticconditionallogic.semantics.AbstractRpclSemantics#satisfies(net.sf.tweety.logics.relationalprobabilisticconditionallogic.semantics.ProbabilityDistribution, net.sf.tweety.logics.relationalprobabilisticconditionallogic.syntax.RelationalProbabilisticConditional)
+	 * @see net.sf.tweety.logics.relationalprobabilisticconditionallogic.semantics.AbstractRpclSemantics#satisfies(net.sf.tweety.logics.probabilisticconditionallogic.semantics.ProbabilityDistribution, net.sf.tweety.logics.relationalprobabilisticconditionallogic.syntax.RelationalProbabilisticConditional)
 	 */
 	@Override
-	public boolean satisfies(ProbabilityDistribution p,	RelationalProbabilisticConditional r) {
+	public boolean satisfies(ProbabilityDistribution<?> p,	RelationalProbabilisticConditional r) {
 		if(r.isGround())
 			return this.satisfiesGroundConditional(p, r);
-		Set<RelationalFormula> groundInstances = r.allGroundInstances(p.getSignature().getConstants());
+		Set<RelationalFormula> groundInstances = r.allGroundInstances(((FolSignature)p.getSignature()).getConstants());
 		Double leftTerm = 0d;
 		for(RelationalFormula f: groundInstances){			
 			FolFormula body = ((RelationalProbabilisticConditional)f).getPremise().iterator().next();			

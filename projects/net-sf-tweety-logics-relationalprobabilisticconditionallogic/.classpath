@@ -6,6 +6,8 @@
 	<classpathentry kind="lib" path="lib/net-sf-tweety-logics-relationalconditionallogic.jar"/>
 	<classpathentry kind="lib" path="lib/net-sf-tweety-math.jar"/>
 	<classpathentry kind="lib" path="lib/net-sf-tweety.jar"/>
+	<classpathentry kind="lib" path="lib/net-sf-tweety-logics-probabilisticconditionallogic.jar"/>
+	<classpathentry kind="lib" path="lib/net-sf-tweety-logics-conditionallogic.jar"/>
 	<classpathentry kind="lib" path="lib/commons-logging-1.1.1-javadoc.jar"/>
 	<classpathentry kind="lib" path="lib/commons-logging-1.1.1-sources.jar"/>
 	<classpathentry kind="lib" path="lib/commons-logging-1.1.1.jar"/>

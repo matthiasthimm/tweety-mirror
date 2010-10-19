@@ -4,6 +4,7 @@ import java.util.*;
 
 import net.sf.tweety.*;
 import net.sf.tweety.logics.firstorderlogic.syntax.*;
+import net.sf.tweety.logics.probabilisticconditionallogic.semantics.*;
 import net.sf.tweety.logics.relationalprobabilisticconditionallogic.syntax.*;
 import net.sf.tweety.math.equation.*;
 import net.sf.tweety.math.term.*;
@@ -23,7 +24,7 @@ public interface RpclSemantics {
 	 * @param r a relational probability conditional.
 	 * @return "true" iff the given distribution satisfies the given conditional.
 	 */
-	public boolean satisfies(ProbabilityDistribution p, RelationalProbabilisticConditional r);
+	public boolean satisfies(ProbabilityDistribution<?> p, RelationalProbabilisticConditional r);
 	
 	/**
 	 * Returns the mathematical statement corresponding to the satisfaction

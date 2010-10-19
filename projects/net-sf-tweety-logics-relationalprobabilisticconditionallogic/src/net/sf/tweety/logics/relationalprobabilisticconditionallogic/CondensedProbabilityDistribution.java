@@ -4,7 +4,9 @@ import java.util.*;
 
 import net.sf.tweety.*;
 import net.sf.tweety.logics.firstorderlogic.syntax.*;
+import net.sf.tweety.logics.probabilisticconditionallogic.semantics.*;
 import net.sf.tweety.logics.relationalprobabilisticconditionallogic.semantics.*;
+import net.sf.tweety.logics.relationalprobabilisticconditionallogic.syntax.*;
 import net.sf.tweety.util.*;
 
 
@@ -14,19 +16,56 @@ import net.sf.tweety.util.*;
  * @author Matthias Thimm
  *
  */
-public class CondensedProbabilityDistribution extends ProbabilityDistribution {
+public class CondensedProbabilityDistribution extends ProbabilityDistribution<ReferenceWorld> {
 
+	/**
+	 * The semantics used for this probability distribution.
+	 */
+	private RpclSemantics semantics;
+	
 	/**
 	 * Creates a new condensed probability distribution for the given signature.
 	 * @param semantics the semantics used for this distribution.
 	 * @param signature a fol signature.
 	 */
 	public CondensedProbabilityDistribution(RpclSemantics semantics, FolSignature signature){
-		super(semantics,signature);
+		super(signature);
+		this.semantics = semantics;		
 	}
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.relationalprobabilisticconditionallogic.semantics.ProbabilityDistribution#entropy()
+	 * @see net.sf.tweety.kr.Interpretation#satisfies(net.sf.tweety.kr.Formula)
+	 */
+	@Override
+	public boolean satisfies(Formula formula) throws IllegalArgumentException {
+		if(!(formula instanceof RelationalProbabilisticConditional))
+			throw new IllegalArgumentException("Relational probabilistic conditional expected.");
+		return semantics.satisfies(this, (RelationalProbabilisticConditional)formula);
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.kr.Interpretation#satisfies(net.sf.tweety.kr.BeliefBase)
+	 */
+	@Override
+	public boolean satisfies(BeliefBase beliefBase)	throws IllegalArgumentException {
+		if(!(beliefBase instanceof RpclBeliefSet))
+			throw new IllegalArgumentException("Relational probabilistic conditional knowledge base expected.");
+		RpclBeliefSet kb = (RpclBeliefSet) beliefBase;
+		for(Formula f: kb)
+			if(!this.satisfies(f)) return false;
+		return true;
+	}
+	
+	/**
+	 * Returns the semantics of this distribution.
+	 * @return the semantics of this distribution.
+	 */
+	public RpclSemantics getSemantics(){
+		return this.semantics;
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.relationalprobabilisticconditionallogic.semantics.RpclProbabilityDistribution#entropy()
 	 */
 	@Override
 	public double entropy(){
@@ -45,54 +84,7 @@ public class CondensedProbabilityDistribution extends ProbabilityDistribution {
 	public double condensedEntropy(){
 		return super.entropy();
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.relationalprobabilisticconditionallogic.semantics.ProbabilityDistribution#convexCombination(double, net.sf.tweety.logics.relationalprobabilisticconditionallogic.semantics.ProbabilityDistribution)
-	 */
-	@Override
-	public CondensedProbabilityDistribution convexCombination(double d, ProbabilityDistribution other){
-		if(!(other instanceof CondensedProbabilityDistribution))
-			throw new IllegalArgumentException("The distribution '" + other + "' is not condensend.");
-		ProbabilityDistribution p = super.convexCombination(d, other);
-		CondensedProbabilityDistribution p2 = new CondensedProbabilityDistribution(this.getSemantics(),this.getSignature());
-		p2.putAll(p);		
-		return p2;
-	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.relationalprobabilisticconditionallogic.semantics.ProbabilityDistribution#convexCombination(double[], net.sf.tweety.logics.relationalprobabilisticconditionallogic.CondensedProbabilityDistribution[])
-	 */
-	public static CondensedProbabilityDistribution convexCombination(double[] factors, CondensedProbabilityDistribution[] creators) throws IllegalArgumentException{
-		ProbabilityDistribution p = ProbabilityDistribution.convexCombination(factors, creators);
-		CondensedProbabilityDistribution p2 = new CondensedProbabilityDistribution(creators[0].getSemantics(),creators[0].getSignature());
-		p2.putAll(p);		
-		return p2;
-	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.relationalprobabilisticconditionallogic.semantics.ProbabilityDistribution#linearCombination(double, double, net.sf.tweety.logics.relationalprobabilisticconditionallogic.semantics.ProbabilityDistribution)
-	 */
-	@Override
-	public CondensedProbabilityDistribution linearCombination(double d1, double d2, ProbabilityDistribution other){
-		if(!(other instanceof CondensedProbabilityDistribution))
-			throw new IllegalArgumentException("The distribution '" + other + "' is not condensend.");
-		List<Double> probabilities = new ArrayList<Double>();
-		for(Interpretation i: this.keySet()){
-			ReferenceWorld world = (ReferenceWorld) i;
-			int spanNumber = world.spanNumber();
-			probabilities.add(d1 * this.get(i).getValue() * spanNumber + d2 * other.get(i).getValue() * spanNumber);
-		}
-		ProbabilityDistribution.normalize(probabilities);		
-		CondensedProbabilityDistribution p = new CondensedProbabilityDistribution(this.getSemantics(),this.getSignature());
-		Iterator<Double> iterator = probabilities.iterator();
-		for(Interpretation i: this.keySet()){
-			ReferenceWorld world = (ReferenceWorld) i;
-			int spanNumber = world.spanNumber();
-			p.put(i, new Probability(iterator.next() / spanNumber));
-		}			
-		return p;		
-	}
-	
+		
 	/**
 	 * Returns the uniform distribution on the given signature.
 	 * @param semantics the semantics used for the distribution
@@ -123,7 +115,7 @@ public class CondensedProbabilityDistribution extends ProbabilityDistribution {
 		List<Double> probs = new ArrayList<Double>();
 		for(int i = 0; i < interpretations.size(); i++)
 			probs.add(rand.nextDouble());
-		ProbabilityDistribution.normalize(probs);
+		RpclProbabilityDistribution.normalize(probs);
 		Iterator<Double> itProbs = probs.iterator();
 		for(ReferenceWorld i: interpretations)
 			p.put(i, new Probability(itProbs.next()/i.spanNumber()));
@@ -135,25 +127,14 @@ public class CondensedProbabilityDistribution extends ProbabilityDistribution {
 	 * probability distribution.
 	 * @return a probability distribution.
 	 */
-	public ProbabilityDistribution toProbabilityDistribution(){
+	public RpclProbabilityDistribution toProbabilityDistribution(){
 		//TODO implement me
 		return null;
 	}
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.relationalprobabilisticconditionallogic.semantics.ProbabilityDistribution#put(net.sf.tweety.kr.Interpretation, net.sf.tweety.util.Probability)
+	 * @see net.sf.tweety.logics.relationalprobabilisticconditionallogic.semantics.RpclProbabilityDistribution#probability(net.sf.tweety.logics.firstorderlogic.syntax.FolFormula)
 	 */
-	@Override
-	public Probability put(Interpretation key, Probability value) {
-		if(!(key instanceof ReferenceWorld))
-			throw new IllegalArgumentException("Condensed probability distribution operate on reference worlds only.");
-		return super.put(key, value);
-	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.relationalprobabilisticconditionallogic.semantics.ProbabilityDistribution#probability(net.sf.tweety.logics.firstorderlogic.syntax.FolFormula)
-	 */
-	@Override
 	public Probability probability(FolFormula f){
 		Probability p = new Probability(0d);
 		for(Interpretation w: this.keySet()){

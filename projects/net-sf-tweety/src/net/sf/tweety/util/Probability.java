@@ -91,6 +91,17 @@ public class Probability extends Number {
 		return new Probability(this.value/other);
 	}
 	
+	/** Checks whether the given probability is "nearly" the same
+	 * as this probability (given the actual precision).
+	 * @param other some probability
+	 * @return "true" if the given probability is "nearly" the
+	 * same as this one.
+	 */
+	public boolean isWithinTolerance(Probability other){
+		return this.value >= other.value - Probability.PRECISION &&
+			this.value <= other.value + Probability.PRECISION;
+	}
+	
 	/**
 	 * Returns the value of this probability.
 	 * @return the value of this probability.

@@ -56,7 +56,7 @@ public class RpclProbabilityDistributionParser implements RpclProbabilityDistrib
                 this.signature = signature;
         }
 
-        public ProbabilityDistribution parseProbabilityDistribution(Reader reader) throws ParserException{
+        public RpclProbabilityDistribution parseProbabilityDistribution(Reader reader) throws ParserException{
                 try
                 {
                         RpclProbabilityDistributionParser theParser = new RpclProbabilityDistributionParser(reader);
@@ -66,7 +66,7 @@ public class RpclProbabilityDistributionParser implements RpclProbabilityDistrib
                 }
         }
 
-  static final public ProbabilityDistribution Distribution(RpclSemantics semantics, FolSignature signature) throws ParseException {
+  static final public RpclProbabilityDistribution Distribution(RpclSemantics semantics, FolSignature signature) throws ParseException {
         Set<Pair<HerbrandInterpretation,Probability>> assignments = new HashSet<Pair<HerbrandInterpretation,Probability>>();
         Pair<HerbrandInterpretation,Probability> assignment;
                 if(signature == null)
@@ -85,7 +85,7 @@ public class RpclProbabilityDistributionParser implements RpclProbabilityDistrib
                 assignments.add(assignment);
     }
     jj_consume_token(0);
-        ProbabilityDistribution distribution = new ProbabilityDistribution(semantics,signature);
+        RpclProbabilityDistribution distribution = new RpclProbabilityDistribution(semantics,signature);
         for(Pair<HerbrandInterpretation,Probability> a: assignments)
                 distribution.put(a.getFirst(),a.getSecond());
         {if (true) return distribution;}

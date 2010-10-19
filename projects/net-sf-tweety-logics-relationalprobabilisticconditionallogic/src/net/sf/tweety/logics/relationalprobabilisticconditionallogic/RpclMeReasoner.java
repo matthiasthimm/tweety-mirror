@@ -8,6 +8,7 @@ import net.sf.tweety.logics.firstorderlogic.syntax.Constant;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import net.sf.tweety.logics.probabilisticconditionallogic.semantics.*;
 import net.sf.tweety.logics.relationalconditionallogic.syntax.*;
 import net.sf.tweety.logics.relationalprobabilisticconditionallogic.semantics.*;
 import net.sf.tweety.logics.relationalprobabilisticconditionallogic.syntax.*;
@@ -55,7 +56,7 @@ public class RpclMeReasoner extends Reasoner {
 	/**
 	 * The ME-distribution for this reasoner.
 	 */
-	private ProbabilityDistribution meDistribution;
+	private  ProbabilityDistribution<?> meDistribution;
 	
 	/**
 	 * Whether this reasoner should use lifted inference for reasoning.
@@ -120,7 +121,7 @@ public class RpclMeReasoner extends Reasoner {
 	 * Returns the ME-distribution this reasoner bases on.
 	 * @return the ME-distribution this reasoner bases on.
 	 */
-	public ProbabilityDistribution getMeDistribution() throws ProblemInconsistentException{
+	public ProbabilityDistribution<?> getMeDistribution() throws ProblemInconsistentException{
 		if(this.meDistribution == null)
 			this.meDistribution = this.computeMeDistribution();
 		return this.meDistribution;		
@@ -130,7 +131,7 @@ public class RpclMeReasoner extends Reasoner {
 	 * Computes the ME-distribution for this reasoner's knowledge base. 
 	 * @return the ME-distribution for this reasoner's knowledge base.
 	 */	
-	private ProbabilityDistribution computeMeDistribution() throws ProblemInconsistentException{		
+	private ProbabilityDistribution<?> computeMeDistribution() throws ProblemInconsistentException{		
 		RpclBeliefSet kb = ((RpclBeliefSet)this.getKnowledgBase());
 		this.log.info("Computing ME-distribution using \"" + this.semantics.toString() + "\" and " + ((this.inferenceType==RpclMeReasoner.LIFTED_INFERENCE)?("lifted"):("standard")) + " inference for the knowledge base " + kb.toString() + ".");
 		// TODO extract common parts from the following if/else
@@ -204,7 +205,7 @@ public class RpclMeReasoner extends Reasoner {
 			Map<HerbrandInterpretation,FloatVariable> worlds2vars = new HashMap<HerbrandInterpretation,FloatVariable>();
 			// check for empty kb
 			if(kb.size() == 0)
-				return ProbabilityDistribution.getUniformDistribution(this.semantics, this.getSignature());
+				return RpclProbabilityDistribution.getUniformDistribution(this.semantics, this.getSignature());
 			int i=0;
 			// We first construct the necessary constraints for the optimization problem
 			Set<Statement> constraints = new HashSet<Statement>();
@@ -239,7 +240,7 @@ public class RpclMeReasoner extends Reasoner {
 				this.log.info("Applying the OpenOpt optimization library to find the ME-distribution.");
 				Solver solver = new OpenOptSolver(problem,this.getFeasibleStartingPoint(problem));
 				Map<Variable,Term> solution = solver.solve();
-				ProbabilityDistribution p = new ProbabilityDistribution(this.semantics,this.getSignature());
+				RpclProbabilityDistribution p = new RpclProbabilityDistribution(this.semantics,this.getSignature());
 				for(HerbrandInterpretation w: worlds2vars.keySet()){
 					net.sf.tweety.math.term.Constant c = solution.get(worlds2vars.get(w)).value();
 					Double value = new Double(c.doubleValue());
@@ -260,7 +261,7 @@ public class RpclMeReasoner extends Reasoner {
 	public Answer query(Formula query) {
 		if(!(query instanceof RelationalConditional) && !(query instanceof FolFormula))
 			throw new IllegalArgumentException("Reasoning in relational probabilistic conditional logic is only defined for conditional and first-order queries.");
-		ProbabilityDistribution meDistribution = this.getMeDistribution();
+		ProbabilityDistribution<?> meDistribution = this.getMeDistribution();
 		RelationalConditional re;
 		if(query instanceof FolFormula)
 			re = new RelationalConditional((FolFormula)query);

@@ -6,6 +6,7 @@ import net.sf.tweety.*;
 import net.sf.tweety.logics.firstorderlogic.semantics.*;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import net.sf.tweety.logics.probabilisticconditionallogic.semantics.*;
 import net.sf.tweety.logics.relationalprobabilisticconditionallogic.*;
 import net.sf.tweety.logics.relationalprobabilisticconditionallogic.syntax.*;
 import net.sf.tweety.math.equation.*;
@@ -22,9 +23,9 @@ import net.sf.tweety.util.*;
 public abstract class AbstractRpclSemantics implements RpclSemantics {
 
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.relationalprobabilisticconditionallogic.semantics.RpclSemantics#satisfies(net.sf.tweety.logics.relationalprobabilisticconditionallogic.semantics.ProbabilityDistribution, net.sf.tweety.logics.relationalprobabilisticconditionallogic.syntax.RelationalProbabilisticConditional)
+	 * @see net.sf.tweety.logics.relationalprobabilisticconditionallogic.semantics.RpclSemantics#satisfies(net.sf.tweety.logics.probabilisticconditionallogic.semantics.ProbabilityDistribution, net.sf.tweety.logics.relationalprobabilisticconditionallogic.syntax.RelationalProbabilisticConditional)
 	 */
-	public abstract boolean satisfies(ProbabilityDistribution p, RelationalProbabilisticConditional r);
+	public abstract boolean satisfies(ProbabilityDistribution<?> p, RelationalProbabilisticConditional r);
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
@@ -46,7 +47,7 @@ public abstract class AbstractRpclSemantics implements RpclSemantics {
 	 * @return "true" iff the given ground conditional is satisfied by the given distribution
 	 * 	wrt. this semantics
 	 */
-	protected boolean satisfiesGroundConditional(ProbabilityDistribution p, RelationalProbabilisticConditional groundConditional){
+	protected boolean satisfiesGroundConditional(ProbabilityDistribution<?> p, RelationalProbabilisticConditional groundConditional){
 		if(!groundConditional.isGround())
 			throw new IllegalArgumentException("The conditional " + groundConditional + " is not ground.");
 		return p.probability(groundConditional).getValue() < groundConditional.getProbability().getValue() + Probability.PRECISION &&
