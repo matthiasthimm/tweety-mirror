@@ -143,24 +143,24 @@ public class DistanceMinimizationInconsistencyMeasure implements InconsistencyMe
 	}
 	
 	public static void main(String[] args){
-		TweetyLogging.logLevel = TweetyConfiguration.LogLevel.TRACE;
+		TweetyLogging.logLevel = TweetyConfiguration.LogLevel.ERROR;
 		TweetyLogging.initLogging();		
-		String file = "/Users/mthimm/Desktop/pcl_test";
+		String file = "/Users/mthimm/Desktop/R4.pcl";
 		try {
-			long millis = System.currentTimeMillis();
 			PclBeliefSet beliefSet = (PclBeliefSet) new net.sf.tweety.logics.probabilisticconditionallogic.parser.PclParser().parseBeliefBaseFromFile(file);
-			//AverageDistanceCulpabilityMeasure adMeasure = new AverageDistanceCulpabilityMeasure();
-			ShapleyCulpabilityMeasure shapley = new ShapleyCulpabilityMeasure(new DistanceMinimizationInconsistencyMeasure());
-			for(ProbabilisticConditional pc: beliefSet)
-				System.out.println(pc + " - " +  pc.getUniformProbability() + " - " + shapley.culpabilityMeasure(beliefSet, pc));
-			PclBeliefSet repaired = (PclBeliefSet) new PclBeliefSetQuadraticErrorMinimizationMachineShop(shapley).repair(beliefSet);
-			System.out.println(repaired);
-			//System.out.println(new PclDefaultConsistencyTester().isConsistent(repaired));
-			/*for(ProbabilisticConditional pc: beliefSet)
-				System.out.println(pc + " - " +  shapley.culpabilityMeasure(beliefSet, pc));
-			for(Set<Formula> f: new PclDefaultConsistencyTester().minimalInconsistentSubsets(beliefSet))
-				System.out.println("MinIncon " + f);*/
-			System.out.println("Time: " + (System.currentTimeMillis()-millis) + "ms");
+			System.out.println(file);
+			System.out.println("======================================");
+			System.out.println("Drastic inconsistency measure:                 " + new DrasticInconsistencyMeasure().inconsistencyMeasure(beliefSet));
+			System.out.println("MI inconsistency measure:                      " + new MiInconsistencyMeasure().inconsistencyMeasure(beliefSet));
+			System.out.println("Normalized MI inconsistency measure:           " + new NormalizedMiInconsistencyMeasure().inconsistencyMeasure(beliefSet));
+			System.out.println("MI^C inconsistency measure:                    " + new MicInconsistencyMeasure().inconsistencyMeasure(beliefSet));
+			System.out.println("Normalized MI^C inconsistency measure:         " + new NormalizedMicInconsistencyMeasure().inconsistencyMeasure(beliefSet));
+			System.out.println("MinDev inconsistency measure:                  " + new DistanceMinimizationInconsistencyMeasure().inconsistencyMeasure(beliefSet));
+			System.out.println("Normalized MinDev inconsistency measure:       " + new NormalizedDistanceMinimizationInconsistencyMeasure().inconsistencyMeasure(beliefSet));
+			System.out.println("Lower MinDev inconsistency measure:            " + new LowerApproxDistanceMinimizationInconsistencyMeasure().inconsistencyMeasure(beliefSet));
+			System.out.println("Normalized lower MinDev inconsistency measure: " + new NormalizedLowerApproxDistanceMinimizationInconsistencyMeasure().inconsistencyMeasure(beliefSet));
+			System.out.println("Upper MinDev inconsistency measure:            " + new UpperApproxDistanceMinimizationInconsistencyMeasure().inconsistencyMeasure(beliefSet));
+			System.out.println("Normalized upper MinDev inconsistency measure: " + new NormalizedUpperApproxDistanceMinimizationInconsistencyMeasure().inconsistencyMeasure(beliefSet));			
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

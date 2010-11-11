@@ -28,6 +28,7 @@ public class PclDefaultConsistencyTester extends BeliefSetConsistencyTester {
 		if(!(beliefBase instanceof PclBeliefSet))
 			throw new IllegalArgumentException("Expected belief base of class 'PclBeliefSet'.");
 		PclBeliefSet beliefSet = (PclBeliefSet) beliefBase;
+		if(beliefSet.isEmpty()) return true;
 		// Create variables for the probability of each possible world and
 		// create a multi-dimensional function that has a root iff the belief base is consistent
 		List<Term> functions = new ArrayList<Term>();

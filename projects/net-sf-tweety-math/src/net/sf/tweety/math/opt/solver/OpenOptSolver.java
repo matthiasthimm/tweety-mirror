@@ -67,7 +67,6 @@ public class OpenOptSolver extends Solver {
 	 * @param a starting point.
 	 */
 	public OpenOptSolver(OptimizationProblem problem, Map<Variable,Term> startingPoint) {
-		// TODO add constructor without starting point and compute starting point using a rootFinder 
 		super(problem.clone());
 		this.startingPoint = startingPoint;
 		// do a renaming of variables		
@@ -88,6 +87,8 @@ public class OpenOptSolver extends Solver {
 	public Map<Variable, Term> solve() throws GeneralMathException {		
 		String output = "";
 		String error = "";
+		InputStream in = null;
+		Process child = null;
 		try{
 			File ooFile = File.createTempFile("ootmp", null);
 			// Delete temp file when program exits.
@@ -99,21 +100,26 @@ public class OpenOptSolver extends Solver {
 			out.close();
 			//execute openopt on problem and retrieve console output
 			this.log.info("Calling OpenOpt optimization library.");
-			Process child = Runtime.getRuntime().exec("python " + ooFile.getAbsolutePath());
+			child = Runtime.getRuntime().exec("python " + ooFile.getAbsolutePath());
 			int c;		
-			InputStream in = child.getInputStream();
+			in = child.getInputStream();
 	        while ((c = in.read()) != -1){
 	            output += ((char)c);
 	        }
 			in.close();		        		        
 	        in = child.getErrorStream();
 	        while ((c = in.read()) != -1)
-	            error += (char)c;
-	        in.close();  
-	        child.destroy();
+	            error += (char)c;	        	        
 		}catch(IOException e){
 			log.error(e.getMessage());
 			return null;
+		}finally{
+			try {
+				if(in != null) in.close();
+			} catch (IOException e) {
+				// ignore
+			}
+			if(child != null) child.destroy();
 		}
 		// TODO check error appropriately
 		if(output.contains("NO FEASIBLE SOLUTION") && !this.ignoreNotFeasibleError){
@@ -212,8 +218,7 @@ public class OpenOptSolver extends Solver {
 				// add equality constraints
 				Equation eq = (Equation)s.toNormalizedForm();
 				equalities.add("c" + idx);
-				code += "c" + idx + " = lambda x: " + eq.getLeftTerm().toString().replace("log", "log_mod") + "\n";
-				
+				code += "c" + idx + " = lambda x: " + eq.getLeftTerm().toString().replace("log", "log_mod") + "\n";				
 			}else{
 				Inequation ineq = (Inequation) s.toNormalizedForm();
 				inequalities.add("i" + idx);

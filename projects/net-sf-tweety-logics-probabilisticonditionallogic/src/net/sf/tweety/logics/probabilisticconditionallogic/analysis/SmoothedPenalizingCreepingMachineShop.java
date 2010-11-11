@@ -10,7 +10,7 @@ import net.sf.tweety.util.*;
  * This class is capable of restoring consistency of a possible inconsistent probabilistic
  * conditional belief set. Restoring consistency is performed by a smoothed
  * penalizing creeping of the original belief set towards an uniform belief set,
- * see [Diss, Thimm] for details.
+ * see [PhD thesis, Thimm] for details.
  * @author Matthias Thimm
  */
 public class SmoothedPenalizingCreepingMachineShop extends AbstractCreepingMachineShop {
