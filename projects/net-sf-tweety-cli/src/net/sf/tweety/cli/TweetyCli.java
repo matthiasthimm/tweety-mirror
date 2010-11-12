@@ -7,6 +7,7 @@ import net.sf.tweety.*;
 import net.sf.tweety.Writer;
 import net.sf.tweety.logics.firstorderlogic.parser.*;
 import net.sf.tweety.logics.firstorderlogic.syntax.*;
+import net.sf.tweety.logics.probabilisticconditionallogic.semantics.*;
 import net.sf.tweety.logics.relationalprobabilisticconditionallogic.*;
 import net.sf.tweety.logics.relationalprobabilisticconditionallogic.parser.*;
 import net.sf.tweety.logics.relationalprobabilisticconditionallogic.parser.rpclcondensedprobabilitydistributionparser.*;
@@ -169,14 +170,14 @@ public class TweetyCli {
 			RpclBeliefSet kb = (RpclBeliefSet)((RpclParser) inputParser[0]).parseBeliefBaseFromFile(inputFiles[0]);
 			if(inputFiles.length == 1){				
 				RpclMeReasoner reasoner = new RpclMeReasoner(kb,semantics,(FolSignature)((RpclParser) inputParser[0]).getSignature(),inferenceType);
-				ProbabilityDistribution p = reasoner.getMeDistribution();
+				ProbabilityDistribution<?> p = reasoner.getMeDistribution();
 				outputWriter.setObject(p);
 				outputWriter.writeToFile(outputFile);
 				System.exit(0);
 			}else if(inputParser[1] instanceof RpclProbabilityDistributionParser) {
 				((RpclProbabilityDistributionParser)inputParser[1]).setSemantics(semantics);
 				((RpclProbabilityDistributionParser)inputParser[1]).setSignature((FolSignature)((RpclParser) inputParser[0]).getSignature());
-				ProbabilityDistribution p = ((RpclProbabilityDistributionParser)inputParser[1]).parseProbabilityDistribution(new InputStreamReader(new java.io.FileInputStream(inputFiles[1])));
+				ProbabilityDistribution<?> p = ((RpclProbabilityDistributionParser)inputParser[1]).parseProbabilityDistribution(new InputStreamReader(new java.io.FileInputStream(inputFiles[1])));
 				FolParser folParser = new FolParser();
 				folParser.setSignature((FolSignature)((RpclParser) inputParser[0]).getSignature());
 				Probability result = p.probability((FolFormula)folParser.parseFormula(query));

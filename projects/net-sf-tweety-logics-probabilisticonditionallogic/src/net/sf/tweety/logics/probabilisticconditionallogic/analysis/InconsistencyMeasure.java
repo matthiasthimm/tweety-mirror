@@ -10,6 +10,9 @@ import net.sf.tweety.logics.probabilisticconditionallogic.*;
  */
 public interface InconsistencyMeasure {
 
+	/** Tolerance. */
+	public static final double MEASURE_TOLERANCE = 0.005;
+	
 	/**
 	 * This method measures the inconsistency of the given belief set.
 	 * @param beliefSet a PclBeliefSet,
