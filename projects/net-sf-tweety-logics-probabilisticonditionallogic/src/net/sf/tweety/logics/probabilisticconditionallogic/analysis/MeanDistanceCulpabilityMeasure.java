@@ -41,8 +41,8 @@ public class MeanDistanceCulpabilityMeasure implements SignedCulpabilityMeasure 
 		if(incVal == 0)
 			return 0d;
 		if(this.normalized)
-			return (this.getMinimumValue(beliefSet, conditional, incVal) / beliefSet.size() + this.getMaximumValue(beliefSet, conditional, incVal) / beliefSet.size()) / 2;
-		return (this.getMinimumValue(beliefSet, conditional, incVal) + this.getMaximumValue(beliefSet, conditional, incVal)) / 2;
+			return Math.abs((this.getMinimumValue(beliefSet, conditional, incVal) / beliefSet.size() + this.getMaximumValue(beliefSet, conditional, incVal) / beliefSet.size()) / 2);
+		return Math.abs((this.getMinimumValue(beliefSet, conditional, incVal) + this.getMaximumValue(beliefSet, conditional, incVal)) / 2);
 	}
 
 	/* (non-Javadoc)
@@ -64,15 +64,15 @@ public class MeanDistanceCulpabilityMeasure implements SignedCulpabilityMeasure 
 	 */
 	private Double getMinimumValue(PclBeliefSet beliefSet, ProbabilisticConditional conditional, double incVal){
 		OptimizationProblem problem = this.getBaseProblem(beliefSet, conditional, incVal);
-		problem.setType(OptimizationProblem.MINIMIZE);	
+		problem.setType(OptimizationProblem.MINIMIZE);
 		try{			
 			OpenOptSolver solver = new OpenOptSolver(problem);
-			solver.contol = 0.01;
+			solver.contol = 0.0001;
 			solver.gtol = 1e-15;
 			solver.ftol = 1e-15;
 			solver.xtol = 1e-15;
 			//solver.ignoreNotFeasibleError = true;
-			Map<Variable,Term> solution = solver.solve();
+			Map<Variable,Term> solution = solver.solve();		
 			return problem.getTargetFunction().replaceAllTerms(solution).doubleValue();
 		}catch (GeneralMathException e){
 			// This should not happen as the optimization problem is guaranteed to be feasible
@@ -88,15 +88,14 @@ public class MeanDistanceCulpabilityMeasure implements SignedCulpabilityMeasure 
 	 */
 	private Double getMaximumValue(PclBeliefSet beliefSet, ProbabilisticConditional conditional, double incVal){
 		OptimizationProblem problem = this.getBaseProblem(beliefSet, conditional, incVal);
-		problem.setType(OptimizationProblem.MAXIMIZE);		
 		try{			
 			OpenOptSolver solver = new OpenOptSolver(problem);
-			solver.contol = 0.01;
+			solver.contol = 0.0001;
 			solver.gtol = 1e-15;
 			solver.ftol = 1e-15;
 			solver.xtol = 1e-15;
 			//solver.ignoreNotFeasibleError = true;
-			Map<Variable,Term> solution = solver.solve();
+			Map<Variable,Term> solution = solver.solve();			
 			return problem.getTargetFunction().replaceAllTerms(solution).doubleValue();
 		}catch (GeneralMathException e){
 			// This should not happen as the optimization problem is guaranteed to be feasible
@@ -115,7 +114,7 @@ public class MeanDistanceCulpabilityMeasure implements SignedCulpabilityMeasure 
 		// Create variables for the probability of each possible world and
 		// set up the optimization problem for computing the minimal
 		// distance to a consistent belief set.
-		OptimizationProblem problem = new OptimizationProblem(OptimizationProblem.MINIMIZE);
+		OptimizationProblem problem = new OptimizationProblem(OptimizationProblem.MAXIMIZE);
 		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PropositionalSignature)beliefSet.getSignature());
 		Map<PossibleWorld,Variable> worlds2vars = new HashMap<PossibleWorld,Variable>();
 		int i = 0;
@@ -184,7 +183,7 @@ public class MeanDistanceCulpabilityMeasure implements SignedCulpabilityMeasure 
 		Inequation ineq = new Inequation(leftSide, new FloatConstant(incVal), Inequation.LESS_EQUAL);
 		problem.add(ineq);
 		// set target function
-		problem.setTargetFunction(etas.get(conditional).add(taus.get(conditional)));
+		problem.setTargetFunction(etas.get(conditional).minus(taus.get(conditional)));
 		return problem;
 	}
 	
