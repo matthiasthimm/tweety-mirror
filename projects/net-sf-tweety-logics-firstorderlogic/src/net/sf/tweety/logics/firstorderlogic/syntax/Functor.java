@@ -71,7 +71,7 @@ public class Functor extends FolBasicStructure {
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
+		int result = super.hashCode();
 		result = prime * result
 				+ ((targetSort == null) ? 0 : targetSort.hashCode());
 		return result;
@@ -82,12 +82,14 @@ public class Functor extends FolBasicStructure {
 	 */
 	@Override
 	public boolean equals(Object obj) {
+		if(!super.equals(obj))
+			return false;
 		if (this == obj)
 			return true;
 		if (obj == null)
 			return false;
 		if (getClass() != obj.getClass())
-			return false;
+			return false;		
 		Functor other = (Functor) obj;
 		if (targetSort == null) {
 			if (other.targetSort != null)
