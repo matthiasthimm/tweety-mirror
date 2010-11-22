@@ -119,10 +119,10 @@ public class DistanceMinimizationInconsistencyMeasure implements InconsistencyMe
 		problem.setTargetFunction(targetFunction);		
 		try{			
 			OpenOptSolver solver = new OpenOptSolver(problem);
-			solver.contol = 1e-2;
-			solver.gtol = 1e-60;
-			solver.ftol = 1e-60;
-			solver.xtol = 1e-60;
+			solver.contol = 1e-4;
+			solver.gtol = 1e-30;
+			solver.ftol = 1e-30;
+			solver.xtol = 1e-30;
 			//solver.ignoreNotFeasibleError = true;
 			Map<Variable,Term> solution = solver.solve();
 			Double result = targetFunction.replaceAllTerms(solution).doubleValue();
@@ -143,18 +143,18 @@ public class DistanceMinimizationInconsistencyMeasure implements InconsistencyMe
 	}
 	
 	public static void main(String[] args){
-		TweetyLogging.logLevel = TweetyConfiguration.LogLevel.ERROR;
-		TweetyLogging.initLogging();		
-		for(int i = 0; i< 10 ; i++){
-			String file = "/Users/mthimm/Desktop/R" + i + ".pcl";
+		TweetyLogging.logLevel = TweetyConfiguration.LogLevel.TRACE;
+		TweetyLogging.initLogging();
+		BeliefBaseMachineShop ms = new PenalizingCreepingMachineShop();		
+		for(int i = 7; i<8; i++){
+			String file = "/Users/mthimm/Desktop/R" + i + ".pcl";			
 			try {
 				PclBeliefSet beliefSet = (PclBeliefSet) new net.sf.tweety.logics.probabilisticconditionallogic.parser.PclParser().parseBeliefBaseFromFile(file);
-				System.out.println(file);
+				System.out.println(file);				
+				PclBeliefSet repaired = (PclBeliefSet)ms.repair(beliefSet);
 				System.out.println("======================================");
-				MeanDistanceCulpabilityMeasure m = new MeanDistanceCulpabilityMeasure(true); 
-				for(ProbabilisticConditional c: beliefSet){
-					System.out.println(c + " ---- " + m.sign(beliefSet, c) + " ---- " + m.culpabilityMeasure(beliefSet, c));
-				}
+				for(Formula f: repaired)
+					System.out.println(f);
 				System.out.println();
 				//System.out.println("Drastic inconsistency measure:                 " + new DrasticInconsistencyMeasure().inconsistencyMeasure(beliefSet));
 				//System.out.println("MI inconsistency measure:                      " + new MiInconsistencyMeasure().inconsistencyMeasure(beliefSet));

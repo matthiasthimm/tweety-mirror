@@ -21,7 +21,7 @@ public class PenalizingCreepingMachineShop extends AbstractCreepingMachineShop {
 	/**
 	 * The step length for the line search.
 	 */
-	public static final double STEP_LENGTH = 0.1;
+	public static final double STEP_LENGTH = 1;
 	
 	/**
 	 * The minimal step length for line search.
@@ -32,6 +32,7 @@ public class PenalizingCreepingMachineShop extends AbstractCreepingMachineShop {
 	 * The culpability vector.
 	 */
 	private Map<ProbabilisticConditional,Double> culpVector;
+	
 	/**
 	 * Logger.
 	 */
@@ -47,10 +48,10 @@ public class PenalizingCreepingMachineShop extends AbstractCreepingMachineShop {
 		PclBeliefSet beliefSet = (PclBeliefSet) beliefBase;
 		this.log.debug("Determining culpability vector of '" + beliefSet + "'.");
 		DistanceMinimizationInconsistencyMeasure inconMeasure = new DistanceMinimizationInconsistencyMeasure();
-		AverageDistanceCulpabilityMeasure agMeasure = new AverageDistanceCulpabilityMeasure();
+		MeanDistanceCulpabilityMeasure agMeasure = new MeanDistanceCulpabilityMeasure(false);
 		this.culpVector = new HashMap<ProbabilisticConditional,Double>();
 		for(ProbabilisticConditional pc: beliefSet){
-			this.culpVector.put(pc, agMeasure.culpabilitySignum(beliefSet, pc) * agMeasure.culpabilityMeasure(beliefSet, pc));
+			this.culpVector.put(pc, agMeasure.sign(beliefSet, pc) * agMeasure.culpabilityMeasure(beliefSet, pc));
 		}
 		this.log.debug("Finished determining culpability vector of '" + beliefSet + "'.");		
 		double delta = this.getLowerBound();
@@ -62,18 +63,20 @@ public class PenalizingCreepingMachineShop extends AbstractCreepingMachineShop {
 		while(delta <= upperBound){
 			newDelta = delta + stepLength;
 			newDeltaInconMeasure = inconMeasure.inconsistencyMeasure(this.characteristicFunction(beliefSet, this.getValues(newDelta, beliefSet)));
-			this.log.debug("Current delta is '" + newDelta + "' with measure '" + newDeltaInconMeasure + "' (step length is '" + stepLength + "').");
+			this.log.debug("Current delta is '" + newDelta + "' with measure '" + newDeltaInconMeasure + "' (step length is '" + stepLength + "').");			
 			if(newDeltaInconMeasure < AbstractCreepingMachineShop.PRECISION && newDeltaInconMeasure > -AbstractCreepingMachineShop.PRECISION)
 				if(Math.abs(newDelta - delta) < AbstractCreepingMachineShop.PRECISION)
 					return this.characteristicFunction(beliefSet, this.getValues(newDelta, beliefSet));
 				else{
-					stepLength *= 0.5;
-					continue;
+					if(stepLength * 0.5 >= MIN_STEP_LENGTH){
+						stepLength *= 0.5;
+						continue;
+					}
 				}
 			delta = newDelta;
-			deltaInconMeasure = newDeltaInconMeasure;
 			if(newDeltaInconMeasure > deltaInconMeasure)
 				stepLength *= -0.5;
+			deltaInconMeasure = newDeltaInconMeasure;			
 			cnt++;
 			if(cnt >= AbstractCreepingMachineShop.MAX_ITERATIONS)
 				break;

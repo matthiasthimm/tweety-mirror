@@ -42,4 +42,5 @@ public class PclBeliefSet extends BeliefSet<ProbabilisticConditional> {
 			sig.addAll(((PropositionalSignature)c.getSignature()));			
 		return sig;
 	}	
+	
 }

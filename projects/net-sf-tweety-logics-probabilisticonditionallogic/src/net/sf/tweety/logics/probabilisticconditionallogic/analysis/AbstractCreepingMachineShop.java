@@ -24,12 +24,12 @@ public abstract class AbstractCreepingMachineShop implements BeliefBaseMachineSh
 	/**
 	 * The precision for finding the minimal consistent knowledge base.
 	 */
-	public static final double PRECISION = 0.000001;
+	public static final double PRECISION = 0.000000001;
 	
 	/**
 	 * The maximum number of steps in the line search.
 	 */
-	public static final int MAX_ITERATIONS = 1000000;
+	public static final int MAX_ITERATIONS = 10000000;
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.BeliefBaseMachineShop#repair(net.sf.tweety.BeliefBase)

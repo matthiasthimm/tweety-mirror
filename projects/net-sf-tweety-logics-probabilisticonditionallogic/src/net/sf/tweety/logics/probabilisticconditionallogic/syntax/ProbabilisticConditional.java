@@ -50,6 +50,16 @@ public class ProbabilisticConditional extends Conditional {
 		this(conditional.getPremise().iterator().next(),conditional.getConclusion(),probability);
 	}
 	
+	/** Checks whether this and the given probabilistic conditional are 
+	 * qualitatively equivalent, i.e. whether they are equivalent when neglecting
+	 * the probability.
+	 * @param other some probabilistic conditional.
+	 * @return "true" iff the two conditionals are qualitatively equivalent.
+	 */
+	public boolean qualitativeEquals(ProbabilisticConditional other){
+		return super.equals(other);
+	}
+	
 	/**
 	 * Returns the probability of this conditional.
 	 * @return the probability of this conditional.
@@ -72,6 +82,38 @@ public class ProbabilisticConditional extends Conditional {
 	@Override
 	public ProbabilisticConditional complement(){
 		return new ProbabilisticConditional(this,this.probability.complement());
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result
+				+ ((probability == null) ? 0 : probability.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ProbabilisticConditional other = (ProbabilisticConditional) obj;
+		if (probability == null) {
+			if (other.probability != null)
+				return false;
+		} else if (!probability.equals(other.probability))
+			return false;
+		return true;
 	}
 
 }
