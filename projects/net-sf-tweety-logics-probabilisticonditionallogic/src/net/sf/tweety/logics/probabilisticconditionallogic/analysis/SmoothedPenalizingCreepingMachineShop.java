@@ -76,7 +76,7 @@ public class SmoothedPenalizingCreepingMachineShop extends AbstractCreepingMachi
 				first = false;
 			}else if(current > this.scalingParameter)
 				this.scalingParameter = current;				
-		}		
+		}
 	}
 	
 	/**

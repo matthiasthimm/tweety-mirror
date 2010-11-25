@@ -119,10 +119,10 @@ public class DistanceMinimizationInconsistencyMeasure implements InconsistencyMe
 		problem.setTargetFunction(targetFunction);		
 		try{			
 			OpenOptSolver solver = new OpenOptSolver(problem);
-			solver.contol = 1e-4;
-			solver.gtol = 1e-30;
-			solver.ftol = 1e-30;
-			solver.xtol = 1e-30;
+			solver.contol = 1e-8;
+			solver.gtol = 1e-15;
+			solver.ftol = 1e-15;
+			solver.xtol = 1e-15;
 			//solver.ignoreNotFeasibleError = true;
 			Map<Variable,Term> solution = solver.solve();
 			Double result = targetFunction.replaceAllTerms(solution).doubleValue();
@@ -143,10 +143,10 @@ public class DistanceMinimizationInconsistencyMeasure implements InconsistencyMe
 	}
 	
 	public static void main(String[] args){
-		TweetyLogging.logLevel = TweetyConfiguration.LogLevel.TRACE;
+		TweetyLogging.logLevel = TweetyConfiguration.LogLevel.ERROR;
 		TweetyLogging.initLogging();
-		BeliefBaseMachineShop ms = new PenalizingCreepingMachineShop();		
-		for(int i = 7; i<8; i++){
+		BeliefBaseMachineShop ms = new SmoothedPenalizingCreepingMachineShop(new ShapleyCulpabilityMeasure(new UpperApproxDistanceMinimizationInconsistencyMeasure()));		
+		for(int i = 4; i < 10; i++){
 			String file = "/Users/mthimm/Desktop/R" + i + ".pcl";			
 			try {
 				PclBeliefSet beliefSet = (PclBeliefSet) new net.sf.tweety.logics.probabilisticconditionallogic.parser.PclParser().parseBeliefBaseFromFile(file);

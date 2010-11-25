@@ -18,6 +18,9 @@ public class ShapleyCulpabilityMeasure implements CulpabilityMeasure {
 	 */
 	private InconsistencyMeasure inconsistencyMeasure;
 	
+	/** Stores previously computed culpability values. */
+	private Map<Pair<PclBeliefSet,ProbabilisticConditional>,Double> archive;
+	
 	/**
 	 * Creates a new Shapley culpability measure that bases on the given
 	 * inconsistency measure.
@@ -25,6 +28,7 @@ public class ShapleyCulpabilityMeasure implements CulpabilityMeasure {
 	 */
 	public ShapleyCulpabilityMeasure(InconsistencyMeasure inconsistencyMeasure){
 		this.inconsistencyMeasure = inconsistencyMeasure;
+		this.archive = new HashMap<Pair<PclBeliefSet,ProbabilisticConditional>,Double>();
 	}
 	
 	/* (non-Javadoc)
@@ -32,18 +36,21 @@ public class ShapleyCulpabilityMeasure implements CulpabilityMeasure {
 	 */
 	@Override
 	public Double culpabilityMeasure(PclBeliefSet beliefSet, ProbabilisticConditional conditional) {
+		if(this.archive.containsKey(new Pair<PclBeliefSet,ProbabilisticConditional>(beliefSet,conditional)))
+			return this.archive.get(new Pair<PclBeliefSet,ProbabilisticConditional>(beliefSet,conditional)); 
 		Set<Pair<PclBeliefSet,PclBeliefSet>> subbases = this.getSubsets(beliefSet, conditional);		
 		Double result = new Double(0);
 		for(Pair<PclBeliefSet,PclBeliefSet> pair : subbases){
 			Double v1,v2;
 			v1 = this.inconsistencyMeasure.inconsistencyMeasure(pair.getFirst());
-			v2 = this.inconsistencyMeasure.inconsistencyMeasure(pair.getSecond());
+			v2 = this.inconsistencyMeasure.inconsistencyMeasure(pair.getSecond());			
 			Double temp =  v1 - v2;
 			temp *= MathTools.faculty(pair.getSecond().size());
 			temp *= MathTools.faculty(beliefSet.size()-pair.getFirst().size());
 			temp /= MathTools.faculty(beliefSet.size());
 			result += temp;
-		}
+		}		
+		this.archive.put(new Pair<PclBeliefSet,ProbabilisticConditional>(beliefSet,conditional), result); 
 		return result;
 	}
 	

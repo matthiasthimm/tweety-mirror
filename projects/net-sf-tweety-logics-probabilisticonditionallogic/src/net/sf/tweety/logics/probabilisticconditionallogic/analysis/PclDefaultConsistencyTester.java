@@ -87,6 +87,10 @@ public class PclDefaultConsistencyTester extends BeliefSetConsistencyTester {
 		for(PossibleWorld w: worlds)
 			startingPoint.put(worlds2vars.get(w), new IntegerConstant(1));
 		OpenOptRootFinder rootFinder = new OpenOptRootFinder(functions,startingPoint);
+		rootFinder.contol = 1.0E-12;
+		rootFinder.ftol = 1.0E-15;
+		rootFinder.gtol = 1.0E-15;
+		rootFinder.xtol = 1.0E-15;
 		try {
 			rootFinder.randomRoot();
 		} catch (GeneralMathException e) {

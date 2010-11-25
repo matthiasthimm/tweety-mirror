@@ -24,7 +24,7 @@ public abstract class AbstractCreepingMachineShop implements BeliefBaseMachineSh
 	/**
 	 * The precision for finding the minimal consistent knowledge base.
 	 */
-	public static final double PRECISION = 0.000000001;
+	public static final double PRECISION = 0.0000001;
 	
 	/**
 	 * The maximum number of steps in the line search.
@@ -41,11 +41,11 @@ public abstract class AbstractCreepingMachineShop implements BeliefBaseMachineSh
 		PclBeliefSet beliefSet = (PclBeliefSet) beliefBase;
 		PclDefaultConsistencyTester tester = new PclDefaultConsistencyTester();
 		if(tester.isConsistent(beliefSet))
-			return beliefSet;
+			return beliefSet;		
 		this.log.trace("'" + beliefSet + "' is inconsistent, preparing optimization problem to restore consistency.");
 		this.init(beliefSet);
 		double lowerBound = this.getLowerBound();
-		double upperBound = this.getUpperBound();
+		double upperBound = this.getUpperBound();		
 		PclBeliefSet lastConsistentBeliefSet = beliefSet;
 		PclBeliefSet newBeliefSet;
 		int cnt = 0;
