@@ -209,7 +209,7 @@ public class HerbrandInterpretation extends InterpretationSet<Atom> {
 	/**
 	 * For every mapping t1 -> t2, this method substitutes every
 	 * occurrence of "t1" by "t2" and vice versa and returns the new interpretation
-	 * @param mapping a mappinf of terms.
+	 * @param mapping a mapping of terms.
 	 * @return a Herbrand interpretation.
 	 */
 	public HerbrandInterpretation exchange(Map<Term,Term> mapping){
@@ -224,5 +224,47 @@ public class HerbrandInterpretation extends InterpretationSet<Atom> {
 	 */
 	public String toString(){
 		return super.toString();
-	}	
+	}
+	
+	public static void main(String[] args){		
+		for(int m = 4; m < 5; m++){
+			System.out.println("m=" + m);
+			System.out.println("=========================");
+			Predicate p = new Predicate("p",2);
+			FolSignature sig = new FolSignature();
+			sig.add(p);
+			Set<Constant> equiClass = new HashSet<Constant>();
+			for(int i = 1; i <= m; i++){
+				Constant a = new Constant("a" + i);
+				sig.add(a);
+				equiClass.add(a);
+			}
+			Set<HerbrandInterpretation> ints = new HerbrandBase(sig).allHerbrandInterpretations();
+			long size = ints.size();
+			Set<Set<Constant>> equivalenceClasses = new HashSet<Set<Constant>>();
+			equivalenceClasses.add(equiClass);
+			
+			Map<Integer,Set<HerbrandInterpretation>> size2EquivInts = new HashMap<Integer,Set<HerbrandInterpretation>>();
+			int tmpsize;			
+			long i = 0;
+			int overall = 0;
+			for(HerbrandInterpretation h: ints){				
+				boolean isEquiv = false;
+				tmpsize = h.size();
+				if(!size2EquivInts.containsKey(tmpsize))
+					size2EquivInts.put(tmpsize,new HashSet<HerbrandInterpretation>());					
+				for(HerbrandInterpretation h2: size2EquivInts.get(tmpsize))
+					if(h.isSyntacticallyEquivalent(h2, equivalenceClasses)){
+						isEquiv = true;
+						break;
+					}
+				System.out.println(i++ + " / " + size + "\t(" + overall + ")");
+				if(isEquiv) continue;
+				overall++;
+				size2EquivInts.get(tmpsize).add(h);
+			}			
+			System.out.println("\n\n" + "m=" + m + "\t#Ints: " + ints.size() + "\t#EquiInts: " + overall);
+		}
+		
+	}
 }

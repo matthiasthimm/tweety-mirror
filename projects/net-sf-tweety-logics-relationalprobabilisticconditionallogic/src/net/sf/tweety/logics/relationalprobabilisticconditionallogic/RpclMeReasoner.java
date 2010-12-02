@@ -184,7 +184,7 @@ public class RpclMeReasoner extends Reasoner {
 			problem.setTargetFunction(targetFunction);			
 			try{
 				this.log.info("Applying the OpenOpt optimization library to find the ME-distribution.");
-				Solver solver = new OpenOptSolver(problem,this.getFeasibleStartingPoint(problem));
+				Solver solver = new OpenOptSolver(problem);
 				Map<Variable,Term> solution = solver.solve();				
 				CondensedProbabilityDistribution p = new CondensedProbabilityDistribution(this.semantics,this.getSignature());
 				for(ReferenceWorld w: worlds2vars.keySet()){
@@ -238,7 +238,7 @@ public class RpclMeReasoner extends Reasoner {
 			problem.setTargetFunction(targetFunction);			
 			try{
 				this.log.info("Applying the OpenOpt optimization library to find the ME-distribution.");
-				Solver solver = new OpenOptSolver(problem,this.getFeasibleStartingPoint(problem));
+				Solver solver = new OpenOptSolver(problem);
 				Map<Variable,Term> solution = solver.solve();
 				RpclProbabilityDistribution p = new RpclProbabilityDistribution(this.semantics,this.getSignature());
 				for(HerbrandInterpretation w: worlds2vars.keySet()){
@@ -271,33 +271,6 @@ public class RpclMeReasoner extends Reasoner {
 		answer.setAnswer(prob.getValue());
 		answer.appendText("The probability of the query is " + prob + ".");
 		return answer;		
-	}
-	
-	/**
-	 * Finds a feasible starting point for the given optimization problem.
-	 * @param problem an optimization problem
-	 * @return a feasible starting point.
-	 * @throws GeneralMathException iff something went wrong.
-	 */
-	private Map<Variable,Term> getFeasibleStartingPoint(OptimizationProblem problem) throws GeneralMathException{
-		this.log.info("Determining feasible starting point for optimizing entropy.");
-		ConstraintSatisfactionProblem csp = new ConstraintSatisfactionProblem();
-		csp.addAll(problem);
-		if(csp.isLinear()){
-			this.log.info("The problem is linear, we use a simplex algorithm.");
-			return new ApacheCommonsSimplex(csp).solve();
-		}else{
-			this.log.info("The problem is not linear, we use the OpenOpt optimization library.");			
-			Map<Variable,Term> startingPoint = new HashMap<Variable,Term>();
-			for(Variable v: problem.getVariables())
-				startingPoint.put(v, new FloatConstant(1));
-			List<Term> functions = new ArrayList<Term>();
-			//every s is an equation
-			for(Statement s: problem)
-				functions.add(s.toNormalizedForm().getLeftTerm());
-			RootFinder rootFinder = new OpenOptRootFinder(functions,startingPoint);	
-			return rootFinder.randomRoot();			
-		}		
 	}
 
 	/**

@@ -145,8 +145,8 @@ public class DistanceMinimizationInconsistencyMeasure implements InconsistencyMe
 	public static void main(String[] args){
 		TweetyLogging.logLevel = TweetyConfiguration.LogLevel.ERROR;
 		TweetyLogging.initLogging();
-		BeliefBaseMachineShop ms = new BalancedMachineShop(new ShapleyCulpabilityMeasure(new DistanceMinimizationInconsistencyMeasure()));		
-		for(int i = 9; i < 10; i++){
+		BeliefBaseMachineShop ms = new BalancedMachineShop(new MeanDistanceCulpabilityMeasure(false));		
+		for(int i = 0; i < 10; i++){
 			String file = "/Users/mthimm/Desktop/R" + i + ".pcl";			
 			try {
 				PclBeliefSet beliefSet = (PclBeliefSet) new net.sf.tweety.logics.probabilisticconditionallogic.parser.PclParser().parseBeliefBaseFromFile(file);
