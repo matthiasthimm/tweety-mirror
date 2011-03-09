@@ -27,3 +27,9 @@ So if you have an interest in getting the clients now, please drop me an e-mail
 to stefan@tittel.net.
 
 -- Stefan Tittel (2011-01-27)
+
+
+More information about GridWorldSim and binary builds of the graphical clients
+are now available at http://www.tittel.net/gridworldsim/.
+
+-- Stefan Tittel (2011-03-09)
