@@ -4,6 +4,7 @@ import java.util.*;
 
 import net.sf.tweety.*;
 import net.sf.tweety.logics.propositionallogic.syntax.*;
+import net.sf.tweety.util.SetTools;
 
 /**
  * This class represents a knowledge base of propositional formulae.
@@ -25,8 +26,43 @@ public class PlBeliefSet extends BeliefSet<PropositionalFormula> {
 	 * set of formulas.
 	 * @param formulas a set of formulas.
 	 */
-	public PlBeliefSet(Set<PropositionalFormula> formulas){
+	public PlBeliefSet(Collection<? extends PropositionalFormula> formulas){
 		super(formulas);
+	}
+	
+	/** Checks whether this belief set is consistent.
+	 * @return "true" if this belief set is consistent.
+	 */
+	public boolean isConsistent(){
+		return !new ClassicalInference(this).query(new Contradiction()).getAnswerBoolean();
+	}
+	
+	/** 
+	 * Returns the set of minimal inconsistent subsets of this set.
+	 * @return the set of minimal inconsistent subsets of this set.
+	 */
+	public Set<PlBeliefSet> getMinimalInconsistentSubsets(){
+		if(this.isConsistent()) return new HashSet<PlBeliefSet>();
+		SetTools<PropositionalFormula> setTools = new SetTools<PropositionalFormula>();
+		Set<PlBeliefSet> minInconSets = new HashSet<PlBeliefSet>();
+		for(int card = 1; card <= this.size(); card++){
+			Set<Set<PropositionalFormula>> sets = setTools.subsets(this, card);
+			for(Set<PropositionalFormula> set: sets){
+				// test if we already have a subset in minInconSets
+				boolean properSet = true;
+				for(PlBeliefSet set2: minInconSets)
+					if(set.containsAll(set2)){
+						properSet = false;
+						break;
+					}
+				if(!properSet) continue;
+				// check for consistency
+				PlBeliefSet candidate = new PlBeliefSet(set);
+				if(!candidate.isConsistent())
+					minInconSets.add(candidate);
+			}
+		}
+		return minInconSets;
 	}
 	
 	/* (non-Javadoc)

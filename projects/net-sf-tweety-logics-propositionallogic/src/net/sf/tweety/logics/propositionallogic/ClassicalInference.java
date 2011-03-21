@@ -16,10 +16,21 @@ import net.sf.tweety.logics.propositionallogic.syntax.*;
  */
 public class ClassicalInference extends Reasoner {
 
+	/** An optional signature. */
+	private PropositionalSignature signature = null;
+	
 	public ClassicalInference(BeliefBase beliefBase){
 		super(beliefBase);
 		if(!(beliefBase instanceof PlBeliefSet))
 			throw new IllegalArgumentException("Classical inference is only defined for propositional knowledgebases.");
+	}
+	
+	/** 
+	 * Sets the optional signature for this reasoner.
+	 * @param signature some signature.
+	 */
+	public void setSignature(PropositionalSignature signature){
+		this.signature = signature;
 	}
 	
 	/* (non-Javadoc)
@@ -29,7 +40,10 @@ public class ClassicalInference extends Reasoner {
 	public Answer query(Formula query) {
 		if(!(query instanceof PropositionalFormula))
 			throw new IllegalArgumentException("Classical inference is only defined for propositional queries.");
-		Set<PossibleWorld> possibleWorlds = PossibleWorld.getAllPossibleWorlds((PropositionalSignature)this.getKnowledgBase().getSignature());
+		PropositionalSignature signature = this.signature;
+		if(signature == null)
+			signature = (PropositionalSignature)this.getKnowledgBase().getSignature();
+		Set<PossibleWorld> possibleWorlds = PossibleWorld.getAllPossibleWorlds(signature);
 		for(PossibleWorld w: possibleWorlds)
 			if(w.satisfies(this.getKnowledgBase()))
 				if(!w.satisfies(query)){
