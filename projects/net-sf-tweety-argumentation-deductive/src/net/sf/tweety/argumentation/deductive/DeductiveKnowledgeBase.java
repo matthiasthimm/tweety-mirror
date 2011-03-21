@@ -1,0 +1,69 @@
+package net.sf.tweety.argumentation.deductive;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
+import net.sf.tweety.argumentation.deductive.semantics.DeductiveArgument;
+import net.sf.tweety.logics.propositionallogic.ClassicalInference;
+import net.sf.tweety.logics.propositionallogic.PlBeliefSet;
+import net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula;
+import net.sf.tweety.logics.propositionallogic.syntax.PropositionalSignature;
+import net.sf.tweety.util.SetTools;
+
+/**
+ * Instances of this class represent deductive knowledge bases,
+ * i.e. sets of propositional formulas.
+ * 
+ * @author Matthias Thimm
+ */
+public class DeductiveKnowledgeBase extends PlBeliefSet{
+
+	/**
+	 * Creates a new (empty) knowledge base.
+	 */
+	public DeductiveKnowledgeBase(){
+		super();
+	}
+	
+	/**
+	 * Creates a new knowledge base with the given
+	 * set of formulas.
+	 * @param formulas a set of formulas.
+	 */
+	public DeductiveKnowledgeBase(Collection<? extends PropositionalFormula> formulas){
+		super(formulas);
+	}
+	
+	/**
+	 * Computes all deductive arguments for the given claim. 
+	 * @param claim a propositional formula.
+	 * @return the set of all deductive arguments for the given claim.
+	 */
+	public Set<DeductiveArgument> getDeductiveArguments(PropositionalFormula claim){
+		Set<DeductiveArgument> arguments = new HashSet<DeductiveArgument>();
+		SetTools<PropositionalFormula> setTools = new SetTools<PropositionalFormula>();
+		for(int card = 1; card <= this.size(); card++){
+			Set<Set<PropositionalFormula>> sets = setTools.subsets(this, card);
+			for(Set<PropositionalFormula> set: sets){
+				// test if we already have a subset in arguments
+				boolean properSet = true;
+				for(DeductiveArgument arg: arguments)
+					if(set.containsAll(arg.getSupport())){
+						properSet = false;
+						break;
+					}
+				if(!properSet) continue;
+				// check for consistency
+				PlBeliefSet candidate = new PlBeliefSet(set);
+				if(!candidate.isConsistent()) continue;
+				// check for entailment
+				ClassicalInference reasoner = new ClassicalInference(candidate);
+				reasoner.setSignature((PropositionalSignature)this.getSignature());
+				if(reasoner.query(claim).getAnswerBoolean())
+					arguments.add(new DeductiveArgument(candidate,claim));
+			}
+		}
+		return arguments;
+	}
+}
