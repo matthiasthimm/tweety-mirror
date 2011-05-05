@@ -95,6 +95,29 @@ public class RpclProbabilityDistribution extends ProbabilityDistribution<Herbran
 	}
 	
 	/**
+	 * Computes the convex combination of this P1 and the
+	 * given probability distribution P2 with parameter d, i.e.
+	 * it returns a P with P(i)=d P1(i) + (1-d) P2(i) for every interpretation i.
+	 * @param d a double
+	 * @param other a probability distribution
+	 * @return the convex combination of this P1 and the
+	 * 	given probability distribution P2 with parameter d.
+	 * @throws IllegalArgumentException if either d is not in [0,1] or this and
+	 * the given probability distribution are not defined on the same set of interpretations.
+	 */
+	public RpclProbabilityDistribution convexCombination(double d, RpclProbabilityDistribution other){
+		if(d < 0 || d > 1)
+			throw new IllegalArgumentException("The combination parameter must be between 0 and 1.");
+		Set<HerbrandInterpretation> interpretations = this.keySet();
+		if(!interpretations.equals(other.keySet())|| !this.getSignature().equals(other.getSignature()))
+			throw new IllegalArgumentException("The distributions cannot be combined as they differ in their definitions.");			
+		RpclProbabilityDistribution p = new RpclProbabilityDistribution(this.semantics, (FolSignature) this.getSignature());
+		for(HerbrandInterpretation i: interpretations)
+			p.put(i, this.probability(i).mult(d).add(other.probability(i).mult(1-d)));
+		return p;
+	}
+	
+	/**
 	 * Returns the uniform distribution on the given signature.
 	 * @param semantics the semantics for the distribution.
 	 * @param signature a fol signature
@@ -107,6 +130,5 @@ public class RpclProbabilityDistribution extends ProbabilityDistribution<Herbran
 		for(HerbrandInterpretation i: interpretations)
 			p.put(i, new Probability(1/size));
 		return p;
-	}
-
+	}	
 }
