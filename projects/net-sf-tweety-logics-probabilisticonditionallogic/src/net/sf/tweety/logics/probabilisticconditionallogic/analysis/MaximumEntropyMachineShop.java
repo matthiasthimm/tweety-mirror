@@ -18,8 +18,7 @@ import net.sf.tweety.math.term.*;
 import net.sf.tweety.util.*;
 
 /**
- * This approach to consistency restoration follows the approach proposed in [Thimm, DKB, 2011]. It uses
- * the idea of the upper approximative distance minimization inconsistency measure to compute a
+ * This consistency restorer uses the idea of the upper approximative distance minimization inconsistency measure to compute a
  * ME-probability distribution and adjust the probabilities of the conditionals accordingly.
  * 
  * @author Matthias Thimm
@@ -133,6 +132,7 @@ public class MaximumEntropyMachineShop implements BeliefBaseMachineShop {
 			solver.gtol = 0.0001;
 			solver.xtol = 0.0001;
 			solver.solver = "ralg";
+			//System.out.println(solver.getOpenOptCode());
 			solution = solver.solve();
 			// construct probability distribution
 			ProbabilityDistribution<PossibleWorld> meDistribution = new ProbabilityDistribution<PossibleWorld>(beliefSet.getSignature());
@@ -150,7 +150,7 @@ public class MaximumEntropyMachineShop implements BeliefBaseMachineShop {
 	}
 
 	public static void main(String[] args) throws FileNotFoundException, ParserException, IOException{
-		PclBeliefSet kb = (PclBeliefSet) new PclParser().parseBeliefBaseFromFile("/Users/mthimm/Desktop/R9.pcl");
+		PclBeliefSet kb = (PclBeliefSet) new PclParser().parseBeliefBaseFromFile("/Users/mthimm/Desktop/R4.pcl");
 		System.out.println("INITIAL: " + kb);
 		
 		System.out.println();

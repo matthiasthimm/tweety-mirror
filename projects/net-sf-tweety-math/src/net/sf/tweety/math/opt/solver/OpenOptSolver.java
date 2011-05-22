@@ -270,5 +270,5 @@ public class OpenOptSolver extends Solver {
 			throw new RuntimeException(e.getMessage());
 		}
 	}
-
+	
 }
