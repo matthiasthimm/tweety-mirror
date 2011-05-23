@@ -150,4 +150,36 @@ public class SetSignature<T extends Formula> extends Signature implements Collec
 		return this.formulas.toArray(a);
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((formulas == null) ? 0 : formulas.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		SetSignature<?> other = (SetSignature<?>) obj;
+		if (formulas == null) {
+			if (other.formulas != null)
+				return false;
+		} else if (!formulas.equals(other.formulas))
+			return false;
+		return true;
+	}
+
 }

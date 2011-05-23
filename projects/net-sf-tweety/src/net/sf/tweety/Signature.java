@@ -14,4 +14,14 @@ public abstract class Signature {
 	 * @return "true" iff this signature is a subsignature of the given one.
 	 */
 	public abstract boolean isSubSignature(Signature other);
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	public abstract int hashCode();
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public abstract boolean equals(Object obj);
 }

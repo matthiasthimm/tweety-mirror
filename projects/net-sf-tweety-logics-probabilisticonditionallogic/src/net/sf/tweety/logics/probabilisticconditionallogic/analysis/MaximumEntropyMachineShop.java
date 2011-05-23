@@ -150,15 +150,14 @@ public class MaximumEntropyMachineShop implements BeliefBaseMachineShop {
 	}
 
 	public static void main(String[] args) throws FileNotFoundException, ParserException, IOException{
-		PclBeliefSet kb = (PclBeliefSet) new PclParser().parseBeliefBaseFromFile("/Users/mthimm/Desktop/R4.pcl");
+		PclBeliefSet kb = (PclBeliefSet) new PclParser().parseBeliefBaseFromFile("/Users/mthimm/Desktop/R8.pcl");
 		System.out.println("INITIAL: " + kb);
 		
 		System.out.println();
 		System.out.println();
+		ConvexAggregatingMaxConsMeMachineShop mshop = new ConvexAggregatingMaxConsMeMachineShop();
 		
-		MaximumEntropyMachineShop mshop = new MaximumEntropyMachineShop();
-		
-		System.out.println("RESULT: " + mshop.repair(kb));
+		System.out.println("RESULT: " + mshop.repair(kb));		
 	}
 	
 	

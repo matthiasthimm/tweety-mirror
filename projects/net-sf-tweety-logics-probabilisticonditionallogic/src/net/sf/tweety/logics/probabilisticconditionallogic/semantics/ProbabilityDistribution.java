@@ -195,8 +195,9 @@ public class ProbabilityDistribution<T extends Interpretation> extends Interpret
 		Set<S> interpretations = creators[0].keySet();
 		Signature sig = creators[0].signature;
 		for(int i = 1; i < creators.length; i++)
-			if(!interpretations.equals(creators[i].keySet()) || !sig.equals(creators[i].signature))
+			if(!interpretations.equals(creators[i].keySet()) ||	!sig.equals(creators[i].signature))				
 				throw new IllegalArgumentException("The distributions cannot be combined as they differ in their definitions.");
+		
 		ProbabilityDistribution<S> p = new ProbabilityDistribution<S>(sig);
 		for(S i: interpretations){
 			double prob = 0;

@@ -1,12 +1,10 @@
 package net.sf.tweety.logics.probabilisticconditionallogic;
 
-import java.io.*;
 import java.util.*;
 
 import net.sf.tweety.*;
 import net.sf.tweety.logics.conditionallogic.syntax.*;
 import net.sf.tweety.logics.probabilisticconditionallogic.analysis.*;
-import net.sf.tweety.logics.probabilisticconditionallogic.parser.*;
 import net.sf.tweety.logics.probabilisticconditionallogic.semantics.*;
 import net.sf.tweety.logics.probabilisticconditionallogic.syntax.*;
 import net.sf.tweety.logics.propositionallogic.semantics.*;
@@ -35,10 +33,25 @@ public class DefaultMeReasoner extends Reasoner {
 	private ProbabilityDistribution<PossibleWorld> meDistribution = null;
 	
 	/**
+	 * The signature of the reasoner.
+	 */
+	private Signature signature = null;
+	
+	/**
 	 * Creates a new default ME-reasoner for the given knowledge base.
 	 * @param beliefBase a pcl belief set. 
 	 */
 	public DefaultMeReasoner(BeliefBase beliefBase){
+		this(beliefBase, beliefBase.getSignature());
+	}
+	
+	/**
+	 * Creates a new default ME-reasoner for the given knowledge base.
+	 * @param beliefBase a pcl belief set. 
+	 * @param name another signature (if the probability distribution should be defined 
+	 * on that one (that one should subsume the signature of the belief base)
+	 */
+	public DefaultMeReasoner(BeliefBase beliefBase, Signature signature){
 		super(beliefBase);		
 		if(!(beliefBase instanceof PclBeliefSet))
 			throw new IllegalArgumentException("Knowledge base of class PclBeliefSet expected.");
@@ -46,6 +59,9 @@ public class DefaultMeReasoner extends Reasoner {
 		PclDefaultConsistencyTester tester = new PclDefaultConsistencyTester();
 		if(!tester.isConsistent(beliefBase))
 			throw new IllegalArgumentException("Knowledge base is inconsistent.");
+		if(!beliefBase.getSignature().isSubSignature(signature))
+			throw new IllegalArgumentException("Given signature is not a super-signature of the belief base's signature.");
+		this.signature = signature;
 	}
 	
 	/**
@@ -65,7 +81,7 @@ public class DefaultMeReasoner extends Reasoner {
 	private ProbabilityDistribution<PossibleWorld> computeMeDistribution(){
 		// construct optimization problem
 		OptimizationProblem problem = new OptimizationProblem(OptimizationProblem.MINIMIZE);
-		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PropositionalSignature)((PclBeliefSet) this.getKnowledgBase()).getSignature());
+		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PropositionalSignature) this.signature);
 		Map<PossibleWorld,Variable> vars = new HashMap<PossibleWorld,Variable>();
 		int cnt = 0;
 		Term normConstraint = null;
@@ -124,10 +140,11 @@ public class DefaultMeReasoner extends Reasoner {
 		}
 		problem.setTargetFunction(targetFunction);
 		try{			
-			OpenOptSolver solver = new OpenOptSolver(problem);			
+			OpenOptSolver solver = new OpenOptSolver(problem);
+			solver.solver = "ralg";
 			Map<Variable,Term> solution = solver.solve();
 			// construct probability distribution
-			ProbabilityDistribution<PossibleWorld> p = new ProbabilityDistribution<PossibleWorld>(this.getKnowledgBase().getSignature());
+			ProbabilityDistribution<PossibleWorld> p = new ProbabilityDistribution<PossibleWorld>(this.signature);
 			for(PossibleWorld w: worlds)
 				p.put(w, new Probability(solution.get(vars.get(w)).doubleValue()));
 			return p;					
