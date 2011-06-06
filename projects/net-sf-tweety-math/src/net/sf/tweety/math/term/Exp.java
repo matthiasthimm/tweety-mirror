@@ -10,7 +10,7 @@ import net.sf.tweety.math.*;
 public class Exp extends FunctionalTerm {
 	
 	/**
-	 * Creates a new exponential term with the given term and base.
+	 * Creates a new exponential term with the given term.
 	 * @param term the potentiated term.
 	 */
 	public Exp(Term term) {

@@ -16,7 +16,8 @@ import org.apache.commons.logging.*;
 
 
 /**
- * This class models the distance minimization inconsistency measure as proposed in [Thimm,UAI,2009].
+ * This class models the distance minimization inconsistency measure as proposed in [Thimm,UAI,2009], extended
+ * by the use of different p-norms.
  * 
  * @author Matthias Thimm
  */
@@ -28,16 +29,54 @@ public class DistanceMinimizationInconsistencyMeasure implements InconsistencyMe
 	private Log log = LogFactory.getLog(DistanceMinimizationInconsistencyMeasure.class);
 	
 	/**
-	 * For archiving.
+	 * The p-norm parameter.
+	 */
+	private int p = 1;
+
+	/**
+	 * For archiving inconsistency values.
 	 */
 	private Map<PclBeliefSet,Double> archive = new HashMap<PclBeliefSet,Double>();
+		
+	/**
+	 * For archiving eta/tau values. 
+	 */
+	private Map<PclBeliefSet,Map<ProbabilisticConditional,Double>> archiveDevs = new HashMap<PclBeliefSet,Map<ProbabilisticConditional,Double>>();
+	
+	/**
+	 * Creates a new measure for p=1.
+	 */
+	public DistanceMinimizationInconsistencyMeasure(){
+		this(1);
+	}
+	
+	/**
+	 * Creates a new measure for the given p.
+	 * @param p some parameter for the p-norm.
+	 */
+	public DistanceMinimizationInconsistencyMeasure(int p){
+		this.p = p;
+	}
+	
+	/** 
+	 * Returns the deviation of the given conditional in the 
+	 * nearest consistent belief set.
+	 * @param beliefSet some belief set.
+	 * @param pc a probabilistic conditional.
+	 * @return a double.
+	 */
+	public Double getDeviation(PclBeliefSet beliefSet, ProbabilisticConditional pc){
+		if(!this.archiveDevs.containsKey(beliefSet))
+			this.inconsistencyMeasure(beliefSet);
+		return this.archiveDevs.get(beliefSet).get(pc);
+	}
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.probabilisticconditionallogic.analysis.InconsistencyMeasure#inconsistencyMeasure(net.sf.tweety.logics.probabilisticconditionallogic.PclBeliefSet)
 	 */
 	@Override
 	public Double inconsistencyMeasure(PclBeliefSet beliefSet) {
-		this.log.trace("Starting to compute minimal distance inconsistency measure for '" + beliefSet + "'.");
+		this.log.trace("Starting to compute minimal " + this.p + "-distance inconsistency measure for '" + beliefSet + "'.");
 		// check archive
 		if(this.archive.containsKey(beliefSet))
 			return this.archive.get(beliefSet);
@@ -77,8 +116,8 @@ public class DistanceMinimizationInconsistencyMeasure implements InconsistencyMe
 			etas.put(c, eta);
 			taus.put(c, tau);
 			if(targetFunction == null)
-				targetFunction = eta.add(tau);
-			else targetFunction = targetFunction.add(eta.add(tau));
+				targetFunction = (this.p == 1) ? (eta.add(tau)) : (new Power(eta.add(tau), new FloatConstant(this.p)));
+			else targetFunction = targetFunction.add((this.p == 1) ? (eta.add(tau)) : (new Power(eta.add(tau), new FloatConstant(this.p))));
 			Term leftSide = null;
 			Term rightSide = null;
 			if(c.isFact()){
@@ -124,10 +163,15 @@ public class DistanceMinimizationInconsistencyMeasure implements InconsistencyMe
 			//solver.ignoreNotFeasibleError = true;
 			Map<Variable,Term> solution = solver.solve();
 			Double result = targetFunction.replaceAllTerms(solution).doubleValue();
+			if(this.p > 1)
+				result = Math.pow(result, 1d/this.p);
 			this.log.debug("Problem solved, the measure is '" + result + "'.");
 			String values = "Eta/Tau-values for the solution:\n===BEGIN===\n";
-			for(ProbabilisticConditional pc: beliefSet)
+			this.archiveDevs.put(beliefSet, new HashMap<ProbabilisticConditional,Double>());
+			for(ProbabilisticConditional pc: beliefSet){
 				values += pc + "\teta: " + solution.get(etas.get(pc)) + "\ttau: " + solution.get(taus.get(pc)) +  "\n";
+				this.archiveDevs.get(beliefSet).put(pc, solution.get(etas.get(pc)).doubleValue() - solution.get(taus.get(pc)).doubleValue() );
+			}
 			values += "===END===";
 			this.log.debug(values);
 			// update archive
