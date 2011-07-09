@@ -12,6 +12,7 @@ public class DLVComplex {
 
 	String path2dlx = null;
 	AspInterface ai = new AspInterface();
+	SolveTime st = null;
 	
 	public DLVComplex(String path2dlx) {
 		this.path2dlx = path2dlx;
@@ -29,7 +30,13 @@ public class DLVComplex {
 		
 		// try running dlv
 		try {
-			ai.executeProgram(cmdLine, p.toStringFlat() );
+			st = new SolveTime();
+			st.beginWrite();
+			String out = p.toStringFlat();
+			st.endWrite();
+			st.beginCalculate();
+			ai.executeProgram(cmdLine, out );
+			st.endCalculate();
 			result = ai.getOutput();
 		} catch (Exception e) {
 			System.out.println("dlvcomplex error!");
@@ -59,6 +66,8 @@ public class DLVComplex {
 	}
 		
 	protected List<AnswerSet> processResults(List<String> result) {
+		
+		st.beginRead();
 		List<AnswerSet> ret = new LinkedList<AnswerSet>();
 
 		// early return
@@ -102,6 +111,8 @@ public class DLVComplex {
 		if (lastAS != null)
 			ret.add( new AnswerSet(lastAS,0,0));
 		
+		st.endRead();
+		
 		return ret;
 	}
 
@@ -122,4 +133,7 @@ public class DLVComplex {
 		return ret;
 	}
 	
+	public SolveTime getTimings() {
+		return this.st;
+	}
 }

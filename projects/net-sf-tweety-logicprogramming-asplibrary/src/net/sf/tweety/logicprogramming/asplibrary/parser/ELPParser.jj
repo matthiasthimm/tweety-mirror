@@ -19,6 +19,7 @@ public class ELPParser{
 | < CURLBRA : "{" >
 | < CURRBRA : "}" >| < PIPE : "|" >
 | < LOGIMPL : ":-" >
+| < WEAKIMPL : ":~" >
 //| < UNEQ : "!=" >
 //| < EQ : "=" >
 //| < RELOP : ("<"|">"|"<="|">="|"="|"!=") >
@@ -152,16 +153,30 @@ Term term() :
 Rule rule() :
 {
   Rule r;
-  List<Literal>	head = new LinkedList<Literal >(), body = new LinkedList<Literal >();}
+  List<Literal>	head = new LinkedList<Literal >(), body = new LinkedList<Literal >();	boolean wc = false;
+}
 {
 
  	head = literalListHead()
-	(	   < LOGIMPL >
+	(
+	  ( 	   < LOGIMPL >
 		body = literalListBody()
+	  )
+	  |
+	  (		< WEAKIMPL >
+		body = literalListBody()
+		{		  wc = true;
+		}
+	  )
 	)?
 	< DOT >
 
-	{		return new Rule(head,body);
+	(		"["
+		"]"
+	)?
+	{
+	  if (wc)	  {		
+	  } else		return new Rule(head,body);
 	}	
 }
 
