@@ -5,3 +5,10 @@ see
 http://creativecommons.org/licenses/by-nc-nd/3.0/
 
 for further details.
+
+in addition:
+
+the asp library is free for educational or academic use. you are allowed to use it 
+for your thesis implementation or implementing asp programs for learning purposes.
+however, do not forget to mention other people's work correctly (via a cite) to avoid
+plagiatism.
