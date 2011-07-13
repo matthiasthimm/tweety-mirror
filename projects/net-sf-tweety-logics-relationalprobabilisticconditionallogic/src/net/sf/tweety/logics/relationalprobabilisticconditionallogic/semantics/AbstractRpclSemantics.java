@@ -77,7 +77,7 @@ public abstract class AbstractRpclSemantics implements RpclSemantics {
 				else result = result.add(t);
 			}				
 		}			
-		return result;
+		return (result == null)? new FloatConstant(0): result;
 	}
 	
 }
