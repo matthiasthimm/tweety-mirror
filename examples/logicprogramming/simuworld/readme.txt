@@ -5,12 +5,16 @@ as a back-end for an agent environment simulator.
 note:
 off maintenance, it is just an example.
 
-license:
-simuworld is licensed under a Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License
+how this works:
+effects of all actions are simulated at once. for any action,
+guess if it can by applied to the world state or not.
+* guess fire action: if an action causes an error, a hard 
+                     constraint discards the answer set.
+* guess omit action: if an action does not cause an error,
+                     a weak constraint is use to minimize
+                     the overall non-conflicting, but not fired
+                     actions.
 
-see 
-
-http://creativecommons.org/licenses/by-nc-nd/3.0/
-
-for further details.
-
+the next world state is that with the lowest weight of all answer
+sets. if multiple answer sets arise, they are all equal with respect
+to the input alphabet.
