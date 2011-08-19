@@ -1,8 +1,6 @@
 package net.sf.tweety.graphs;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Instance of this class represent graphs with
@@ -99,6 +97,48 @@ public class Graph<T extends Node> implements Iterable<T>{
 				neighbors.add(edge.getNodeA());
 		}
 		return neighbors;
+	}
+	
+	/**
+	 * Returns the set of children (node connected via an undirected edge or a directed edge
+	 * where the given node is the parent) of the given node.
+	 * @param node some node (must be in the graph).
+	 * @return the set of children of the given node.
+	 */
+	public Set<T> getChildren(T node){
+		if(!this.nodes.contains(node))
+			throw new IllegalArgumentException("The node is not in this graph.");
+		Set<T> children = new HashSet<T>();
+		for(Edge<T> edge: this.edges){
+			if(edge.getNodeA() == node)
+				children.add(edge.getNodeB());
+			else if(edge.getNodeB() == node && (edge instanceof UndirectedEdge))
+				children.add(edge.getNodeA());
+		}
+		return children;
+	}
+	
+	/**
+	 * Checks whether there is a (directed) path from node1 to node2.
+	 * @param node1 some node.
+	 * @param node2 some node.
+	 * @return "true" if there is a directed path from node1 to node2.
+	 */
+	public boolean existsDirectedPath(T node1, T node2){
+		if(!this.nodes.contains(node1) || !this.nodes.contains(node2))
+			throw new IllegalArgumentException("The nodes are not in this graph.");
+		if(node1 == node2)
+			return true;
+		// we perform a DFS.
+		Stack<T> stack = new Stack<T>();
+		stack.addAll(this.getChildren(node1));
+		while(!stack.isEmpty()){
+			T node = stack.pop();
+			if(node == node2)
+				return true;
+			stack.addAll(this.getChildren(node));
+		}
+		return false;
 	}
 	
 	/* (non-Javadoc)

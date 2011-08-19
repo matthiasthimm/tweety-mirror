@@ -34,7 +34,7 @@ public class ClassicalCategorizer implements Categorizer {
 	 * @param node the current node.
 	 * @return "1" if node is undefeated, "0" otherwise.
 	 */
-	private double categorize(ArgumentTree argumentTree, DeductiveArgument parent,DeductiveArgument node){
+	private double categorize(ArgumentTree argumentTree, DeductiveArgument parent, DeductiveArgument node){
 		Set<DeductiveArgument> children = argumentTree.getNeighbors(node);
 		if(parent != null) children.remove(parent);
 		if(children.isEmpty())

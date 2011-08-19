@@ -5,10 +5,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.sf.tweety.argumentation.deductive.semantics.DeductiveArgument;
-import net.sf.tweety.logics.propositionallogic.ClassicalInference;
 import net.sf.tweety.logics.propositionallogic.PlBeliefSet;
+import net.sf.tweety.logics.propositionallogic.semantics.*;
 import net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula;
-import net.sf.tweety.logics.propositionallogic.syntax.PropositionalSignature;
 import net.sf.tweety.util.SetTools;
 
 /**
@@ -58,9 +57,8 @@ public class DeductiveKnowledgeBase extends PlBeliefSet{
 				PlBeliefSet candidate = new PlBeliefSet(set);
 				if(!candidate.isConsistent()) continue;
 				// check for entailment
-				ClassicalInference reasoner = new ClassicalInference(candidate);
-				reasoner.setSignature((PropositionalSignature)this.getSignature());
-				if(reasoner.query(claim).getAnswerBoolean())
+				ClassicalEntailment entailment = new ClassicalEntailment();
+				if(entailment.entails(candidate, claim))
 					arguments.add(new DeductiveArgument(candidate,claim));
 			}
 		}

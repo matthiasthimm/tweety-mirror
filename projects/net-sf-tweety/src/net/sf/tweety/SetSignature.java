@@ -45,6 +45,16 @@ public class SetSignature<T extends Formula> extends Signature implements Collec
 			return false;
 		return ((SetSignature<?>)other).containsAll(this);
 	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.Signature#addSignature(net.sf.tweety.Signature)
+	 */
+	@SuppressWarnings("unchecked")
+	public void addSignature(Signature other){
+		if(!(other instanceof SetSignature<?>))
+			throw new IllegalArgumentException("The given object is no set signature.");
+		this.formulas.addAll(((SetSignature<T>)other).formulas);		
+	}
 		
 	/* (non-Javadoc)
 	 * @see java.util.Collection#add(java.lang.Object)

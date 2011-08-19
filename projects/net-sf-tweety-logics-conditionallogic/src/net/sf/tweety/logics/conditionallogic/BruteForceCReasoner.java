@@ -250,5 +250,4 @@ public class BruteForceCReasoner extends Reasoner {
 		}
 		throw new IllegalArgumentException("Argument must contain at least one value \"1\"");
 	}
-	
 }

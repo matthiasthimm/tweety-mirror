@@ -15,6 +15,12 @@ public abstract class Signature {
 	 */
 	public abstract boolean isSubSignature(Signature other);
 	
+	/** 
+	 * Adds the elements of the given signature to this signature.
+	 * @param other a signature.
+	 */
+	public abstract void addSignature(Signature other);
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */

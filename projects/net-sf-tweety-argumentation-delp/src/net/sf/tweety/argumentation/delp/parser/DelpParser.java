@@ -28,7 +28,6 @@ import java.util.regex.*;
   * <br>VARIABALE is a sequence of symbols from {a,...,z,A,...,Z,0,...,9,_,-} with an uppercase letter at the beginning.
   * <br>CONSTANT is  a sequence of symbols from {a,...,z,A,...,Z,0,...,9,_,-} with an lowercase letter at the beginning.
   */
-@SuppressWarnings("all")
 public class DelpParser extends Parser implements DelpParserConstants {
 
         private FolSignature signature = new FolSignature();

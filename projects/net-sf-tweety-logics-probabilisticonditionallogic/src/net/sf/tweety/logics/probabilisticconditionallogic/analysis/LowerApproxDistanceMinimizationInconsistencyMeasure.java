@@ -4,7 +4,6 @@ import java.util.*;
 
 import org.apache.commons.logging.*;
 
-import net.sf.tweety.*;
 import net.sf.tweety.logics.probabilisticconditionallogic.*;
 import net.sf.tweety.logics.probabilisticconditionallogic.syntax.*;
 import net.sf.tweety.logics.propositionallogic.semantics.*;
@@ -132,38 +131,5 @@ public class LowerApproxDistanceMinimizationInconsistencyMeasure implements Inco
 			// This should not happen as the optimization problem is guaranteed to be feasible
 			throw new RuntimeException("Fatal error: Optimization problem to compute the minimal distance to a consistent knowledge base is not feasible.");
 		}		
-	}
-	
-	public static void main(String[] args){
-		TweetyLogging.logLevel = TweetyConfiguration.LogLevel.ERROR;
-		TweetyLogging.initLogging();		
-		
-		PclBeliefSet beliefSet = new PclBeliefSet();		
-		Proposition a = new Proposition("A");
-		Proposition b = new Proposition("B");
-		Proposition c = new Proposition("C");
-		
-		ProbabilisticConditional pc1 = new ProbabilisticConditional(c,a, new net.sf.tweety.util.Probability(0.7));
-		ProbabilisticConditional pc2 = new ProbabilisticConditional(new Negation(c),b,new net.sf.tweety.util.Probability(0.8));
-		ProbabilisticConditional pc3 = new ProbabilisticConditional(b, new net.sf.tweety.util.Probability(0.3d));
-		ProbabilisticConditional pc4 = new ProbabilisticConditional(a, new net.sf.tweety.util.Probability(0.2d));
-		ProbabilisticConditional pc5 = new ProbabilisticConditional(c, new net.sf.tweety.util.Probability(0.5d));
-		beliefSet.add(pc1);
-		beliefSet.add(pc2);
-		beliefSet.add(pc3);
-		beliefSet.add(pc4);
-		beliefSet.add(pc5);
-		
-		InconsistencyMeasure dist = new DistanceMinimizationInconsistencyMeasure();
-		InconsistencyMeasure approxLowerDist = new LowerApproxDistanceMinimizationInconsistencyMeasure();
-		InconsistencyMeasure approxUpperDist = new UpperApproxDistanceMinimizationInconsistencyMeasure();
-	
-		for(int i=0; i <= 100; i++){
-			beliefSet.remove(pc4);
-			pc4 = new ProbabilisticConditional(a, new net.sf.tweety.util.Probability(new Double(i)/100));
-			beliefSet.add(pc4);
-			System.out.println(i + ":\t" + approxLowerDist.inconsistencyMeasure(beliefSet) + "\t<\t" + dist.inconsistencyMeasure(beliefSet) + "\t<\t" + approxUpperDist.inconsistencyMeasure(beliefSet));
-		}
-		
 	}
 }

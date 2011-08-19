@@ -230,5 +230,20 @@ public class FolSignature extends Signature implements LogicalSymbols{
 			return false;
 		return true;
 	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.Signature#addSignature(net.sf.tweety.Signature)
+	 */
+	@Override
+	public void addSignature(Signature other) {
+		if(!(other instanceof FolSignature))
+			return;
+		FolSignature folSig = (FolSignature) other;
+		this.constants.addAll(folSig.constants);
+		this.functors.addAll(folSig.functors);
+		this.predicates.addAll(folSig.predicates);
+		this.sorts.addAll(folSig.sorts);
+		
+	}
 	
 }

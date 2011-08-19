@@ -9,7 +9,6 @@ import java.util.*;
 import java.util.regex.*;
 
 /** Token Manager. */
-@SuppressWarnings("all")
 public class DelpParserTokenManager implements DelpParserConstants
 {
 

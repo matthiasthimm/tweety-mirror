@@ -56,6 +56,8 @@ public abstract class SasAgent extends Agent {
 	 * i.e. whether he may bring forward only one argument at a time or multiple.
 	 */
 	public SasAgent(StructuredArgumentationFramework view, UtilityFunction utility, boolean isSingleStep){
+		// no name needed
+		super("");
 		this.view = view;
 		this.commonView = new StructuredArgumentationFramework();
 		this.utility = utility;

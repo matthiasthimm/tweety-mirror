@@ -1,6 +1,5 @@
 package net.sf.tweety.argumentation.deductive;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -9,17 +8,12 @@ import java.util.Set;
 import net.sf.tweety.Answer;
 import net.sf.tweety.BeliefBase;
 import net.sf.tweety.Formula;
-import net.sf.tweety.ParserException;
 import net.sf.tweety.Reasoner;
 import net.sf.tweety.argumentation.deductive.accumulator.Accumulator;
-import net.sf.tweety.argumentation.deductive.accumulator.SimpleAccumulator;
 import net.sf.tweety.argumentation.deductive.categorizer.Categorizer;
-import net.sf.tweety.argumentation.deductive.categorizer.ClassicalCategorizer;
 import net.sf.tweety.argumentation.deductive.semantics.ArgumentTree;
 import net.sf.tweety.argumentation.deductive.semantics.Compilation;
 import net.sf.tweety.argumentation.deductive.semantics.DeductiveArgument;
-import net.sf.tweety.logics.propositionallogic.PlBeliefSet;
-import net.sf.tweety.logics.propositionallogic.parser.PlParser;
 import net.sf.tweety.logics.propositionallogic.syntax.Negation;
 import net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula;
 
@@ -97,39 +91,5 @@ public class CompilationReasoner extends Reasoner {
 		answer.setAnswer(result > 0);
 		answer.setAnswer(result);
 		return answer;
-	}
-
-	public static void main(String[] args) throws ParserException, IOException{
-		String kbString = "a\n" +
-				"e\n" +
-				"!a || !e || b\n" +
-				"!b || c\n" +
-				"d\n" +
-				"!d || !b\n" + 
-				"f\n" + 
-				"!f || !d || !a";
-
-		DeductiveKnowledgeBase kb = new DeductiveKnowledgeBase((PlBeliefSet)new PlParser().parseBeliefBase(kbString));
-		CompilationReasoner reasoner = new CompilationReasoner(kb, new ClassicalCategorizer(), new SimpleAccumulator());
-		for(PropositionalFormula f: kb)
-			System.out.println(reasoner.query(f).getAnswerDouble() + "\t" + f);
-		Compilation comp = new Compilation(kb);
-		System.out.println(kb);
-		System.out.println();
-		System.out.println(comp);
-		System.out.println();
-		for(PropositionalFormula pf: kb){
-			System.out.println("===");
-			for(DeductiveArgument arg: kb.getDeductiveArguments(pf)){
-				System.out.println(comp.getArgumentTree(arg).prettyPrint());
-				System.out.println();
-			}
-			System.out.println("---");
-			for(DeductiveArgument arg: kb.getDeductiveArguments(new Negation(pf))){
-				System.out.println(comp.getArgumentTree(arg).prettyPrint());
-				System.out.println();
-			}
-			System.out.println("===");
-		}
 	}
 }
