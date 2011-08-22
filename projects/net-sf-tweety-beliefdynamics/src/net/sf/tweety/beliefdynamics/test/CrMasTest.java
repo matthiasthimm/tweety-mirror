@@ -17,6 +17,8 @@ import net.sf.tweety.logics.propositionallogic.syntax.*;
 public class CrMasTest {
 
 	public static void main(String[] args) throws ParserException, IOException{		
+		//TweetyLogging.logLevel = TweetyConfiguration.LogLevel.TRACE;
+		//TweetyLogging.initLogging();
 		PlParser parser = new PlParser();
 		
 		// some agents
@@ -32,11 +34,14 @@ public class CrMasTest {
 		
 		// a belief base (we use propositional logic)
 		CrMasBeliefSet<PropositionalFormula> bs = new CrMasBeliefSet<PropositionalFormula>(credOrder);
-		bs.add(new InformationObject<PropositionalFormula>((PropositionalFormula) parser.parseFormula("a"), agents.get(0)));		
+		bs.add(new InformationObject<PropositionalFormula>((PropositionalFormula) parser.parseFormula("!c"), agents.get(1)));
+		bs.add(new InformationObject<PropositionalFormula>((PropositionalFormula) parser.parseFormula("b"), agents.get(2)));
+		bs.add(new InformationObject<PropositionalFormula>((PropositionalFormula) parser.parseFormula("!b||!a"), agents.get(2)));
 		
 		// some new information
 		Collection<InformationObject<PropositionalFormula>> newInformation = new HashSet<InformationObject<PropositionalFormula>>();
-		newInformation.add(new InformationObject<PropositionalFormula>((PropositionalFormula) parser.parseFormula("!a"), agents.get(2)));		
+		newInformation.add(new InformationObject<PropositionalFormula>((PropositionalFormula) parser.parseFormula("a"), agents.get(2)));
+		newInformation.add(new InformationObject<PropositionalFormula>((PropositionalFormula) parser.parseFormula("!a||c"), agents.get(2)));		
 		
 		System.out.println(bs + " * " + newInformation);
 		System.out.println();

@@ -88,7 +88,7 @@ public abstract class AbstractCredibilityComparer {
 		for(Agent a: agents1){
 			boolean mostCredible = true;
 			for(Agent b: agents2){
-				if(this.credOrder.isOrderedBefore(b, a)){
+				if(this.credOrder.isOrderedBefore(b, a) && !this.credOrder.isOrderedBefore(a, b)){
 					mostCredible = false;
 					break;
 				}
