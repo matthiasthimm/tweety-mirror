@@ -40,6 +40,8 @@ public class LeviMultipleBaseRevisionOperator<T extends ClassicalFormula> extend
 	@SuppressWarnings("unchecked")
 	@Override
 	public Collection<T> revise(Collection<T> base, Collection<T> formulas) {
+		if(formulas.isEmpty())
+			return new HashSet<T>(base);			
 		// the complement of a set of formulas is the disjunction of the negated formulas
 		T formula = null;
 		for(T f: formulas)

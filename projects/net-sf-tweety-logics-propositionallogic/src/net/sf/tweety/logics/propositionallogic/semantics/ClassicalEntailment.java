@@ -29,4 +29,12 @@ public class ClassicalEntailment extends EntailmentRelation<PropositionalFormula
 		return true;		
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.EntailmentRelation#isConsistent(java.util.Collection)
+	 */
+	@Override
+	public boolean isConsistent(Collection<PropositionalFormula> formulas) {
+		return !this.entails(formulas, new Contradiction());
+	}
+
 }

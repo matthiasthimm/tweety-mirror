@@ -32,36 +32,30 @@ public class CrMasTest {
 		
 		// a belief base (we use propositional logic)
 		CrMasBeliefSet<PropositionalFormula> bs = new CrMasBeliefSet<PropositionalFormula>(credOrder);
-		bs.add(new InformationObject<PropositionalFormula>((PropositionalFormula) parser.parseFormula("!a || c"), agents.get(0)));
-		bs.add(new InformationObject<PropositionalFormula>((PropositionalFormula) parser.parseFormula("c"), agents.get(1)));
-		bs.add(new InformationObject<PropositionalFormula>((PropositionalFormula) parser.parseFormula("!d || !e || c"), agents.get(2)));
-		bs.add(new InformationObject<PropositionalFormula>((PropositionalFormula) parser.parseFormula("!a"), agents.get(0)));
-		bs.add(new InformationObject<PropositionalFormula>((PropositionalFormula) parser.parseFormula("f || g"), agents.get(1)));
+		bs.add(new InformationObject<PropositionalFormula>((PropositionalFormula) parser.parseFormula("a"), agents.get(0)));		
 		
 		// some new information
 		Collection<InformationObject<PropositionalFormula>> newInformation = new HashSet<InformationObject<PropositionalFormula>>();
-		newInformation.add(new InformationObject<PropositionalFormula>((PropositionalFormula) parser.parseFormula("!c"), agents.get(2)));
-		newInformation.add(new InformationObject<PropositionalFormula>((PropositionalFormula) parser.parseFormula("!a || f"), agents.get(1)));
-		newInformation.add(new InformationObject<PropositionalFormula>((PropositionalFormula) parser.parseFormula("!f && !g"), agents.get(0)));
+		newInformation.add(new InformationObject<PropositionalFormula>((PropositionalFormula) parser.parseFormula("!a"), agents.get(2)));		
 		
+		System.out.println(bs + " * " + newInformation);
+		System.out.println();
+				
 		// simple prioritized revision (without considering credibilities)
 		CrMasRevisionWrapper<PropositionalFormula> rev = new CrMasRevisionWrapper<PropositionalFormula>(
 				new LeviMultipleBaseRevisionOperator<PropositionalFormula>(
 						new KernelContractionOperator<PropositionalFormula>(new RandomIncisionFunction<PropositionalFormula>(), new ClassicalEntailment()),
 						new DefaultMultipleBaseExpansionOperator<PropositionalFormula>()
 						));
-		System.out.println(bs + " * " + newInformation);
-		System.out.println();
-		System.out.println(rev.revise(bs, newInformation));
+		System.out.println("PRIO       :\t " + rev.revise(bs, newInformation));
+		
+		// simple non-prioritized revision (with credibilities)
+		CrMasSimpleRevisionOperator rev2 = new CrMasSimpleRevisionOperator();
+		System.out.println("N-PRIO CRED:\t " + rev2.revise(bs, newInformation));
 		
 		// credibility-based argumentative revision
 		CrMasArgumentativeRevisionOperator theRevision = new CrMasArgumentativeRevisionOperator();		
-		
-		System.out.println("----------");
-		System.out.println();
-		System.out.println(bs + " *c " + newInformation);
-		System.out.println();
-		System.out.println(theRevision.revise(bs, newInformation));
+		System.out.println("ARG        :\t " + theRevision.revise(bs, newInformation));
 		
 	}
 }

@@ -22,6 +22,13 @@ public abstract class EntailmentRelation<T extends Formula> {
 	 */
 	public abstract boolean entails(Collection<T> formulas, T formula);
 	
+	/**
+	 * Checks whether the given set of formulas is consistent.
+	 * @param formulas a set of formulas.
+	 * @return "true" if the set is consistent.
+	 */
+	public abstract boolean isConsistent(Collection<T> formulas);
+	
 	/** 
 	 * Checks whether the given set of formulas entails the other set of formulas.
 	 * @param formulas a collection of formulas.
@@ -58,8 +65,9 @@ public abstract class EntailmentRelation<T extends Formula> {
 		Collection<Collection<T>> possibleKernels = new HashSet<Collection<T>>();
 		// check each subset of the collection
 		for(Set<T> subset: new SetTools<T>().subsets(formulas))
-			if(this.entails(subset, formula))
-				possibleKernels.add(subset);
+			if(this.isConsistent(subset))
+				if(this.entails(subset, formula))
+					possibleKernels.add(subset);
 		// do subset check
 		Collection<Collection<T>> kernels = new HashSet<Collection<T>>();
 		for(Collection<T> set: possibleKernels){
