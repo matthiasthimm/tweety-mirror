@@ -11,7 +11,7 @@ import net.sf.tweety.logics.propositionallogic.syntax.*;
 
 /**
  * A ranking function (or ordinal conditional function, OCF) that maps possible worlds
- * of a propositional language. 
+ * of a propositional language to integers. 
  * 
  * <br><br>See W. Spohn. Ordinal conditional functions: a dynamic theory of epistemic states.
  * In W.L. Harper and B. Skyrms, editors, Causation in Decision, Belief Change, and Statistics, II,
@@ -142,7 +142,7 @@ public class RankingFunction extends Interpretation {
 	}
 	
 	/**
-	 * Normalizes this OCF, i.e. appropriatly shifts the ranks
+	 * Normalizes this OCF, i.e. appropriately shifts the ranks
 	 * such that the minimal rank equals zero. 
 	 */
 	public void normalize(){

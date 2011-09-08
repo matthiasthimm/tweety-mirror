@@ -1,17 +1,17 @@
-package net.sf.tweety.logics.conditionallogic;
+package net.sf.tweety.logics.relationalconditionallogic;
 
 import java.util.*;
 
 import org.apache.commons.logging.*;
 
 import net.sf.tweety.*;
-import net.sf.tweety.logics.conditionallogic.semantics.*;
-import net.sf.tweety.logics.conditionallogic.syntax.*;
-import net.sf.tweety.logics.propositionallogic.semantics.*;
-import net.sf.tweety.logics.propositionallogic.syntax.*;
+import net.sf.tweety.logics.relationalconditionallogic.semantics.*;
+import net.sf.tweety.logics.relationalconditionallogic.syntax.*;
+import net.sf.tweety.logics.firstorderlogic.semantics.*;
+import net.sf.tweety.logics.firstorderlogic.syntax.*;
 
 /**
- * This class models a brute force c-reasoner for conditional logic. Reasoning is performed
+ * This class models a relational brute force c-reasoner for relational conditional logic. Reasoning is performed
  * by computing a minimal c-representation for the given knowledge base.<br>
  * 
  * A c-representation for a conditional knowledge base R={r1,...,rn} is a ranking function k such that
@@ -25,20 +25,23 @@ import net.sf.tweety.logics.propositionallogic.syntax.*;
  * 
  * <br><br>See Gabriele Kern-Isberner. Conditionals in nonmonotonic reasoning and belief revision.
  * Lecture Notes in Computer Science, Volume 2087. 2001.
+ * 
+ * <br><br>See also [Kern-Isberner,Thimm, "A Ranking Semantics for Relational Defaults", in preparation].
+ * 
  * @author Matthias Thimm
  */
-public class BruteForceCReasoner extends Reasoner {
+public class RelationalBruteForceCReasoner extends Reasoner {
 
 	/** Logger. */
-	private Log log = LogFactory.getLog(BruteForceCReasoner.class);
+	private Log log = LogFactory.getLog(RelationalBruteForceCReasoner.class);
 	
 	/**
-	 * The c-representation for the given knowledge base. Once this
+	 * The relational c-representation for the given knowledge base. Once this
 	 * ranking function has been computed it is used for
 	 * subsequent queries in order to avoid unnecessary
 	 * computations.
 	 */
-	private RankingFunction crepresentation = null;
+	private RelationalRankingFunction crepresentation = null;
 	
 	/**
 	 * The current vectors of kappa values.
@@ -54,7 +57,7 @@ public class BruteForceCReasoner extends Reasoner {
 	 * Maps the indices of the kappa vector to their corresponding
 	 * conditionals. 
 	 */
-	private Map<Integer,Conditional> indexToConditional;
+	private Map<Integer,RelationalConditional> indexToConditional;
 	
 	/**
 	 * indicates whether the computed c-representation is simple.
@@ -62,14 +65,14 @@ public class BruteForceCReasoner extends Reasoner {
 	private boolean simple = false;
 	
 	/**
-	 * Creates a new c-representation reasoner for the given knowledge base.
+	 * Creates a new relational c-representation reasoner for the given knowledge base.
 	 * @param beliefBase a knowledge base.	
 	 * @param simple whether the computed c-representation is simple. 
 	 */
-	public BruteForceCReasoner(BeliefBase beliefBase, boolean simple){
+	public RelationalBruteForceCReasoner(BeliefBase beliefBase, boolean simple){
 		super(beliefBase);		
-		if(!(beliefBase instanceof ClBeliefSet))
-			throw new IllegalArgumentException("Knowledge base of class ClBeliefSet expected.");
+		if(!(beliefBase instanceof RclBeliefSet))
+			throw new IllegalArgumentException("Knowledge base of class RclBeliefSet expected.");
 		this.simple = simple;
 	}
 	
@@ -77,7 +80,7 @@ public class BruteForceCReasoner extends Reasoner {
 	 * Creates a new simple c-representation reasoner for the given knowledge base.
 	 * @param beliefBase  a knowledge base.	
 	 */
-	public BruteForceCReasoner(BeliefBase beliefBase){
+	public RelationalBruteForceCReasoner(BeliefBase beliefBase){
 		this(beliefBase,false);
 	}
 	
@@ -85,29 +88,31 @@ public class BruteForceCReasoner extends Reasoner {
 	 * Returns the c-representation this reasoner bases on.
 	 * @return the c-representation this reasoner bases on.
 	 */
-	public RankingFunction getCRepresentation(){
+	public RelationalRankingFunction getCRepresentation(){
 		if(this.crepresentation == null)
 			this.crepresentation = this.computeCRepresentation();
 		return this.crepresentation;
 	}
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.kr.Reasoner#query(net.sf.tweety.kr.Formula)
+	 * @see net.sf.tweety.Reasoner#query(net.sf.tweety.Formula)
 	 */
 	@Override
 	public Answer query(Formula query) {
-		if(!(query instanceof Conditional) && !(query instanceof PropositionalFormula))
-			throw new IllegalArgumentException("Reasoning in conditional logic is only defined for conditional and propositional queries.");
-		RankingFunction crepresentation = this.getCRepresentation();
-		if(query instanceof Conditional){
+		if(!(query instanceof RelationalConditional) && !(query instanceof FolFormula))
+			throw new IllegalArgumentException("Reasoning in relational conditional logic is only defined for relational conditional and first-order queries.");
+		RelationalRankingFunction crepresentation = this.getCRepresentation();
+		if(query instanceof RelationalConditional){
 			Answer answer = new Answer(this.getKnowledgBase(),query);
 			boolean bAnswer = crepresentation.satisfies(query);
 			answer.setAnswer(bAnswer);
 			answer.appendText("The answer is: " + bAnswer);
 			return answer;			
 		}
-		if(query instanceof PropositionalFormula){
-			int rank = crepresentation.rank((PropositionalFormula)query);
+		if(query instanceof FolFormula){
+			if(((FolFormula)query).isClosed())
+				throw new IllegalArgumentException("Reasoning in relational conditional logic is not defined for open first-order queries.");
+			int rank = crepresentation.rank((FolFormula)query);
 			Answer answer = new Answer(this.getKnowledgBase(),query);			
 			answer.setAnswer(new Double(rank));
 			answer.appendText("The rank of the query is " + rank + " (the query is " + ((rank==0)?(""):("not ")) + "believed)");
@@ -120,20 +125,20 @@ public class BruteForceCReasoner extends Reasoner {
 	 * Computes a minimal c-representation for this reasoner's knowledge base. 
 	 * @return a minimal c-representation for this reasoner's knowledge base.
 	 */
-	private RankingFunction computeCRepresentation(){		
-		this.numConditionals = ((ClBeliefSet)this.getKnowledgBase()).size();
+	private RelationalRankingFunction computeCRepresentation(){		
+		this.numConditionals = ((RclBeliefSet)this.getKnowledgBase()).size();
 		int i = 0;
-		this.indexToConditional = new HashMap<Integer,Conditional>();
-		for(Formula f: ((ClBeliefSet)this.getKnowledgBase())){
-			this.indexToConditional.put(i++, (Conditional) f);
+		this.indexToConditional = new HashMap<Integer,RelationalConditional>();
+		for(Formula f: ((RclBeliefSet)this.getKnowledgBase())){
+			this.indexToConditional.put(i++, (RelationalConditional) f);
 			if(!this.simple)
-				this.indexToConditional.put(i++, (Conditional) f);
+				this.indexToConditional.put(i++, (RelationalConditional) f);
 		}
 		Integer[] kappa = null;		
-		RankingFunction candidate = this.constructRankingFunction(kappa);
+		RelationalRankingFunction candidate = this.constructRankingFunction(kappa);
 		while(!candidate.satisfies(this.getKnowledgBase())){
 			kappa = this.increment(kappa);			
-			candidate = this.constructRankingFunction(kappa);
+			candidate = this.constructRankingFunction(kappa);			
 			String debugMessage = "["+kappa[0];
 			for(int j=1; j< kappa.length;j++)
 				debugMessage += "," + kappa[j];
@@ -151,29 +156,22 @@ public class BruteForceCReasoner extends Reasoner {
 	 * @param kappa
 	 * @return
 	 */
-	private RankingFunction constructRankingFunction(Integer[] kappa){
-		RankingFunction candidate = new RankingFunction((PropositionalSignature)this.getKnowledgBase().getSignature());
+	private RelationalRankingFunction constructRankingFunction(Integer[] kappa){
+		RelationalRankingFunction candidate = new RelationalRankingFunction((FolSignature)this.getKnowledgBase().getSignature());
 		if(kappa == null) 
 			return candidate;
-		for(PossibleWorld w: candidate.getPossibleWorlds()){
+		// following [Kern-Isberner,Thimm, "A Ranking Semantics for Relational Defaults", in preparation]
+		// the rank of an interpretation is determined by the number of verified/falsified instances
+		for(HerbrandInterpretation w: candidate.getPossibleInterpretations()){
 			int sum = 0;
 			if(this.simple){
-				for(int idx = 0; idx < kappa.length; idx++){
-					if(RankingFunction.falsifies(w, this.indexToConditional.get(idx))){
-						sum +=kappa[idx];
-					}
-				}					
+				for(int idx = 0; idx < kappa.length; idx++)
+					sum += candidate.numFalsifiedInstances(w, this.indexToConditional.get(idx)) * kappa[idx];					
 			}else{
-				for(int idx = 0; idx < kappa.length; idx+=2){
-					if(RankingFunction.verifies(w, this.indexToConditional.get(idx))){
-						sum +=kappa[idx];
-					}
-				}
-				for(int idx = 1; idx < kappa.length; idx+=2){
-					if(RankingFunction.falsifies(w, this.indexToConditional.get(idx))){
-						sum +=kappa[idx];
-					}
-				}
+				for(int idx = 0; idx < kappa.length; idx+=2)
+					sum += candidate.numVerifiedInstances(w, this.indexToConditional.get(idx)) * kappa[idx];
+				for(int idx = 1; idx < kappa.length; idx+=2)
+					sum += candidate.numFalsifiedInstances(w, this.indexToConditional.get(idx)) * kappa[idx];
 			}
 			candidate.setRank(w, sum);
 		}

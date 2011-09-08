@@ -5,5 +5,12 @@
 	<classpathentry kind="lib" path="lib/net-sf-tweety-math.jar"/>
 	<classpathentry kind="lib" path="lib/net-sf-tweety.jar"/>
 	<classpathentry kind="lib" path="lib/net-sf-tweety-logics-propositionallogic.jar"/>
+        <classpathentry kind="lib" path="lib/commons-logging-1.1.1-javadoc.jar"/>
+        <classpathentry kind="lib" path="lib/commons-logging-1.1.1-sources.jar"/>
+        <classpathentry kind="lib" path="lib/commons-logging-1.1.1.jar"/>
+        <classpathentry kind="lib" path="lib/commons-logging-adapters-1.1.1.jar"/>
+        <classpathentry kind="lib" path="lib/commons-logging-api-1.1.1.jar"/>
+        <classpathentry kind="lib" path="lib/commons-logging-tests.jar"/>
+        <classpathentry kind="lib" path="lib/log4j-1.2.16.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
