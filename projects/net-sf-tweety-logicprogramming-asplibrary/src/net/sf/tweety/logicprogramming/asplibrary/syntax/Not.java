@@ -1,7 +1,19 @@
 package net.sf.tweety.logicprogramming.asplibrary.syntax;
 
 /**
- * this class models a default negated literal.
+ * this class models a default negated literal. in answer set
+ * programming, the body of a rule is usually composed of a
+ * set of positive and negative literals, where this valuation
+ * refers to default negation or negation as failure. when
+ * implementing a rule, there are two opportunities:
+ * - implement the rule with two distinct lists, representing
+ *   the sets of positive and negative literals
+ * - implement the rule with one set containing super literals,
+ *   where a super literal can be positive or strictly negated,
+ *   with or without default negation.
+ * the library takes the second approach, which allows more
+ * flexibility, but comes at the cost that malformed constructs
+ * like "not not a" are not intercepted by the library.
  * 
  * @author Thomas Vengels
  *

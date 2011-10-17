@@ -102,4 +102,9 @@ public class ListTerm implements Term {
 			ret += ", " + iter.next().toString();
 		return ret;
 	}
+
+	@Override
+	public boolean isString() {
+		return false;
+	}
 }

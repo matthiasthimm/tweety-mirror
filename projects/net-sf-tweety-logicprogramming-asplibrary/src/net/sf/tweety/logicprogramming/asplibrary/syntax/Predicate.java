@@ -10,6 +10,5 @@ public interface Predicate {
 
 	public String	getSymbol();
 	
-	public int		getArity();
-	
+	public int		getArity();	
 }

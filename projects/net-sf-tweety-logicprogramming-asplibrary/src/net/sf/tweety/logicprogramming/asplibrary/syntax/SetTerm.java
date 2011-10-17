@@ -98,4 +98,9 @@ public class SetTerm implements Term {
 			return false;
 		}
 	}
+
+	@Override
+	public boolean isString() {
+		return false;
+	}
 }

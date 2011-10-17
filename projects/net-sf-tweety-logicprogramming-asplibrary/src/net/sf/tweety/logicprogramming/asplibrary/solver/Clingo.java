@@ -1,13 +1,14 @@
 package net.sf.tweety.logicprogramming.asplibrary.solver;
 
-import java.io.StringReader;
-import java.util.*;
-
 import net.sf.tweety.logicprogramming.asplibrary.parser.ELPParser;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.*;
 import net.sf.tweety.logicprogramming.asplibrary.util.*;
 
-public class Clingo {
+import java.io.StringReader;
+import java.util.*;
+
+
+public class Clingo implements Solver {
 	protected AspInterface ai = new AspInterface();
 	protected String path2clingo = null;
 	
@@ -15,32 +16,7 @@ public class Clingo {
 		this.path2clingo = path2clingo;
 	}
 	
-	public List<AnswerSet> computeModels(Program p) {
-		
-		List<String> result = null;
-		try {
-			ai.executeProgram( path2clingo, p.toStringFlat() );
-			result = ai.getOutput();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		// process output and return answer set
-		List<AnswerSet> asl = new LinkedList<AnswerSet>();
-		boolean prevIsAnswer = false;
-		for (String s : result) {
-			if (s.startsWith("Answer:")) {
-				prevIsAnswer = true;
-			} else if (prevIsAnswer) {
-				prevIsAnswer = false;
-				List<Literal> lits = parseAnswerSet(s);
-				if (lits != null)
-					asl.add( new AnswerSet(lits,0,0));
-			}
-		}
-		return asl;
-	}
-
+	
 	private List<Literal> parseAnswerSet(String s) {
 		List<Literal> ret = null;
 		try {
@@ -51,5 +27,88 @@ public class Clingo {
 			e.printStackTrace();
 		}
 		return ret;
+	}
+
+	@Override
+	public AnswerSetList computeModels(Program p, int maxModels) throws SolverException {
+		try {
+			ai.executeProgram( path2clingo, p.toStringFlat() );
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		this.checkErrors(ai.getError());
+		return this.buildASL(ai.getOutput());
+	}
+
+	
+	@Override
+	public AnswerSetList computeModels(String s, int maxModels) throws SolverException {
+		
+		try {
+			ai.executeProgram( path2clingo, s );
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		this.checkErrors(ai.getError());
+		return this.buildASL(ai.getOutput());
+	}
+
+	
+	@Override
+	public AnswerSetList computeModels(List<String> files, int maxModels) throws SolverException {
+		try {			
+			LinkedList<String> f2 = new LinkedList<String>(files);
+			f2.addFirst(path2clingo);
+			ai.executeProgram(f2, null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		this.checkErrors(ai.getError());
+		return this.buildASL(ai.getOutput());				
+	}
+	
+	
+	protected void checkErrors(List<String> errorOut) throws SolverException {
+		// process possible errors and throw exception
+		if (ai.getError().size() > 0) {
+			// skip any warning, anything else is critical!
+			Iterator<String> iter = ai.getError().iterator();
+			while (iter.hasNext()) {
+				String l = iter.next();
+				
+				if (l.startsWith("% warning"))
+					;
+				
+				if (l.startsWith("ERROR:")) {
+					if (iter.hasNext())
+						l += iter.next();
+					
+					throw new SolverException( l, SolverException.SE_ERROR );
+				}
+					
+			}
+		}
+	}
+	
+	
+	protected AnswerSetList buildASL(List<String> output) {
+		// process output and return answer set
+		AnswerSetList asl = new AnswerSetList();
+		boolean prevIsAnswer = false;
+		for (String s : output) {
+			//System.out.println(s);
+			if (s.startsWith("Answer:")) {
+				prevIsAnswer = true;
+			} else if (prevIsAnswer) {
+				prevIsAnswer = false;
+				List<Literal> lits = parseAnswerSet(s);
+				if (lits != null)
+					asl.add( new AnswerSet(lits,0,0));
+			}
+		}
+		return asl;
 	}
 }

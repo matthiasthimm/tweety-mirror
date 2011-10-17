@@ -129,4 +129,9 @@ public class StdTerm implements Term {
 	public int hashCode() {
 		return this.hash;
 	}
+
+	@Override
+	public boolean isString() {
+		return false;
+	}
 }

@@ -292,4 +292,9 @@ public class Atom implements Term, Literal, Predicate {
 			tNew[i] = terms[i-ari];
 		return new Atom(prefix+this.functor, tNew);
 	}
+
+	@Override
+	public boolean isString() {
+		return false;
+	}
 }

@@ -7,7 +7,6 @@ import net.sf.tweety.logicprogramming.asplibrary.parser.ELPParser;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.*;
 import net.sf.tweety.logicprogramming.asplibrary.util.*;
 
-
 /**
  * wrapper class for the dlv answer set solver command line
  * utility.
@@ -15,7 +14,7 @@ import net.sf.tweety.logicprogramming.asplibrary.util.*;
  * @author Thomas Vengels
  *
  */
-public class DLV {
+public class DLV implements Solver {
 
 	String path2dlv = null;
 	AspInterface ai = new AspInterface();
@@ -24,40 +23,21 @@ public class DLV {
 		this.path2dlv = path2dlv;
 	}
 	
-	public List<AnswerSet> computeModels(Program p, int models) {
+	public AnswerSetList computeModels(Program p, int models) throws SolverException{
 		
 		return runDLV(p,models,null);
 		
 	}
 	
-	
-	protected List<AnswerSet> runDLV(Program p, int nModels, String otherOptions) {
-	
-		String cmdLine = path2dlv + " -- " + "N=" + nModels; 
-		
-		List<String> result = null;
-		List<AnswerSet> ret = new LinkedList<AnswerSet>();
-		
-		// try running dlv
-		try {
-			ai.executeProgram(cmdLine,p.toStringFlat());
-			result = ai.getOutput();
-		} catch (Exception e) {
-			System.out.println("dlv error!");
-			e.printStackTrace();
-		}
-		
-		// early exit
-		if (result == null)
-			return ret;
-		
+	protected AnswerSetList parseResults() throws SolverException {
+		AnswerSetList ret = new AnswerSetList();
+				
 		// process results
 		List<Literal> lastAS = null;
-		for (String s : result) {
+		for (String s : ai.getOutput()) {
 			if (s.length() <= 0)
 				continue;
-			//System.out.println(s);
-			
+		
 			// answer sets starts with a '{'
 			if (s.charAt(0) == '{') {
 				if (lastAS != null) {
@@ -75,6 +55,7 @@ public class DLV {
 				s = s.substring(11);
 				lastAS = parseAnswerSet(s);
 			}
+			// Cost of best model
 			else if (s.startsWith("Cost")) {
 				s = s.substring(25, s.length()-2 );
 				String[] wl = s.split(":");
@@ -83,12 +64,50 @@ public class DLV {
 				ret.add(new AnswerSet(lastAS,weight,level));
 				lastAS = null;
 			}
+			// error
+			else {
+				
+			}
 		}
 		
 		if (lastAS != null)
 			ret.add( new AnswerSet(lastAS,0,0));
 		
 		return ret;
+	}
+	
+	protected void checkErrors() throws SolverException {
+		// early exit
+		if (ai.getError().size() > 0) {
+			Iterator<String> iter = ai.getError().iterator();
+			while (iter.hasNext()) {
+				String l = iter.next();
+				
+				if (l.endsWith("syntax error.")) {
+					throw new SolverException(l, SolverException.SE_SYNTAX_ERROR);
+				} else if (l.endsWith("open input.")) {
+					throw new SolverException(l, SolverException.SE_CANNOT_OPEN_INPUT);
+				} else {
+					throw new SolverException(l, SolverException.SE_ERROR);
+				}
+			}
+		}
+	}
+	
+	protected AnswerSetList runDLV(Program p, int nModels, String otherOptions) throws SolverException {
+	
+		String cmdLine = path2dlv + " -- " + "-N=" + nModels; 
+		
+		// try running dlv
+		try {
+			ai.executeProgram(cmdLine,p.toStringFlat());
+		} catch (Exception e) {
+			System.out.println("dlv error!");
+			e.printStackTrace();
+		}
+		
+		checkErrors();	
+		return parseResults();
 	}
 	
 	protected List<Literal> parseAnswerSet(String s) {
@@ -101,5 +120,29 @@ public class DLV {
 			e.printStackTrace();
 		}
 		return ret;
+	}
+
+	
+	@Override
+	public AnswerSetList computeModels(String s, int maxModels) throws SolverException {
+
+		String cmdLine = path2dlv + " -- " + "-N=" + maxModels; 
+		
+		// try running dlv
+		try {
+			ai.executeProgram(cmdLine,s);
+		} catch (Exception e) {
+			System.out.println("dlv error!");
+			e.printStackTrace();
+		}
+		
+		checkErrors();	
+		return parseResults();
+	}
+
+	@Override
+	public AnswerSetList computeModels(List<String> files, int maxModels) throws SolverException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

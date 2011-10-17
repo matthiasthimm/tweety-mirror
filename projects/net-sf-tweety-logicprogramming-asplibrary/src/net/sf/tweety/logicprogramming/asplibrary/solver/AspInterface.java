@@ -59,7 +59,8 @@ public class AspInterface
     StreamFlusher stdoutFlusher = new StreamFlusher( process.getInputStream() );
     StreamFlusher erroutFlusher = new StreamFlusher( process.getErrorStream() );
     
-    stdin.write( input.getBytes() );
+    if (input != null)
+    	stdin.write( input.getBytes() );
     stdin.flush();
     stdin.close();
     
@@ -93,6 +94,10 @@ public class AspInterface
    */
   public List<String> getOutput() {
 	  return this.outputData;
+  }
+  
+  public List<String> getError() {
+	  return this.errorData;
   }
   
   /**

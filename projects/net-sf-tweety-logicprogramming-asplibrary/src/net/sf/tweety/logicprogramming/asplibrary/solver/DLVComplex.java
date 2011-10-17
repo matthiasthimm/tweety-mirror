@@ -1,28 +1,26 @@
 package net.sf.tweety.logicprogramming.asplibrary.solver;
 
-import java.io.StringReader;
+import java.io.*;
 import java.util.*;
 
 import net.sf.tweety.logicprogramming.asplibrary.parser.ELPParser;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.*;
 import net.sf.tweety.logicprogramming.asplibrary.util.*;
 
-
-public class DLVComplex {
+public class DLVComplex implements Solver {
 
 	String path2dlx = null;
 	AspInterface ai = new AspInterface();
-	SolveTime st = null;
 	
 	public DLVComplex(String path2dlx) {
 		this.path2dlx = path2dlx;
 	}
 	
-	public List<AnswerSet> computeModels(Program p, int models) {
+	public AnswerSetList computeModels(Program p, int models) throws SolverException {
 		return runDLV(p,models,null);
 	}
 	
-	protected List<AnswerSet> runDLV(Program p, int nModels, String otherOptions) {
+	protected AnswerSetList runDLV(Program p, int nModels, String otherOptions) throws SolverException {
 	
 		String cmdLine = path2dlx + " -- " + "-nofdcheck " + "N=" + nModels; 
 		
@@ -30,13 +28,7 @@ public class DLVComplex {
 		
 		// try running dlv
 		try {
-			st = new SolveTime();
-			st.beginWrite();
-			String out = p.toStringFlat();
-			st.endWrite();
-			st.beginCalculate();
-			ai.executeProgram(cmdLine, out );
-			st.endCalculate();
+			ai.executeProgram(cmdLine, p.toStringFlat() );
 			result = ai.getOutput();
 		} catch (Exception e) {
 			System.out.println("dlvcomplex error!");
@@ -46,7 +38,7 @@ public class DLVComplex {
 		return processResults(result);
 	}
 	
-	public List<AnswerSet> computeModels(String program, int models) {
+	public AnswerSetList computeModels(String program, int models) throws SolverException {
 		String cmdLine = path2dlx + " -- " + "-nofdcheck";
 		if (models > 0)
 			cmdLine += " N=" + models; 
@@ -57,6 +49,8 @@ public class DLVComplex {
 		try {
 			ai.executeProgram(cmdLine, program );
 			result = ai.getOutput();
+		} catch (IOException fnfe) {
+			throw new SolverException(fnfe.getMessage(), SolverException.SE_NO_BINARY);
 		} catch (Exception e) {
 			System.out.println("dlvcomplex error!");
 			e.printStackTrace();
@@ -65,11 +59,13 @@ public class DLVComplex {
 		return processResults(result);
 	}
 		
-	protected List<AnswerSet> processResults(List<String> result) {
-		
-		st.beginRead();
-		List<AnswerSet> ret = new LinkedList<AnswerSet>();
+	protected AnswerSetList processResults(List<String> result) throws SolverException {
+		AnswerSetList ret = new AnswerSetList();
 
+		if (ai.getError().size() > 0) {
+			System.out.println(ai.getError());
+		}
+		
 		// early return
 		if (result == null)
 			return ret;
@@ -79,7 +75,7 @@ public class DLVComplex {
 		for (String s : result) {
 			if (s.length() <= 0)
 				continue;
-			//System.out.println(s);
+			System.out.println(s);
 			
 			// answer sets starts with a '{'
 			if (s.charAt(0) == '{') {
@@ -111,8 +107,6 @@ public class DLVComplex {
 		if (lastAS != null)
 			ret.add( new AnswerSet(lastAS,0,0));
 		
-		st.endRead();
-		
 		return ret;
 	}
 
@@ -132,8 +126,11 @@ public class DLVComplex {
 		
 		return ret;
 	}
-	
-	public SolveTime getTimings() {
-		return this.st;
+
+	@Override
+	public AnswerSetList computeModels(List<String> files, int maxModels) throws SolverException {
+		// TODO Auto-generated method stub
+		return null;
 	}
+	
 }
