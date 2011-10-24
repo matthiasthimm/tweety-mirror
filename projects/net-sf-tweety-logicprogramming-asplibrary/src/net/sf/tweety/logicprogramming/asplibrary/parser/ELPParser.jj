@@ -33,7 +33,9 @@ public class ELPParser{
 | < CHAR : ["a"-"z"]>
 | < UCHAR : ["A"-"Z"] >
 | < BLANK : "_" >
-}int one_line() :{}{
+
+| < TEXT : (["a"-"z","A"-"Z","0"-"9",".",":","?","!","$","ä","ö","ü","Ä","Ö","Ü"])+ >
+| < STRING : "\"" < TEXT > "\"" >}int one_line() :{}{
   rule()  {    return 0;
   }}
 Atom atom() :
@@ -107,6 +109,8 @@ Term term() :
   Term t1 = null,t2 = null;
   List<Term> tl1 = null, tl2 = null;}
 {
+  	(s = < STRING > )
+  	{		return new StringTerm(s.image);	    	}|   
   	(s = < VAR >|s=< BLANK >)
   	{		return new StdTerm(s.image);
   	}

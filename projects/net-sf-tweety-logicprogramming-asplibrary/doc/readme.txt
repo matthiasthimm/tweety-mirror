@@ -10,9 +10,12 @@ asp library version 1.0
   
 * future improvements:
   * predicate pooling (through something like a signature class)
+  * parser improvements (speed / compatibility)
+  * better documentation, more examples  
+  
+* disposed ideas:
   * split a rule into three lists (head, body+, body-), as default
     negation in the head is not supported anyway. the Not class
     would become obsolete anyway, which might cause some work
     on symbolic sets again.
-  * parser improvements (speed / compatibility)
-  * better documentation, more examples  
+ 

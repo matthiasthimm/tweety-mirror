@@ -297,4 +297,9 @@ public class Atom implements Term, Literal, Predicate {
 	public boolean isString() {
 		return false;
 	}
+
+	@Override
+	public TermType type() {
+		return TermType.Atom;
+	}
 }
