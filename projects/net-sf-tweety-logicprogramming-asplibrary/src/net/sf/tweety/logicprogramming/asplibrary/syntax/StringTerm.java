@@ -11,10 +11,12 @@ package net.sf.tweety.logicprogramming.asplibrary.syntax;
  */
 public class StringTerm extends Constant {
 
-	protected String value = null;
-	
 	public StringTerm(String value) {
-		super(value);
+		super(fixMarks(value));
+	}
+	
+	protected static String fixMarks(String s) {
+		return s;
 	}
 	
 	@Override
@@ -33,7 +35,7 @@ public class StringTerm extends Constant {
 
 	@Override
 	public String toString() {
-		return "\"" + this.value + "\"";
+		return this.value;
 	}
 	
 	@Override
