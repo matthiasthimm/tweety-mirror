@@ -54,6 +54,11 @@ public class RelationalBruteForceCReasoner extends Reasoner {
 	private int numConditionals;
 	
 	/**
+	 * The signature used for building the c-representation. 
+	 */
+	private FolSignature signature;
+	
+	/**
 	 * Maps the indices of the kappa vector to their corresponding
 	 * conditionals. 
 	 */
@@ -66,22 +71,25 @@ public class RelationalBruteForceCReasoner extends Reasoner {
 	
 	/**
 	 * Creates a new relational c-representation reasoner for the given knowledge base.
-	 * @param beliefBase a knowledge base.	
+	 * @param beliefBase a knowledge base.
+	 * @param signature the signature used for building the c-representation.	
 	 * @param simple whether the computed c-representation is simple. 
 	 */
-	public RelationalBruteForceCReasoner(BeliefBase beliefBase, boolean simple){
+	public RelationalBruteForceCReasoner(BeliefBase beliefBase, FolSignature signature, boolean simple){
 		super(beliefBase);		
 		if(!(beliefBase instanceof RclBeliefSet))
 			throw new IllegalArgumentException("Knowledge base of class RclBeliefSet expected.");
+		this.signature = signature;
 		this.simple = simple;
 	}
 	
 	/**
 	 * Creates a new simple c-representation reasoner for the given knowledge base.
-	 * @param beliefBase  a knowledge base.	
+	 * @param beliefBase  a knowledge base.
+	 * @param signature the signature used for building the c-representation.	
 	 */
-	public RelationalBruteForceCReasoner(BeliefBase beliefBase){
-		this(beliefBase,false);
+	public RelationalBruteForceCReasoner(BeliefBase beliefBase, FolSignature signature){
+		this(beliefBase,signature, false);
 	}
 	
 	/**
@@ -157,7 +165,7 @@ public class RelationalBruteForceCReasoner extends Reasoner {
 	 * @return
 	 */
 	private RelationalRankingFunction constructRankingFunction(Integer[] kappa){
-		RelationalRankingFunction candidate = new RelationalRankingFunction((FolSignature)this.getKnowledgBase().getSignature());
+		RelationalRankingFunction candidate = new RelationalRankingFunction(this.signature);
 		if(kappa == null) 
 			return candidate;
 		// following [Kern-Isberner,Thimm, "A Ranking Semantics for Relational Defaults", in preparation]

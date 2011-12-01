@@ -113,8 +113,74 @@ public class RelationalRankingFunction extends Interpretation {
 			return rankPremiseAndConclusion < rankPremiseAndNotConclusion;
 		}
 		// following [Kern-Isberner,Thimm, "A Ranking Semantics for Relational Defaults", in preparation],
+		// a relational ranking function satisfies an open conditional if there is one instantiation such that
+		// (1) the rank of premise and conclusion is minimal under all instances
+		// (2) the rank of premise and negated conclusion is minimal under all instances
+		// (3) the conditional is classically accepted
+		Set<RelationalFormula> allInstances = rc.allGroundInstances(this.signature.getConstants());
+		for(RelationalFormula rf: allInstances){
+			// check (3)
+			if(!this.satisfies(rf)) continue;
+			// check (1) and (2)
+			RelationalConditional instance = (RelationalConditional) rf;
+			FolFormula conjPremConc = instance.getPremise().iterator().next().combineWithAnd(instance.getConclusion());
+			FolFormula conjPremNegConc =  instance.getPremise().iterator().next().combineWithAnd(instance.getConclusion().complement());
+			Integer concRank = this.rank(conjPremConc);
+			Integer negConcRank = this.rank(conjPremNegConc);			
+			boolean success = true;
+			for(RelationalFormula rf2: allInstances){
+				RelationalConditional otherInstance = (RelationalConditional) rf2;						
+				FolFormula otherConjPremConc = otherInstance.getPremise().iterator().next().combineWithAnd(otherInstance.getConclusion());
+				FolFormula otherConjPremNegConc = otherInstance.getPremise().iterator().next().combineWithAnd(otherInstance.getConclusion().complement());
+				Integer otherConcRank = this.rank(otherConjPremConc);
+				Integer otherNegConcRank = this.rank(otherConjPremNegConc);
+				if(otherConcRank < concRank || otherNegConcRank < negConcRank){
+					success = false;
+					break;
+				}
+			}			
+			if(success)
+				return true;
+		}
+		return false;
+		
+		/* ============================ SECOND VERSION
+		// a relational ranking function satisfies an open conditional if (1) there is one instantiation 
+		// where the conjunction of conclusion and premise has rank strictly smaller than all instantiations
+		// of the conjunction of the premise and the negated conclusion AND (2) the rank of the negated premise is maximal
+		// under all negated premises
+		Set<RelationalFormula> allInstances = rc.allGroundInstances(this.signature.getConstants());
+		for(RelationalFormula rf: allInstances){
+			RelationalConditional instance = (RelationalConditional) rf;
+			FolFormula conjPremConc = instance.getPremise().iterator().next().combineWithAnd(instance.getConclusion());
+			FolFormula negPremise =  instance.getPremise().iterator().next().complement();
+			Integer instanceRank = this.rank(conjPremConc);
+			Integer premRank = this.rank(negPremise);
+			boolean success = true;
+			for(RelationalFormula rf2: allInstances){
+				RelationalConditional otherInstance = (RelationalConditional) rf2;
+				// check (1)				
+				FolFormula otherConjPremConc = otherInstance.getPremise().iterator().next().combineWithAnd(otherInstance.getConclusion().complement());
+				Integer otherInstanceRank = this.rank(otherConjPremConc);
+				if(otherInstanceRank <= instanceRank){
+					success = false;
+					break;
+				}
+				// check (2)
+				FolFormula otherNegPremise = otherInstance.getPremise().iterator().next().complement();
+				Integer otherPremRank = this.rank(otherNegPremise);
+				if(otherPremRank > premRank){
+					success = false;
+					break;
+				}
+			}			
+			if(success)
+				return true;
+		}
+		return false;*/		
+		/* ========================== FIRST VERSION		 
 		// a relational ranking function satisfies an open conditional if there is one instantiation
-		// where the premise has minimal rank and the conditional is classically satisfied
+		// where the premise has minimal rank and the conditional is classically satisfied		
 		Set<RelationalFormula> allInstances = rc.allGroundInstances(this.signature.getConstants());
 		for(RelationalFormula rf: allInstances){
 			RelationalConditional instance = (RelationalConditional) rf;
@@ -124,12 +190,14 @@ public class RelationalRankingFunction extends Interpretation {
 			Integer instanceRank = this.rank(instance.getPremise().iterator().next());
 			for(RelationalFormula rf2: allInstances){
 				RelationalConditional otherInstance = (RelationalConditional) rf2;
-				if(this.rank(otherInstance.getPremise().iterator().next()) < instanceRank)
-					continue;
+				if(instance != otherInstance)
+					if(this.rank(otherInstance.getPremise().iterator().next()) < instanceRank)
+						continue;
 			}
 			return true;
 		}
 		return false;
+		*/
 	}
 
 	/* (non-Javadoc)
