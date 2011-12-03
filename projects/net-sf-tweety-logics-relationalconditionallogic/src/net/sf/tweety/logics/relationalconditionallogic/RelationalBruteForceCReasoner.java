@@ -146,11 +146,20 @@ public class RelationalBruteForceCReasoner extends Reasoner {
 		RelationalRankingFunction candidate = this.constructRankingFunction(kappa);
 		while(!candidate.satisfies(this.getKnowledgBase())){
 			kappa = this.increment(kappa);			
-			candidate = this.constructRankingFunction(kappa);			
-			String debugMessage = "["+kappa[0];
-			for(int j=1; j< kappa.length;j++)
-				debugMessage += "," + kappa[j];
-			debugMessage += "]";
+			candidate = this.constructRankingFunction(kappa);
+			String debugMessage = "";
+			if(this.simple){
+				debugMessage = "[ KMINUS "+ this.indexToConditional.get(0) + " : " + kappa[0];
+				for(int j=1; j< kappa.length;j++)
+					debugMessage += ", KMINUS "+ this.indexToConditional.get(j) + " : " + kappa[j];
+				debugMessage += "]";
+			}else{
+				debugMessage = "[ KPLUS/KMINUS "+ this.indexToConditional.get(0) + " : " + kappa[0] + "/" + kappa[1];
+				for(int j=2; j< kappa.length;j+=2){
+					debugMessage += ", KPLUS/KMINUS "+ this.indexToConditional.get(j/2) + " : " + kappa[j] + "/" + kappa[j+1];
+				}
+				debugMessage += "]";
+			}				
 			this.log.debug(debugMessage);
 		}		
 		candidate.normalize();

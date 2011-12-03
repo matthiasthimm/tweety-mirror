@@ -117,7 +117,7 @@ public class RankingFunction extends Interpretation {
 	 * is defined as the minimal rank of its satisfying interpretations.
 	 * @param formula a formula.
 	 * @return the rank of the given formula.
-	 * @throws IllegalArgumentException if the languages of the formula does not correspond to the language of the
+	 * @throws IllegalArgumentException if the language of the formula does not correspond to the language of the
 	 * 		interpretations this ranking function is defined on.
 	 */
 	public Integer rank(Formula formula) throws IllegalArgumentException{

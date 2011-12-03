@@ -113,6 +113,36 @@ public class RelationalRankingFunction extends Interpretation {
 			return rankPremiseAndConclusion < rankPremiseAndNotConclusion;
 		}
 		// following [Kern-Isberner,Thimm, "A Ranking Semantics for Relational Defaults", in preparation],
+		// a relational ranking function satisfies an open conditional if the set of prototypes is non-empty AND (
+		// either the minimal rank of conclusion and premise is smaller than the minimal rank of negated conclusion and
+		// premise (wrt. all instances) OR the prototypes of the conditional have a smaller rank in its negated form
+		// as the prototypes of the complement conditional in the positive form)		
+		Set<RelationalConditional> prototypes = this.getPrototypes(rc);
+		if(prototypes.isEmpty())
+			return false;
+		int minPositive = -1;
+		int minNegative = -1;
+		for(RelationalFormula rf: rc.allGroundInstances(this.signature.getConstants())){
+			RelationalConditional instance = (RelationalConditional) rf;
+			int rankPremiseAndConclusion = this.rank(instance.getConclusion().combineWithAnd(instance.getPremise().iterator().next()));
+			int rankPremiseAndNotConclusion = this.rank(instance.getConclusion().complement().combineWithAnd(instance.getPremise().iterator().next()));
+			if(minPositive == -1) minPositive = rankPremiseAndConclusion;
+			else minPositive = minPositive > rankPremiseAndConclusion ? rankPremiseAndConclusion : minPositive;
+			if(minNegative == -1) minNegative = rankPremiseAndNotConclusion;
+			else minNegative = minNegative > rankPremiseAndNotConclusion ? rankPremiseAndNotConclusion : minNegative;
+		}
+		if(minPositive < minNegative) return true;		
+		Set<RelationalConditional> antiPrototypes = this.getPrototypes(new RelationalConditional(rc.getPremise().iterator().next(), rc.getConclusion().complement()));
+		for(RelationalConditional prot: prototypes){
+			for(RelationalConditional anti: antiPrototypes){
+				int rankPremiseAndConclusion = this.rank(anti.getConclusion().combineWithAnd(anti.getPremise().iterator().next()));
+				int rankPremiseAndNotConclusion = this.rank(prot.getConclusion().complement().combineWithAnd(prot.getPremise().iterator().next()));
+				if(rankPremiseAndConclusion >= rankPremiseAndNotConclusion)
+					return false;
+			}
+		}		
+		return true;
+		/* ============================ THIRD VERSION
 		// a relational ranking function satisfies an open conditional if there is one instantiation such that
 		// (1) the rank of premise and conclusion is minimal under all instances
 		// (2) the rank of premise and negated conclusion is minimal under all instances
@@ -142,8 +172,7 @@ public class RelationalRankingFunction extends Interpretation {
 			if(success)
 				return true;
 		}
-		return false;
-		
+		return false;*/		
 		/* ============================ SECOND VERSION
 		// a relational ranking function satisfies an open conditional if (1) there is one instantiation 
 		// where the conjunction of conclusion and premise has rank strictly smaller than all instantiations
@@ -200,6 +229,62 @@ public class RelationalRankingFunction extends Interpretation {
 		*/
 	}
 
+	/** Returns the set of instances with weak prototypes.
+	 * @param rc a relational conditional
+	 * @return the set of instances with weak prototypes.
+	 */
+	private Set<RelationalConditional> getWeakPrototypes(RelationalConditional rc){
+		Set<RelationalConditional> weakPrototypes = new HashSet<RelationalConditional>();
+		for(RelationalFormula rf: rc.allGroundInstances(this.signature.getConstants())){
+			RelationalConditional instance = (RelationalConditional) rf;
+			if(weakPrototypes.isEmpty()){
+				weakPrototypes.add(instance);
+			}else{
+				RelationalConditional previousInstance = weakPrototypes.iterator().next();
+				int instanceRank = this.rank(instance.getConclusion().combineWithAnd(instance.getPremise().iterator().next()));
+				int previousRank = this.rank(previousInstance.getConclusion().combineWithAnd(previousInstance.getPremise().iterator().next()));
+				if(instanceRank == previousRank)
+					weakPrototypes.add(instance);
+				else if(instanceRank < previousRank){
+					weakPrototypes.clear();
+					weakPrototypes.add(instance);
+				}
+			}
+		}
+		//remove those instances that are not accepted
+		Set<RelationalConditional> result = new HashSet<RelationalConditional>();
+		for(RelationalConditional r: weakPrototypes)
+			if(this.satisfies(r))
+				result.add(r);
+		return result;
+	}
+	
+	/** Returns the set of instances with prototypes.
+	 * @param rc a relational conditional
+	 * @return the set of instances with prototypes.
+	 */
+	private Set<RelationalConditional> getPrototypes(RelationalConditional rc){
+		Set<RelationalConditional> weakPrototypes = this.getWeakPrototypes(rc);
+		Set<RelationalConditional> prototypes = new HashSet<RelationalConditional>();
+		for(RelationalConditional r: weakPrototypes){
+			RelationalConditional instance = (RelationalConditional)r;
+			if(prototypes.isEmpty()){
+				prototypes.add(instance);
+			}else{
+				RelationalConditional previousInstance = prototypes.iterator().next();
+				int instanceRank = this.rank(instance.getConclusion().complement().combineWithAnd(instance.getPremise().iterator().next()));
+				int previousRank = this.rank(previousInstance.getConclusion().complement().combineWithAnd(previousInstance.getPremise().iterator().next()));
+				if(instanceRank == previousRank)
+					prototypes.add(instance);
+				else if(instanceRank < previousRank){
+					prototypes.clear();
+					prototypes.add(instance);
+				}
+			}
+		}		
+		return prototypes;
+	}
+	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.Interpretation#satisfies(net.sf.tweety.BeliefBase)
 	 */
