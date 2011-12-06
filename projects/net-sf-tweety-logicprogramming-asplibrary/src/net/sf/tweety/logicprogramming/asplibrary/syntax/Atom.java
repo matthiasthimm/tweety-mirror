@@ -172,9 +172,12 @@ public class Atom implements Term, Literal, Predicate {
 	
 	public int getTermInt(int index) {
 		Term t = this.getTerm(index);
-		if (t != null)
-			return Integer.parseInt(t.toString());
-		else
+		if (t!= null) {			
+			if (t.isNumber())
+				return t.getInt();
+			else 
+				return Integer.parseInt(t.toString());
+		} else
 			return 0;
 	}
 	
@@ -301,5 +304,29 @@ public class Atom implements Term, Literal, Predicate {
 	@Override
 	public TermType type() {
 		return TermType.Atom;
+	}
+	
+	/**
+	 * this method converts a term to a double if
+	 * the term is a number or a string constant
+	 * representing a double. otherwise, this
+	 * method returns 0.0;
+	 * 
+	 * @param i
+	 * @return
+	 */
+	public double getTermDbl(int i) {
+		Term t = this.terms[i];
+		
+		if (t.isNumber()) {
+			return (double) t.getInt();
+		}
+		else if (t.isString()) {
+			String s = t.toString();
+			int l = s.length();
+			return Double.parseDouble( s.substring(1, l-1) );
+		}
+		else
+			return 0.0;
 	}
 }

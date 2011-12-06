@@ -131,7 +131,7 @@ Term term() :
 	}
 |
 	s = < NUMBER >
-	{		return new StdTerm(s.image);
+	{		return new NumberTerm(s.image);
 	}
 |
 	< SQLBRA >

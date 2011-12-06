@@ -1,14 +1,14 @@
 package net.sf.tweety.logicprogramming.asplibrary.syntax;
 
-public class Number implements Term {
+public class NumberTerm implements Term {
 
 	protected int	num;
 	
-	public	Number(int n) {
+	public	NumberTerm(int n) {
 		this.num = n;
 	}
 	
-	public	Number(String n) {
+	public	NumberTerm(String n) {
 		this.num = Integer.parseInt(n);
 	}
 	
@@ -76,5 +76,17 @@ public class Number implements Term {
 	@Override
 	public String	toString() {
 		return ""+this.num;
+	}
+	
+	@Override
+	public boolean	equals(Object o) {
+		if (o instanceof Integer) {
+			Integer i = (Integer) o;
+			return i == num;
+		} else if (o instanceof NumberTerm) {
+			NumberTerm n = (NumberTerm) o;
+			return n.num == this.num;
+		} else
+			return false;
 	}
 }
