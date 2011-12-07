@@ -88,7 +88,7 @@ public class RclParser extends FolParser {
 			throw new ParserException(e);
 		}
 		if(!s.contains("(") || !s.contains(")")) 
-			throw new ParserException("Conditionals must be enclosed by parantheses.");
+			throw new ParserException("Conditionals must be enclosed by parentheses.");
 		String condString = s.substring(1,s.lastIndexOf(")"));
 		//check for a single "|" (note, that "||" denotes disjunction)
 		int idx = 0;		
@@ -96,6 +96,7 @@ public class RclParser extends FolParser {
 			idx = condString.indexOf("|", idx);
 			if(condString.charAt(idx+1) != '|')
 				break;			
+			idx += 2;
 		}		
 		FolParser parser = new FolParser();
 		parser.setSignature(this.getSignature());

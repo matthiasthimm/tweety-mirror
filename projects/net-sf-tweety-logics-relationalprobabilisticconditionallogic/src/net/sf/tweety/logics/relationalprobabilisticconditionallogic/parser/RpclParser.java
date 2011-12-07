@@ -108,6 +108,7 @@ public class RpclParser extends FolParser {
 			idx = condString.indexOf("|", idx);
 			if(condString.charAt(idx+1) != '|')
 				break;			
+			idx += 2;
 		}		
 		FolParser parser = new FolParser();
 		parser.setSignature(this.getSignature());
