@@ -232,14 +232,14 @@ public class OpenOptSolver extends Solver {
 			code += "\np.c = " + inequalities + "\n\n";
 		// write commands			
 		code += "p.contol = " + this.contol + "\n";
-		code += "p.ftol = " + this.ftol + "\n";
-		code += "p.gtol = " + this.gtol + "\n";
-		code += "p.xtol = " + this.xtol + "\n";
-		code += "p.maxIter = " + this.maxIter + "\n";
-		code += "p.maxFunEvals = " + this.maxFunEvals + "\n";
+	//	code += "p.ftol = " + this.ftol + "\n";
+	//	code += "p.gtol = " + this.gtol + "\n";
+	//	code += "p.xtol = " + this.xtol + "\n";
+	//	code += "p.maxIter = " + this.maxIter + "\n";
+	//	code += "p.maxFunEvals = " + this.maxFunEvals + "\n";
 		code += "r = p.solve('" + this.solver + "')\n";
 		code += "print r.xf";
-		this.log.trace("Generated the OpenOpt code:\n===BEGIN===\n" + code + "\n===END===");
+		this.log.trace("Generated the OpenOpt code:\n===BEGIN===\n" + code + "\n===END===");		
 		return code;
 	}
 	

@@ -9,7 +9,7 @@ import net.sf.tweety.argumentation.dung.syntax.*;
 
 /**
  * This reasoner for Dung theories performs inference on the complete extensions.
- * Computes the set of all complete extensions, i.e., all admissable sets that contain all their acceptable arguments.
+ * Computes the set of all complete extensions, i.e., all admissible sets that contain all their acceptable arguments.
  * @author Matthias Thimm
  *
  */

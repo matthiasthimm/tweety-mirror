@@ -5,13 +5,11 @@ import java.util.*;
 import net.sf.tweety.*;
 import net.sf.tweety.argumentation.dung.*;
 import net.sf.tweety.argumentation.dung.syntax.*;
+import net.sf.tweety.util.Probability;
 
 
 /**
  * This class models a (possible) extension of a Dung theory, i.e. a set of arguments.
- * <br>
- * This class implements "Executable" because in structured argumentation systems
- * an extension (ie a set of arguments) is a valid action for agents.
  *  
  * @author Matthias Thimm
  *
@@ -49,7 +47,56 @@ public class Extension extends InterpretationSet<Argument> {
 	public boolean satisfies(BeliefBase beliefBase) throws IllegalArgumentException{
 		throw new IllegalArgumentException("Satisfaction of belief bases by extensions is undefined.");
 	}
-		
+			
+	/**
+	 * Returns all arguments that are "in" in this extension wrt.
+	 * the given theory, i.e. this extension itself.
+	 * @param dungTheory some Dung theory.
+	 * @return this extension
+	 */
+	public Extension getInArguments(DungTheory dungTheory){
+		if(dungTheory.containsAll(this))
+			return new Extension(this);
+		throw new IllegalArgumentException("The arguments of this extension are not all in the given theory.");
+	}
+	
+	/**
+	 * Returns all arguments that are "out" in this extension wrt.
+	 * the given theory, i.e. all arguments in the given theory
+	 * that are attacked by some argument in this extension.
+	 * @param dungTheory some Dung theory.
+	 * @return the set of arguments attacked by this extension.
+	 */
+	public Extension getOutArguments(DungTheory dungTheory){
+		if(dungTheory.containsAll(this)){
+			Extension ext = new Extension();
+			for(Argument a: dungTheory){
+				if(!this.contains(a))
+					if(dungTheory.isAttacked(a, this))
+						ext.add(a);
+			}
+			return ext;
+		}
+		throw new IllegalArgumentException("The arguments of this extension are not all in the given theory.");
+	}
+	
+	/**
+	 * Returns all arguments that are "undecided" in this extension wrt.
+	 * the given theory, i.e. all arguments that are neither in nor out.
+	 * @param dungTheory some Dung theory.
+	 * @return the set of undecided arguments.
+	 */
+	public Extension getUndecidedArguments(DungTheory dungTheory){
+		if(dungTheory.containsAll(this)){
+			Extension ext = this.getInArguments(dungTheory);
+			ext.addAll(this.getOutArguments(dungTheory));
+			Extension result = new Extension(dungTheory);
+			result.removeAll(ext);
+			return result;
+		}
+		throw new IllegalArgumentException("The arguments of this extension are not all in the given theory.");
+	}
+	
 	/**
 	 * returns true if every element of this is defended by some element in this wrt. the
 	 * given Dung theory.
@@ -97,6 +144,27 @@ public class Extension extends InterpretationSet<Argument> {
 		return true;
 	}
 	
+	/**
+	 * Returns the characteristic probabilistic extension of this extension,
+	 * i.e. the probabilistic extension that assigns probability 0.5
+	 * to this extension and 0.5 to the union of this extension and the set
+	 * of undecided arguments.
+	 * @param theory some Dung theory
+	 * @return the characteristic probabilistic extension of this extension.
+	 */
+	public ProbabilisticExtension getCharacteristicProbabilisticExtension(DungTheory theory){
+		ProbabilisticExtension pe = new ProbabilisticExtension((DungSignature)theory.getSignature());
+		if(this.getUndecidedArguments(theory).isEmpty()){
+			pe.put(new Extension(this), new Probability(1d));
+			return pe;
+		}
+		pe.put(new Extension(this), new Probability(0.5));
+		Extension e = new Extension(this);
+		e.addAll(this.getUndecidedArguments(theory));
+		pe.put(e, new Probability(0.5));		
+		return pe;
+	}
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
@@ -116,7 +184,7 @@ public class Extension extends InterpretationSet<Argument> {
 	 */
 	@Override
 	public int hashCode() {
-		return super.hashCode() * 3;
+		return 1;
 	}
 
 	/* (non-Javadoc)

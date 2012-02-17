@@ -83,7 +83,7 @@ public class ProbabilityDistribution<T extends Interpretation> extends Interpret
 		double p = 0;
 		for(T i: this.probabilities.keySet())
 			if(i.satisfies(f))
-				p += this.probability(i).doubleValue();		
+				p += this.probability(i).doubleValue();
 		return new Probability(p);
 	}
 	

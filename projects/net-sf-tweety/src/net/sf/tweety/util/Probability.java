@@ -115,7 +115,7 @@ public class Probability extends Number {
 	 */
 	@Override
 	public double doubleValue() {
-		return this.value.doubleValue();
+		return this.value.doubleValue();	
 	}
 
 	/* (non-Javadoc)

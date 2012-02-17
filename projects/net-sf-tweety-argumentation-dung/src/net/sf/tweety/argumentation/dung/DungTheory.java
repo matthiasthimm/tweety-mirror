@@ -178,7 +178,7 @@ public class DungTheory extends BeliefSet<Argument> {
 	 * @return an extension (a set of arguments).
 	 */
 	public Extension faf(Extension extension){
-		Extension newExtension = new Extension(extension);
+		Extension newExtension = new Extension();
 		Iterator<Argument> it = this.iterator();
 		while(it.hasNext()){
 			Argument argument = it.next();
