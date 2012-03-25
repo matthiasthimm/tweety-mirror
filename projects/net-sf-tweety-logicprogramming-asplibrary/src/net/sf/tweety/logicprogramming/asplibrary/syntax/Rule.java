@@ -89,6 +89,10 @@ public class Rule {
 			&& (this.numHead() == 1);
 	}
 	
+	public	boolean		isDisjunctive() {
+		return this.numHead() > 1;
+	}
+	
 	public	boolean 	isChoice() {
 		return false;
 	}
@@ -103,6 +107,13 @@ public class Rule {
 	
 	public boolean		isComment() {
 		return false;
+	}
+	
+	public boolean		isBasicRule() {
+		return (this.numHead() == 1) &&
+			!this.isChoice() &&
+			!this.isComment() &&
+			this.numBody() > 0;
 	}
 	
 	@Override

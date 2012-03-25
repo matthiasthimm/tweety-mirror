@@ -102,7 +102,10 @@ public class StdTerm implements Term {
 
 	@Override
 	public String get() {
-		return null;
+		if (this.isIntType)
+			return ""+this.intValue;
+		else
+			return this.termValue;
 	}
 
 	@Override

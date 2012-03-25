@@ -44,5 +44,5 @@ public interface Solver {
 	 * @throws SolverException
 	 */
 	public AnswerSetList	computeModels(List<String> files, int maxModels) throws SolverException;
-	
+
 }

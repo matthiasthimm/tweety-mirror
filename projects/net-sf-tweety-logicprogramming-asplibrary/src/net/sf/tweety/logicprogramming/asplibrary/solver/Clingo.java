@@ -46,7 +46,7 @@ public class Clingo implements Solver {
 	public AnswerSetList computeModels(String s, int maxModels) throws SolverException {
 		
 		try {
-			ai.executeProgram( path2clingo, s );
+			ai.executeProgram( path2clingo + " " +maxModels , s );
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
