@@ -157,16 +157,41 @@ public class ProbDungTest {
 		theory.add(a);
 		theory.add(b);
 		theory.add(c);
-		//theory.add(d);
-		//theory.add(e);
+		theory.add(d);
+		theory.add(e);
 		theory.add(new Attack(a,b));
 		theory.add(new Attack(b,a));
 		theory.add(new Attack(b,c));
-		theory.add(new Attack(a,c));
-		//theory.add(new Attack(c,d));
-		//theory.add(new Attack(d,e));
-		//theory.add(new Attack(e,d));
-		//theory.add(new Attack(e,c));
+		theory.add(new Attack(c,d));
+		theory.add(new Attack(d,e));
+		theory.add(new Attack(e,d));
+		theory.add(new Attack(e,c));
+		
+//		Argument d1 = new Argument("d1");
+//		Argument d2 = new Argument("d2");
+//		Argument t1 = new Argument("t1");
+//		Argument t2 = new Argument("t2");
+//		Argument c = new Argument("c");
+//		Argument p1 = new Argument("p1");
+//		Argument p2 = new Argument("p2");
+//		theory.add(d1);
+//		theory.add(d2);
+//		theory.add(t1);
+//		theory.add(t2);
+//		theory.add(c);
+//		theory.add(p1);
+//		theory.add(p2);
+//		theory.add(new Attack(d1,d2));
+//		theory.add(new Attack(d2,d1));
+//		theory.add(new Attack(t1,t2));
+//		theory.add(new Attack(t2,t1));
+//		theory.add(new Attack(t1,d1));
+//		theory.add(new Attack(t2,d2));
+//		theory.add(new Attack(c,d2));
+//		theory.add(new Attack(p1,p2));
+//		theory.add(new Attack(p2,p1));
+//		theory.add(new Attack(p1,c));
+			
 		
 		// standard semantics
 		CompleteReasoner completeReasoner = new CompleteReasoner(theory);
@@ -176,22 +201,22 @@ public class ProbDungTest {
 			allComplete.add(ex.getCharacteristicProbabilisticExtension(theory));			
 		}
 		
-//		// compute average
-//		ProbabilisticExtension avg = new ProbabilisticExtension((DungSignature)theory.getSignature());		
-//		for(Set<Argument> set: new SetTools<Argument>().subsets(theory)){
-//			Extension ext = new Extension(set);
-//			double prob = 0;
-//			for(ProbabilisticExtension pe: allComplete){
-//				if(pe.containsKey(ext))
-//					prob += pe.get(ext).doubleValue();
-//			}
-//			avg.put(ext, new Probability(prob/allComplete.size()));
-//		}
-//		for(Argument arg: theory)
-//			System.out.println(arg + " " + avg.probability(arg));
-//		
-//		System.out.println();
-//		
+		// compute average
+		ProbabilisticExtension avg = new ProbabilisticExtension((DungSignature)theory.getSignature());		
+		for(Set<Argument> set: new SetTools<Argument>().subsets(theory)){
+			Extension ext = new Extension(set);
+			double prob = 0;
+			for(ProbabilisticExtension pe: allComplete){
+				if(pe.containsKey(ext))
+					prob += pe.get(ext).doubleValue();
+			}
+			avg.put(ext, new Probability(prob/allComplete.size()));
+		}
+		for(Argument arg: theory)
+			System.out.println(arg + " " + avg.probability(arg));
+		
+		System.out.println();
+		
 //		// compute centroid
 //		ProbabilisticExtension cen = ProbDungTest.centroid(allComplete,theory);
 //		for(Argument arg: theory)
