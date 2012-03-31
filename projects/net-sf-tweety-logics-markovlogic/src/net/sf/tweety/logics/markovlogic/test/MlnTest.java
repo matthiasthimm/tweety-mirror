@@ -16,8 +16,7 @@ import net.sf.tweety.logics.markovlogic.analysis.DistanceFunction;
 import net.sf.tweety.logics.markovlogic.analysis.MaxAggregator;
 import net.sf.tweety.logics.markovlogic.analysis.MinAggregator;
 import net.sf.tweety.logics.markovlogic.analysis.PNormDistanceFunction;
-import net.sf.tweety.logics.markovlogic.analysis.ProductAggregator;
-import net.sf.tweety.logics.markovlogic.analysis.SumAggregator;
+import net.sf.tweety.logics.markovlogic.analysis.ProbabilisticAggregatingDistanceFunction;
 import net.sf.tweety.logics.markovlogic.syntax.MlnFormula;
 
 public class MlnTest {
@@ -51,13 +50,13 @@ public class MlnTest {
 		List<AggregationFunction> aggrFunctions = new ArrayList<AggregationFunction>();
 		aggrFunctions.add(new MaxAggregator());
 		aggrFunctions.add(new MinAggregator());
-		aggrFunctions.add(new AverageAggregator());
-		aggrFunctions.add(new SumAggregator());
-		aggrFunctions.add(new ProductAggregator());
+		aggrFunctions.add(new AverageAggregator());		
 		
 		List<DistanceFunction> distFunctions = new ArrayList<DistanceFunction>();
 		for(AggregationFunction af: aggrFunctions)
 			distFunctions.add(new AggregatingDistanceFunction(af));
+		for(AggregationFunction af: aggrFunctions)
+			distFunctions.add(new ProbabilisticAggregatingDistanceFunction(af,3));
 		for(int i = 1; i< 4; i++)
 			distFunctions.add(new PNormDistanceFunction(i));
 		
