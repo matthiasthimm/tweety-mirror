@@ -9,9 +9,9 @@
 	<classpathentry kind="lib" path="../../generalLibraries/commons-logging-api-1.1.1.jar"/>
 	<classpathentry kind="lib" path="../../generalLibraries/commons-logging-tests.jar"/>
 	<classpathentry kind="lib" path="../../generalLibraries/log4j-1.2.16.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Math Library)"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Conditional Logic Library)"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Probabilistic Conditional Logic Library)"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Core Library)"/>
+	<classpathentry kind="lib" path="../../latestBuild/net-sf-tweety-logics-conditionallogic.jar"/>
+	<classpathentry kind="lib" path="../../latestBuild/net-sf-tweety-logics-probabilisticconditionallogic.jar"/>
+	<classpathentry kind="lib" path="../../latestBuild/net-sf-tweety-math.jar"/>
+	<classpathentry kind="lib" path="../../latestBuild/net-sf-tweety.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

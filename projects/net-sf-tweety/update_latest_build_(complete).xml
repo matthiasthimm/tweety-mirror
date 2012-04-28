@@ -12,10 +12,12 @@
 			<zipfileset dir="../../latestBuild" includes="net-sf-tweety-argumentation-deductive.jar"/>
 			<zipfileset dir="../../latestBuild" includes="net-sf-tweety-argumentation-delp.jar"/>
 			<zipfileset dir="../../latestBuild" includes="net-sf-tweety-argumentation-structuredargumentationframeworks.jar"/>
+			<zipfileset dir="../../latestBuild" includes="net-sf-tweety-beliefdynamics.jar"/>
 			<zipfileset dir="../../latestBuild" includes="net-sf-tweety-cli.jar"/>
 			<zipfileset dir="../../latestBuild" includes="net-sf-tweety-graphs.jar"/>
 			<zipfileset dir="../../latestBuild" includes="net-sf-tweety-logics-conditionallogic.jar"/>
 			<zipfileset dir="../../latestBuild" includes="net-sf-tweety-logics-firstorderlogic.jar"/>
+			<zipfileset dir="../../latestBuild" includes="net-sf-tweety-logics-markovlogic.jar"/>
 			<zipfileset dir="../../latestBuild" includes="net-sf-tweety-logics-modallogic.jar"/>
 			<zipfileset dir="../../latestBuild" includes="net-sf-tweety-logics-probabilisticconditionallogic.jar"/>
 			<zipfileset dir="../../latestBuild" includes="net-sf-tweety-logics-propositionallogic.jar"/>
