@@ -4,6 +4,7 @@ package net.sf.tweety.util;
  * This class implements a simple pair of elements.
  *
  * @author Matthias Thimm
+ * @author Bastian Wolf
  *
  * @param <E> the type of the first element
  * @param <F> the type of the second element
@@ -104,6 +105,16 @@ public class Pair<E,F> {
 		} else if (!obj2.equals(other.obj2))
 			return false;
 		return true;
+	}
+	
+	/**
+	 * returns a string representation of a pair as "(obj1, obj2)"
+	 * @return a string representation of a pair as "(obj1, obj2)"
+	 */
+	@Override
+	public String toString() {
+		 String s = "(" + obj1.toString() + ", "+ obj2.toString() + ")";
+		 return s;
 	}
 
 }
