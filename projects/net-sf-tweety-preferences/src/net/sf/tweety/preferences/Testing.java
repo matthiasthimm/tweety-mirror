@@ -1,6 +1,7 @@
 package net.sf.tweety.preferences;
 
-import net.sf.tweety.util.Pair;
+
+import net.sf.tweety.util.*;
 
 /**
  * A first simple testing-method for preference orders. To be extended and automated
@@ -34,8 +35,15 @@ public class Testing {
 		testing.removePair(gamma);
 		
 		System.out.println(testing.size());
-		System.out.println(testing);
-
+		
+		System.out.println("TESTING +++++++++++++++++++++");
+		System.out.println("Testing: " + testing);
+		System.out.println("Elements: " + testing.singleElements());
+		System.out.println("Totality: " + testing.isTotal());
+		System.out.println("Transitivity: " + testing.isTransitive());
+		System.out.println("TESTING +++++++++++++++++++++");
+		
+		
 		// Integer-Order
 		
 		PreferenceOrder<Integer> count = new PreferenceOrder<Integer>();
@@ -52,10 +60,29 @@ public class Testing {
 		count.addPair(9, 10);
 		System.out.println(count.size());
 		
-		System.out.println(count);
-		System.out.println(count);
+		System.out.println("COUNT +++++++++++++++++++++");
+		System.out.println("Count: " + count);
+		System.out.println("Elements: " + count.singleElements());
+		System.out.println("Totality: " + count.isTotal());
+		System.out.println("Transitivity: " + count.isTransitive());
+		System.out.println("COUNT +++++++++++++++++++++");
 		
+		PreferenceOrder<Integer> totalcount = new PreferenceOrder<Integer>();
 		
+		totalcount.addPair(1, 2);
+		totalcount.addPair(1, 3);
+		totalcount.addPair(2, 3);
+		totalcount.addPair(3, 4);
+		totalcount.addPair(4, 1);
+		totalcount.addPair(4, 2);
+		//totalcount.addPair(4, 5);
+		
+		System.out.println("TOTALCOUNT +++++++++++++++++++++");
+		System.out.println("Totalcount: " + totalcount);
+		System.out.println("Elements: " + totalcount.singleElements());
+		System.out.println("Totality: " + totalcount.isTotal());
+		System.out.println("Transitivity: " + totalcount.isTransitive());
+		System.out.println("TOTALCOUNT +++++++++++++++++++++");
 		
 		
 	}
