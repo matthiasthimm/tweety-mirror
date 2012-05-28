@@ -1,5 +1,7 @@
 package net.sf.tweety.logics.markovlogic.analysis;
 
+import java.io.Serializable;
+
 import net.sf.tweety.Reasoner;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 import net.sf.tweety.logics.markovlogic.MarkovLogicNetwork;
@@ -11,7 +13,9 @@ import net.sf.tweety.logics.markovlogic.MarkovLogicNetwork;
  * 
  * @author Matthias Thimm
  */
-public abstract class AbstractCoherenceMeasure {
+public abstract class AbstractCoherenceMeasure implements Serializable{
+
+	private static final long serialVersionUID = 8888349459869328287L;
 
 	/** Measures the coherence of the given MLN using the given reasoner.
 	 * @param mln some MLN

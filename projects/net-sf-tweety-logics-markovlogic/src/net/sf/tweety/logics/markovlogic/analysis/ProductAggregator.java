@@ -8,6 +8,8 @@ import java.util.List;
  */
 public class ProductAggregator implements AggregationFunction {
 
+	private static final long serialVersionUID = -2717855227084369340L;
+
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.markovlogic.analysis.AggregationFunction#aggregate(java.util.List)
 	 */

@@ -1,5 +1,6 @@
 package net.sf.tweety.logics.markovlogic.analysis;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -7,7 +8,7 @@ import java.util.List;
  * 
  * @author Matthias Thimm
  */
-public interface DistanceFunction {
+public interface DistanceFunction extends Serializable {
 	
 	/** Measures the distance between the two vectors.
 	 * @param l1 some list of doubles.

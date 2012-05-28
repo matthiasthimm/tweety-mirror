@@ -8,6 +8,8 @@ import java.util.List;
  */
 public class MinAggregator implements AggregationFunction {
 
+	private static final long serialVersionUID = -8571729834785975974L;
+
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.markovlogic.analysis.AggregationFunction#aggregate(java.util.List)
 	 */

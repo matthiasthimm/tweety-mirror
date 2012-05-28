@@ -11,6 +11,8 @@ import java.util.List;
  */
 public class AggregatingDistanceFunction implements DistanceFunction {
 
+	private static final long serialVersionUID = 7393475547325748126L;
+
 	/** The aggregation function used for computing the distance. */	
 	private AggregationFunction aggregator;
 	

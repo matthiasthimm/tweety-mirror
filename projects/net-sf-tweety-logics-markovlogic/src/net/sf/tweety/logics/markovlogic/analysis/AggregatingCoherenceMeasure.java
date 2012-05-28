@@ -21,6 +21,8 @@ import net.sf.tweety.logics.markovlogic.syntax.MlnFormula;
  */
 public class AggregatingCoherenceMeasure extends AbstractCoherenceMeasure {
 	
+	private static final long serialVersionUID = 4162719595968757160L;
+	
 	/** The distance function used to measure the difference of the probabilities
 	 * of each ground instance for a single formula. */
 	private DistanceFunction distance;
@@ -45,7 +47,7 @@ public class AggregatingCoherenceMeasure extends AbstractCoherenceMeasure {
 			for(RelationalFormula groundFormula: f.getFormula().allGroundInstances(signature.getConstants())){
 				observed.add(reasoner.query(groundFormula).getAnswerDouble());
 				intended.add(pObserved);
-			}
+			}			
 			distances.add(this.distance.distance(intended, observed));
 		}
 		return 1-this.aggregator.aggregate(distances);

@@ -8,15 +8,21 @@ import java.util.List;
  */
 public class PNormDistanceFunction implements DistanceFunction {
 	
+	private static final long serialVersionUID = -6486471543081744847L;
+
 	/** The parameter for the p-norm.*/
 	private int p;
+	
+	/** Whether the distance should be normalized to [0,1].*/
+	private boolean normalize = false;
 	
 	/** Creates a new p-norm distance function.
 	 * @param p the parameter for the p-norm.
 	 */
-	public PNormDistanceFunction(int p){
+	public PNormDistanceFunction(int p, boolean normalize){
 		this.p = p;
-	}
+		this.normalize = normalize;
+	}	
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.markovlogic.analysis.DistanceFunction#distance(java.util.List, java.util.List)
@@ -28,13 +34,17 @@ public class PNormDistanceFunction implements DistanceFunction {
 		Double sum = new Double(0);
 		for(int i = 0; i< l1.size(); i++)
 			sum += Math.pow(Math.abs(l1.get(i)-l2.get(i)),p);
-		return Math.pow(sum, new Double(1)/p);
+		if(!this.normalize)
+			return Math.pow(sum, new Double(1)/p);
+		return Math.pow(sum, new Double(1)/p) / Math.pow(l1.size(),new Double(1)/p);
 	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString(){
-		return this.p+"-norm";
+		if(!this.normalize)
+			return this.p+"-norm";
+		return this.p+"-norm0";
 	}
 }

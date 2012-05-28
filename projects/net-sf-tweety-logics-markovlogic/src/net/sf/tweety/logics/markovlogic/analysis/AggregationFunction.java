@@ -1,5 +1,6 @@
 package net.sf.tweety.logics.markovlogic.analysis;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -7,7 +8,7 @@ import java.util.List;
  * 
  * @author Matthias Thimm
  */
-public interface AggregationFunction {
+public interface AggregationFunction extends Serializable {
 
 	/** Aggregates the elements to a single double.
 	 * @param elements a list of double

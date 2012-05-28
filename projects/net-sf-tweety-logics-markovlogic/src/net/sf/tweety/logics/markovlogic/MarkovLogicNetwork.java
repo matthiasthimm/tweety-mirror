@@ -1,5 +1,6 @@
 package net.sf.tweety.logics.markovlogic;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 import net.sf.tweety.BeliefSet;
@@ -12,7 +13,9 @@ import net.sf.tweety.logics.markovlogic.syntax.MlnFormula;
  * 
  * @author Matthias Thimm
  */
-public class MarkovLogicNetwork extends BeliefSet<MlnFormula>{
+public class MarkovLogicNetwork extends BeliefSet<MlnFormula> implements Serializable {
+
+	private static final long serialVersionUID = 3313039501304912746L;
 
 	/**
 	 * Creates a new (empty) MLN.

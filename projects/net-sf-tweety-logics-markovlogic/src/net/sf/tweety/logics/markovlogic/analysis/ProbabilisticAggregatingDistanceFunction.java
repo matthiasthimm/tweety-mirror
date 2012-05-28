@@ -11,6 +11,8 @@ import java.util.List;
  */
 public class ProbabilisticAggregatingDistanceFunction implements DistanceFunction {
 
+	private static final long serialVersionUID = -114048201529519281L;
+
 	/** The aggregation function used for computing the distance. */	
 	private AggregationFunction aggregator;
 	
