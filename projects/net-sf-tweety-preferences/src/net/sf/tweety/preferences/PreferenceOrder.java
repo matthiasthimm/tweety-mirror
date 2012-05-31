@@ -38,21 +38,20 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 	 */
 	public PreferenceOrder(Collection<? extends Pair<T, T>> elements) {
 		this.elements = new HashSet<Pair<T, T>>(elements);
+		this.singleElements = new HashSet<T>();
 		computeSingleElements();
 	}
 
 	/**
 	 * (re-)computes a set of single elements in this preference order
 	 */
-	public Set<T> computeSingleElements() {
-		if (singleElements != null){
+	public void computeSingleElements() {
+		if(!singleElements.isEmpty())
 			singleElements.clear();
-		}
 		for (Pair<T, T> pairs : elements) {
 			singleElements.add(pairs.getFirst());
 			singleElements.add(pairs.getSecond());
 		}
-		return singleElements;
 	}
 	
 	/**
@@ -68,7 +67,7 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 	 * @return the single elements in this preference order
 	 */
 	public Set<T> getSingleElements(){
-		if (singleElements == null)
+		if (singleElements.isEmpty())
 			computeSingleElements();
 		return singleElements;
 	}

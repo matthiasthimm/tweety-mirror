@@ -1,6 +1,5 @@
 package net.sf.tweety.preferences;
 
-import java.util.*;
 
 /**
  * This abstract class provides a basic implementation of a generic set of pairs to be used for
@@ -24,7 +23,7 @@ public abstract class BinaryRelation<T> {
 	/**
 	 * returns a set of the single elements in this binary relation
 	 */
-	public abstract Set<T> computeSingleElements();
+	public abstract void computeSingleElements();
 	
 	/**
 	 * checks whether the set is total or not
