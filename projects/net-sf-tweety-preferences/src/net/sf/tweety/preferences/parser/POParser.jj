@@ -8,17 +8,20 @@
  
  options {
  	JDK_VERSION = "1.6";
+ 	STATIC = false;
+ 	
  }
  
  PARSER_BEGIN(POParser)
- package net.sf.tweey.preferences.parser;
+ package net.sf.tweety.preferences.parser;
  
  import java.util.*;
+ import net.sf.tweety.preferences.*;
  import net.sf.tweety.util.Pair;
  
  public class POParser {
 
-	public PreferenceOrder parse(String filename) throws ParseException,java.io.FileNotFoundException{
+	public static PreferenceOrder<String> parse(String filename) throws ParseException,java.io.FileNotFoundException{
 	  	POParser parser;
     	parser = new POParser(new java.io.FileInputStream(filename));
     	return parser.StringPreferenceOrder();
@@ -27,8 +30,16 @@
   	public static void main(String args[]) {
   	  try
   	  {
-  	    
-  	  	System.out.println(parse("test.po") );
+  	    PreferenceOrder<String> TestPO = new PreferenceOrder<String>();
+  	    // Error with reading in file, path has to be edited manually
+  	  	TestPO = parse("test.po");
+  	 	System.out.println(TestPO);
+  	 	System.out.println(TestPO.getSingleElements());
+  	 	TestPO.addPair("g", "h");
+  	 	TestPO.computeSingleElements();
+  	 	System.out.println(TestPO.getSingleElements());
+  	 	System.out.println(TestPO);
+  	 
   	 } catch (Exception e)
   	 {
 		System.out.println("error while parsing: "+e);
@@ -44,7 +55,7 @@ SKIP :
 
 TOKEN:
 {
-	< NAME : ( ["a"-"z"] )+ > |
+	
  	< LBRA : "{" > 	|
  	< RBRA : "}" >	|
  	< ELEMENT : ( ["a"-"z","A"-"Z","0"-"9"] )+ > |
@@ -52,11 +63,40 @@ TOKEN:
 	< EOL : "\n" | "\r\n" | "\t" >
 }
 
-/** TODO ++++++++++++++++++++++++
-*
-*PreferenceOrder<String> StringPreferenceOrder() :
-*....
-*	TODO ++++++++++++++++++++++++
-**/ 
+
+PreferenceOrder<String> StringPreferenceOrder() :
+{
+
+	Token t;
+	Token t0, t1;
+	
+	Set<String> singleElements = new HashSet<String>();
+	Set<Pair<String, String>> pairs = new HashSet<Pair<String, String>>();
+}
+{
+	(
+	 <LBRA>
+		 ( t = <ELEMENT>
+		 { singleElements.add(t.image);}
+		 (",")?
+		 )+
+	 <RBRA>) <EOL>
+	 
+	 ( t0 = <ELEMENT>
+	 	<REL>
+	 	t1 = <ELEMENT>
+	 	{
+	 	Pair<String, String> entry  = new Pair<String, String>(t0.image, t1.image);
+	 	pairs.add(entry);
+	 	}
+	 	
+	 	<EOL>)+
+	{ 
+	PreferenceOrder<String> n = new PreferenceOrder<String>(pairs);
+	return n;
+	}
+	
+	
+}
 	
 	

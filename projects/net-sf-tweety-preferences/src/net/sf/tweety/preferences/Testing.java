@@ -3,6 +3,7 @@ package net.sf.tweety.preferences;
 
 import net.sf.tweety.util.*;
 
+
 /**
  * A first simple testing-method for preference orders. To be extended and automated
  * for preference aggregation later.
@@ -84,7 +85,6 @@ public class Testing {
 		System.out.println("Totality: " + totalcount.isTotal());
 		System.out.println("Transitivity: " + totalcount.isTransitive());
 		System.out.println("TOTALCOUNT +++++++++++++++++++++");
-		
 		
 	}
 }
