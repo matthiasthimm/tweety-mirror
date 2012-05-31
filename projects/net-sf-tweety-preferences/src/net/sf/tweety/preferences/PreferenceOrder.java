@@ -16,12 +16,17 @@ import net.sf.tweety.util.Pair;
 public class PreferenceOrder<T> extends BinaryRelation<T> {
 
 	/**
+	 * the single elements used
+	 */
+	private Set<T> singleElements;
+	
+	/**
 	 * a given set of Pairs
 	 */
 	private Set<Pair<T, T>> elements;
-
+	
 	/**
-	 * Creates an empty HashSet of binary relations.
+	 * Creates an empty HashSet of preference order.
 	 */
 	public PreferenceOrder() {
 		this(new HashSet<Pair<T, T>>());
@@ -33,20 +38,39 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 	 */
 	public PreferenceOrder(Collection<? extends Pair<T, T>> elements) {
 		this.elements = new HashSet<Pair<T, T>>(elements);
+		computeSingleElements();
 	}
 
 	/**
-	 * returns a set of single elements in this preference order
+	 * (re-)computes a set of single elements in this preference order
 	 */
-	public Set<T> singleElements() {
-		Set<T> singleelements = new HashSet<T>();
+	public Set<T> computeSingleElements() {
+		singleElements.clear();
 		for (Pair<T, T> pairs : elements) {
-			singleelements.add(pairs.getFirst());
-			singleelements.add(pairs.getSecond());
+			singleElements.add(pairs.getFirst());
+			singleElements.add(pairs.getSecond());
 		}
-		return singleelements;
+		return singleElements;
 	}
-
+	
+	/**
+	 * a setter for the single elements of a preference order
+	 * @param singleElements the given set of single elements
+	 */
+	public void setSingleElements(Set<T> singleElements){
+		this.singleElements = singleElements;
+	}
+	
+	/**
+	 * returns the single elements in this preference order
+	 * @return the single elements in this preference order
+	 */
+	public Set<T> getSingleElements(){
+		if (singleElements == null)
+			computeSingleElements();
+		return singleElements;
+	}
+	
 	/**
 	 * adds a given pair of generic elements to the set.
 	 * 
@@ -162,8 +186,8 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 	 * @return true if total, false otherwise
 	 */
 	public boolean isTotal() {
-		for (final T f : singleElements()) {
-			for (final T s : singleElements()) {
+		for (final T f : getSingleElements()) {
+			for (final T s : getSingleElements()) {
 				if (f != s && !isRelated(f, s) && !isRelated(s, f))
 					return false;
 			}
@@ -176,9 +200,9 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 	 * @return true if transitive, false otherwise 
 	 */
 	public boolean isTransitive() {
-		for (final T a : singleElements()) {
-			for (final T b : singleElements()) {
-				for (final T c : singleElements()) {
+		for (final T a : getSingleElements()) {
+			for (final T b : getSingleElements()) {
+				for (final T c : getSingleElements()) {
 					if (a != b && b != c && a != c && isRelated(a, b)
 							&& isRelated(b, c) && !isRelated(a, c)) {
 						return false;

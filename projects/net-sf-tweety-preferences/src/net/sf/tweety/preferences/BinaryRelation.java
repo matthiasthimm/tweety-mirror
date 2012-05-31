@@ -22,15 +22,15 @@ public abstract class BinaryRelation<T> {
 	public abstract boolean isRelated(T a, T b);
 
 	/**
-	 * returns a set of the single elements in this preference order
+	 * returns a set of the single elements in this binary relation
 	 */
-	public abstract Set<T> singleElements();
+	public abstract Set<T> computeSingleElements();
 	
 	/**
 	 * checks whether the set is total or not
 	 * @return true if total, false otherwise
 	 */
-	public abstract boolean isTotal();			
+	public abstract boolean isTotal();
 	
 	/**
 	 * checks whether the given set is transitive or not

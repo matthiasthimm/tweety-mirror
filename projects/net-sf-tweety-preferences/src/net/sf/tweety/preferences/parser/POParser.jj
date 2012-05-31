@@ -1,0 +1,62 @@
+/**
+ * JavaCC file
+ *
+ * parser script for preference orders
+ * 
+ *
+ */
+ 
+ options {
+ 	JDK_VERSION = "1.6";
+ }
+ 
+ PARSER_BEGIN(POParser)
+ package net.sf.tweey.preferences.parser;
+ 
+ import java.util.*;
+ import net.sf.tweety.util.Pair;
+ 
+ public class POParser {
+
+	public PreferenceOrder parse(String filename) throws ParseException,java.io.FileNotFoundException{
+	  	POParser parser;
+    	parser = new POParser(new java.io.FileInputStream(filename));
+    	return parser.StringPreferenceOrder();
+  	}
+
+  	public static void main(String args[]) {
+  	  try
+  	  {
+  	    
+  	  	System.out.println(parse("test.po") );
+  	 } catch (Exception e)
+  	 {
+		System.out.println("error while parsing: "+e);
+  	 }
+  	}
+
+}
+
+PARSER_END(POParser)
+
+SKIP :
+{ " " }
+
+TOKEN:
+{
+	< NAME : ( ["a"-"z"] )+ > |
+ 	< LBRA : "{" > 	|
+ 	< RBRA : "}" >	|
+ 	< ELEMENT : ( ["a"-"z","A"-"Z","0"-"9"] )+ > |
+	< REL : "<" > |
+	< EOL : "\n" | "\r\n" | "\t" >
+}
+
+/** TODO ++++++++++++++++++++++++
+*
+*PreferenceOrder<String> StringPreferenceOrder() :
+*....
+*	TODO ++++++++++++++++++++++++
+**/ 
+	
+	

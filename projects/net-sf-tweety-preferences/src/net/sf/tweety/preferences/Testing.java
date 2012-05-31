@@ -38,7 +38,7 @@ public class Testing {
 		
 		System.out.println("TESTING +++++++++++++++++++++");
 		System.out.println("Testing: " + testing);
-		System.out.println("Elements: " + testing.singleElements());
+		System.out.println("Elements: " + testing.getSingleElements());
 		System.out.println("Totality: " + testing.isTotal());
 		System.out.println("Transitivity: " + testing.isTransitive());
 		System.out.println("TESTING +++++++++++++++++++++");
@@ -62,7 +62,7 @@ public class Testing {
 		
 		System.out.println("COUNT +++++++++++++++++++++");
 		System.out.println("Count: " + count);
-		System.out.println("Elements: " + count.singleElements());
+		System.out.println("Elements: " + count.getSingleElements());
 		System.out.println("Totality: " + count.isTotal());
 		System.out.println("Transitivity: " + count.isTransitive());
 		System.out.println("COUNT +++++++++++++++++++++");
@@ -79,7 +79,7 @@ public class Testing {
 		
 		System.out.println("TOTALCOUNT +++++++++++++++++++++");
 		System.out.println("Totalcount: " + totalcount);
-		System.out.println("Elements: " + totalcount.singleElements());
+		System.out.println("Elements: " + totalcount.getSingleElements());
 		System.out.println("Totality: " + totalcount.isTotal());
 		System.out.println("Transitivity: " + totalcount.isTransitive());
 		System.out.println("TOTALCOUNT +++++++++++++++++++++");
