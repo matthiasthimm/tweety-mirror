@@ -45,7 +45,9 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 	 * (re-)computes a set of single elements in this preference order
 	 */
 	public Set<T> computeSingleElements() {
-		singleElements.clear();
+		if (singleElements != null){
+			singleElements.clear();
+		}
 		for (Pair<T, T> pairs : elements) {
 			singleElements.add(pairs.getFirst());
 			singleElements.add(pairs.getSecond());
