@@ -15,9 +15,7 @@ import java.util.StringTokenizer;
 
 import net.sf.tweety.Answer;
 import net.sf.tweety.BeliefBase;
-import net.sf.tweety.Formula;
 import net.sf.tweety.ParserException;
-import net.sf.tweety.Reasoner;
 import net.sf.tweety.logics.firstorderlogic.parser.FolParser;
 import net.sf.tweety.logics.firstorderlogic.semantics.HerbrandBase;
 import net.sf.tweety.logics.firstorderlogic.semantics.HerbrandInterpretation;
@@ -32,13 +30,8 @@ import net.sf.tweety.logics.markovlogic.syntax.MlnFormula;
  * 
  * @author Matthias Thimm
  */
-public class NaiveMlnReasoner extends Reasoner {
+public class NaiveMlnReasoner extends AbstractMlnReasoner {
 
-	/**
-	 * The signature of the reasoner.
-	 */
-	private FolSignature signature = null;
-	
 	/** If the model has already been computed this file contains it. */
 	private File archivedFile = null;
 	
@@ -57,12 +50,7 @@ public class NaiveMlnReasoner extends Reasoner {
 	 * on that one (that one should subsume the signature of the Markov logic network)
 	 */
 	public NaiveMlnReasoner(BeliefBase beliefBase, FolSignature signature){
-		super(beliefBase);		
-		if(!(beliefBase instanceof MarkovLogicNetwork))
-			throw new IllegalArgumentException("Knowledge base of class MarkovLogicNetwork expected.");
-		if(!beliefBase.getSignature().isSubSignature(signature))
-			throw new IllegalArgumentException("Given signature is not a super-signature of the belief base's signature.");
-		this.signature = signature;
+		super(beliefBase, signature);		
 	}
 
 	/** Computes the model of the given MLN.
@@ -72,7 +60,7 @@ public class NaiveMlnReasoner extends Reasoner {
 		//1.) write all possible worlds of the signature into a text file
 		// (Note: we avoid doing this in memory due to exponential size)
 		try {
-			HerbrandBase hBase = new HerbrandBase(this.signature);			
+			HerbrandBase hBase = new HerbrandBase(this.getSignature());			
 			FileWriter fstream;
 			FileInputStream inStream;	
 			boolean isFirst = true;
@@ -172,14 +160,12 @@ public class NaiveMlnReasoner extends Reasoner {
 		return null;
 	}
 	
+
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.Reasoner#query(net.sf.tweety.Formula)
+	 * @see net.sf.tweety.logics.markovlogic.AbstractMlnReasoner#doQuery(net.sf.tweety.logics.firstorderlogic.syntax.FolFormula)
 	 */
 	@Override
-	public Answer query(Formula query) {
-		if(!(query instanceof FolFormula) && !( ((FolFormula)query).isGround() ))
-			throw new IllegalArgumentException("Reasoning in Markov logic with naive MLN reasoner is only defined for ground FOL formulas.");
-		
+	public Answer doQuery(FolFormula query) {		
 		if(this.archivedFile == null)
 			this.archivedFile = this.computeModel();
 		
@@ -220,7 +206,7 @@ public class NaiveMlnReasoner extends Reasoner {
 		StringTokenizer tokenizer = new StringTokenizer(str, ";");
 		Collection<Atom> atoms = new HashSet<Atom>();
 		FolParser parser = new FolParser();
-		parser.setSignature(this.signature);
+		parser.setSignature(this.getSignature());
 		while(tokenizer.hasMoreTokens()){
 			String token = tokenizer.nextToken();
 			try {
@@ -245,7 +231,7 @@ public class NaiveMlnReasoner extends Reasoner {
 	 */
 	private int numberOfGroundSatisfactions(FolFormula formula, HerbrandInterpretation hInt){
 		int num = 0;
-		for(RelationalFormula f: formula.allGroundInstances(this.signature.getConstants()))
+		for(RelationalFormula f: formula.allGroundInstances(this.getSignature().getConstants()))
 			if(hInt.satisfies(f)) num++;		
 		return num;
 	}
