@@ -2,8 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="../../latestBuild/net-sf-tweety-logics-firstorderlogic.jar"/>
-	<classpathentry kind="lib" path="../../latestBuild/net-sf-tweety.jar"/>
 	<classpathentry kind="lib" path="lib/gnujaxp.jar"/>
 	<classpathentry kind="lib" path="lib/iText-2.1.5.jar"/>
 	<classpathentry kind="lib" path="lib/jcommon-1.0.17.jar"/>
@@ -13,5 +11,9 @@
 	<classpathentry kind="lib" path="lib/junit.jar"/>
 	<classpathentry kind="lib" path="lib/servlet.jar"/>
 	<classpathentry kind="lib" path="lib/swtgraphics2d.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Probabilistic Conditional Logic Library)"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Conditional Logic Library)"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Core Library)"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (First-Order Logic Library)"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

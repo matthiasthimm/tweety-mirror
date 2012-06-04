@@ -4,8 +4,11 @@ import net.sf.tweety.Answer;
 import net.sf.tweety.BeliefBase;
 import net.sf.tweety.Formula;
 import net.sf.tweety.Reasoner;
+import net.sf.tweety.logics.firstorderlogic.semantics.HerbrandInterpretation;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
+import net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula;
+import net.sf.tweety.logics.markovlogic.syntax.MlnFormula;
 
 /**
  * This class provides common methods for MLN reasoner.
@@ -56,12 +59,45 @@ public abstract class AbstractMlnReasoner extends Reasoner {
 	public Answer query(Formula query) {
 		if(!(query instanceof FolFormula) && !( ((FolFormula)query).isGround() ))
 			throw new IllegalArgumentException("Reasoning in Markov logic with naive MLN reasoner is only defined for ground FOL formulas.");		
-		return this.doQuery((FolFormula)query);
+		double result = this.doQuery((FolFormula)query);
+		Answer ans = new Answer(this.getKnowledgBase(),query);
+		ans.setAnswer(result);		
+		return ans;
+	}
+	
+	/**
+	 * Computes the (unnormalized) weight of the given Herbrand interpretation
+	 * with respect to the formulas in this reasoner's MLN.
+	 * @param hInt a Herbrand interpretation
+	 * @return the (unnormalized) weight of the given Herbrand interpretation
+	 */
+	protected double computeWeight(HerbrandInterpretation hInt){
+		int num;
+		double weight = 0;
+		for(MlnFormula f: (MarkovLogicNetwork)this.getKnowledgBase()){
+			num = this.numberOfGroundSatisfactions(f.getFormula(), hInt);
+			weight += num * f.getWeight();
+		}
+		return Math.exp(weight);
+	}
+	
+	/** Computes the number of instantiations of the formula, wrt. the given
+	 * signature, that are satisfied in the given Herbrand interpretation. 
+	 * @param formula some fol formula.
+	 * @param hInt a Herbrand interpretation.
+	 * @return the number of instantiations of the formula, wrt. the given
+	 * signature, that are satisfied in the given Herbrand interpretation.
+	 */
+	protected int numberOfGroundSatisfactions(FolFormula formula, HerbrandInterpretation hInt){
+		int num = 0;
+		for(RelationalFormula f: formula.allGroundInstances(this.getSignature().getConstants()))
+			if(hInt.satisfies(f)) num++;		
+		return num;
 	}
 	
 	/** Performs the actual querying. 
 	 * @param query a fol formula guaranteed to be ground.
 	 * @return the answer of the query.
 	 */
-	protected abstract Answer doQuery(FolFormula query);
+	protected abstract double doQuery(FolFormula query);
 }

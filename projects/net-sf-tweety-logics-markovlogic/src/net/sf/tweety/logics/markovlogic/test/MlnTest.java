@@ -85,17 +85,17 @@ public class MlnTest {
 		MarkovLogicNetwork mln = new MarkovLogicNetwork();
 		
 		// Clyde is an elephant, Fred is a keeper
-		mln.add(new MlnFormula((FolFormula)parser.parseFormula("elephant(clyde)"), Double.MAX_VALUE)); //p=1
-		mln.add(new MlnFormula((FolFormula)parser.parseFormula("keeper(fred)"), Double.MAX_VALUE)); //p=1
+		mln.add(new MlnFormula((FolFormula)parser.parseFormula("!elephant(clyde)"), Double.MIN_VALUE)); //p=1
+		mln.add(new MlnFormula((FolFormula)parser.parseFormula("!keeper(fred)"), Double.MIN_VALUE)); //p=1
 		// elephants are not keepers
-		mln.add(new MlnFormula((FolFormula)parser.parseFormula("!keeper(X) || !elephant(X)"), Double.MAX_VALUE)); //p=1
-		mln.add(new MlnFormula((FolFormula)parser.parseFormula("keeper(X) || elephant(X)"), Double.MAX_VALUE)); //p=1
+		mln.add(new MlnFormula((FolFormula)parser.parseFormula("keeper(X) && elephant(X)"), Double.MIN_VALUE)); //p=1
+		mln.add(new MlnFormula((FolFormula)parser.parseFormula("!keeper(X) && !elephant(X)"), Double.MIN_VALUE)); //p=1
 		//elephants like keepers
 		mln.add(new MlnFormula((FolFormula)parser.parseFormula("!elephant(X) || !keeper(Y) || likes(X,Y)"), new Double(2.1972))); //p=0.9
 		// elephants do not like Fred
 		mln.add(new MlnFormula((FolFormula)parser.parseFormula("!elephant(X) || likes(X,fred)"), new Double(-0.8573))); //p=0.3
 		// Clyde likes Fred
-		mln.add(new MlnFormula((FolFormula)parser.parseFormula("likes(clyde,fred)"), Double.MAX_VALUE)); //p=1
+		mln.add(new MlnFormula((FolFormula)parser.parseFormula("!likes(clyde,fred)"), Double.MIN_VALUE)); //p=1
 				
 		return new Pair<MarkovLogicNetwork,FolSignature>(mln,sig);
 	}

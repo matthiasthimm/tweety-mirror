@@ -13,7 +13,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.StringTokenizer;
 
-import net.sf.tweety.Answer;
 import net.sf.tweety.BeliefBase;
 import net.sf.tweety.ParserException;
 import net.sf.tweety.logics.firstorderlogic.parser.FolParser;
@@ -22,13 +21,15 @@ import net.sf.tweety.logics.firstorderlogic.semantics.HerbrandInterpretation;
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
-import net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula;
-import net.sf.tweety.logics.markovlogic.syntax.MlnFormula;
 
 /**
  * This class implements a naive reasoner for MLNs.
  * 
  * @author Matthias Thimm
+ */
+/**
+ * @author mthimm
+ *
  */
 public class NaiveMlnReasoner extends AbstractMlnReasoner {
 
@@ -108,7 +109,6 @@ public class NaiveMlnReasoner extends AbstractMlnReasoner {
 			BufferedReader br = new BufferedReader(new InputStreamReader(in));
 			String strLine;
 			boolean emptyLine = false;
-			int num;
 			double weight;
 			while((strLine = br.readLine()) != null){
 				if(strLine.equals("")){
@@ -116,12 +116,7 @@ public class NaiveMlnReasoner extends AbstractMlnReasoner {
 					else emptyLine = true;
 				}
 				HerbrandInterpretation hInt = this.parseInterpretation(strLine);
-				weight=0;
-				for(MlnFormula f: (MarkovLogicNetwork)this.getKnowledgBase()){
-					num = this.numberOfGroundSatisfactions(f.getFormula(), hInt);
-					weight += num * f.getWeight();
-				}
-				weight = Math.exp(weight);
+				weight = this.computeWeight(hInt);
 				sum += weight;
 				out.append(strLine + "#" + weight);
 				out.newLine();
@@ -161,11 +156,12 @@ public class NaiveMlnReasoner extends AbstractMlnReasoner {
 	}
 	
 
+	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.markovlogic.AbstractMlnReasoner#doQuery(net.sf.tweety.logics.firstorderlogic.syntax.FolFormula)
 	 */
 	@Override
-	public Answer doQuery(FolFormula query) {		
+	public double doQuery(FolFormula query) {		
 		if(this.archivedFile == null)
 			this.archivedFile = this.computeModel();
 		
@@ -185,9 +181,7 @@ public class NaiveMlnReasoner extends AbstractMlnReasoner {
 				}catch(Exception e){}				
 			}
 			in.close();
-			Answer ans = new Answer(this.getKnowledgBase(),query);
-			ans.setAnswer(prob);		
-			return ans;
+			return prob;
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -195,7 +189,7 @@ public class NaiveMlnReasoner extends AbstractMlnReasoner {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return null;	
+		return -1;	
 	}
 
 	/** Constructs a Herbrand interpretation from the given string
@@ -221,19 +215,4 @@ public class NaiveMlnReasoner extends AbstractMlnReasoner {
 		}
 		return new HerbrandInterpretation(atoms);
 	}
-	
-	/** Computes the number of instantiations of the formula, wrt. the given
-	 * signature, that are satisfied in the given Herbrand interpretation. 
-	 * @param formula some fol formula.
-	 * @param hInt a Herbrand interpretation.
-	 * @return the number of instantiations of the formula, wrt. the given
-	 * signature, that are satisfied in the given Herbrand interpretation.
-	 */
-	private int numberOfGroundSatisfactions(FolFormula formula, HerbrandInterpretation hInt){
-		int num = 0;
-		for(RelationalFormula f: formula.allGroundInstances(this.getSignature().getConstants()))
-			if(hInt.satisfies(f)) num++;		
-		return num;
-	}
-	
 }

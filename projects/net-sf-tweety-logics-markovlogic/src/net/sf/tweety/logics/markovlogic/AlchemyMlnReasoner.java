@@ -11,7 +11,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Collection;
 
-import net.sf.tweety.Answer;
 import net.sf.tweety.BeliefBase;
 import net.sf.tweety.logics.firstorderlogic.syntax.*;
 import net.sf.tweety.logics.markovlogic.syntax.MlnFormula;
@@ -56,7 +55,7 @@ public class AlchemyMlnReasoner extends AbstractMlnReasoner {
 	 * @see net.sf.tweety.logics.markovlogic.AbstractMlnReasoner#doQuery(net.sf.tweety.logics.firstorderlogic.syntax.FolFormula)
 	 */
 	@Override
-	public Answer doQuery(FolFormula query) {
+	public double doQuery(FolFormula query) {
 		// NOTE: as the query formula might be an arbitrary formula
 		// and Alchemy only supports querying the probabilities
 		// of atoms, we need to encode the query in the MLN
@@ -93,11 +92,11 @@ public class AlchemyMlnReasoner extends AbstractMlnReasoner {
 	        //System.out.println(output);
 	        //System.out.println();
 	        //System.out.println(error);
-			return null;
+			return -1;
 		}catch(IOException e) {
 			// TODO
 			e.printStackTrace();
-			return null;
+			return -1;
 		}		
 	}
 	
