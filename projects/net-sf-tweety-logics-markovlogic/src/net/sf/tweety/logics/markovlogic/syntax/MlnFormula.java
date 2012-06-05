@@ -41,7 +41,7 @@ public class MlnFormula extends RelationalFormula {
 		this.formula = formula;
 		this.weight = weight;
 	}
-	
+		
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.ClassicalFormula#combineWithAnd(net.sf.tweety.ClassicalFormula)
 	 */

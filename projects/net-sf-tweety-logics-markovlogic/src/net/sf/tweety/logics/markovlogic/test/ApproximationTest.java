@@ -14,11 +14,11 @@ public class ApproximationTest {
 
 	public static void main(String[] args) throws ParserException, IOException{
 		Pair<MarkovLogicNetwork,FolSignature> ex = MlnTest.iterateExamples(1, 3);
-		NaiveMlnReasoner naiveReasoner = new NaiveMlnReasoner(ex.getFirst(),ex.getSecond());
-		ApproximateNaiveMlnReasoner appReasoner = new ApproximateNaiveMlnReasoner(ex.getFirst(),ex.getSecond(), -1, 10000);
+		ApproximateNaiveMlnReasoner appReasoner = new ApproximateNaiveMlnReasoner(ex.getFirst(),ex.getSecond(), -1, 100000);
 		for(MlnFormula f: ex.getFirst()){
 			for(RelationalFormula groundFormula: f.getFormula().allGroundInstances(ex.getSecond().getConstants())){
-				System.out.println(naiveReasoner.query(groundFormula).getAnswerDouble() + "\t" + appReasoner.query(groundFormula).getAnswerDouble());
+				System.out.println(appReasoner.query(groundFormula).getAnswerDouble());
+				break;
 			}
 		}
 	}

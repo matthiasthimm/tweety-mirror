@@ -154,7 +154,10 @@ public class AlchemyMlnReasoner extends AbstractMlnReasoner {
 		out.append("tweetyQueryFormula(TWEETYQUERYCONSTANT) <=> " + formula + " .\n\n");
 		// write formulas
 		for(MlnFormula f: mln){
-			out.append(f.getWeight() + " " + this.alchemyStringForFormula(f.getFormula()) + "\n");
+			if(f.isStrict())
+				out.append(this.alchemyStringForFormula(f.getFormula()) + " .\n");
+			else
+				out.append(f.getWeight() + " " + this.alchemyStringForFormula(f.getFormula()) + "\n");
 		}
 		out.close();
 		return mlnFile;

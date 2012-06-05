@@ -112,7 +112,6 @@ public class ApproximateNaiveMlnReasoner extends AbstractMlnReasoner{
 			sumOfWeights += whInt.weight;
 			while(pq.size() > this.maxNumberOfInterpretationsForModel){
 				whInt = pq.remove();
-				// better without the following?
 				sumOfWeights -= whInt.weight;
 			}
 			count++;

@@ -76,7 +76,11 @@ public abstract class AbstractMlnReasoner extends Reasoner {
 		double weight = 0;
 		for(MlnFormula f: (MarkovLogicNetwork)this.getKnowledgBase()){
 			num = this.numberOfGroundSatisfactions(f.getFormula(), hInt);
-			weight += num * f.getWeight();
+			if(f.isStrict()){
+				if(num != f.getFormula().allGroundInstances(this.getSignature().getConstants()).size())
+					return 0;				
+			}else 	
+				weight += num * f.getWeight();
 		}
 		return Math.exp(weight);
 	}
