@@ -33,6 +33,9 @@ import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
  */
 public class NaiveMlnReasoner extends AbstractMlnReasoner {
 
+	/** Directory for temporary files. */
+	private String tempDirectory = null;
+	
 	/** If the model has already been computed this file contains it. */
 	private File archivedFile = null;
 	
@@ -54,6 +57,13 @@ public class NaiveMlnReasoner extends AbstractMlnReasoner {
 		super(beliefBase, signature);		
 	}
 
+	/** Sets the path of the directory for temporary files.
+	 * @param str a file path
+	 */
+	public void setTempDirectory(String str){
+		this.tempDirectory = str;
+	}
+	
 	/** Computes the model of the given MLN.
 	 * @return a file where the model is stored.
 	 */
@@ -65,7 +75,7 @@ public class NaiveMlnReasoner extends AbstractMlnReasoner {
 			FileWriter fstream;
 			FileInputStream inStream;	
 			boolean isFirst = true;
-			File currentFile = File.createTempFile("naive_mln",null);
+			File currentFile = File.createTempFile("naive_mln",null,new File(this.tempDirectory));
 			currentFile.deleteOnExit();
 			for(Atom a: hBase.getAtoms()){
 				if(isFirst){					
@@ -77,7 +87,7 @@ public class NaiveMlnReasoner extends AbstractMlnReasoner {
 					isFirst = false;
 					out.close();
 				}else{
-					File temp = File.createTempFile("naive_mln",null);
+					File temp = File.createTempFile("naive_mln",null,new File(this.tempDirectory));
 					temp.deleteOnExit();
 					fstream = new FileWriter(temp.getAbsoluteFile());
 					inStream = new FileInputStream(currentFile.getAbsoluteFile());
@@ -100,7 +110,7 @@ public class NaiveMlnReasoner extends AbstractMlnReasoner {
 			}
 			// 2.) for each possible world compute its impact; also, sum up all impacts
 			double sum = 0;
-			File temp = File.createTempFile("naive_mln",null);
+			File temp = File.createTempFile("naive_mln",null,new File(this.tempDirectory));
 			temp.deleteOnExit();
 			fstream = new FileWriter(temp.getAbsoluteFile());
 			inStream = new FileInputStream(currentFile.getAbsoluteFile());
@@ -126,7 +136,7 @@ public class NaiveMlnReasoner extends AbstractMlnReasoner {
 			currentFile = temp;
 			
 			// 3.) normalize by sum
-			temp = File.createTempFile("naive_mln",null);
+			temp = File.createTempFile("naive_mln",null,new File(this.tempDirectory));
 			temp.deleteOnExit();
 			fstream = new FileWriter(temp.getAbsoluteFile());
 			inStream = new FileInputStream(currentFile.getAbsoluteFile());

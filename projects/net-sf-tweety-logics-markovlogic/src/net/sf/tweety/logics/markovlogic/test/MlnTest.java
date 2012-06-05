@@ -160,7 +160,7 @@ public class MlnTest {
 	
 	public static void main(String[] args) throws ParserException, IOException{
 		//MlnTest.createChart(null, "", "");
-		String expPath = "/Users/mthimm/Desktop/mln_experiments/";
+		String expPath = "/home/share/mln/";
 					
 		List<AggregationFunction> aggrFunctions = new ArrayList<AggregationFunction>();
 		aggrFunctions.add(new MaxAggregator());
@@ -193,6 +193,7 @@ public class MlnTest {
 						mln_g = mln;
 						FolSignature sig = ex.getSecond();
 						NaiveMlnReasoner reasoner = new NaiveMlnReasoner(mln, sig);
+						reasoner.setTempDirectory(expPath+"tmp");
 						results[0][dsize-3] = dsize;
 						results[1][dsize-3] = measure.coherence(mln, reasoner, sig);
 						System.out.println("Example " + i + ", domain size " + dsize + ", measure " + measure.toString() + ", coherence value " + results[1][dsize-3]);
