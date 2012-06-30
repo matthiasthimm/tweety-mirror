@@ -86,5 +86,27 @@ public class Testing {
 		System.out.println("Transitivity: " + totalcount.isTransitive());
 		System.out.println("TOTALCOUNT +++++++++++++++++++++");
 		
+		// Test with new RankedElements, maybe deleted later
+//		
+//		PreferenceOrder<String> testing = new PreferenceOrder<String>();
+//		
+//		RankedElement<String> alpha1 = new RankedElement<String>("alpha1", 6);
+//		RankedElement<String> alpha2 = new RankedElement<String>("alpha2", 6);
+//		RankedElement<String> beta1 = new RankedElement<String>("beta1", 6);
+//		RankedElement<String> beta2 = new RankedElement<String>("beta2", 6);
+//		RankedElement<String> gamma1 = new RankedElement<String>("gamma1", 6);
+//		RankedElement<String> gamma2 = new RankedElement<String>("gamma2", 6);
+//		
+//		
+//		testing.addPair(alpha1.getElement(), alpha2.getElement());
+//		testing.addPair(beta1.getElement(), beta2.getElement());
+//		testing.addPair(gamma1.getElement(), gamma2.getElement());
+//		
+//		System.out.println("RANKED TESTING+++++++++++++++");
+//		System.out.println("Testing: "+ testing);
+//		System.out.println("Elements: "+ testing.getSingleElements());
+//		System.out.println("Totality: "+ testing.isTotal());
+//		System.out.println("Transitivity: "+ testing.isTransitive());
+//		System.out.println("RANKED TESTING+++++++++++++++");
 	}
 }

@@ -10,7 +10,8 @@ import net.sf.tweety.util.Pair;
  * 
  * @author Bastian Wolf
  * 
- * @param <T> the generic type of objects/pairs in this preference order
+ * @param <T>
+ *            the generic type of objects/pairs in this preference order
  */
 
 public class PreferenceOrder<T> extends BinaryRelation<T> {
@@ -19,12 +20,12 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 	 * the single elements used
 	 */
 	private Set<T> singleElements;
-	
+
 	/**
 	 * a given set of Pairs
 	 */
 	private Set<Pair<T, T>> elements;
-	
+
 	/**
 	 * Creates an empty HashSet of preference order.
 	 */
@@ -34,7 +35,9 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 
 	/**
 	 * generates a preference order with a given set of elements
-	 * @param elements the set of given element pairs
+	 * 
+	 * @param elements
+	 *            the set of given element pairs
 	 */
 	public PreferenceOrder(Collection<? extends Pair<T, T>> elements) {
 		this.elements = new HashSet<Pair<T, T>>(elements);
@@ -46,36 +49,40 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 	 * (re-)computes a set of single elements in this preference order
 	 */
 	public void computeSingleElements() {
-		if(!singleElements.isEmpty())
+		if (!singleElements.isEmpty())
 			singleElements.clear();
 		for (Pair<T, T> pairs : elements) {
 			singleElements.add(pairs.getFirst());
 			singleElements.add(pairs.getSecond());
 		}
 	}
-	
+
 	/**
 	 * a setter for the single elements of a preference order
-	 * @param singleElements the given set of single elements
+	 * 
+	 * @param singleElements
+	 *            the given set of single elements
 	 */
-	public void setSingleElements(Set<T> singleElements){
+	public void setSingleElements(Set<T> singleElements) {
 		this.singleElements = singleElements;
 	}
-	
+
 	/**
 	 * returns the single elements in this preference order
+	 * 
 	 * @return the single elements in this preference order
 	 */
-	public Set<T> getSingleElements(){
+	public Set<T> getSingleElements() {
 		if (singleElements.isEmpty())
 			computeSingleElements();
 		return singleElements;
 	}
-	
+
 	/**
 	 * adds a given pair of generic elements to the set.
 	 * 
-	 * @param e the given set
+	 * @param e
+	 *            the given set
 	 * @return true if successful, false if not
 	 */
 
@@ -86,8 +93,10 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 	/**
 	 * adds two given (single) elements as pair into the set
 	 * 
-	 * @param f first element of the new pair
-	 * @param s second element of the new pair
+	 * @param f
+	 *            first element of the new pair
+	 * @param s
+	 *            second element of the new pair
 	 * @return true if successful, false if not
 	 */
 	public boolean addPair(T f, T s) {
@@ -98,7 +107,8 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 	/**
 	 * removes specific pair of the set
 	 * 
-	 * @param e the pair to be removed
+	 * @param e
+	 *            the pair to be removed
 	 * @return true if successful, false if not
 	 */
 	public boolean removePair(Pair<T, T> e) {
@@ -117,8 +127,10 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 	/**
 	 * returns whether the elements a and b are related
 	 * 
-	 * @param a the first element to be checked
-	 * @param b the second element to be checked
+	 * @param a
+	 *            the first element to be checked
+	 * @param b
+	 *            the second element to be checked
 	 * @return true if related, false if not.
 	 */
 	public boolean isRelated(T a, T b) {
@@ -156,6 +168,24 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 	}
 
 	/**
+	 * returns a pair if it consists of of two given elements
+	 * 
+	 * @param a
+	 *            the first element
+	 * @param b
+	 *            the second element
+	 * @return a pair if found, null if not
+	 */
+	public Pair<T, T> getPair(T a, T b) {
+		for (Pair<T, T> p : elements) {
+			if (p.getFirst() == a && p.getSecond() == b) {
+				return p;
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * returns the size of the set
 	 * 
 	 * @return the size of the set
@@ -180,10 +210,31 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 		return s;
 
 	}
+	
+//	Experimental:	
+//	
+//	/**
+//	 * returns an array containing all objects
+//	 * @return the Object[]-array
+//	 */
+//	public Object[] toArray(){
+//		return this.elements.toArray();
+//	}
+//	
+//	/**
+//	 * returns all elements in an array
+//	 * @param a is a given array
+//	 * @return an array
+//	 */
+//	public T[] toArray(T[] a){
+//		return this.elements.toArray(a);
+//	}
+//	
 
 	
 	/**
 	 * checks whether the set is total or not
+	 * 
 	 * @return true if total, false otherwise
 	 */
 	public boolean isTotal() {
@@ -195,10 +246,11 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * checks whether the given set is transitive or not
-	 * @return true if transitive, false otherwise 
+	 * 
+	 * @return true if transitive, false otherwise
 	 */
 	public boolean isTransitive() {
 		for (final T a : getSingleElements()) {
@@ -209,7 +261,6 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 						return false;
 					}
 				}
-
 			}
 		}
 		return true;
