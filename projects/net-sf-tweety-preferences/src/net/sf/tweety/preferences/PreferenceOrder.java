@@ -2,6 +2,7 @@ package net.sf.tweety.preferences;
 
 import java.util.*;
 
+import net.sf.tweety.preferences.ranking.RankingFunction;
 import net.sf.tweety.util.Pair;
 
 /**
@@ -15,7 +16,7 @@ import net.sf.tweety.util.Pair;
  */
 
 public class PreferenceOrder<T> extends BinaryRelation<T> {
-
+	
 	/**
 	 * the single elements used
 	 */
@@ -25,7 +26,15 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 	 * a given set of Pairs
 	 */
 	private Set<Pair<T, T>> elements;
-
+	
+	/**
+	 * the ranking function for this preference order
+	 */
+	private RankingFunction<T> rankingFunction;
+	
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	
+//------- Constructor ------------------------------------------------	
+	
 	/**
 	 * Creates an empty HashSet of preference order.
 	 */
@@ -45,18 +54,9 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 		computeSingleElements();
 	}
 
-	/**
-	 * (re-)computes a set of single elements in this preference order
-	 */
-	public void computeSingleElements() {
-		if (!singleElements.isEmpty())
-			singleElements.clear();
-		for (Pair<T, T> pairs : elements) {
-			singleElements.add(pairs.getFirst());
-			singleElements.add(pairs.getSecond());
-		}
-	}
-
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	
+//------- Getter & Setter --------------------------------------------
+		
 	/**
 	 * a setter for the single elements of a preference order
 	 * 
@@ -77,6 +77,27 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 			computeSingleElements();
 		return singleElements;
 	}
+
+	/**
+	 * returns the ranking function for this preference order
+	 * @return the ranking function for this preference order
+	 */
+	public RankingFunction<T> getRankingFunction() {
+		return rankingFunction;
+	}
+
+	/**
+	 * the setter for the ranking function of this preference order
+	 * @param rankingFunction the ranking function of this order
+	 */
+	public void setRankingFunction(RankingFunction<T> rankingFunction) {
+		this.rankingFunction = rankingFunction;
+	}
+	
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+//------- Methods ----------------------------------------------------
+	
+
 
 	/**
 	 * adds a given pair of generic elements to the set.
@@ -102,6 +123,18 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 	public boolean addPair(T f, T s) {
 		Pair<T, T> pair = new Pair<T, T>(f, s);
 		return elements.add(pair);
+	}
+
+	/**
+	 * (re-)computes a set of single elements in this preference order
+	 */
+	public void computeSingleElements() {
+		if (!singleElements.isEmpty())
+			singleElements.clear();
+		for (Pair<T, T> pairs : elements) {
+			singleElements.add(pairs.getFirst());
+			singleElements.add(pairs.getSecond());
+		}
 	}
 
 	/**
@@ -231,6 +264,15 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 //	}
 //	
 
+//	Under Construction:
+//	/**
+//	 * 
+//	 */
+//	public RankingFunction<T> computeRankingFunction(){
+//		RankingFunction<T> rankfunc = new RankingFunction<T>();
+//		rankfunc.computeRanks();
+//		return rankfunc;
+//	}
 	
 	/**
 	 * checks whether the set is total or not
