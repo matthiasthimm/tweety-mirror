@@ -6,26 +6,26 @@ import net.sf.tweety.preferences.ranking.RankingFunction;
 import net.sf.tweety.util.Pair;
 
 /**
- * This class extends the BinaryRelation-class with a check for totality and
- * transitivity
- * 
+ * BETA VERSION
+ * Optional implementation of the Preference Order using ranked elements for testing purposes.
+ *  
  * @author Bastian Wolf
  * 
  * @param <T>
  *            the generic type of objects/pairs in this preference order
  */
 
-public class PreferenceOrder<T> extends BinaryRelation<T> {
+public class RankPreferenceOrder<T> extends BinaryRelation<RankedElement<T>> {
 	
 	/**
-	 * the single elements used
+	 * the single ranked elements used
 	 */
-	private Set<T> singleElements;
+	private Set<RankedElement<T>> singleElements;
 
 	/**
 	 * a given set of Pairs
 	 */
-	private Set<Pair<T, T>> elements;
+	private Set<Pair<RankedElement<T>, RankedElement<T>>> elements;
 	
 	/**
 	 * the ranking function for this preference order
@@ -38,19 +38,19 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 	/**
 	 * Creates an empty HashSet of preference order.
 	 */
-	public PreferenceOrder() {
-		this(new HashSet<Pair<T, T>>());
+	public RankPreferenceOrder() {
+		this(new HashSet<Pair<RankedElement<T>, RankedElement<T>>>());
 	}
 
 	/**
 	 * generates a preference order with a given set of elements
 	 * 
-	 * @param elements
+	 * @param hashSet
 	 *            the set of given element pairs
 	 */
-	public PreferenceOrder(Collection<? extends Pair<T, T>> elements) {
-		this.elements = new HashSet<Pair<T, T>>(elements);
-		this.singleElements = new HashSet<T>();
+	public RankPreferenceOrder(HashSet<Pair<RankedElement<T>, RankedElement<T>>> hashSet) {
+		this.elements = new HashSet<Pair<RankedElement<T>, RankedElement<T>>>(hashSet);
+		this.singleElements = new HashSet<RankedElement<T>>();
 		computeSingleElements();
 	}
 
@@ -63,7 +63,7 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 	 * @param singleElements
 	 *            the given set of single elements
 	 */
-	public void setSingleElements(Set<T> singleElements) {
+	public void setSingleElements(Set<RankedElement<T>> singleElements) {
 		this.singleElements = singleElements;
 	}
 
@@ -72,7 +72,7 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 	 * 
 	 * @return the single elements in this preference order
 	 */
-	public Set<T> getSingleElements() {
+	public Set<RankedElement<T>> getSingleElements() {
 		if (singleElements.isEmpty())
 			computeSingleElements();
 		return singleElements;
@@ -107,7 +107,7 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 	 * @return true if successful, false if not
 	 */
 
-	public boolean addPair(Pair<T, T> e) {
+	public boolean addPair(Pair<RankedElement<T>, RankedElement<T>> e) {
 		return this.elements.add(e);
 	}
 
@@ -120,8 +120,8 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 	 *            second element of the new pair
 	 * @return true if successful, false if not
 	 */
-	public boolean addPair(T f, T s) {
-		Pair<T, T> pair = new Pair<T, T>(f, s);
+	public boolean addPair(RankedElement<T> f, RankedElement<T> s) {
+		Pair<RankedElement<T>, RankedElement<T>> pair = new Pair<RankedElement<T>, RankedElement<T>>(f, s);
 		return elements.add(pair);
 	}
 
@@ -131,7 +131,7 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 	public void computeSingleElements() {
 		if (!singleElements.isEmpty())
 			singleElements.clear();
-		for (Pair<T, T> pairs : elements) {
+		for (Pair<RankedElement<T>, RankedElement<T>> pairs : elements) {
 			singleElements.add(pairs.getFirst());
 			singleElements.add(pairs.getSecond());
 		}
@@ -144,7 +144,7 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 	 *            the pair to be removed
 	 * @return true if successful, false if not
 	 */
-	public boolean removePair(Pair<T, T> e) {
+	public boolean removePair(Pair<RankedElement<T>, RankedElement<T>> e) {
 		return this.elements.remove(e);
 	}
 
@@ -166,8 +166,8 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 	 *            the second element to be checked
 	 * @return true if related, false if not.
 	 */
-	public boolean isRelated(T a, T b) {
-		for (Pair<T, T> pair : elements) {
+	public boolean isRelated(RankedElement<T> a, RankedElement<T> b) {
+		for (Pair<RankedElement<T>, RankedElement<T>> pair : elements) {
 			if (pair.getFirst() == a) {
 				if (pair.getSecond() == b) {
 					return true;
@@ -182,7 +182,7 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 	 * 
 	 * @return an iterator over a set of pairs
 	 */
-	public Iterator<Pair<T, T>> iterator() {
+	public Iterator<Pair<RankedElement<T>, RankedElement<T>>> iterator() {
 		return this.elements.iterator();
 	}
 
@@ -193,7 +193,7 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 	 *            the demanded pair
 	 * @return a pair if it exists, null otherwise
 	 */
-	public Pair<T, T> getPair(Pair<T, T> e) {
+	public Pair<RankedElement<T>, RankedElement<T>> getPair(Pair<RankedElement<T>, RankedElement<T>> e) {
 		if (elements.contains(e)) {
 			return e;
 		}
@@ -209,8 +209,8 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 	 *            the second element
 	 * @return a pair if found, null if not
 	 */
-	public Pair<T, T> getPair(T a, T b) {
-		for (Pair<T, T> p : elements) {
+	public Pair<RankedElement<T>, RankedElement<T>> getPair(RankedElement<T> a, RankedElement<T> b) {
+		for (Pair<RankedElement<T>, RankedElement<T>> p : elements) {
 			if (p.getFirst() == a && p.getSecond() == b) {
 				return p;
 			}
@@ -235,7 +235,7 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 	@Override
 	public String toString() {
 		String s = "{";
-		Iterator<Pair<T, T>> it = iterator();
+		Iterator<Pair<RankedElement<T>, RankedElement<T>>> it = iterator();
 		while (it.hasNext()) {
 			s += it.next();
 		}
@@ -280,8 +280,8 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 	 * @return true if total, false otherwise
 	 */
 	public boolean isTotal() {
-		for (final T f : getSingleElements()) {
-			for (final T s : getSingleElements()) {
+		for (final RankedElement<T> f : getSingleElements()) {
+			for (final RankedElement<T> s : getSingleElements()) {
 				if (f != s && !isRelated(f, s) && !isRelated(s, f))
 					return false;
 			}
@@ -295,9 +295,9 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 	 * @return true if transitive, false otherwise
 	 */
 	public boolean isTransitive() {
-		for (final T a : getSingleElements()) {
-			for (final T b : getSingleElements()) {
-				for (final T c : getSingleElements()) {
+		for (final RankedElement<T> a : getSingleElements()) {
+			for (final RankedElement<T> b : getSingleElements()) {
+				for (final RankedElement<T> c : getSingleElements()) {
 					if (a != b && b != c && a != c && isRelated(a, b)
 							&& isRelated(b, c) && !isRelated(a, c)) {
 						return false;

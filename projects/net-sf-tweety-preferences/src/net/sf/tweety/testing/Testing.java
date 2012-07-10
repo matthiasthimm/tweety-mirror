@@ -1,6 +1,7 @@
-package net.sf.tweety.preferences;
+package net.sf.tweety.testing;
 
 
+import net.sf.tweety.preferences.PreferenceOrder;
 import net.sf.tweety.util.*;
 
 
@@ -35,12 +36,14 @@ public class Testing {
 		
 		testing.removePair(gamma);
 		
+//		String[] testingarray = new String[testing.size()];
 		
 		System.out.println(testing.size());
 		
 		System.out.println("TESTING +++++++++++++++++++++");
 		System.out.println("Testing: " + testing);
 		System.out.println("Elements: " + testing.getSingleElements());
+//		System.out.println("Array: " + testing.toArray(testingarray).toString());
 		System.out.println("Totality: " + testing.isTotal());
 		System.out.println("Transitivity: " + testing.isTransitive());
 		System.out.println("TESTING +++++++++++++++++++++");
@@ -62,9 +65,13 @@ public class Testing {
 		count.addPair(9, 10);
 		System.out.println(count.size());
 		
+//		Integer[] countarray = new Integer[count.size()];
+		
+		
 		System.out.println("COUNT +++++++++++++++++++++");
 		System.out.println("Count: " + count);
 		System.out.println("Elements: " + count.getSingleElements());
+//		System.out.println("Array: " + count.toArray(countarray).toString());
 		System.out.println("Totality: " + count.isTotal());
 		System.out.println("Transitivity: " + count.isTransitive());
 		System.out.println("COUNT +++++++++++++++++++++");
@@ -79,9 +86,12 @@ public class Testing {
 		totalcount.addPair(4, 2);
 		//totalcount.addPair(4, 5);
 		
+//		Integer[] totalcountarray = new Integer[totalcount.size()];
+		
 		System.out.println("TOTALCOUNT +++++++++++++++++++++");
 		System.out.println("Totalcount: " + totalcount);
 		System.out.println("Elements: " + totalcount.getSingleElements());
+//		System.out.println("Array: " + totalcount.toArray(totalcountarray).toString());
 		System.out.println("Totality: " + totalcount.isTotal());
 		System.out.println("Transitivity: " + totalcount.isTransitive());
 		System.out.println("TOTALCOUNT +++++++++++++++++++++");

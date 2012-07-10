@@ -1,7 +1,7 @@
 package net.sf.tweety.preferences;
 
 /**
- * EXPERIMENTAL, MAYBE REMOVED AGAIN SOON
+ * UNDER CONSTRUCTION
  * This class provides elements for preference orders containing their rank
  * The rank of a element represents its position within a preference order,
  * where a lower rank means a higher (better) position.
@@ -32,6 +32,16 @@ public class RankedElement<T> {
 		super();
 		this.element = element;
 		this.rank = rank;
+	}
+	
+	/**
+	 * constructor for elements with initial rank zero
+	 * @param element the element
+	 */
+	public RankedElement(T element){
+		super();
+		this.element = element;
+		this.rank = 0;
 	}
 	
 	/**
@@ -78,5 +88,14 @@ public class RankedElement<T> {
 	 */
 	public void incrementRank(){
 		this.rank++;
+	}
+	
+	/**
+	 * represents a ranked element as "element(rank)"
+	 */
+	public String toString(){
+		String s = "";
+		s += this.element + "(" + this.rank + ")";
+		return s;
 	}
 }

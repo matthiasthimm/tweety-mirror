@@ -98,14 +98,16 @@ public class RankingFunction<T> {
 // Methods under Construction:
 	
 //	/**
-//	 *	This functions computes the rank each element in a preference order 
+//	 *	This functions computes the rank for each element in a preference order 
 //	 */
 //	public void computeRanks(){
+//		int[] ranks = new int[preforder.getSingleElements().size()];
 //		for(final T f : preforder.getSingleElements()){
 //			for(final T s : preforder.getSingleElements()){
 //				if (this.elements.contains(f) && this.elements.contains(s)){
 //					{
-//						
+//						if (f!=s && preforder.isRelated(f, s) && !preforder.isRelated(s, f)){
+//						}
 //					}
 //				}
 //			}
