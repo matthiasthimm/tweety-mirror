@@ -164,7 +164,7 @@ public class MlnTest {
 	
 	public static void main(String[] args) throws ParserException, IOException{
 		//MlnTest.createChart(null, "", "");
-		String expPath = "/home/share/mln/";
+		String expPath = "/home/share/mln/results_100000000_1000000_no_dup/";//"/Users/mthimm/Desktop/test/";
 					
 		List<AggregationFunction> aggrFunctions = new ArrayList<AggregationFunction>();
 		aggrFunctions.add(new MaxAggregator());
@@ -186,38 +186,77 @@ public class MlnTest {
 			distFunctions.add(new ProbabilisticPNormDistanceFunction(i,3));
 		
 		for(int i = 0; i < 4; i++){
-			for(AggregationFunction af: aggrFunctions){
-				for(DistanceFunction df: distFunctions){				
-					AggregatingCoherenceMeasure measure = new AggregatingCoherenceMeasure(df,af);
-					double[][] results = new double[2][12];
-					MarkovLogicNetwork mln_g = null;
-					for(int dsize = 3; dsize < 15; dsize++){						
-						Pair<MarkovLogicNetwork,FolSignature> ex = MlnTest.iterateExamples(i, dsize);
-						MarkovLogicNetwork mln = ex.getFirst();
-						mln_g = mln;
-						FolSignature sig = ex.getSecond();
-						ApproximateNaiveMlnReasoner reasoner = new ApproximateNaiveMlnReasoner(mln, sig, -1, 1000000);
-						//reasoner.setTempDirectory(expPath+"tmp");
-						results[0][dsize-3] = dsize;
-						results[1][dsize-3] = measure.coherence(mln, reasoner, sig);
-						System.out.println("Example " + i + ", domain size " + dsize + ", measure " + measure.toString() + ", coherence value " + results[1][dsize-3]);
+			Map<AggregatingCoherenceMeasure,double[][]> results = new HashMap<AggregatingCoherenceMeasure,double[][]>();
+			for(int dsize = 3; dsize < 15; dsize++){
+				Pair<MarkovLogicNetwork,FolSignature> ex = MlnTest.iterateExamples(i, dsize);
+				MarkovLogicNetwork mln = ex.getFirst();
+				FolSignature sig = ex.getSecond();
+				ApproximateNaiveMlnReasoner reasoner = new ApproximateNaiveMlnReasoner(mln, sig, 100000000, 1000000);
+				for(AggregationFunction af: aggrFunctions){
+					for(DistanceFunction df: distFunctions){				
+						AggregatingCoherenceMeasure measure = new AggregatingCoherenceMeasure(df,af);
+						if(!results.containsKey(measure))
+							results.put(measure, new double[2][12]);
+						results.get(measure)[0][dsize-3] = new Double(dsize);
+						results.get(measure)[1][dsize-3] = measure.coherence(mln, reasoner, sig);
+						System.out.println("Example " + i + ", domain size " + dsize + ", measure " + measure.toString() + ", coherence value " + results.get(measure)[1][dsize-3]);
 					}
+				}
+			}
+			for(AggregationFunction af: aggrFunctions){
+				for(DistanceFunction df: distFunctions){
+					AggregatingCoherenceMeasure measure = new AggregatingCoherenceMeasure(df,af);
 					List<double[][]> series = new ArrayList<double[][]>();
-					series.add(results);
+					series.add(results.get(measure));
 					MlnTest.createChart(series, i+"_"+measure.toString(), expPath+i+"_"+measure.toString()+".png");
 					ExpResult expResult = new ExpResult();
 					expResult.coherenceMeasure = measure;
-					expResult.domain2Coherence = results;
-					expResult.mln = mln_g;
+					expResult.domain2Coherence = results.get(measure);
+					expResult.mln = null;
 					FileOutputStream fos = null;
 					ObjectOutputStream out = null;
 					fos = new FileOutputStream(expPath+i+"_"+measure.toString()+".obj");
 					out = new ObjectOutputStream(fos);
 					out.writeObject(expResult);
-					out.close();					
+					out.close();
 				}
-			}			
-		}				
+			}
+		}
+		
+		
+//		for(int i = 0; i < 4; i++){
+//			for(AggregationFunction af: aggrFunctions){
+//				for(DistanceFunction df: distFunctions){				
+//					AggregatingCoherenceMeasure measure = new AggregatingCoherenceMeasure(df,af);
+//					double[][] results = new double[2][12];
+//					MarkovLogicNetwork mln_g = null;
+//					for(int dsize = 3; dsize < 15; dsize++){						
+//						Pair<MarkovLogicNetwork,FolSignature> ex = MlnTest.iterateExamples(i, dsize);
+//						MarkovLogicNetwork mln = ex.getFirst();
+//						mln_g = mln;
+//						FolSignature sig = ex.getSecond();
+//						ApproximateNaiveMlnReasoner reasoner = new ApproximateNaiveMlnReasoner(mln, sig, -1, 1000000);
+//						//reasoner.setTempDirectory(expPath+"tmp");
+//						results[0][dsize-3] = dsize;
+//						results[1][dsize-3] = measure.coherence(mln, reasoner, sig);
+//						System.out.println("Example " + i + ", domain size " + dsize + ", measure " + measure.toString() + ", coherence value " + results[1][dsize-3]);
+//					}
+//					List<double[][]> series = new ArrayList<double[][]>();
+//					series.add(results);
+//					MlnTest.createChart(series, i+"_"+measure.toString(), expPath+i+"_"+measure.toString()+".png");
+//					ExpResult expResult = new ExpResult();
+//					expResult.coherenceMeasure = measure;
+//					expResult.domain2Coherence = results;
+//					expResult.mln = mln_g;
+//					FileOutputStream fos = null;
+//					ObjectOutputStream out = null;
+//					fos = new FileOutputStream(expPath+i+"_"+measure.toString()+".obj");
+//					out = new ObjectOutputStream(fos);
+//					out.writeObject(expResult);
+//					out.close();					
+//				}
+//			}			
+//		}				
 	}
 	
 	public static void createChart(List<double[][]> series, String title, String filename) throws IOException {

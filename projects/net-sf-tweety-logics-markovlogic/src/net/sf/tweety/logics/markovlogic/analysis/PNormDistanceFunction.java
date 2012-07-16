@@ -47,4 +47,35 @@ public class PNormDistanceFunction implements DistanceFunction {
 			return this.p+"-norm";
 		return this.p+"-norm0";
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (normalize ? 1231 : 1237);
+		result = prime * result + p;
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		PNormDistanceFunction other = (PNormDistanceFunction) obj;
+		if (normalize != other.normalize)
+			return false;
+		if (p != other.p)
+			return false;
+		return true;
+	}
 }

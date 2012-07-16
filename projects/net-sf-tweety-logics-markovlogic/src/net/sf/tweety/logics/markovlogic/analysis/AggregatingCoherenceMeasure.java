@@ -20,7 +20,7 @@ import net.sf.tweety.logics.markovlogic.syntax.MlnFormula;
  *
  */
 public class AggregatingCoherenceMeasure extends AbstractCoherenceMeasure {
-	
+
 	private static final long serialVersionUID = 4162719595968757160L;
 	
 	/** The distance function used to measure the difference of the probabilities
@@ -43,7 +43,10 @@ public class AggregatingCoherenceMeasure extends AbstractCoherenceMeasure {
 		for(MlnFormula f: mln){
 			List<Double> intended = new ArrayList<Double>();
 			List<Double> observed = new ArrayList<Double>();
-			Double pObserved = (Math.exp(f.getWeight())/(1+Math.exp(f.getWeight())));
+			Double pObserved;
+			if(f.isStrict())
+				pObserved = 1d;
+			else pObserved = (Math.exp(f.getWeight())/(1+Math.exp(f.getWeight())));
 			for(RelationalFormula groundFormula: f.getFormula().allGroundInstances(signature.getConstants())){
 				observed.add(reasoner.query(groundFormula).getAnswerDouble());
 				intended.add(pObserved);
@@ -59,6 +62,45 @@ public class AggregatingCoherenceMeasure extends AbstractCoherenceMeasure {
 	@Override
 	public String toString() {		
 		return "C<" + this.distance.toString() + ", " + this.aggregator.toString() + ">";
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((aggregator == null) ? 0 : aggregator.hashCode());
+		result = prime * result
+				+ ((distance == null) ? 0 : distance.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AggregatingCoherenceMeasure other = (AggregatingCoherenceMeasure) obj;
+		if (aggregator == null) {
+			if (other.aggregator != null)
+				return false;
+		} else if (!aggregator.equals(other.aggregator))
+			return false;
+		if (distance == null) {
+			if (other.distance != null)
+				return false;
+		} else if (!distance.equals(other.distance))
+			return false;
+		return true;
 	}
 
 }

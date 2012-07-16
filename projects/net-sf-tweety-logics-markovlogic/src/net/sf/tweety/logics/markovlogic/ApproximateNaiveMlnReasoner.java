@@ -98,7 +98,7 @@ public class ApproximateNaiveMlnReasoner extends AbstractMlnReasoner{
 		Iterator<Set<Atom>> it;
 		if(this.maxNumberOfSelectedInterpretations == -1)
 			it = new SubsetIterator<Atom>(hBase.getAtoms());
-		else it = new RandomSubsetIterator<Atom>(hBase.getAtoms(),true);
+		else it = new RandomSubsetIterator<Atom>(hBase.getAtoms(),false);
 		long count = 0;
 		HerbrandInterpretation hInt;
 		WeightedHerbrandInterpretation whInt;
@@ -109,7 +109,7 @@ public class ApproximateNaiveMlnReasoner extends AbstractMlnReasoner{
 			whInt.interpretation = hInt;
 			whInt.weight = this.computeWeight(hInt);
 			pq.add(whInt);
-			sumOfWeights += whInt.weight;
+			sumOfWeights += whInt.weight;			
 			while(pq.size() > this.maxNumberOfInterpretationsForModel){
 				whInt = pq.remove();
 				sumOfWeights -= whInt.weight;
