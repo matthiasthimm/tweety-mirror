@@ -96,7 +96,7 @@ public class ApproximateNaiveMlnReasoner extends AbstractMlnReasoner{
 		HerbrandBase hBase = new HerbrandBase(this.getSignature());
 		// The iterator for Herbrand interpretations
 		Iterator<Set<Atom>> it;
-		if(this.maxNumberOfSelectedInterpretations == -1)
+		if(this.maxNumberOfSelectedInterpretations == -1 || Math.pow(2, hBase.getAtoms().size()) <= this.maxNumberOfSelectedInterpretations )
 			it = new SubsetIterator<Atom>(hBase.getAtoms());
 		else it = new RandomSubsetIterator<Atom>(hBase.getAtoms(),false);
 		long count = 0;
