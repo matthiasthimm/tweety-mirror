@@ -52,6 +52,12 @@ public abstract class AbstractMlnReasoner extends Reasoner {
 		return this.signature;
 	}
 	
+
+	/**
+	 * Resets this reasoner (removes cached files etc.) 
+	 */
+	public abstract void reset();
+	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.Reasoner#query(net.sf.tweety.Formula)
 	 */

@@ -57,6 +57,13 @@ public class NaiveMlnReasoner extends AbstractMlnReasoner {
 		super(beliefBase, signature);		
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.markovlogic.AbstractMlnReasoner#reset()
+	 */
+	public void reset(){
+		this.archivedFile = null;
+	}
+	
 	/** Sets the path of the directory for temporary files.
 	 * @param str a file path
 	 */

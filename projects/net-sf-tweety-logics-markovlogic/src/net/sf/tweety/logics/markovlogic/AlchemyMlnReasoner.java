@@ -259,4 +259,10 @@ public class AlchemyMlnReasoner extends AbstractMlnReasoner {
 			return t.toString().toLowerCase();
 		throw new IllegalArgumentException("Functional expressions not supported by Alchemy.");
 	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.markovlogic.AbstractMlnReasoner#reset()
+	 */
+	@Override
+	public void reset() { }
 }

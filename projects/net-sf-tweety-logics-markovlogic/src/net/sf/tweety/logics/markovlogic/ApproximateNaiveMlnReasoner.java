@@ -77,6 +77,13 @@ public class ApproximateNaiveMlnReasoner extends AbstractMlnReasoner{
 	}
 	
 	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.markovlogic.AbstractMlnReasoner#reset()
+	 */
+	public void reset(){
+		this.prob = null;
+	}
+	
+	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.markovlogic.AbstractMlnReasoner#doQuery(net.sf.tweety.logics.firstorderlogic.syntax.FolFormula)
 	 */
 	@Override
