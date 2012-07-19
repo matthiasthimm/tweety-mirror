@@ -21,7 +21,9 @@ import org.jfree.data.xy.DefaultXYDataset;
 import net.sf.tweety.ParserException;
 import net.sf.tweety.logics.firstorderlogic.parser.FolParser;
 import net.sf.tweety.logics.firstorderlogic.syntax.*;
+import net.sf.tweety.logics.markovlogic.AbstractMlnReasoner;
 import net.sf.tweety.logics.markovlogic.ApproximateNaiveMlnReasoner;
+import net.sf.tweety.logics.markovlogic.IteratingMlnReasoner;
 import net.sf.tweety.logics.markovlogic.MarkovLogicNetwork;
 import net.sf.tweety.logics.markovlogic.analysis.*;
 import net.sf.tweety.logics.markovlogic.syntax.MlnFormula;
@@ -164,7 +166,7 @@ public class MlnTest {
 	
 	public static void main(String[] args) throws ParserException, IOException{
 		//MlnTest.createChart(null, "", "");
-		String expPath = "/home/share/mln/results_100000000_1000000_no_dup/";//"/Users/mthimm/Desktop/test/";
+		String expPath = "/home/share/mln/results_100000_100000_10/";//"/Users/mthimm/Desktop/test/";
 					
 		List<AggregationFunction> aggrFunctions = new ArrayList<AggregationFunction>();
 		aggrFunctions.add(new MaxAggregator());
@@ -191,7 +193,7 @@ public class MlnTest {
 				Pair<MarkovLogicNetwork,FolSignature> ex = MlnTest.iterateExamples(i, dsize);
 				MarkovLogicNetwork mln = ex.getFirst();
 				FolSignature sig = ex.getSecond();
-				ApproximateNaiveMlnReasoner reasoner = new ApproximateNaiveMlnReasoner(mln, sig, 100000000, 1000000);
+				AbstractMlnReasoner reasoner = new IteratingMlnReasoner(new ApproximateNaiveMlnReasoner(mln, sig, 100000, 100000), 10);
 				for(AggregationFunction af: aggrFunctions){
 					for(DistanceFunction df: distFunctions){				
 						AggregatingCoherenceMeasure measure = new AggregatingCoherenceMeasure(df,af);
