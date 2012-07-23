@@ -1,5 +1,8 @@
 package net.sf.tweety.logics.markovlogic;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 
 /**
@@ -15,6 +18,9 @@ public class IteratingMlnReasoner extends AbstractMlnReasoner{
 	
 	/** The number of iterations. */
 	private long numberOfIterations;
+
+	/** For archiving previous results. */
+	private Map<FolFormula,Double> archive;
 	
 	/**
 	 * Creates a new IteratingMlnReasoner for the given MLN reaasoner.
@@ -25,6 +31,7 @@ public class IteratingMlnReasoner extends AbstractMlnReasoner{
 		super(reasoner.getKnowledgBase(), reasoner.getSignature());
 		this.reasoner = reasoner;
 		this.numberOfIterations = numberOfIterations;
+		this.archive = new HashMap<FolFormula,Double>();		
 	}
 	
 	/* (non-Javadoc)
@@ -32,6 +39,7 @@ public class IteratingMlnReasoner extends AbstractMlnReasoner{
 	 */
 	public void reset(){
 		this.reasoner.reset();
+		this.archive.clear();
 	}
 	
 	/* (non-Javadoc)
@@ -39,12 +47,16 @@ public class IteratingMlnReasoner extends AbstractMlnReasoner{
 	 */
 	@Override
 	protected double doQuery(FolFormula query) {
+		if(this.archive.containsKey(query))
+			return this.archive.get(query);
 		double resultSum = 0;
 		for(long i = 0; i < this.numberOfIterations; i++){
 			this.reasoner.reset();
 			resultSum += this.reasoner.doQuery(query);
 		}
-		return resultSum/this.numberOfIterations;
+		double result = resultSum/this.numberOfIterations;
+		this.archive.put(query, result);
+		return result;
 	}
 
 }
