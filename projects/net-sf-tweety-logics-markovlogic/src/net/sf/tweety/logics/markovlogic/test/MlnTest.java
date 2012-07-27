@@ -23,7 +23,6 @@ import net.sf.tweety.logics.firstorderlogic.parser.FolParser;
 import net.sf.tweety.logics.firstorderlogic.syntax.*;
 import net.sf.tweety.logics.markovlogic.AbstractMlnReasoner;
 import net.sf.tweety.logics.markovlogic.ApproximateNaiveMlnReasoner;
-import net.sf.tweety.logics.markovlogic.IteratingMlnReasoner;
 import net.sf.tweety.logics.markovlogic.MarkovLogicNetwork;
 import net.sf.tweety.logics.markovlogic.analysis.*;
 import net.sf.tweety.logics.markovlogic.syntax.MlnFormula;
@@ -130,7 +129,7 @@ public class MlnTest {
 		// infection by contact
 		mln.add(new MlnFormula((FolFormula)parser.parseFormula("!contact(X,Y) || !cold(Y) || cold(X)"), new Double(0.4054651081))); //p=0.6
 		// contact relationship is symmetric
-		mln.add(new MlnFormula((FolFormula)parser.parseFormula("!contact(X,Y) v contact(Y,X)")));
+		mln.add(new MlnFormula((FolFormula)parser.parseFormula("!contact(X,Y) || contact(Y,X)")));
 		
 		return new Pair<MarkovLogicNetwork,FolSignature>(mln,sig);
 	}
@@ -166,7 +165,7 @@ public class MlnTest {
 	
 	public static void main(String[] args) throws ParserException, IOException{
 		//MlnTest.createChart(null, "", "");
-		String expPath = "/home/share/mln/results_100000_100000_10/";//"/Users/mthimm/Desktop/test/";
+		String expPath = "/home/share/mln/results_2012-07-25__10000_10000/";//"/Users/mthimm/Desktop/test/";
 					
 		List<AggregationFunction> aggrFunctions = new ArrayList<AggregationFunction>();
 		aggrFunctions.add(new MaxAggregator());
@@ -187,21 +186,25 @@ public class MlnTest {
 		for(int i = 1; i< 4; i++)
 			distFunctions.add(new ProbabilisticPNormDistanceFunction(i,3));
 		
-		for(int i = 0; i < 4; i++){
+		// already got first two examples
+		for(int i = 2; i < 4; i++){
 			Map<AggregatingCoherenceMeasure,double[][]> results = new HashMap<AggregatingCoherenceMeasure,double[][]>();
 			for(int dsize = 3; dsize < 15; dsize++){
 				Pair<MarkovLogicNetwork,FolSignature> ex = MlnTest.iterateExamples(i, dsize);
 				MarkovLogicNetwork mln = ex.getFirst();
 				FolSignature sig = ex.getSecond();
-				AbstractMlnReasoner reasoner = new IteratingMlnReasoner(new ApproximateNaiveMlnReasoner(mln, sig, 100000, 100000), 10);
+				AbstractMlnReasoner reasoner = new ApproximateNaiveMlnReasoner(mln, sig, 10000, 10000);
 				for(AggregationFunction af: aggrFunctions){
 					for(DistanceFunction df: distFunctions){				
 						AggregatingCoherenceMeasure measure = new AggregatingCoherenceMeasure(df,af);
 						if(!results.containsKey(measure))
 							results.put(measure, new double[2][12]);
 						results.get(measure)[0][dsize-3] = new Double(dsize);
-						results.get(measure)[1][dsize-3] = measure.coherence(mln, reasoner, sig);
+						results.get(measure)[1][dsize-3] = measure.coherence(mln, reasoner, sig);						
 						System.out.println("Example " + i + ", domain size " + dsize + ", measure " + measure.toString() + ", coherence value " + results.get(measure)[1][dsize-3]);
+						//check for NaN or infty						
+						if(results.get(measure)[1][dsize-3] == Double.NaN || results.get(measure)[1][dsize-3] == Double.NEGATIVE_INFINITY || results.get(measure)[1][dsize-3] == Double.POSITIVE_INFINITY)
+							results.get(measure)[1][dsize-3] = -10000;
 					}
 				}
 			}
