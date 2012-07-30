@@ -165,38 +165,44 @@ public class MlnTest {
 	
 	public static void main(String[] args) throws ParserException, IOException{
 		//MlnTest.createChart(null, "", "");
-		String expPath = "/home/share/mln/results_2012-07-25__10000_10000/";//"/Users/mthimm/Desktop/test/";
+		String expPath = "/home/share/mln/results_2012-07-30__1000000_100000/";//"/Users/mthimm/Desktop/test/";
 					
-		List<AggregationFunction> aggrFunctions = new ArrayList<AggregationFunction>();
-		aggrFunctions.add(new MaxAggregator());
-		aggrFunctions.add(new MinAggregator());
-		aggrFunctions.add(new AverageAggregator());
-		//aggrFunctions.add(new ProductAggregator());
-		//aggrFunctions.add(new SumAggregator());
+//		List<AggregationFunction> aggrFunctions = new ArrayList<AggregationFunction>();
+//		aggrFunctions.add(new MaxAggregator());
+//		aggrFunctions.add(new MinAggregator());
+//		aggrFunctions.add(new AverageAggregator());
+//		//aggrFunctions.add(new ProductAggregator());
+//		//aggrFunctions.add(new SumAggregator());
+//		
+//		List<DistanceFunction> distFunctions = new ArrayList<DistanceFunction>();
+//		for(AggregationFunction af: aggrFunctions)
+//			distFunctions.add(new AggregatingDistanceFunction(af));
+//		for(AggregationFunction af: aggrFunctions)
+//			distFunctions.add(new ProbabilisticAggregatingDistanceFunction(af,3));
+//		for(int i = 1; i< 2; i++){
+//			distFunctions.add(new PNormDistanceFunction(i,false));
+//			distFunctions.add(new PNormDistanceFunction(i,true));
+//		}
+//		for(int i = 1; i< 4; i++)
+//			distFunctions.add(new ProbabilisticPNormDistanceFunction(i,3));
 		
-		List<DistanceFunction> distFunctions = new ArrayList<DistanceFunction>();
-		for(AggregationFunction af: aggrFunctions)
-			distFunctions.add(new AggregatingDistanceFunction(af));
-		for(AggregationFunction af: aggrFunctions)
-			distFunctions.add(new ProbabilisticAggregatingDistanceFunction(af,3));
-		for(int i = 1; i< 2; i++){
-			distFunctions.add(new PNormDistanceFunction(i,false));
-			distFunctions.add(new PNormDistanceFunction(i,true));
-		}
-		for(int i = 1; i< 4; i++)
-			distFunctions.add(new ProbabilisticPNormDistanceFunction(i,3));
+		List<AggregatingCoherenceMeasure> cohMeasures = new ArrayList<AggregatingCoherenceMeasure>();
+		cohMeasures.add(new AggregatingCoherenceMeasure(new PNormDistanceFunction(2,true),new MaxAggregator()));
+		cohMeasures.add(new AggregatingCoherenceMeasure(new AggregatingDistanceFunction(new AverageAggregator()),new MaxAggregator()));
+		cohMeasures.add(new AggregatingCoherenceMeasure(new AggregatingDistanceFunction(new MaxAggregator()),new AverageAggregator()));
+		cohMeasures.add(new AggregatingCoherenceMeasure(new AggregatingDistanceFunction(new MinAggregator()),new MinAggregator()));
 		
-		// already got first two examples
-		for(int i = 2; i < 4; i++){
+		for(int i = 0; i < 4; i++){
 			Map<AggregatingCoherenceMeasure,double[][]> results = new HashMap<AggregatingCoherenceMeasure,double[][]>();
 			for(int dsize = 3; dsize < 15; dsize++){
 				Pair<MarkovLogicNetwork,FolSignature> ex = MlnTest.iterateExamples(i, dsize);
 				MarkovLogicNetwork mln = ex.getFirst();
 				FolSignature sig = ex.getSecond();
-				AbstractMlnReasoner reasoner = new ApproximateNaiveMlnReasoner(mln, sig, 10000, 10000);
-				for(AggregationFunction af: aggrFunctions){
-					for(DistanceFunction df: distFunctions){				
-						AggregatingCoherenceMeasure measure = new AggregatingCoherenceMeasure(df,af);
+				AbstractMlnReasoner reasoner = new ApproximateNaiveMlnReasoner(mln, sig, 1000000, 100000);
+				//for(AggregationFunction af: aggrFunctions){
+				///	for(DistanceFunction df: distFunctions){
+				for(AggregatingCoherenceMeasure measure: cohMeasures){
+						//AggregatingCoherenceMeasure measure = new AggregatingCoherenceMeasure(df,af);
 						if(!results.containsKey(measure))
 							results.put(measure, new double[2][12]);
 						results.get(measure)[0][dsize-3] = new Double(dsize);
@@ -205,12 +211,14 @@ public class MlnTest {
 						//check for NaN or infty						
 						if(results.get(measure)[1][dsize-3] == Double.NaN || results.get(measure)[1][dsize-3] == Double.NEGATIVE_INFINITY || results.get(measure)[1][dsize-3] == Double.POSITIVE_INFINITY)
 							results.get(measure)[1][dsize-3] = -10000;
-					}
 				}
+				//	}
+				//}
 			}
-			for(AggregationFunction af: aggrFunctions){
-				for(DistanceFunction df: distFunctions){
-					AggregatingCoherenceMeasure measure = new AggregatingCoherenceMeasure(df,af);
+			//for(AggregationFunction af: aggrFunctions){
+			//	for(DistanceFunction df: distFunctions){
+			for(AggregatingCoherenceMeasure measure: cohMeasures){
+					//AggregatingCoherenceMeasure measure = new AggregatingCoherenceMeasure(df,af);
 					List<double[][]> series = new ArrayList<double[][]>();
 					series.add(results.get(measure));
 					MlnTest.createChart(series, i+"_"+measure.toString(), expPath+i+"_"+measure.toString()+".png");
@@ -224,8 +232,9 @@ public class MlnTest {
 					out = new ObjectOutputStream(fos);
 					out.writeObject(expResult);
 					out.close();
-				}
 			}
+				//}
+			//}
 		}
 		
 		
