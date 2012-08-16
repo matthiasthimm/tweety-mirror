@@ -5,6 +5,7 @@ import net.sf.tweety.preferences.PreferenceOrder;
 import net.sf.tweety.util.*;
 
 
+
 /**
  * A first simple testing-method for preference orders. To be extended and automated
  * for preference aggregation later.
@@ -31,14 +32,16 @@ public class Testing {
 		testing.addPair(gamma);
 		testing.addPair(delta);
 		
-		System.out.println(testing.size());
-		System.out.println(testing);
+		testing.writeToFile("testing.po");
 		
-		testing.removePair(gamma);
-		
-//		String[] testingarray = new String[testing.size()];
-		
-		System.out.println(testing.size());
+//		System.out.println(testing.size());
+//		System.out.println(testing);
+//		
+//		testing.removePair(gamma);
+//		
+////		String[] testingarray = new String[testing.size()];
+//		
+//		System.out.println(testing.size());
 		
 		System.out.println("TESTING +++++++++++++++++++++");
 		System.out.println("Testing: " + testing);
@@ -47,6 +50,7 @@ public class Testing {
 		System.out.println("Totality: " + testing.isTotal());
 		System.out.println("Transitivity: " + testing.isTransitive());
 		System.out.println("TESTING +++++++++++++++++++++");
+		
 		
 		
 		// Integer-Order
@@ -84,7 +88,9 @@ public class Testing {
 		totalcount.addPair(3, 4);
 		totalcount.addPair(4, 1);
 		totalcount.addPair(4, 2);
-		//totalcount.addPair(4, 5);
+		totalcount.addPair(4, 5);
+		
+		totalcount.writeToFile("testingtotalcount.po");
 		
 //		Integer[] totalcountarray = new Integer[totalcount.size()];
 		
@@ -118,5 +124,7 @@ public class Testing {
 //		System.out.println("Totality: "+ testing.isTotal());
 //		System.out.println("Transitivity: "+ testing.isTransitive());
 //		System.out.println("RANKED TESTING+++++++++++++++");
+		
+
 	}
 }
