@@ -1,5 +1,10 @@
 package net.sf.tweety.preferences;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.*;
 
 import net.sf.tweety.preferences.ranking.RankingFunction;
@@ -273,6 +278,48 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 //		rankfunc.computeRanks();
 //		return rankfunc;
 //	}
+	
+	
+	/**
+	 * a method for writing preference orders into files from which they can be read in again
+	 * @param filename the filename for the file this order has do be written in
+	 */
+	public void writeToFile(String filename){
+		
+		PrintWriter pw = null;
+		try {
+		Writer fw = new FileWriter(filename);
+		Writer bw = new BufferedWriter(fw);
+		pw = new PrintWriter(bw);
+		
+		String s = "{";
+		int count = 1;
+		for (T e : getSingleElements()){
+			
+			if (count < singleElements.size())
+				s += e.toString() + ", ";
+			else
+				s += e.toString();
+		count++;
+		}
+		
+		s += "}";
+		
+		pw.println(s);
+		
+		Iterator<Pair<T,T>> it = iterator();
+		while (it.hasNext()){
+			Pair<T, T> temp = it.next();
+			pw.println(temp.getFirst() + " < " + temp.getSecond());
+		}
+		} catch (IOException e){
+			System.out.println("File could not be generated");
+		} finally {
+			if (pw != null)
+				pw.close();
+		}
+	}
+	
 	
 	/**
 	 * checks whether the set is total or not
