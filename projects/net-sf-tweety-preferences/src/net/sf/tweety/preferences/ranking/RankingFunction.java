@@ -1,17 +1,25 @@
 package net.sf.tweety.preferences.ranking;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
+import net.sf.tweety.math.equation.Inequation;
+import net.sf.tweety.math.opt.*;
+import net.sf.tweety.math.opt.solver.*;
+import net.sf.tweety.math.term.IntegerVariable;
+import net.sf.tweety.math.term.Term;
+import net.sf.tweety.math.term.Variable;
 import net.sf.tweety.preferences.PreferenceOrder;
-import net.sf.tweety.util.*;
+import net.sf.tweety.util.Pair;
 
 /**
- * UNDER CONSTRUCTION
- * This class is meant to provide ranking functions to given
+ * UNDER CONSTRUCTION This class is meant to provide ranking functions to given
  * preference orders and vice versa. To be implemented. A ranking function
- * characterizes a preference order uniquely as:
- * 1.: rank: O -> N+ where O is the set of elements in the preference order.
- * 2.: the sum of all ranks for each element in O is minimal
+ * characterizes a preference order uniquely as: 1.: rank: O -> N+ where O is
+ * the set of elements in the preference order. 2.: the sum of all ranks for
+ * each element in O is minimal
  * 
  * @author Bastian Wolf
  * 
@@ -20,127 +28,94 @@ import net.sf.tweety.util.*;
 public class RankingFunction<T> {
 
 	/**
-	 * every element is paired with its rank
+	 * the map containing the ranking function
 	 */
-	private Set<Pair<T, Integer>> elements;
+	Map<Variable, Term> rankingFunction;
 
-	
 	/**
-	 * the preference order of this ranking function
-	 */
-	private PreferenceOrder<T> preforder;
-	
-	
-	/**
-	 * empty ranking function
+	 * empty constructor
 	 */
 	public RankingFunction() {
-		this(new HashSet<Pair<T, Integer>>());
+
 	}
 
+	//TODO: Fixing error occurring w/ more than 4 elements
 	
 	/**
-	 * ranking function
-	 * @param elements the elements given for this ranking function
+	 * method for generating the ranking function
+	 * 
+	 * @param po
+	 *            the given ranking function
 	 */
-	public RankingFunction(Collection<? extends Pair<T, Integer>> elements) {
-		this.setElements(new HashSet<Pair<T, Integer>>(elements));
+	public void generateRankingFunction(PreferenceOrder<T> po) {
+
+		List<IntegerVariable> integerVariables = new LinkedList<IntegerVariable>();
+
+		for (final T e : po.getSingleElements()) {
+			integerVariables.add(new IntegerVariable(e.toString(), true));
+		}
+
+		OptimizationProblem opt = new OptimizationProblem(
+				OptimizationProblem.MINIMIZE);
+
+		Iterator<Pair<T, T>> it = po.iterator();
+
+		while (it.hasNext()) {
+
+			Pair<T, T> temp = it.next();
+			
+			Iterator<IntegerVariable> integerIt = integerVariables.iterator();
+			IntegerVariable tempVarF = null;
+			IntegerVariable tempVarS = null;
+			while (integerIt.hasNext()) {
+
+				IntegerVariable tempvar = integerIt.next();
+
+				if (temp.getFirst().toString().equals(tempvar.toString())) {
+					tempVarF = tempvar;
+				}
+
+				if (temp.getSecond().toString().equals(tempvar.toString())) {
+					tempVarS = tempvar;
+				}
+				if (tempVarF != null && tempVarS != null) {
+					opt.add(new Inequation(tempVarF, tempVarS, Inequation.LESS));
+					continue;
+				}
+			}
+		}
+
+		Term target;
+		Iterator<IntegerVariable> termIt = integerVariables.listIterator();
+
+		if (termIt.hasNext()) {
+			target = termIt.next();
+
+			while (termIt.hasNext()) {
+				target.add(termIt.next());
+			}
+		
+
+		opt.setTargetFunction(target);
+		}
+		LpSolve solver = new LpSolve(opt);
+
+		rankingFunction = solver.solve();
 	}
 
-	
 	/**
-	 * returns a set of ranked elements
-	 * @return
+	 * prints the ranking function
 	 */
-	public Set<Pair<T, Integer>> getElements() {
-		return elements;
+	public void printRankingFunction() {
+		System.out.println(rankingFunction);
 	}
 
-	
 	/**
-	 * sets ranked elements
-	 * @param elements
+	 * returns the ranking function
+	 * 
+	 * @return ranking function
 	 */
-	public void setElements(Set<Pair<T, Integer>> elements) {
-		this.elements = elements;
+	public Map<Variable, Term> getRankingFunction() {
+		return rankingFunction;
 	}
-
-	
-	/**
-	 * Setter for the preference order this ranking function represents
-	 *
-	 */
-	public void setPrefOrder(PreferenceOrder<T> preforder){
-		this.preforder = preforder;
-	}
-
-	
-	/**
-	 * returns the preference order this ranking function represents 
-	 * @return the preference order
-	 */
-	public PreferenceOrder<T> getPrefOrder(){
-		return this.preforder;
-	}
-	
-	
-	/**
-	 * Adds a single pair representing an element and its rank 
-	 * @param e the element
-	 * @param rank the elements rank
-	 * @return true if successful, false if not
-	 */
-	public boolean addPair(T e, Integer rank) {
-		Pair<T, Integer> pair = new Pair<T, Integer>(e, rank);
-		return elements.add(pair);
-	}
-	
-// Methods under Construction:
-	
-//	/**
-//	 *	This functions computes the rank for each element in a preference order 
-//	 */
-//	public void computeRanks(){
-//		int[] ranks = new int[preforder.getSingleElements().size()];
-//		for(final T f : preforder.getSingleElements()){
-//			for(final T s : preforder.getSingleElements()){
-//				if (this.elements.contains(f) && this.elements.contains(s)){
-//					{
-//						if (f!=s && preforder.isRelated(f, s) && !preforder.isRelated(s, f)){
-//						}
-//					}
-//				}
-//			}
-//		}
-//	}
-//	
-//	/**
-//	 * 
-//	 */
-//	public void initialiseEmptyRankingFunction(){
-//		elements.clear();
-//		for(final T e : preforder.getSingleElements()){
-//			
-//		}
-//	}
-//	
-//	/**
-//	 * 
-//	 * @return
-//	 */
-//	public PreferenceOrder<T> computePreferenceOrder() {
-//		PreferenceOrder<T> preforder = new PreferenceOrder<T>();
-//		for (final Pair<T, Integer> f : elements) {
-//			for (final Pair<T, Integer> s : elements) {
-//				if (f != s) {
-//					if (f.getSecond() < s.getSecond()) {
-//						preforder.addPair(f.getFirst(), s.getFirst());
-//					} else {
-//						preforder.addPair(s.getFirst(), f.getFirst());
-//					}
-//				}
-//			}
-//		}
-//		return preforder;
-//	}
 }
