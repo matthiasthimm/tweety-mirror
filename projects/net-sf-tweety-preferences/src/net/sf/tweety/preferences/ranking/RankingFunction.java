@@ -1,9 +1,11 @@
 package net.sf.tweety.preferences.ranking;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import net.sf.tweety.math.equation.Inequation;
 import net.sf.tweety.math.opt.*;
@@ -39,8 +41,8 @@ public class RankingFunction<T> {
 
 	}
 
-	//TODO: Fixing error occurring w/ more than 4 elements
-	
+	// TODO: Fixing error occurring w/ more than 4 elements
+
 	/**
 	 * method for generating the ranking function
 	 * 
@@ -63,7 +65,7 @@ public class RankingFunction<T> {
 		while (it.hasNext()) {
 
 			Pair<T, T> temp = it.next();
-			
+
 			Iterator<IntegerVariable> integerIt = integerVariables.iterator();
 			IntegerVariable tempVarF = null;
 			IntegerVariable tempVarS = null;
@@ -80,7 +82,7 @@ public class RankingFunction<T> {
 				}
 				if (tempVarF != null && tempVarS != null) {
 					opt.add(new Inequation(tempVarF, tempVarS, Inequation.LESS));
-					continue;
+
 				}
 			}
 		}
@@ -94,9 +96,8 @@ public class RankingFunction<T> {
 			while (termIt.hasNext()) {
 				target.add(termIt.next());
 			}
-		
 
-		opt.setTargetFunction(target);
+			opt.setTargetFunction(target);
 		}
 		LpSolve solver = new LpSolve(opt);
 
@@ -117,5 +118,46 @@ public class RankingFunction<T> {
 	 */
 	public Map<Variable, Term> getRankingFunction() {
 		return rankingFunction;
+	}
+
+	/**
+	 * this method returns a string preference order made out of an ranking function
+	 * @returns a preference order out of a given ranking function
+	 */
+	public PreferenceOrder<String> generateStringPreferenceOrder() {
+
+		Iterator<Variable> varIt = rankingFunction.keySet().iterator();
+
+		Set<Pair<String, Integer>> elements = new HashSet<Pair<String, Integer>>();
+		//Set<Pair<String, String>> pairs = new HashSet<Pair<String, String>>();
+		PreferenceOrder<String> po = new PreferenceOrder<String>();
+		
+		while (varIt.hasNext()) {
+			Variable temp = varIt.next();
+			Pair<String, Integer> e = new Pair<String, Integer>(
+					temp.toString(), (int) rankingFunction.get(temp).doubleValue());
+			elements.add(e);
+
+		}
+		for (Pair<String, Integer> f : elements) {
+			for (Pair<String, Integer> s : elements) {
+				if (f != s) {
+					if (f.getSecond() < s.getSecond()) {
+						Pair<String, String> p = new Pair<String, String>(
+								f.getFirst(), s.getFirst());
+						po.addPair(p);
+					} else if (f.getSecond() > s.getSecond()) {
+						Pair<String, String> p = new Pair<String, String>(
+								f.getFirst(), s.getFirst());
+						po.addPair(p);
+					} else
+						continue;
+				}
+			}
+		}
+		
+		po.computeSingleElements();
+		
+		return po;
 	}
 }

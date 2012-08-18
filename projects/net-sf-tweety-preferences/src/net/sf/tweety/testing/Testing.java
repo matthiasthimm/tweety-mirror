@@ -18,6 +18,8 @@ public class Testing {
 
 	public static void main(String[] args) {
 		
+		// StringPO to RankingFunction and back to StringPO
+		
 		PreferenceOrder<String> testing = new PreferenceOrder<String>();
 		
 		String alpha = "alpha";
@@ -50,8 +52,7 @@ public class Testing {
 		
 		// String-Order
 		
-		
-
+	
 //		Pair<String, String> alpha = new Pair<String, String>("a1", "a2");
 //		Pair<String, String> beta = new Pair<String, String>("be1", "be2");
 //		Pair<String, String> gamma = new Pair<String, String>("gam1", "gam2");
@@ -63,11 +64,19 @@ public class Testing {
 //		testing.addPair(gamma);
 //		testing.addPair(delta);
 		
-		testing.writeToFile("testing-new.po");
+		//testing.writeToFile("testing-new.po");
 		
 		RankingFunction<String> rankFuncTest = new RankingFunction<String>();
 		rankFuncTest.generateRankingFunction(testing);
 		rankFuncTest.printRankingFunction();
+		
+		PreferenceOrder<String> po = rankFuncTest.generateStringPreferenceOrder();
+		System.out.println("StringPO +++++++++++++++++++++");
+		System.out.println("StringPO: " + po);
+		System.out.println("Elements: " + po.getSingleElements());
+		System.out.println("Totality: " + po.isTotal());
+		System.out.println("Transitivity: " + po.isTransitive());
+		System.out.println("StringPO +++++++++++++++++++++");
 		
 //		System.out.println(testing.size());
 //		System.out.println(testing);
@@ -78,13 +87,13 @@ public class Testing {
 //		
 //		System.out.println(testing.size());
 		
-		System.out.println("TESTING +++++++++++++++++++++");
-		System.out.println("Testing: " + testing);
-		System.out.println("Elements: " + testing.getSingleElements());
-//		System.out.println("Array: " + testing.toArray(testingarray).toString());
-		System.out.println("Totality: " + testing.isTotal());
-		System.out.println("Transitivity: " + testing.isTransitive());
-		System.out.println("TESTING +++++++++++++++++++++");
+//		System.out.println("TESTING +++++++++++++++++++++");
+//		System.out.println("Testing: " + testing);
+//		System.out.println("Elements: " + testing.getSingleElements());
+////		System.out.println("Array: " + testing.toArray(testingarray).toString());
+//		System.out.println("Totality: " + testing.isTotal());
+//		System.out.println("Transitivity: " + testing.isTransitive());
+//		System.out.println("TESTING +++++++++++++++++++++");
 		
 		
 		
