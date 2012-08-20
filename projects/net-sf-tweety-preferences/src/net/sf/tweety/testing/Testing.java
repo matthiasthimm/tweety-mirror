@@ -26,7 +26,7 @@ public class Testing {
 		String beta = "beta";
 		String gamma = "gamma";
 		String delta = "delta";
-		//String eps = "eps";
+		String eps = "eps";
 		
 		Pair<String, String> one = new Pair<String, String>(alpha, beta);
 		Pair<String, String> two = new Pair<String, String>(alpha, gamma);
@@ -34,10 +34,10 @@ public class Testing {
 		Pair<String, String> eight = new Pair<String, String>(gamma, delta);
 		Pair<String, String> five = new Pair<String, String>(gamma, beta);
 		Pair<String, String> six = new Pair<String, String>(beta, delta);
-//		Pair<String, String> seven = new Pair<String, String>(eps, beta);
-//		Pair<String, String> nine = new Pair<String, String>(gamma, eps);
-//		Pair<String, String> ten = new Pair<String, String>(delta, eps);
-//		Pair<String, String> four = new Pair<String, String>(alpha, eps);
+		Pair<String, String> seven = new Pair<String, String>(eps, beta);
+		Pair<String, String> nine = new Pair<String, String>(gamma, eps);
+		Pair<String, String> ten = new Pair<String, String>(delta, eps);
+		Pair<String, String> four = new Pair<String, String>(alpha, eps);
 		
 		testing.addPair(one);
 		testing.addPair(two);testing.addPair(three);
@@ -46,8 +46,8 @@ public class Testing {
 		testing.addPair(six);
 		
 		testing.addPair(eight);
-//		testing.addPair(nine);testing.addPair(ten);
-//		testing.addPair(four);testing.addPair(seven);
+		testing.addPair(nine);testing.addPair(ten);
+		testing.addPair(four);testing.addPair(seven);
 	
 		
 		// String-Order
@@ -70,13 +70,13 @@ public class Testing {
 		rankFuncTest.generateRankingFunction(testing);
 		rankFuncTest.printRankingFunction();
 		
-		PreferenceOrder<String> po = rankFuncTest.generateStringPreferenceOrder();
-		System.out.println("StringPO +++++++++++++++++++++");
-		System.out.println("StringPO: " + po);
-		System.out.println("Elements: " + po.getSingleElements());
-		System.out.println("Totality: " + po.isTotal());
-		System.out.println("Transitivity: " + po.isTransitive());
-		System.out.println("StringPO +++++++++++++++++++++");
+////		PreferenceOrder<String> po = rankFuncTest.generateStringPreferenceOrder();
+//		System.out.println("StringPO +++++++++++++++++++++");
+//		System.out.println("StringPO: " + po);
+//		System.out.println("Elements: " + po.getSingleElements());
+//		System.out.println("Totality: " + po.isTotal());
+//		System.out.println("Transitivity: " + po.isTransitive());
+//		System.out.println("StringPO +++++++++++++++++++++");
 		
 //		System.out.println(testing.size());
 //		System.out.println(testing);
@@ -149,6 +149,5 @@ public class Testing {
 //		System.out.println("Transitivity: " + totalcount.isTransitive());
 //		System.out.println("TOTALCOUNT +++++++++++++++++++++");
 		
-	
 	}
 }

@@ -223,6 +223,19 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 		return null;
 	}
 
+	
+	public boolean containsPair(T a, T b){
+		for (Pair<T, T> p : elements) 
+			if (p.getFirst() == a && p.getSecond() == b){ 
+				return true;
+				}
+		return false;
+	}
+	
+	public boolean containsPair(Pair<T, T> e){
+		return (elements.contains(e));
+	}
+	
 	/**
 	 * returns the size of the set
 	 * 
@@ -265,19 +278,19 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 //	 * @return an array
 //	 */
 //	public T[] toArray(T[] a){
-//	
+//		return a;
 //	}
 	
 
 //	Under Construction:
-//	/**
-//	 * 
-//	 */
-//	public RankingFunction<T> computeRankingFunction(){
-//		RankingFunction<T> rankfunc = new RankingFunction<T>();
-//		rankfunc.computeRanks();
-//		return rankfunc;
-//	}
+	/**
+	 * 
+	 */
+	public RankingFunction<T> computeRankingFunction(){
+		RankingFunction<T> rankfunc = new RankingFunction<T>();
+		rankfunc.generateRankingFunction(this);
+		return rankfunc;
+	}
 	
 	
 	/**

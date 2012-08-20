@@ -57,9 +57,11 @@ public class RankingFunction<T> {
 			integerVariables.add(new IntegerVariable(e.toString(), true));
 		}
 
+		Set<Pair<IntegerVariable, IntegerVariable>> optIneq = new HashSet<Pair<IntegerVariable, IntegerVariable>>(); 
 		OptimizationProblem opt = new OptimizationProblem(
 				OptimizationProblem.MINIMIZE);
-
+		
+		
 		Iterator<Pair<T, T>> it = po.iterator();
 
 		while (it.hasNext()) {
@@ -81,28 +83,31 @@ public class RankingFunction<T> {
 					tempVarS = tempvar;
 				}
 				if (tempVarF != null && tempVarS != null) {
-					opt.add(new Inequation(tempVarF, tempVarS, Inequation.LESS));
-
+					optIneq.add(new Pair<IntegerVariable, IntegerVariable>(tempVarF, tempVarS));
+				}else{
+					continue;
 				}
 			}
 		}
-
-		Term target;
-		Iterator<IntegerVariable> termIt = integerVariables.listIterator();
-
-		if (termIt.hasNext()) {
-			target = termIt.next();
-
-			while (termIt.hasNext()) {
-				target.add(termIt.next());
-			}
-
-			opt.setTargetFunction(target);
+		
+		for(Pair<IntegerVariable, IntegerVariable> p : optIneq){
+			opt.add(new Inequation(p.getFirst(), p.getSecond(), Inequation.LESS));
 		}
+		
+		Iterator<IntegerVariable> termIt = integerVariables.listIterator();
+			
+		if (termIt.hasNext()){
+			Term tar = termIt.next();
+			while (termIt.hasNext()){
+				tar = tar.add(termIt.next());
+			}
+			opt.setTargetFunction(tar);
+		}	
+		
 		LpSolve solver = new LpSolve(opt);
 
 		rankingFunction = solver.solve();
-	}
+}
 
 	/**
 	 * prints the ranking function
