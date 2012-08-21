@@ -22,11 +22,11 @@ public class Testing {
 		
 		PreferenceOrder<String> testing = new PreferenceOrder<String>();
 		
-		String alpha = "alpha";
-		String beta = "beta";
-		String gamma = "gamma";
-		String delta = "delta";
-		String eps = "eps";
+		String alpha = "a";
+		String beta = "b";
+		String gamma = "c";
+		String delta = "d";
+		String eps = "e";
 		
 		Pair<String, String> one = new Pair<String, String>(alpha, beta);
 		Pair<String, String> two = new Pair<String, String>(alpha, gamma);
@@ -36,7 +36,7 @@ public class Testing {
 		Pair<String, String> six = new Pair<String, String>(beta, delta);
 		Pair<String, String> seven = new Pair<String, String>(eps, beta);
 		Pair<String, String> nine = new Pair<String, String>(gamma, eps);
-		Pair<String, String> ten = new Pair<String, String>(delta, eps);
+		Pair<String, String> ten = new Pair<String, String>(eps, delta);
 		Pair<String, String> four = new Pair<String, String>(alpha, eps);
 		
 		testing.addPair(one);

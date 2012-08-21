@@ -41,8 +41,7 @@ public class RankingFunction<T> {
 
 	}
 
-	// TODO: Fixing error occurring w/ more than 4 elements
-	//		 Still buggy			
+			
 
 	/**
 	 * method for generating the ranking function
@@ -106,7 +105,7 @@ public class RankingFunction<T> {
 		}	
 		
 		LpSolve solver = new LpSolve(opt);
-		// something is going terribly wrong right here:
+		
 		rankingFunction = solver.solve();
 }
 
