@@ -69,6 +69,8 @@ public class Testing {
 		RankingFunction<String> rankFuncTest = new RankingFunction<String>();
 		rankFuncTest.generateRankingFunction(testing);
 		rankFuncTest.printRankingFunction();
+//		Set<Variable> var = rankFuncTest.getRankingFunction().keySet();
+		
 		
 ////		PreferenceOrder<String> po = rankFuncTest.generateStringPreferenceOrder();
 //		System.out.println("StringPO +++++++++++++++++++++");

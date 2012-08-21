@@ -102,8 +102,6 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //------- Methods ----------------------------------------------------
 	
-
-
 	/**
 	 * adds a given pair of generic elements to the set.
 	 * 
@@ -223,7 +221,12 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 		return null;
 	}
 
-	
+	/**
+	 * checks whether this preference order contains a pair of given elements
+	 * @param a the first element
+	 * @param b the second element
+	 * @return true if pair is in this preference order, false if not
+	 */
 	public boolean containsPair(T a, T b){
 		for (Pair<T, T> p : elements) 
 			if (p.getFirst() == a && p.getSecond() == b){ 
@@ -232,6 +235,11 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 		return false;
 	}
 	
+	/**
+	 * checks whether this preference order contains a given pair
+	 * @param e the given pair
+	 * @return true if pair is in this preference order, false if not
+	 */
 	public boolean containsPair(Pair<T, T> e){
 		return (elements.contains(e));
 	}
