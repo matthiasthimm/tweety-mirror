@@ -13,7 +13,7 @@
  }
  
  PARSER_BEGIN(POParser)
- package net.sf.tweety.preferences.parser;
+ package net.sf.tweety.preferences.io;
  
  import java.util.*;
  import net.sf.tweety.preferences.*;

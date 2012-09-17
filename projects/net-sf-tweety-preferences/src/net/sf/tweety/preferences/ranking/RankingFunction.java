@@ -1,5 +1,7 @@
 package net.sf.tweety.preferences.ranking;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -17,76 +19,54 @@ import net.sf.tweety.preferences.PreferenceOrder;
 import net.sf.tweety.util.Pair;
 
 /**
- * UNDER CONSTRUCTION This class is meant to provide ranking functions to given
+ * This class is meant to provide ranking functions to given
  * preference orders and vice versa. To be implemented. A ranking function
  * characterizes a preference order uniquely as: 1.: rank: O -> N+ where O is
  * the set of elements in the preference order. 2.: the sum of all ranks for
  * each element in O is minimal
  * 
+ * TODO exception handling for invalid preference orders (total preorder)
  * @author Bastian Wolf
+ * @param <T>
  * 
  */
 
-public class RankingFunction<T> {
+public class RankingFunction<T> extends HashMap<T, Integer> implements Map<T, Integer>  {
+
+	
+	private static final long serialVersionUID = 1L;
 
 	/**
-	 * the map containing the ranking function
+	 * this constructor creates a ranking function using a given preference order
+	 * @param po the given preference order
 	 */
-	Map<Variable, Term> rankingFunction;
-
-	/**
-	 * empty constructor
-	 */
-	public RankingFunction() {
-
-	}
-
-			
-
-	/**
-	 * method for generating the ranking function
-	 * 
-	 * @param po
-	 *            the given ranking function
-	 */
-	public void generateRankingFunction(PreferenceOrder<T> po) {
-
-		List<IntegerVariable> integerVariables = new LinkedList<IntegerVariable>();
-
-		for (final T e : po.getSingleElements()) {
-			integerVariables.add(new IntegerVariable(e.toString(), true));
-		}
-
+	public RankingFunction(PreferenceOrder<T> po) {
+	
+		Map<T, IntegerVariable> intVar = new HashMap<T, IntegerVariable>();
+		
 		Set<Pair<IntegerVariable, IntegerVariable>> optIneq = new HashSet<Pair<IntegerVariable, IntegerVariable>>(); 
 		OptimizationProblem opt = new OptimizationProblem(
 				OptimizationProblem.MINIMIZE);
 		
+		for (final T e : po.getDomainElements()) {
+			intVar.put(e, new IntegerVariable(e.toString(), true));
+		}
 		
 		Iterator<Pair<T, T>> it = po.iterator();
 
-		while (it.hasNext()) {
+		while (it.hasNext()){
 
 			Pair<T, T> temp = it.next();
 
-			Iterator<IntegerVariable> integerIt = integerVariables.iterator();
 			IntegerVariable tempVarF = null;
 			IntegerVariable tempVarS = null;
-			while (integerIt.hasNext()) {
-
-				IntegerVariable tempvar = integerIt.next();
-
-				if (temp.getFirst().toString().equals(tempvar.toString())) {
-					tempVarF = tempvar;
-				}
-
-				if (temp.getSecond().toString().equals(tempvar.toString())) {
-					tempVarS = tempvar;
-				}
-				if (tempVarF != null && tempVarS != null) {
-					optIneq.add(new Pair<IntegerVariable, IntegerVariable>(tempVarF, tempVarS));
-				}else{
-					continue;
-				}
+			
+			if (po.contains(temp)){
+				tempVarF = intVar.get(temp.getFirst());
+				tempVarS = intVar.get(temp.getSecond());
+				optIneq.add(new Pair<IntegerVariable, IntegerVariable>(tempVarF, tempVarS));	
+			} else {
+				continue;
 			}
 		}
 		
@@ -94,26 +74,54 @@ public class RankingFunction<T> {
 			opt.add(new Inequation(p.getFirst(), p.getSecond(), Inequation.LESS));
 		}
 		
-		Iterator<IntegerVariable> termIt = integerVariables.listIterator();
+		List<Term> terms = new LinkedList<Term>();
+		
+		for(Entry<T, IntegerVariable> e : intVar.entrySet()){
+			Term t = e.getValue();
+			terms.add(t);
+		}
 			
-		if (termIt.hasNext()){
-			Term tar = termIt.next();
-			while (termIt.hasNext()){
-				tar = tar.add(termIt.next());
+		Iterator<Term> termIt = terms.listIterator();
+		
+		if(termIt.hasNext()){
+			Term t = termIt.next();
+			while(termIt.hasNext()){
+				t = t.add(termIt.next());
 			}
-			opt.setTargetFunction(tar);
-		}	
+			opt.setTargetFunction(t);
+		}
 		
 		LpSolve solver = new LpSolve(opt);
+		Map<Variable, Term> solution = solver.solve();
+		Map<T, Integer> sol = new HashMap<T, Integer>();
+		for (Entry<Variable, Term> e : solution.entrySet()){
+			T key = (T) e.getKey().toString();
+			Integer val = (int) e.getValue().doubleValue();
+			sol.put(key, val);
+		}
 		
-		rankingFunction = solver.solve();
-}
+		this.putAll(sol);
+	}
 
+			
 	/**
-	 * prints the ranking function
+	 * returns a string representation for this ranking function
 	 */
-	public void printRankingFunction() {
-		System.out.println(rankingFunction);
+	public String toString() {
+		String s = "{";
+		int count = 1;
+		for (Entry<T, Integer> e : this.entrySet()){
+			
+			if (count < this.entrySet().size())
+				s += e.toString() + ", ";
+			else
+				s += e.toString();
+		count++;
+		}
+		s += "}";
+		
+		return s;
+		
 	}
 
 	/**
@@ -121,48 +129,98 @@ public class RankingFunction<T> {
 	 * 
 	 * @return ranking function
 	 */
-	public Map<Variable, Term> getRankingFunction() {
-		return rankingFunction;
+	public Map<T, Integer> getRankingFunction() {
+		return this;
 	}
 
 	/**
-	 * this method returns a string preference order made out of an ranking function
+	 * this method returns a preference order made out of an ranking function
 	 * @returns a preference order out of a given ranking function
 	 */
-	public PreferenceOrder<String> generateStringPreferenceOrder() {
+	public PreferenceOrder<T> generatePreferenceOrder() {
 
-		Iterator<Variable> varIt = rankingFunction.keySet().iterator();
-
-		Set<Pair<String, Integer>> elements = new HashSet<Pair<String, Integer>>();
-		//Set<Pair<String, String>> pairs = new HashSet<Pair<String, String>>();
-		PreferenceOrder<String> po = new PreferenceOrder<String>();
+		PreferenceOrder<T> po = new PreferenceOrder<T>();
+		Map<T, Integer> in = this; 
 		
-		while (varIt.hasNext()) {
-			Variable temp = varIt.next();
-			Pair<String, Integer> e = new Pair<String, Integer>(
-					temp.toString(), (int) rankingFunction.get(temp).doubleValue());
-			elements.add(e);
-
-		}
-		for (Pair<String, Integer> f : elements) {
-			for (Pair<String, Integer> s : elements) {
-				if (f != s) {
-					if (f.getSecond() < s.getSecond()) {
-						Pair<String, String> p = new Pair<String, String>(
-								f.getFirst(), s.getFirst());
-						po.addPair(p);
-					} else if (f.getSecond() > s.getSecond()) {
-						Pair<String, String> p = new Pair<String, String>(
-								f.getFirst(), s.getFirst());
-						po.addPair(p);
-					} else
-						continue;
+		for(Entry<T, Integer> f : in.entrySet()){
+			for(Entry<T, Integer> s : in.entrySet()){
+				if(!f.getKey().equals(s.getKey()) && ((!po.containsPair(f.getKey(), s.getKey()) || (!po.containsPair(s.getKey(), f.getKey()))))){
+					if(f.getValue() <= s.getValue()){
+						po.addPair(f.getKey(), s.getKey());
+					} else if(f.getValue() > s.getValue()){
+						po.addPair(s.getKey(), f.getKey());
+					}
 				}
 			}
 		}
-		
-		po.computeSingleElements();
-		
 		return po;
 	}
+
+	/**
+	 * checks whether the key is present in the entry-set of the map
+	 */
+	@Override
+	public boolean containsKey(Object key) {
+		for(Entry<T, Integer> o : this.entrySet()){
+			if (o.getKey().equals(key)){
+				return true;
+			}}
+		return false;
+	}
+
+	/**
+	 * checks whether the value is present in the entry-set of the map
+	 */
+	@Override
+	public boolean containsValue(Object value) {
+		Iterator<Entry<T, Integer>> temp = this.entrySet().iterator();
+		if (temp.hasNext()){
+			while (temp.hasNext()){
+				if (temp.next().getValue().equals(value)){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+
+	/**
+	 * returns the value to a given key
+	 * @return the value if present, null otherwise (but value.equals(null) is possible)
+	 */
+	@Override
+	public Integer get(Object key) {
+		Iterator<Entry<T, Integer>> temp = this.entrySet().iterator();
+		if (temp.hasNext()){
+			while (temp.hasNext()){
+				Entry<T, Integer> e = temp.next();
+				if (e.getKey().equals(key)){
+					return e.getValue();
+				}
+			}
+		}
+		return null;
+	}
+
+	
+	/**
+	 * returns a collection containing all values of the map
+	 */
+	@Override
+	public Collection<Integer> values() {
+		Set<Integer> v = new HashSet<Integer>();
+		Iterator<Entry<T, Integer>> temp = this.entrySet().iterator();
+		if (temp.hasNext()){
+			while (temp.hasNext()){
+				Entry<T, Integer> e = temp.next();
+				v.add(e.getValue());
+				}
+			}
+		
+		return v;
+	}
+
+		
+	
 }

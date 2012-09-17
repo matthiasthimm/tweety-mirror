@@ -1,5 +1,8 @@
 package net.sf.tweety.preferences;
 
+import java.util.Set;
+
+import net.sf.tweety.util.Pair;
 
 /**
  * This abstract class provides a basic implementation of a generic set of pairs to be used for
@@ -10,7 +13,7 @@ package net.sf.tweety.preferences;
  * @param <T> the generic type of objects/pairs in this binary relation
  */
 
-public abstract class BinaryRelation<T> {
+public abstract interface BinaryRelation<T> extends Set<Pair<T, T>> {
 
 	/**
 	 * returns whether the elements a and b are related
@@ -23,7 +26,7 @@ public abstract class BinaryRelation<T> {
 	/**
 	 * returns a set of the single elements in this binary relation
 	 */
-	public abstract void computeSingleElements();
+	public abstract Set<T> getDomainElements();
 	
 	/**
 	 * checks whether the set is total or not
@@ -37,12 +40,17 @@ public abstract class BinaryRelation<T> {
 	 */
 	public abstract boolean isTransitive();
 	
-
+	/**
+	 * checks whether the preference order is valid (transitive, total and unique)
+	 * @return true if valid, false if not
+	 */
+	public abstract boolean isValid();
+	
 	/**
 	 * returns a String with the elements of this set
 	 * @return a String with the elements of this set
 	 */
 	public abstract String toString();
-		
+	
 	
 }

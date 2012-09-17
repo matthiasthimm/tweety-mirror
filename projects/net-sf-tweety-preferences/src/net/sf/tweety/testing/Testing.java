@@ -3,7 +3,6 @@ package net.sf.tweety.testing;
 
 import net.sf.tweety.preferences.PreferenceOrder;
 import net.sf.tweety.util.*;
-import net.sf.tweety.preferences.ranking.RankingFunction;
 
 
 
@@ -39,15 +38,15 @@ public class Testing {
 		Pair<String, String> ten = new Pair<String, String>(eps, delta);
 		Pair<String, String> four = new Pair<String, String>(alpha, eps);
 		
-		testing.addPair(one);
-		testing.addPair(two);testing.addPair(three);
+		testing.add(one);
+		testing.add(two);testing.add(three);
 		
-		testing.addPair(five);
-		testing.addPair(six);
+		testing.add(five);
+		testing.add(six);
 		
-		testing.addPair(eight);
-		testing.addPair(nine);testing.addPair(ten);
-		testing.addPair(four);testing.addPair(seven);
+		testing.add(eight);
+		testing.add(nine);testing.add(ten);
+		testing.add(four);testing.add(seven);
 	
 		
 		// String-Order
@@ -66,9 +65,13 @@ public class Testing {
 		
 		//testing.writeToFile("testing-new.po");
 		
-		RankingFunction<String> rankFuncTest = new RankingFunction<String>();
-		rankFuncTest.generateRankingFunction(testing);
-		rankFuncTest.printRankingFunction();
+		//RankingFunction<String> rankFuncTest = new RankingFunction<String>(testing);
+		System.out.println(testing.getRankingFunction());
+		System.out.println(testing.getRankingFunction().generatePreferenceOrder());
+		System.out.println(testing.getRankingFunction().generatePreferenceOrder().isTotal());
+		System.out.println(testing.getRankingFunction().generatePreferenceOrder().isTransitive());
+//		rankFuncTest.generateRankingFunction(testing);
+		
 //		Set<Variable> var = rankFuncTest.getRankingFunction().keySet();
 		
 		
@@ -89,13 +92,13 @@ public class Testing {
 //		
 //		System.out.println(testing.size());
 		
-//		System.out.println("TESTING +++++++++++++++++++++");
-//		System.out.println("Testing: " + testing);
-//		System.out.println("Elements: " + testing.getSingleElements());
-////		System.out.println("Array: " + testing.toArray(testingarray).toString());
-//		System.out.println("Totality: " + testing.isTotal());
-//		System.out.println("Transitivity: " + testing.isTransitive());
-//		System.out.println("TESTING +++++++++++++++++++++");
+		System.out.println("TESTING +++++++++++++++++++++");
+		System.out.println("Testing: " + testing);
+		System.out.println("Elements: " + testing.getDomainElements());
+//		System.out.println("Array: " + testing.toArray(testingarray).toString());
+		System.out.println("Totality: " + testing.isTotal());
+		System.out.println("Transitivity: " + testing.isTransitive());
+		System.out.println("TESTING +++++++++++++++++++++");
 		
 		
 		

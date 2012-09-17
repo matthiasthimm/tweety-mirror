@@ -1,10 +1,5 @@
 package net.sf.tweety.preferences;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.Writer;
 import java.util.*;
 
 import net.sf.tweety.preferences.ranking.RankingFunction;
@@ -20,22 +15,13 @@ import net.sf.tweety.util.Pair;
  *            the generic type of objects/pairs in this preference order
  */
 
-public class PreferenceOrder<T> extends BinaryRelation<T> {
+public class PreferenceOrder<T> implements BinaryRelation<T> {
 	
-	/**
-	 * the single elements used
-	 */
-	private Set<T> singleElements;
-
 	/**
 	 * a given set of Pairs
 	 */
 	private Set<Pair<T, T>> elements;
 	
-	/**
-	 * the ranking function for this preference order
-	 */
-	private RankingFunction<T> rankingFunction;
 	
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	
 //------- Constructor ------------------------------------------------	
@@ -55,49 +41,20 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 	 */
 	public PreferenceOrder(Collection<? extends Pair<T, T>> elements) {
 		this.elements = new HashSet<Pair<T, T>>(elements);
-		this.singleElements = new HashSet<T>();
-		computeSingleElements();
 	}
 
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	
 //------- Getter & Setter --------------------------------------------
 		
-	/**
-	 * a setter for the single elements of a preference order
-	 * 
-	 * @param singleElements
-	 *            the given set of single elements
-	 */
-	public void setSingleElements(Set<T> singleElements) {
-		this.singleElements = singleElements;
-	}
-
-	/**
-	 * returns the single elements in this preference order
-	 * 
-	 * @return the single elements in this preference order
-	 */
-	public Set<T> getSingleElements() {
-		if (singleElements.isEmpty())
-			computeSingleElements();
-		return singleElements;
-	}
 
 	/**
 	 * returns the ranking function for this preference order
 	 * @return the ranking function for this preference order
 	 */
 	public RankingFunction<T> getRankingFunction() {
-		return rankingFunction;
+		return new RankingFunction<T>(this);
 	}
 
-	/**
-	 * the setter for the ranking function of this preference order
-	 * @param rankingFunction the ranking function of this order
-	 */
-	public void setRankingFunction(RankingFunction<T> rankingFunction) {
-		this.rankingFunction = rankingFunction;
-	}
 	
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //------- Methods ----------------------------------------------------
@@ -109,9 +66,8 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 	 *            the given set
 	 * @return true if successful, false if not
 	 */
-
-	public boolean addPair(Pair<T, T> e) {
-		return this.elements.add(e);
+	public boolean add(Pair<T,T> e) {
+		return elements.add((Pair<T, T>) e);
 	}
 
 	/**
@@ -131,13 +87,15 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 	/**
 	 * (re-)computes a set of single elements in this preference order
 	 */
-	public void computeSingleElements() {
-		if (!singleElements.isEmpty())
-			singleElements.clear();
+	public Set<T> getDomainElements() {
+		Set<T> domainElements = new HashSet<T>();
+		
 		for (Pair<T, T> pairs : elements) {
-			singleElements.add(pairs.getFirst());
-			singleElements.add(pairs.getSecond());
+			domainElements.add(pairs.getFirst());
+			domainElements.add(pairs.getSecond());
 		}
+		
+		return domainElements;
 	}
 
 	/**
@@ -147,8 +105,9 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 	 *            the pair to be removed
 	 * @return true if successful, false if not
 	 */
-	public boolean removePair(Pair<T, T> e) {
-		return this.elements.remove(e);
+	@Override
+	public boolean remove(Object o) {
+		return this.elements.remove(o);
 	}
 
 	/**
@@ -169,6 +128,7 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 	 *            the second element to be checked
 	 * @return true if related, false if not.
 	 */
+	
 	public boolean isRelated(T a, T b) {
 		for (Pair<T, T> pair : elements) {
 			if (pair.getFirst() == a) {
@@ -185,8 +145,9 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 	 * 
 	 * @return an iterator over a set of pairs
 	 */
+
 	public Iterator<Pair<T, T>> iterator() {
-		return this.elements.iterator();
+		return elements.iterator();
 	}
 
 	/**
@@ -196,7 +157,7 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 	 *            the demanded pair
 	 * @return a pair if it exists, null otherwise
 	 */
-	public Pair<T, T> getPair(Pair<T, T> e) {
+	public Pair<T, T> get(Pair<T, T> e) {
 		if (elements.contains(e)) {
 			return e;
 		}
@@ -240,8 +201,8 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 	 * @param e the given pair
 	 * @return true if pair is in this preference order, false if not
 	 */
-	public boolean containsPair(Pair<T, T> e){
-		return (elements.contains(e));
+	public boolean contains(Object o){
+		return (elements.contains(o));
 	}
 	
 	/**
@@ -270,77 +231,23 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 
 	}
 	
-//	Experimental:	
-	
-//	/**
-//	 * returns an array containing all objects
-//	 * @return the Object[]-array
-//	 */
-//	public Object[] toArray(){
-//		return this.elements.toArray();
-//	}
-//	
-//	/**
-//	 * returns all elements in an array
-//	 * @param a is a given array
-//	 * @return an array
-//	 */
-//	public T[] toArray(T[] a){
-//		return a;
-//	}
-	
-
-//	Under Construction:
 	/**
-	 * 
+	 * returns an array containing all objects
+	 * @return the Object[]-array
 	 */
-	public RankingFunction<T> computeRankingFunction(){
-		RankingFunction<T> rankfunc = new RankingFunction<T>();
-		rankfunc.generateRankingFunction(this);
-		return rankfunc;
+	public Object[] toArray(){
+		return this.elements.toArray();
 	}
 	
-	
 	/**
-	 * a method for writing preference orders into files from which they can be read in again
-	 * @param filename the filename for the file this order has do be written in
+	 * returns all elements in an array
+	 * @param a is a given array
+	 * @return an array
 	 */
-	public void writeToFile(String filename){
-		
-		PrintWriter pw = null;
-		try {
-		Writer fw = new FileWriter(filename);
-		Writer bw = new BufferedWriter(fw);
-		pw = new PrintWriter(bw);
-		
-		String s = "{";
-		int count = 1;
-		for (T e : getSingleElements()){
-			
-			if (count < singleElements.size())
-				s += e.toString() + ", ";
-			else
-				s += e.toString();
-		count++;
-		}
-		
-		s += "}";
-		
-		pw.println(s);
-		
-		Iterator<Pair<T,T>> it = iterator();
-		while (it.hasNext()){
-			Pair<T, T> temp = it.next();
-			pw.println(temp.getFirst() + " < " + temp.getSecond());
-		}
-		} catch (IOException e){
-			System.out.println("File could not be generated");
-		} finally {
-			if (pw != null)
-				pw.close();
-		}
+	@Override
+	public <T> T[] toArray(T[] a) {
+		return this.getDomainElements().toArray(a);
 	}
-	
 	
 	/**
 	 * checks whether the set is total or not
@@ -348,8 +255,8 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 	 * @return true if total, false otherwise
 	 */
 	public boolean isTotal() {
-		for (final T f : getSingleElements()) {
-			for (final T s : getSingleElements()) {
+		for (final T f : getDomainElements()) {
+			for (final T s : getDomainElements()) {
 				if (f != s && !isRelated(f, s) && !isRelated(s, f))
 					return false;
 			}
@@ -363,9 +270,9 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 	 * @return true if transitive, false otherwise
 	 */
 	public boolean isTransitive() {
-		for (final T a : getSingleElements()) {
-			for (final T b : getSingleElements()) {
-				for (final T c : getSingleElements()) {
+		for (final T a : getDomainElements()) {
+			for (final T b : getDomainElements()) {
+				for (final T c : getDomainElements()) {
 					if (a != b && b != c && a != c && isRelated(a, b)
 							&& isRelated(b, c) && !isRelated(a, c)) {
 						return false;
@@ -375,4 +282,106 @@ public class PreferenceOrder<T> extends BinaryRelation<T> {
 		}
 		return true;
 	}
+
+	/**
+	 * checks whether the given set represents a valid preference order
+	 * @return true if valid, false if not
+	 */
+	public boolean isValid(){
+		for(T a : getDomainElements()){
+			for (T b: getDomainElements()){
+				if(a != b){
+					if(isRelated(a, b) && isRelated(b, a)){
+						return false;
+					}
+				}
+			}
+		}
+		return (true && isTotal() && isTransitive());
+	}
+
+	/**
+	 * clears the current preference order element set
+	 */
+	@Override
+	public void clear() {
+		elements.clear();
+	}
+
+	/**
+	 * checks, whether all of the given elements are contained in the preference order
+	 * @return true iff all elements are contained, false otherwise
+	 */
+	@Override
+	public boolean containsAll(Collection<?> c) {
+		Iterator<?> it = c.iterator();
+		while (it.hasNext()) {
+			Object e = it.next();
+			if(!elements.contains(e)){
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * removes all given elements from the preference order
+	 * @return true if elements-set has changed, false if not
+	 */
+	@Override
+	public boolean removeAll(Collection<?> c) {
+		Iterator<?> it = c.iterator();
+		Set<Pair<T, T>> p = new HashSet<Pair<T, T>>();
+		while(it.hasNext()){
+			Object e = it.next();
+			for(Pair<T, T> a : elements){
+				if(!c.contains(a))
+					p.add(a);
+			}
+		}
+		if(p.equals(elements)){ 
+			return false;
+		}
+		elements = p;
+		return true;
+	}
+	
+	/**
+	 * keeps all the given elements in the element set and removes the rest
+	 * @return true if the set changed, false if not
+	 */
+	@Override
+	public boolean retainAll(Collection<?> c) {
+		Iterator<?> it = c.iterator();
+		Set<Pair<T,T>> p = new HashSet<Pair<T,T>>();
+		while(it.hasNext()){
+			Object e = it.next();
+			for(Pair<T, T> a : elements){
+				if(a.equals(e)){
+					p.add(a);
+				}
+			}
+		}	
+		if (p.equals(elements)){
+			return false;
+		}
+		elements = p;
+		return true;
+	}
+
+	/**
+	 * adds all given elements to the preference order
+	 * @return true if element-set changed, false if not
+	 */
+	@Override
+	public boolean addAll(Collection<? extends Pair<T, T>> c) {
+		Set<Pair<T, T>> temp = this;
+		for (Pair<T, T> p : c){
+			temp.add(p);
+		}
+		if(!this.equals(temp))
+			return true;
+		else
+			return false;
+	}	
 }
