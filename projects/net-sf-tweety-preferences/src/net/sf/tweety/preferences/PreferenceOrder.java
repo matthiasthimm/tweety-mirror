@@ -18,9 +18,29 @@ import net.sf.tweety.util.Pair;
 public class PreferenceOrder<T> implements BinaryRelation<T> {
 	
 	/**
-	 * a given set of Pairs
+	 * 
 	 */
-	private Set<Pair<T, T>> elements;
+	final static int LESS = 0;
+	
+	/**
+	 * 
+	 */
+	final static int LEQ = 1;
+	
+//	/**
+//	 * a given set of Pairs
+//	 */
+//	private Set<Pair<T, T>> elements;
+	
+	/**
+	 * pairs contained in this po related in a less-relation
+	 */
+	private Set<Pair<T, T>> lessRelations;
+	
+	/**
+	 * pairs contained in this po related in a less-equal-relation
+	 */
+	private Set<Pair<T, T>> leqRelations;
 	
 	
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	
@@ -30,7 +50,7 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	 * Creates an empty HashSet of preference order.
 	 */
 	public PreferenceOrder() {
-		this(new HashSet<Pair<T, T>>());
+		this(new HashSet<Pair<T, T>>(), new HashSet<Pair<T, T>>());
 	}
 
 	/**
@@ -39,8 +59,9 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	 * @param elements
 	 *            the set of given element pairs
 	 */
-	public PreferenceOrder(Collection<? extends Pair<T, T>> elements) {
-		this.elements = new HashSet<Pair<T, T>>(elements);
+	public PreferenceOrder(Collection<? extends Pair<T, T>> lessRelations, Collection<? extends Pair<T, T>> leqRelations) {
+		this.lessRelations = new HashSet<Pair<T, T>>(lessRelations);
+		this.leqRelations = new HashSet<Pair<T, T>>(leqRelations);
 	}
 
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	
@@ -66,9 +87,12 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	 *            the given set
 	 * @return true if successful, false if not
 	 */
-	public boolean add(Pair<T,T> e) {
-		return elements.add((Pair<T, T>) e);
+	@Override
+	public boolean add(Pair<T, T> p) {
+		return true;
 	}
+	
+	
 
 	/**
 	 * adds two given (single) elements as pair into the set
@@ -79,9 +103,16 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	 *            second element of the new pair
 	 * @return true if successful, false if not
 	 */
-	public boolean addPair(T f, T s) {
+	public boolean addPair(T f, T s, Integer relation) {
 		Pair<T, T> pair = new Pair<T, T>(f, s);
-		return elements.add(pair);
+		switch (relation) {
+		case LESS:
+			return this.lessRelations.add(pair);
+		case LEQ:
+			return this.leqRelations.add(pair);
+		default:
+			return false;
+		}
 	}
 
 	/**
@@ -90,7 +121,11 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	public Set<T> getDomainElements() {
 		Set<T> domainElements = new HashSet<T>();
 		
-		for (Pair<T, T> pairs : elements) {
+		for (Pair<T, T> pairs : lessRelations) {
+			domainElements.add(pairs.getFirst());
+			domainElements.add(pairs.getSecond());
+		}
+		for (Pair<T, T> pairs : leqRelations) {
 			domainElements.add(pairs.getFirst());
 			domainElements.add(pairs.getSecond());
 		}
@@ -107,7 +142,13 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	 */
 	@Override
 	public boolean remove(Object o) {
-		return this.elements.remove(o);
+		if (this.leqRelations.contains(o)){
+			return leqRelations.remove(o);
+		}
+		if (this.lessRelations.contains(o)){
+			return lessRelations.remove(o);
+		}
+		return false;
 	}
 
 	/**
@@ -116,7 +157,7 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	 * @return true if empty, false if not
 	 */
 	public boolean isEmpty() {
-		return this.elements.isEmpty();
+		return (this.lessRelations.isEmpty() && this.leqRelations.isEmpty());
 	}
 
 	/**
@@ -130,7 +171,14 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	 */
 	
 	public boolean isRelated(T a, T b) {
-		for (Pair<T, T> pair : elements) {
+		for (Pair<T, T> pair : lessRelations) {
+			if (pair.getFirst() == a) {
+				if (pair.getSecond() == b) {
+					return true;
+				}
+			}
+		}
+		for (Pair<T, T> pair : leqRelations) {
 			if (pair.getFirst() == a) {
 				if (pair.getSecond() == b) {
 					return true;
@@ -146,8 +194,8 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	 * @return an iterator over a set of pairs
 	 */
 
-	public Iterator<Pair<T, T>> iterator() {
-		return elements.iterator();
+	public Iterator<Pair<T, T>> iterator(Set<Pair<T, T>> s) {
+		return s.iterator();
 	}
 
 	/**
@@ -158,7 +206,10 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	 * @return a pair if it exists, null otherwise
 	 */
 	public Pair<T, T> get(Pair<T, T> e) {
-		if (elements.contains(e)) {
+		if(lessRelations.contains(e)) {
+			return e;
+		}
+		if(leqRelations.contains(e)){
 			return e;
 		}
 		return null;
@@ -174,7 +225,12 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	 * @return a pair if found, null if not
 	 */
 	public Pair<T, T> getPair(T a, T b) {
-		for (Pair<T, T> p : elements) {
+		for (Pair<T, T> p : lessRelations) {
+			if (p.getFirst() == a && p.getSecond() == b) {
+				return p;
+			}
+		}
+		for (Pair<T, T> p : leqRelations) {
 			if (p.getFirst() == a && p.getSecond() == b) {
 				return p;
 			}
@@ -189,7 +245,11 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	 * @return true if pair is in this preference order, false if not
 	 */
 	public boolean containsPair(T a, T b){
-		for (Pair<T, T> p : elements) 
+		for (Pair<T, T> p : lessRelations)
+			if (p.getFirst() == a && p.getSecond() == b){ 
+				return true;
+				}
+		for (Pair<T, T> p : leqRelations)
 			if (p.getFirst() == a && p.getSecond() == b){ 
 				return true;
 				}
@@ -202,7 +262,7 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	 * @return true if pair is in this preference order, false if not
 	 */
 	public boolean contains(Object o){
-		return (elements.contains(o));
+		return (leqRelations.contains(o) || lessRelations.contains(o));
 	}
 	
 	/**
@@ -211,7 +271,7 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	 * @return the size of the set
 	 */
 	public int size() {
-		return this.elements.size();
+		return (this.lessRelations.size()+this.leqRelations.size());
 	}
 
 	/**
@@ -236,7 +296,10 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	 * @return the Object[]-array
 	 */
 	public Object[] toArray(){
-		return this.elements.toArray();
+		Set<Pair<T, T>> elements = new HashSet<Pair<T, T>>();
+		elements.addAll(leqRelations);
+		elements.addAll(lessRelations);
+		return elements.toArray();
 	}
 	
 	/**
@@ -305,7 +368,8 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	 */
 	@Override
 	public void clear() {
-		elements.clear();
+		lessRelations.clear();
+		leqRelations.clear();
 	}
 
 	/**
@@ -317,7 +381,7 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 		Iterator<?> it = c.iterator();
 		while (it.hasNext()) {
 			Object e = it.next();
-			if(!elements.contains(e)){
+			if(!this.contains(e)){
 				return false;
 			}
 		}
@@ -331,41 +395,53 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	@Override
 	public boolean removeAll(Collection<?> c) {
 		Iterator<?> it = c.iterator();
-		Set<Pair<T, T>> p = new HashSet<Pair<T, T>>();
+		Set<Pair<T,T>> pLess = new HashSet<Pair<T,T>>();
+		Set<Pair<T,T>> pLeq = new HashSet<Pair<T, T>>();
 		while(it.hasNext()){
 			Object e = it.next();
-			for(Pair<T, T> a : elements){
+			for(Pair<T, T> a : lessRelations){
 				if(!c.contains(a))
-					p.add(a);
+					pLess.add(a);
+			}
+			for(Pair<T, T> a : leqRelations){
+				if(!c.contains(a))
+					pLeq.add(a);
 			}
 		}
-		if(p.equals(elements)){ 
+		if (pLess.equals(lessRelations) && pLeq.equals(leqRelations)){
 			return false;
 		}
-		elements = p;
+		lessRelations = pLess;
+		leqRelations = pLeq;
 		return true;
 	}
 	
-	/**
-	 * keeps all the given elements in the element set and removes the rest
-	 * @return true if the set changed, false if not
+	/* (non-Javadoc)
+	 * @see java.util.Set#retainAll(java.util.Collection)
 	 */
 	@Override
 	public boolean retainAll(Collection<?> c) {
 		Iterator<?> it = c.iterator();
-		Set<Pair<T,T>> p = new HashSet<Pair<T,T>>();
+		Set<Pair<T,T>> pLess = new HashSet<Pair<T,T>>();
+		Set<Pair<T,T>> pLeq = new HashSet<Pair<T, T>>();
 		while(it.hasNext()){
 			Object e = it.next();
-			for(Pair<T, T> a : elements){
+			for(Pair<T, T> a : lessRelations){
 				if(a.equals(e)){
-					p.add(a);
+					pLess.add(a);
+				}
+			}
+			for(Pair<T, T> a : leqRelations){
+				if(a.equals(e)){
+					pLeq.add(a);
 				}
 			}
 		}	
-		if (p.equals(elements)){
+		if (pLess.equals(lessRelations) && pLeq.equals(leqRelations)){
 			return false;
 		}
-		elements = p;
+		lessRelations = pLess;
+		leqRelations = pLeq;
 		return true;
 	}
 
@@ -383,5 +459,5 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 			return true;
 		else
 			return false;
-	}	
+	}
 }

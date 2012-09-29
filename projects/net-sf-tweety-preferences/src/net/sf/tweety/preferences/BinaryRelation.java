@@ -14,7 +14,15 @@ import net.sf.tweety.util.Pair;
  */
 
 public abstract interface BinaryRelation<T> extends Set<Pair<T, T>> {
-
+	
+	/**
+	 * 
+	 * @param e
+	 * @param relation
+	 * @return
+	 */
+	public abstract boolean add(Pair<T, T> p);
+	
 	/**
 	 * returns whether the elements a and b are related
 	 * @param a the first element to be checked
