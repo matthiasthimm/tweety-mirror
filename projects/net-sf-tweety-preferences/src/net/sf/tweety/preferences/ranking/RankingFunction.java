@@ -44,7 +44,8 @@ public class RankingFunction<T> extends HashMap<T, Integer> implements Map<T, In
 	
 		Map<T, IntegerVariable> intVar = new HashMap<T, IntegerVariable>();
 		
-		Set<Pair<IntegerVariable, IntegerVariable>> optIneq = new HashSet<Pair<IntegerVariable, IntegerVariable>>(); 
+		Set<Pair<IntegerVariable, IntegerVariable>> optIneqLess = new HashSet<Pair<IntegerVariable, IntegerVariable>>(); 
+		Set<Pair<IntegerVariable, IntegerVariable>> optIneqLeq = new HashSet<Pair<IntegerVariable, IntegerVariable>>();
 		OptimizationProblem opt = new OptimizationProblem(
 				OptimizationProblem.MINIMIZE);
 		
@@ -52,11 +53,11 @@ public class RankingFunction<T> extends HashMap<T, Integer> implements Map<T, In
 			intVar.put(e, new IntegerVariable(e.toString(), true));
 		}
 		
-		Iterator<Pair<T, T>> it = po.iterator();
+		Iterator<Pair<Pair<T, T>, Integer>> it = po.iterator();
 
 		while (it.hasNext()){
-
-			Pair<T, T> temp = it.next();
+			Pair<Pair<T,T>,Integer> tempRel = it.next();
+			Pair<T, T> temp = tempRel.getFirst();
 
 			IntegerVariable tempVarF = null;
 			IntegerVariable tempVarS = null;
@@ -64,14 +65,23 @@ public class RankingFunction<T> extends HashMap<T, Integer> implements Map<T, In
 			if (po.contains(temp)){
 				tempVarF = intVar.get(temp.getFirst());
 				tempVarS = intVar.get(temp.getSecond());
-				optIneq.add(new Pair<IntegerVariable, IntegerVariable>(tempVarF, tempVarS));	
+				if(tempRel.getSecond().equals(Inequation.LESS)){
+					optIneqLess.add(new Pair<IntegerVariable, IntegerVariable>(tempVarF, tempVarS));
+				}
+				if(tempRel.getSecond().equals(Inequation.LESS_EQUAL)){
+					optIneqLeq.add(new Pair<IntegerVariable, IntegerVariable>(tempVarF, tempVarS));
+				}
+					
 			} else {
 				continue;
 			}
 		}
 		
-		for(Pair<IntegerVariable, IntegerVariable> p : optIneq){
+		for(Pair<IntegerVariable, IntegerVariable> p : optIneqLess){
 			opt.add(new Inequation(p.getFirst(), p.getSecond(), Inequation.LESS));
+		}
+		for(Pair<IntegerVariable, IntegerVariable> p : optIneqLeq){
+			opt.add(new Inequation(p.getFirst(), p.getSecond(), Inequation.LESS_EQUAL));
 		}
 		
 		List<Term> terms = new LinkedList<Term>();
@@ -146,9 +156,9 @@ public class RankingFunction<T> extends HashMap<T, Integer> implements Map<T, In
 			for(Entry<T, Integer> s : in.entrySet()){
 				if(!f.getKey().equals(s.getKey()) && ((!po.containsPair(f.getKey(), s.getKey()) || (!po.containsPair(s.getKey(), f.getKey()))))){
 					if(f.getValue() <= s.getValue()){
-						po.addPair(f.getKey(), s.getKey());
+						po.addPair(f.getKey(), s.getKey(), PreferenceOrder.LEQ);
 					} else if(f.getValue() > s.getValue()){
-						po.addPair(s.getKey(), f.getKey());
+						po.addPair(s.getKey(), f.getKey(), PreferenceOrder.LESS);
 					}
 				}
 			}

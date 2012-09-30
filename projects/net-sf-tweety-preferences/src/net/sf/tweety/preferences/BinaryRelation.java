@@ -13,7 +13,7 @@ import net.sf.tweety.util.Pair;
  * @param <T> the generic type of objects/pairs in this binary relation
  */
 
-public abstract interface BinaryRelation<T> extends Set<Pair<T, T>> {
+public abstract interface BinaryRelation<T> extends Set<Pair<Pair<T, T>, Integer>> {
 	
 	/**
 	 * 
@@ -21,7 +21,7 @@ public abstract interface BinaryRelation<T> extends Set<Pair<T, T>> {
 	 * @param relation
 	 * @return
 	 */
-	public abstract boolean add(Pair<T, T> p);
+	public abstract boolean add(Pair<Pair<T, T>, Integer> p);
 	
 	/**
 	 * returns whether the elements a and b are related

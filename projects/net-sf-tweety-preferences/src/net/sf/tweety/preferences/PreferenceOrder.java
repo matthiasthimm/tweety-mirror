@@ -18,14 +18,14 @@ import net.sf.tweety.util.Pair;
 public class PreferenceOrder<T> implements BinaryRelation<T> {
 	
 	/**
-	 * 
+	 * constant value for less-relations
 	 */
-	final static int LESS = 0;
+	public final static int LESS = 0;
 	
 	/**
-	 * 
+	 * constant value for less-equal-relations
 	 */
-	final static int LEQ = 1;
+	public final static int LEQ = 1;
 	
 //	/**
 //	 * a given set of Pairs
@@ -88,12 +88,18 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	 * @return true if successful, false if not
 	 */
 	@Override
-	public boolean add(Pair<T, T> p) {
-		return true;
+	public boolean add(Pair<Pair<T, T>, Integer> p) {
+		switch (p.getSecond()) {
+		case LESS:
+			return this.lessRelations.add(p.getFirst());
+		case LEQ:
+			return this.leqRelations.add(p.getFirst());
+		default:
+			return false;
+		}
 	}
 	
 	
-
 	/**
 	 * adds two given (single) elements as pair into the set
 	 * 
@@ -105,14 +111,7 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	 */
 	public boolean addPair(T f, T s, Integer relation) {
 		Pair<T, T> pair = new Pair<T, T>(f, s);
-		switch (relation) {
-		case LESS:
-			return this.lessRelations.add(pair);
-		case LEQ:
-			return this.leqRelations.add(pair);
-		default:
-			return false;
-		}
+		return this.add(new Pair<Pair<T, T>, Integer>(pair, relation));
 	}
 
 	/**
@@ -282,9 +281,9 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	@Override
 	public String toString() {
 		String s = "{";
-		Iterator<Pair<T, T>> it = iterator();
+		Iterator<Pair<Pair<T, T>, Integer>> it = iterator();
 		while (it.hasNext()) {
-			s += it.next();
+			s += it.next().getFirst();
 		}
 		s += "}";
 		return s;
@@ -362,7 +361,18 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 		}
 		return (true && isTotal() && isTransitive());
 	}
-
+	
+	public Set<Pair<Pair<T, T>, Integer>> getAllPairs(){
+		Set<Pair<Pair<T, T>, Integer>> allTemp = new HashSet<Pair<Pair<T,T>,Integer>>();
+		for(Pair<T, T> p : lessRelations){
+			allTemp.add(new Pair<Pair<T, T>, Integer>(p, LESS)); 
+		}
+		for(Pair<T, T> p : leqRelations){
+			allTemp.add(new Pair<Pair<T, T>, Integer>(p, LEQ)); 
+		}
+		return allTemp;
+	}
+	
 	/**
 	 * clears the current preference order element set
 	 */
@@ -449,15 +459,42 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	 * adds all given elements to the preference order
 	 * @return true if element-set changed, false if not
 	 */
+//	@Override
+//	public boolean addAll(Collection<? extends Pair<T, T>> c) {
+//		Set<Pair<T, T>> temp = this;
+//		for (Pair<T, T> p : c){
+//			temp.add(p);
+//		}
+//		if(!this.equals(temp))
+//			return true;
+//		else
+//			return false;
+//	}
+
 	@Override
-	public boolean addAll(Collection<? extends Pair<T, T>> c) {
-		Set<Pair<T, T>> temp = this;
-		for (Pair<T, T> p : c){
-			temp.add(p);
+	public boolean addAll(Collection<? extends Pair<Pair<T, T>, Integer>> c) {
+		Set<Pair<T, T>> lessTemp = this.lessRelations;
+		Set<Pair<T, T>> leqTemp = this.leqRelations;
+		for (Pair<Pair<T, T>, Integer> p : c){
+			switch (p.getSecond()) {
+			case LESS:
+				lessTemp.add(p.getFirst());
+			case LEQ:
+				leqTemp.add(p.getFirst());
+			default:
+				continue;
+			}
 		}
-		if(!this.equals(temp))
+		if (!lessTemp.equals(lessRelations) || !leqTemp.equals(leqRelations)){
+			this.lessRelations = lessTemp;
+			this.leqRelations = leqTemp;
 			return true;
-		else
-			return false;
+		}
+		return false;
+	}
+
+	@Override
+	public Iterator<Pair<Pair<T, T>, Integer>> iterator() {
+		return getAllPairs().iterator();	
 	}
 }
