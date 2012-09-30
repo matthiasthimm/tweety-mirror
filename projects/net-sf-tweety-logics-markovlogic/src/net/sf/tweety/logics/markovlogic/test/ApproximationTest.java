@@ -12,14 +12,27 @@ import net.sf.tweety.logics.markovlogic.syntax.MlnFormula;
 
 public class ApproximationTest {
 
-	public static void main(String[] args) throws ParserException, IOException{
+	public static void main(String[] args) throws ParserException, IOException, InterruptedException{
+		
 		Pair<MarkovLogicNetwork,FolSignature> ex = MlnTest.iterateExamples(1, 3);
-		ApproximateNaiveMlnReasoner appReasoner = new ApproximateNaiveMlnReasoner(ex.getFirst(),ex.getSecond(), -1, 100000);
+		SimpleSamplingMlnReasoner appReasoner = new SimpleSamplingMlnReasoner(ex.getFirst(),ex.getSecond(), 0.0001, 1000);
+		NaiveMlnReasoner naiReasoner = new NaiveMlnReasoner(ex.getFirst(),ex.getSecond());
+		naiReasoner.setTempDirectory("/Users/mthimm/Desktop/tmp/");
 		for(MlnFormula f: ex.getFirst()){
 			for(RelationalFormula groundFormula: f.getFormula().allGroundInstances(ex.getSecond().getConstants())){
-				System.out.println(appReasoner.query(groundFormula).getAnswerDouble());
-				break;
+				System.out.println(appReasoner.query(groundFormula).getAnswerDouble() + "\t" + naiReasoner.query(groundFormula).getAnswerDouble());
+				Thread.sleep(10000);
+				//break;
 			}
 		}
+		
+//		Pair<MarkovLogicNetwork,FolSignature> ex = MlnTest.iterateExamples(1, 3);
+//		ApproximateNaiveMlnReasoner appReasoner = new ApproximateNaiveMlnReasoner(ex.getFirst(),ex.getSecond(), -1, 100000);
+//		for(MlnFormula f: ex.getFirst()){
+//			for(RelationalFormula groundFormula: f.getFormula().allGroundInstances(ex.getSecond().getConstants())){
+//				System.out.println(appReasoner.query(groundFormula).getAnswerDouble());
+//				break;
+//			}
+//		}
 	}
 }

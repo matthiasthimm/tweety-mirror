@@ -21,9 +21,7 @@ import org.jfree.data.xy.DefaultXYDataset;
 import net.sf.tweety.ParserException;
 import net.sf.tweety.logics.firstorderlogic.parser.FolParser;
 import net.sf.tweety.logics.firstorderlogic.syntax.*;
-import net.sf.tweety.logics.markovlogic.AbstractMlnReasoner;
-import net.sf.tweety.logics.markovlogic.ApproximateNaiveMlnReasoner;
-import net.sf.tweety.logics.markovlogic.MarkovLogicNetwork;
+import net.sf.tweety.logics.markovlogic.*;
 import net.sf.tweety.logics.markovlogic.analysis.*;
 import net.sf.tweety.logics.markovlogic.syntax.MlnFormula;
 import net.sf.tweety.util.Pair;
@@ -52,13 +50,13 @@ public class MlnTest {
 		//friends of friends are friends
 		mln.add(new MlnFormula((FolFormula)parser.parseFormula("!friends(X,Y) || !friends(Y,Z) || friends(X,Z)"), new Double(0.7)));
 		//friendless people smoke
-		mln.add(new MlnFormula((FolFormula)parser.parseFormula("(exists Y: (friends(X,Y))) || smokes(X)"), new Double(2.3)));
+		//mln.add(new MlnFormula((FolFormula)parser.parseFormula("(exists Y: (friends(X,Y))) || smokes(X)"), new Double(2.3)));
 		//smoking causes cancer
 		mln.add(new MlnFormula((FolFormula)parser.parseFormula("!smokes(X) ||  cancer(X)"), new Double(1.5)));
 		//smoking behavior of friends is the same
 		mln.add(new MlnFormula((FolFormula)parser.parseFormula("!friends(X,Y) || ((smokes(X) && smokes(Y))||(!smokes(X) && !smokes(Y)))"), new Double(1.1)));
 		// friends relationship is symmetric (strict formula)
-		mln.add(new MlnFormula((FolFormula)parser.parseFormula("!friends(X,Y) || friends(Y,X)")));
+		mln.add(new MlnFormula((FolFormula)parser.parseFormula("(friends(X,Y) && friends(Y,X))||(!friends(X,Y) && !friends(Y,X))")));
 				
 		return new Pair<MarkovLogicNetwork,FolSignature>(mln,sig);
 	}
@@ -90,9 +88,8 @@ public class MlnTest {
 		// Clyde is an elephant, Fred is a keeper (strict formulas)
 		mln.add(new MlnFormula((FolFormula)parser.parseFormula("elephant(clyde)"))); //p=1
 		mln.add(new MlnFormula((FolFormula)parser.parseFormula("keeper(fred)"))); //p=1
-		// elephants are not keepers (strict formulas)
-		mln.add(new MlnFormula((FolFormula)parser.parseFormula("!keeper(X) || !elephant(X)"))); //p=1
-		mln.add(new MlnFormula((FolFormula)parser.parseFormula("keeper(X) || elephant(X)"))); //p=1
+		// elephants are not keepers (strict formula)
+		mln.add(new MlnFormula((FolFormula)parser.parseFormula("(!keeper(X) && elephant(X))||(keeper(X) && !elephant(X))"))); //p=1		
 		//elephants like keepers
 		mln.add(new MlnFormula((FolFormula)parser.parseFormula("!elephant(X) || !keeper(Y) || likes(X,Y)"), new Double(2.1972))); //p=0.9
 		// elephants do not like Fred
@@ -165,7 +162,7 @@ public class MlnTest {
 	
 	public static void main(String[] args) throws ParserException, IOException{
 		//MlnTest.createChart(null, "", "");
-		String expPath = "/home/share/mln/results_2012-07-30__1000000_100000/";//"/Users/mthimm/Desktop/test/";
+		String expPath = "/home/share/mln/results_2012-09-30__00001_1000/";//"/Users/mthimm/Desktop/test/";
 					
 //		List<AggregationFunction> aggrFunctions = new ArrayList<AggregationFunction>();
 //		aggrFunctions.add(new MaxAggregator());
@@ -192,13 +189,16 @@ public class MlnTest {
 		cohMeasures.add(new AggregatingCoherenceMeasure(new AggregatingDistanceFunction(new MaxAggregator()),new AverageAggregator()));
 		cohMeasures.add(new AggregatingCoherenceMeasure(new AggregatingDistanceFunction(new MinAggregator()),new MinAggregator()));
 		
-		for(int i = 0; i < 4; i++){
+		//cohMeasures.add(new AggregatingCoherenceMeasure(new AggregatingDistanceFunction(new MaxAggregator()),new MaxAggregator()));
+		
+		for(int i = 1; i < 4; i++){
 			Map<AggregatingCoherenceMeasure,double[][]> results = new HashMap<AggregatingCoherenceMeasure,double[][]>();
-			for(int dsize = 3; dsize < 15; dsize++){
+			for(int dsize = 3; dsize < 14; dsize++){
 				Pair<MarkovLogicNetwork,FolSignature> ex = MlnTest.iterateExamples(i, dsize);
 				MarkovLogicNetwork mln = ex.getFirst();
 				FolSignature sig = ex.getSecond();
-				AbstractMlnReasoner reasoner = new ApproximateNaiveMlnReasoner(mln, sig, 1000000, 100000);
+				SimpleSamplingMlnReasoner reasoner = new SimpleSamplingMlnReasoner(mln,sig,0.00001,1000);//new ApproximateNaiveMlnReasoner(mln, sig, 1000000, 100000);
+				//reasoner.setTempDirectory("/home/share/mln/results_2012-09-21__precise/temp");
 				//for(AggregationFunction af: aggrFunctions){
 				///	for(DistanceFunction df: distFunctions){
 				for(AggregatingCoherenceMeasure measure: cohMeasures){

@@ -84,7 +84,8 @@ public abstract class AbstractMlnReasoner extends Reasoner {
 			num = this.numberOfGroundSatisfactions(f.getFormula(), hInt);
 			if(f.isStrict()){
 				if(num != f.getFormula().allGroundInstances(this.getSignature().getConstants()).size())
-					return 0;				
+					return 0;		
+				else weight += 1;
 			}else 	
 				weight += num * f.getWeight();
 		}
