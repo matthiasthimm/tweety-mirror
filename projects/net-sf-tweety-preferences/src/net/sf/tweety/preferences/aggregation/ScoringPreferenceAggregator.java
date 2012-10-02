@@ -1,11 +1,13 @@
 package net.sf.tweety.preferences.aggregation;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.HashMap;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import net.sf.tweety.preferences.PreferenceOrder;
+import net.sf.tweety.preferences.Relation;
+import net.sf.tweety.util.Triple;
 
 /**
  * This class extends the interface for preference aggregation with scoring
@@ -40,7 +42,7 @@ public abstract class ScoringPreferenceAggregator<T> implements
 	 * 
 	 * @return the final, aggregated preference order
 	 */
-	public PreferenceOrder<T> aggregate(ArrayList<PreferenceOrder<T>> input) {
+	public PreferenceOrder<T> aggregate(List<PreferenceOrder<T>> input) {
 		PreferenceOrder<T> tempPO = new PreferenceOrder<T>();
 		Map<T, Integer> elem = new HashMap<T, Integer>();
 
@@ -87,14 +89,22 @@ public abstract class ScoringPreferenceAggregator<T> implements
 		// final po, if not done yet
 		for (Entry<T, Integer> f : elem.entrySet()) {
 			for (Entry<T, Integer> s : elem.entrySet()) {
-				if (!f.getKey().equals(s.getKey())
-						&& (!tempPO.containsPair(f.getKey(), s.getKey()) || !tempPO
-								.containsPair(s.getKey(),f.getKey()))) {
-					if (f.getValue() >= s.getValue()) {
-						tempPO.addPair(f.getKey(),s.getKey());
-					} else {
-						tempPO.addPair((T) s.getKey(),f.getKey());
-					}
+				if (!f.getKey().equals(s.getKey())){
+					int diff = f.getValue()-s.getValue();
+					if (diff < 0){
+						Triple<T, T, Relation> rel = new Triple<T, T, Relation>(f.getKey(), s.getKey(), Relation.LESS);
+						tempPO.add(rel);
+					} else if (diff == 0){
+						Triple<T, T, Relation> rel = new Triple<T, T, Relation>(f.getKey(), s.getKey(), Relation.LESS_EQUAL);
+						tempPO.add(rel);
+					} else
+						continue;
+						
+//					if (f.getValue() >= s.getValue()) {
+//						tempPO.addPair(f.getKey(),s.getKey());
+//					} else {
+//						tempPO.addPair((T) s.getKey(),f.getKey());
+//					}
 				}
 			}
 		}

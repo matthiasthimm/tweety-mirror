@@ -16,122 +16,119 @@ import net.sf.tweety.math.term.IntegerVariable;
 import net.sf.tweety.math.term.Term;
 import net.sf.tweety.math.term.Variable;
 import net.sf.tweety.preferences.PreferenceOrder;
-import net.sf.tweety.util.Pair;
+import net.sf.tweety.preferences.Relation;
+import net.sf.tweety.util.Triple;
 
 /**
- * This class is meant to provide ranking functions to given
- * preference orders and vice versa. To be implemented. A ranking function
- * characterizes a preference order uniquely as: 1.: rank: O -> N+ where O is
- * the set of elements in the preference order. 2.: the sum of all ranks for
- * each element in O is minimal
+ * This class is meant to provide ranking functions to given preference orders
+ * and vice versa. To be implemented. A ranking function characterizes a
+ * preference order uniquely as: 1.: rank: O -> N+ where O is the set of
+ * elements in the preference order. 2.: the sum of all ranks for each element
+ * in O is minimal
  * 
  * TODO exception handling for invalid preference orders (total preorder)
+ * 
  * @author Bastian Wolf
  * @param <T>
  * 
  */
 
-public class RankingFunction<T> extends HashMap<T, Integer> implements Map<T, Integer>  {
+public class RankingFunction<T> extends HashMap<T, Integer> implements
+		Map<T, Integer> {
 
-	
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * this constructor creates a ranking function using a given preference order
-	 * @param po the given preference order
+	 * this constructor creates a ranking function using a given preference
+	 * order
+	 * 
+	 * @param po
+	 *            the given preference order
 	 */
 	public RankingFunction(PreferenceOrder<T> po) {
-	
+
 		Map<T, IntegerVariable> intVar = new HashMap<T, IntegerVariable>();
-		
-		Set<Pair<IntegerVariable, IntegerVariable>> optIneqLess = new HashSet<Pair<IntegerVariable, IntegerVariable>>(); 
-		Set<Pair<IntegerVariable, IntegerVariable>> optIneqLeq = new HashSet<Pair<IntegerVariable, IntegerVariable>>();
+
+		Set<Triple<IntegerVariable, IntegerVariable, Relation>> optIneq = new HashSet<Triple<IntegerVariable, IntegerVariable, Relation>>();
 		OptimizationProblem opt = new OptimizationProblem(
 				OptimizationProblem.MINIMIZE);
-		
+
 		for (final T e : po.getDomainElements()) {
 			intVar.put(e, new IntegerVariable(e.toString(), true));
 		}
-		
-		Iterator<Pair<Pair<T, T>, Integer>> it = po.iterator();
 
-		while (it.hasNext()){
-			Pair<Pair<T,T>,Integer> tempRel = it.next();
-			Pair<T, T> temp = tempRel.getFirst();
+		Iterator<Triple<T, T, Relation>> it = po.iterator();
+
+		while (it.hasNext()) {
+			Triple<T, T, Relation> tempRel = it.next();
 
 			IntegerVariable tempVarF = null;
 			IntegerVariable tempVarS = null;
-			
-			if (po.contains(temp)){
-				tempVarF = intVar.get(temp.getFirst());
-				tempVarS = intVar.get(temp.getSecond());
-				if(tempRel.getSecond().equals(Inequation.LESS)){
-					optIneqLess.add(new Pair<IntegerVariable, IntegerVariable>(tempVarF, tempVarS));
+
+			if (po.contains(tempRel)) {
+				tempVarF = intVar.get(tempRel.getFirst());
+				tempVarS = intVar.get(tempRel.getSecond());
+				switch (tempRel.getThird()) {
+				case LESS:
+					opt.add(new Inequation(tempVarF, tempVarS, Inequation.LESS));
+				case LESS_EQUAL:
+					opt.add(new Inequation(tempVarF, tempVarS,
+							Inequation.LESS_EQUAL));
+				default:
+					continue;
 				}
-				if(tempRel.getSecond().equals(Inequation.LESS_EQUAL)){
-					optIneqLeq.add(new Pair<IntegerVariable, IntegerVariable>(tempVarF, tempVarS));
-				}
-					
 			} else {
 				continue;
 			}
 		}
-		
-		for(Pair<IntegerVariable, IntegerVariable> p : optIneqLess){
-			opt.add(new Inequation(p.getFirst(), p.getSecond(), Inequation.LESS));
-		}
-		for(Pair<IntegerVariable, IntegerVariable> p : optIneqLeq){
-			opt.add(new Inequation(p.getFirst(), p.getSecond(), Inequation.LESS_EQUAL));
-		}
-		
+
 		List<Term> terms = new LinkedList<Term>();
-		
-		for(Entry<T, IntegerVariable> e : intVar.entrySet()){
+
+		for (Entry<T, IntegerVariable> e : intVar.entrySet()) {
 			Term t = e.getValue();
 			terms.add(t);
 		}
-			
+
 		Iterator<Term> termIt = terms.listIterator();
-		
-		if(termIt.hasNext()){
+
+		if (termIt.hasNext()) {
 			Term t = termIt.next();
-			while(termIt.hasNext()){
+			while (termIt.hasNext()) {
 				t = t.add(termIt.next());
 			}
 			opt.setTargetFunction(t);
 		}
-		
+
 		LpSolve solver = new LpSolve(opt);
 		Map<Variable, Term> solution = solver.solve();
 		Map<T, Integer> sol = new HashMap<T, Integer>();
-		for (Entry<Variable, Term> e : solution.entrySet()){
+		for (Entry<Variable, Term> e : solution.entrySet()) {
 			T key = (T) e.getKey().toString();
 			Integer val = (int) e.getValue().doubleValue();
 			sol.put(key, val);
 		}
-		
+
 		this.putAll(sol);
 	}
 
-			
 	/**
 	 * returns a string representation for this ranking function
 	 */
 	public String toString() {
 		String s = "{";
 		int count = 1;
-		for (Entry<T, Integer> e : this.entrySet()){
-			
+		for (Entry<T, Integer> e : this.entrySet()) {
+
 			if (count < this.entrySet().size())
 				s += e.toString() + ", ";
 			else
 				s += e.toString();
-		count++;
+			count++;
 		}
 		s += "}";
-		
+
 		return s;
-		
+
 	}
 
 	/**
@@ -145,24 +142,30 @@ public class RankingFunction<T> extends HashMap<T, Integer> implements Map<T, In
 
 	/**
 	 * this method returns a preference order made out of an ranking function
+	 * 
 	 * @returns a preference order out of a given ranking function
 	 */
 	public PreferenceOrder<T> generatePreferenceOrder() {
-
-		PreferenceOrder<T> po = new PreferenceOrder<T>();
-		Map<T, Integer> in = this; 
+		Set<Triple<T, T, Relation>> tempPO = new HashSet<Triple<T, T, Relation>>();
 		
-		for(Entry<T, Integer> f : in.entrySet()){
-			for(Entry<T, Integer> s : in.entrySet()){
-				if(!f.getKey().equals(s.getKey()) && ((!po.containsPair(f.getKey(), s.getKey()) || (!po.containsPair(s.getKey(), f.getKey()))))){
-					if(f.getValue() <= s.getValue()){
-						po.addPair(f.getKey(), s.getKey(), PreferenceOrder.LEQ);
-					} else if(f.getValue() > s.getValue()){
-						po.addPair(s.getKey(), f.getKey(), PreferenceOrder.LESS);
-					}
-				}
+		Map<T, Integer> in = this;
+
+		for (Entry<T, Integer> f : in.entrySet()) {
+			for (Entry<T, Integer> s : in.entrySet()) {
+				if(!f.equals(s)){
+					
+					if (f.getValue()<s.getValue()){
+						Triple<T, T, Relation> rel = new Triple<T, T, Relation>(f.getKey(), s.getKey(), Relation.LESS);
+						tempPO.add(rel);
+					} else if (f.getValue() == s.getValue()){
+						Triple<T, T, Relation> rel = new Triple<T, T, Relation>(f.getKey(), s.getKey(), Relation.LESS_EQUAL);
+						tempPO.add(rel);
+					} else
+						continue;
+				}				
 			}
 		}
+		PreferenceOrder<T> po = new PreferenceOrder<T>(tempPO);
 		return po;
 	}
 
@@ -171,10 +174,11 @@ public class RankingFunction<T> extends HashMap<T, Integer> implements Map<T, In
 	 */
 	@Override
 	public boolean containsKey(Object key) {
-		for(Entry<T, Integer> o : this.entrySet()){
-			if (o.getKey().equals(key)){
+		for (Entry<T, Integer> o : this.entrySet()) {
+			if (o.getKey().equals(key)) {
 				return true;
-			}}
+			}
+		}
 		return false;
 	}
 
@@ -184,9 +188,9 @@ public class RankingFunction<T> extends HashMap<T, Integer> implements Map<T, In
 	@Override
 	public boolean containsValue(Object value) {
 		Iterator<Entry<T, Integer>> temp = this.entrySet().iterator();
-		if (temp.hasNext()){
-			while (temp.hasNext()){
-				if (temp.next().getValue().equals(value)){
+		if (temp.hasNext()) {
+			while (temp.hasNext()) {
+				if (temp.next().getValue().equals(value)) {
 					return true;
 				}
 			}
@@ -194,18 +198,19 @@ public class RankingFunction<T> extends HashMap<T, Integer> implements Map<T, In
 		return false;
 	}
 
-
 	/**
 	 * returns the value to a given key
-	 * @return the value if present, null otherwise (but value.equals(null) is possible)
+	 * 
+	 * @return the value if present, null otherwise (but value.equals(null) is
+	 *         possible)
 	 */
 	@Override
 	public Integer get(Object key) {
 		Iterator<Entry<T, Integer>> temp = this.entrySet().iterator();
-		if (temp.hasNext()){
-			while (temp.hasNext()){
+		if (temp.hasNext()) {
+			while (temp.hasNext()) {
 				Entry<T, Integer> e = temp.next();
-				if (e.getKey().equals(key)){
+				if (e.getKey().equals(key)) {
 					return e.getValue();
 				}
 			}
@@ -213,7 +218,6 @@ public class RankingFunction<T> extends HashMap<T, Integer> implements Map<T, In
 		return null;
 	}
 
-	
 	/**
 	 * returns a collection containing all values of the map
 	 */
@@ -221,16 +225,14 @@ public class RankingFunction<T> extends HashMap<T, Integer> implements Map<T, In
 	public Collection<Integer> values() {
 		Set<Integer> v = new HashSet<Integer>();
 		Iterator<Entry<T, Integer>> temp = this.entrySet().iterator();
-		if (temp.hasNext()){
-			while (temp.hasNext()){
+		if (temp.hasNext()) {
+			while (temp.hasNext()) {
 				Entry<T, Integer> e = temp.next();
 				v.add(e.getValue());
-				}
 			}
-		
+		}
+
 		return v;
 	}
 
-		
-	
 }

@@ -1,6 +1,8 @@
 package net.sf.tweety.preferences.io;
 
 import net.sf.tweety.preferences.PreferenceOrder;
+import net.sf.tweety.preferences.Relation;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -8,8 +10,15 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.Iterator;
 
-import net.sf.tweety.util.Pair;
+import net.sf.tweety.util.Triple;
 
+/**
+ * 
+ * 
+ * @author bwolf
+ * TODO Anpassung Less-Equal / Equal
+ * @param <T>
+ */
 public class POWriter<T> {
 	
 	public void writeToFile(String filename, PreferenceOrder<T> po){
@@ -35,10 +44,15 @@ public class POWriter<T> {
 		
 		pw.println(s);
 		
-		Iterator<Pair<T,T>> it = po.iterator();
+		Iterator<Triple<T, T, Relation>> it = po.iterator();
 		while (it.hasNext()){
-			Pair<T, T> temp = it.next();
-			pw.println(temp.getFirst() + " < " + temp.getSecond());
+			Triple<T, T, Relation> temp = it.next();
+			if(temp.getThird() == Relation.LESS){
+				pw.println(temp.getFirst() + " < " + temp.getSecond());
+			}
+			if(temp.getSecond() == Relation.LESS_EQUAL){
+				pw.println(temp.getFirst() + " <= " + temp.getSecond());
+			}
 		}
 		} catch (IOException e){
 			System.out.println("File could not be generated");

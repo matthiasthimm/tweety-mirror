@@ -1,6 +1,6 @@
 package net.sf.tweety.preferences.aggregation;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import net.sf.tweety.preferences.PreferenceOrder;
 
@@ -20,7 +20,7 @@ public interface PreferenceAggregator<T> {
 	 * @param input the array of preference orders to be aggregated
 	 * @returns the final result as a preference order
 	 */
-	public PreferenceOrder<T> aggregate(ArrayList<PreferenceOrder<T>> input);
+	public PreferenceOrder<T> aggregate(List<PreferenceOrder<T>> input);
 
 	
 }

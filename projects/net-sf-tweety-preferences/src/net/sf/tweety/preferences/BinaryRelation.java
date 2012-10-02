@@ -2,7 +2,7 @@ package net.sf.tweety.preferences;
 
 import java.util.Set;
 
-import net.sf.tweety.util.Pair;
+import net.sf.tweety.util.Triple;
 
 /**
  * This abstract class provides a basic implementation of a generic set of pairs to be used for
@@ -11,9 +11,13 @@ import net.sf.tweety.util.Pair;
  * @author Bastian Wolf
  * 
  * @param <T> the generic type of objects/pairs in this binary relation
+ * 
  */
 
-public abstract interface BinaryRelation<T> extends Set<Pair<Pair<T, T>, Integer>> {
+
+
+public abstract interface BinaryRelation<T> extends Set<Triple<T, T, Relation>> {	
+	
 	
 	/**
 	 * 
@@ -21,7 +25,7 @@ public abstract interface BinaryRelation<T> extends Set<Pair<Pair<T, T>, Integer
 	 * @param relation
 	 * @return
 	 */
-	public abstract boolean add(Pair<Pair<T, T>, Integer> p);
+	public abstract boolean add(Triple<T, T, Relation> t);
 	
 	/**
 	 * returns whether the elements a and b are related

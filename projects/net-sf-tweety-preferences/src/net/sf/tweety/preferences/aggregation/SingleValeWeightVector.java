@@ -27,9 +27,9 @@ public class SingleValeWeightVector implements WeightVector {
 	@Override
 	public int getWeight(int n) {
 		if (n == m){
-			return 1;
+			return 0;
 		}
-		return 0;
+		return 1;
 	}
 
 }
