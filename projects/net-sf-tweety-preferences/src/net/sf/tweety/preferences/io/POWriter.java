@@ -15,8 +15,7 @@ import net.sf.tweety.util.Triple;
 /**
  * 
  * 
- * @author bwolf
- * TODO Anpassung Less-Equal / Equal
+ * @author Bastian Wolf
  * @param <T>
  */
 public class POWriter<T> {

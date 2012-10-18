@@ -14,11 +14,14 @@ import net.sf.tweety.util.Triple;
 
 public class CompleteTest {
 	public static void main(String[] args) {
+		
+		// TODO JUnit-Test
+		
 		/**
 		 * filenames of PO-Files (e.g. "Test.po")
 		 * Here named "TestA.po" to "TestE.po"
 		 * Testfiles are stored in the root folder of this project, if another folder
-		 * is meant to be used, the path has to be edited 
+		 * is meant to be used, the path has to be edited
 		 */
 		String[] files = {"TestA.po","TestB.po","TestC.po","TestD.po","TestE.po"};
 		
@@ -42,8 +45,8 @@ public class CompleteTest {
 		/**
 		 * Aggregation:
 		 * PluralityScoringPreferenceAggregator<String> for plurality rule
-		 * VetoScoringPreferenceAggregator<String> for veto rule
-		 * BordaScoringPreferenceAggregator<String> for borda rule
+		 * VetoScoringPreferenceAggregator<String> for veto rule (parameter: highest rank for this PO (e.g. 0 for rank = 0 (lowest number))
+		 * BordaScoringPreferenceAggregator<String> for borda rule (parameter: amount of single elements per preference order)
 		 * 
 		 * Example:
 		 * PluralityScoringPreferenceAggregator<String> plur = new PluralityScoringPreferenceAggregator<String>();
@@ -53,7 +56,7 @@ public class CompleteTest {
 		PluralityScoringPreferenceAggregator<String> plur = new PluralityScoringPreferenceAggregator<String>();
 		PreferenceOrder<String> plurAgg = plur.aggregate(orders);
 		
-		BordaScoringPreferenceAggregator<String> borda = new BordaScoringPreferenceAggregator<String>(5);
+		BordaScoringPreferenceAggregator<String> borda = new BordaScoringPreferenceAggregator<String>(orders.iterator().next().getDomainElements().size());
 		PreferenceOrder<String> bordaAgg = borda.aggregate(orders);
 		
 		VetoScoringPreferenceAggregator<String> veto = new VetoScoringPreferenceAggregator<String>(0);
@@ -67,7 +70,18 @@ public class CompleteTest {
 		 * po.isValid(); checks the validity of the po
 		 */
 		
+		System.out.println(plurAgg.isValid());
+		System.out.println(plurAgg);
+		System.out.println(plurAgg.getDomainElements());
+		System.out.println(plurAgg.getRankingFunction());
 		
+		System.out.println(bordaAgg.isValid());
+		System.out.println(bordaAgg.getDomainElements());
+		System.out.println(bordaAgg.getRankingFunction());
+		
+		System.out.println(vetoAgg.isValid());
+		System.out.println(vetoAgg.getDomainElements());
+		System.out.println(vetoAgg.getRankingFunction());
 		/**
 		 * Adding new elements to preference orders:
 		 * 
@@ -88,17 +102,6 @@ public class CompleteTest {
 		 * Example:
 		 * POWriter<String> writer = new POWriter<String>();
 		 * writer.writeToFile("TestZ.po", po);
-		 */
-		
-		
-		/**
-		 * Estimated results for aggregation:
-		 * Plurality:
-		 * (d=2, e=1, b=1, c=0, a=2)
-		 * Borda:
-		 * (d=2, e=0, b=1, c=1, a=0)
-		 * Veto:
-		 * (d=0, e=1, b=1, c=2, a=0)
 		 */
 	}
 	

@@ -152,16 +152,17 @@ public class RankingFunction<T> extends HashMap<T, Integer> implements
 
 		for (Entry<T, Integer> f : in.entrySet()) {
 			for (Entry<T, Integer> s : in.entrySet()) {
-				if(!f.equals(s)){
-					
-					if (f.getValue()<s.getValue()){
+				if (!f.getKey().equals(s.getKey())){
+					int diff = f.getValue()-s.getValue();
+					if (diff > 0){
 						Triple<T, T, Relation> rel = new Triple<T, T, Relation>(f.getKey(), s.getKey(), Relation.LESS);
 						tempPO.add(rel);
-					} else if (f.getValue() == s.getValue()){
+					} else if (diff == 0){
 						Triple<T, T, Relation> rel = new Triple<T, T, Relation>(f.getKey(), s.getKey(), Relation.LESS_EQUAL);
 						tempPO.add(rel);
 					} else
 						continue;
+						
 				}				
 			}
 		}

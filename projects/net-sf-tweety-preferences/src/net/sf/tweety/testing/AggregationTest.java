@@ -60,6 +60,34 @@ public class AggregationTest {
 		t.add(testing);
 		t.add(plurality);
 		
+		//----------------------------------------------------------------
+		
+		PreferenceOrder<String> plur1 = new PreferenceOrder<String>();
+		
+		Triple<String, String, Relation> a1 = new Triple<String, String, Relation>(gamma, beta, Relation.LESS);
+		Triple<String, String, Relation> a2 = new Triple<String, String, Relation>(gamma, alpha, Relation.LESS);
+		Triple<String, String, Relation> a3 = new Triple<String, String, Relation>(beta, alpha,  Relation.LESS);
+		plur1.add(a1);plur1.add(a2);plur1.add(a3);
+		
+		PreferenceOrder<String> plur2 = new PreferenceOrder<String>();
+		
+		Triple<String, String, Relation> b1 = new Triple<String, String, Relation>(beta, gamma, Relation.LESS);
+		Triple<String, String, Relation> b2 = new Triple<String, String, Relation>(gamma, alpha, Relation.LESS);
+		Triple<String, String, Relation> b3 = new Triple<String, String, Relation>(beta, alpha,  Relation.LESS);
+		Triple<String, String, Relation> b4 = new Triple<String, String, Relation>(beta, delta,  Relation.LESS);
+		Triple<String, String, Relation> b5 = new Triple<String, String, Relation>(alpha, delta,  Relation.LESS);
+		Triple<String, String, Relation> b6 = new Triple<String, String, Relation>(gamma, delta,  Relation.LESS);
+		plur2.add(b1);plur2.add(b2);plur2.add(b3);plur2.add(b4);plur2.add(b5);plur2.add(b6);
+		
+		ArrayList<PreferenceOrder<String>> x = new ArrayList<PreferenceOrder<String>>();
+		x.add(plur1); x.add(plur2);
+		
+		PluralityScoringPreferenceAggregator<String> plurA = new PluralityScoringPreferenceAggregator<String>();
+		
+		
+		PreferenceOrder<String> plurFinA = plurA.aggregate(x);
+		System.out.println(plurFinA);
+		System.out.println(plurFinA.getRankingFunction());
 		
 		// Tests may return invalid preference orders where unique ranking functions are not possible
 		

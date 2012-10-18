@@ -43,9 +43,10 @@ public abstract class ScoringPreferenceAggregator<T> implements
 	 * @return the final, aggregated preference order
 	 */
 	public PreferenceOrder<T> aggregate(List<PreferenceOrder<T>> input) {
+		
 		PreferenceOrder<T> tempPO = new PreferenceOrder<T>();
 		Map<T, Integer> elem = new HashMap<T, Integer>();
-
+		
 		// all single elements are store in one HashMap
 		// note that every input-po only consists of the exact same domain
 		// elements
@@ -63,6 +64,15 @@ public abstract class ScoringPreferenceAggregator<T> implements
 						continue;
 					}
 					
+				}
+				while (it.hasNext()){
+					PreferenceOrder<T> checkPO = it.next();
+					for(T e : checkPO.getDomainElements()){
+						if(!elem.containsKey(e)){
+							//TODO Exception handling for null pointer exception
+							System.out.println("Invalid preference order used");;
+						}
+					}
 				}
 			}
 			
@@ -91,7 +101,7 @@ public abstract class ScoringPreferenceAggregator<T> implements
 			for (Entry<T, Integer> s : elem.entrySet()) {
 				if (!f.getKey().equals(s.getKey())){
 					int diff = f.getValue()-s.getValue();
-					if (diff < 0){
+					if (diff > 0){
 						Triple<T, T, Relation> rel = new Triple<T, T, Relation>(f.getKey(), s.getKey(), Relation.LESS);
 						tempPO.add(rel);
 					} else if (diff == 0){
@@ -99,15 +109,10 @@ public abstract class ScoringPreferenceAggregator<T> implements
 						tempPO.add(rel);
 					} else
 						continue;
-						
-//					if (f.getValue() >= s.getValue()) {
-//						tempPO.addPair(f.getKey(),s.getKey());
-//					} else {
-//						tempPO.addPair((T) s.getKey(),f.getKey());
-//					}
 				}
 			}
 		}
+		
 
 		return tempPO;
 	}
