@@ -13,9 +13,9 @@ import net.sf.tweety.graphs.*;
  */
 public class Order<T> {
 
-	/** The directed graph that represents the order */
-	private Graph<OrderNode> graph;
-	/** A bijection between objects and nodes in the graph. */
+	/** The directed defaultGraph that represents the order */
+	private DefaultGraph<OrderNode> defaultGraph;
+	/** A bijection between objects and nodes in the defaultGraph. */
 	private Map<T,OrderNode> nodes;
 	
 	/**
@@ -29,12 +29,12 @@ public class Order<T> {
 	 * @param objects some set of objects.
 	 */
 	public Order(Collection<T> objects){
-		this.graph = new Graph<OrderNode>();
+		this.defaultGraph = new DefaultGraph<OrderNode>();
 		this.nodes = new HashMap<T,OrderNode>();
 		for(T object: objects){
 			OrderNode node = new OrderNode();
 			this.nodes.put(object, node);
-			this.graph.add(node);
+			this.defaultGraph.add(node);
 		}			
 	}
 	
@@ -46,7 +46,7 @@ public class Order<T> {
 	public void setOrderedBefore(T object1, T object2){
 		if(!this.nodes.containsKey(object1) || !this.nodes.containsKey(object2))
 			throw new IllegalArgumentException("Objects cannot be ordered by this order as they are not contained in the domain.");
-		this.graph.add(new DirectedEdge<OrderNode>(this.nodes.get(object1),this.nodes.get(object2)));		
+		this.defaultGraph.add(new DirectedEdge<OrderNode>(this.nodes.get(object1),this.nodes.get(object2)));		
 	}
 	
 	/**
@@ -58,7 +58,7 @@ public class Order<T> {
 	public boolean isOrderedBefore(T object1, T object2){
 		OrderNode node1 = this.nodes.get(object1);
 		OrderNode node2 = this.nodes.get(object2);
-		return this.graph.existsDirectedPath(node1, node2);
+		return this.defaultGraph.existsDirectedPath(node1, node2);
 	}
 	
 }
