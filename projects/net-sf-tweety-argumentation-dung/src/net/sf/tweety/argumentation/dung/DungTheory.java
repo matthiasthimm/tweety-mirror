@@ -5,6 +5,7 @@ import java.util.*;
 import net.sf.tweety.*;
 import net.sf.tweety.argumentation.dung.semantics.*;
 import net.sf.tweety.argumentation.dung.syntax.*;
+import net.sf.tweety.graphs.*;
 
 
 /**
@@ -324,5 +325,18 @@ public class DungTheory extends BeliefSet<Argument> {
 	public Set<Attack> getAttacks(){
 		return new HashSet<Attack>(this.attacks);
 	}
-
+	
+	/**
+	 * Returns a simple graph representation of this
+	 * Dung theory.
+	 * @return a graph representing this Dung Theory
+	 */
+	public Graph<Argument> getGraph(){
+		Graph<Argument> graph = new DefaultGraph<Argument>();
+		for(Argument a: this)
+			graph.add(a);
+		for(Attack a: this.attacks)
+			graph.add(new DirectedEdge<Argument>(a.getAttacker(),a.getAttacked()));
+		return graph;
+	}
 }

@@ -13,5 +13,6 @@
 	<classpathentry kind="lib" path="../../latestBuild/net-sf-tweety-logics-probabilisticconditionallogic.jar"/>
 	<classpathentry kind="lib" path="../../latestBuild/net-sf-tweety-math.jar"/>
 	<classpathentry kind="lib" path="../../latestBuild/net-sf-tweety.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Graph Library)"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

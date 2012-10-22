@@ -1,13 +1,14 @@
 package net.sf.tweety.argumentation.dung.syntax;
 
 import net.sf.tweety.*;
+import net.sf.tweety.graphs.Node;
 
 /**
  * This class models an argument used by Dung's abstract argumentation theory and is just described by its name.
  * @author Matthias Thimm
  *
  */
-public class Argument implements Formula{
+public class Argument implements Formula, Node{
 	/**
 	 * The name of the argument.
 	 */
