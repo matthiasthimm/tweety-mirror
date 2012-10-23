@@ -81,6 +81,16 @@ public class Attack implements Formula {
 		this.attacker = attacker;
 	}
 	
+	/**
+	 * Return true if the given argument is in this attack relation.
+	 * @param argument some argument
+	 * @return true if the given argument is in this attack relation.
+	 */
+	public boolean contains(Argument argument){
+		return this.attacked.equals(argument) || this.attacker.equals(argument);
+	}
+
+	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.kr.Formula#getSignature()
 	 */

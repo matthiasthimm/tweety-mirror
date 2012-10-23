@@ -17,7 +17,7 @@ import net.sf.tweety.graphs.*;
  * In Artificial Intelligence, Volume 77(2):321-358. 1995
  *
  *
- * @author Matthias Thimm
+ * @author Matthias Thimm, Tjitze Rienstra
  *
  */
 public class DungTheory extends BeliefSet<Argument> {
@@ -338,5 +338,20 @@ public class DungTheory extends BeliefSet<Argument> {
 		for(Attack a: this.attacks)
 			graph.add(new DirectedEdge<Argument>(a.getAttacker(),a.getAttacked()));
 		return graph;
+	}
+	
+	/**
+	 * Returns copy of this theory consisting only of the given 
+	 * arguments 
+	 * @param arguments a set of arguments
+	 * @return a Dung theory.
+	 */
+	public DungTheory getRestriction(Collection<Argument> arguments) {
+		DungTheory theory = new DungTheory();
+		theory.addAll(arguments);
+		for (Attack attack: this.attacks)
+			if(arguments.contains(attack.getAttacked()) && arguments.contains(attack.getAttacker()))
+				theory.add(attack);
+		return theory;
 	}
 }
