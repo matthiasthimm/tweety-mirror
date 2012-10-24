@@ -7,7 +7,7 @@ import org.apache.commons.logging.*;
 import net.sf.tweety.*;
 import net.sf.tweety.logics.probabilisticconditionallogic.*;
 import net.sf.tweety.logics.probabilisticconditionallogic.syntax.*;
-import net.sf.tweety.util.*;
+import net.sf.tweety.math.probability.*;
 
 /**
  * This class is capable of restoring consistency of a possible inconsistent probabilistic

@@ -7,7 +7,7 @@ import net.sf.tweety.logics.conditionallogic.syntax.*;
 import net.sf.tweety.logics.probabilisticconditionallogic.*;
 import net.sf.tweety.logics.probabilisticconditionallogic.syntax.*;
 import net.sf.tweety.logics.propositionallogic.syntax.*;
-import net.sf.tweety.util.*;
+import net.sf.tweety.math.probability.Probability;
 
 /**
  * This class represents a probability distribution on some logical language

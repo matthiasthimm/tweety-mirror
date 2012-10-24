@@ -15,7 +15,7 @@ import net.sf.tweety.math.equation.*;
 import net.sf.tweety.math.opt.*;
 import net.sf.tweety.math.opt.solver.*;
 import net.sf.tweety.math.term.*;
-import net.sf.tweety.util.*;
+import net.sf.tweety.math.probability.*;
 
 /**
  * This approach to consistency restoration follows the approach proposed in [Thimm, DKB, 2011].

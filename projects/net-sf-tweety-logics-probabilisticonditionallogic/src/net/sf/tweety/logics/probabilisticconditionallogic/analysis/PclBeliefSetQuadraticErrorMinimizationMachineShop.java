@@ -15,6 +15,7 @@ import net.sf.tweety.math.opt.*;
 import net.sf.tweety.math.opt.solver.*;
 import net.sf.tweety.math.term.*;
 import net.sf.tweety.util.*;
+import net.sf.tweety.math.probability.*;
 
 /**
  * This class is capable of restoring consistency of a possible inconsistent probabilistic

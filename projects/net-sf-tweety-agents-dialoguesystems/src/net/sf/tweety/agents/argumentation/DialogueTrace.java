@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
 
-import net.sf.tweety.agents.Perceivable;
 import net.sf.tweety.argumentation.dung.semantics.Extension;
 import net.sf.tweety.argumentation.dung.syntax.Argument;
 
@@ -15,7 +14,7 @@ import net.sf.tweety.argumentation.dung.syntax.Argument;
  * @author Tjitze Rienstra, Matthias Thimm
  *
  */
-public class DialogueTrace extends LinkedList<Extension> implements Perceivable{
+public class DialogueTrace extends LinkedList<Extension>{
 
 	/** For serialization. */
 	private static final long serialVersionUID = 1L;
@@ -29,5 +28,18 @@ public class DialogueTrace extends LinkedList<Extension> implements Perceivable{
 		for(Extension e: this)
 			arguments.addAll(e);
 		return arguments;
+	}
+	
+	/**
+	 * Returns a copy of this trace and adds the given move to this copy.
+	 * 
+	 * @param newMove Move to add to copy.
+	 * @return Copy of this trace, with newMove appended.
+	 */
+	public DialogueTrace addAndCopy(ExecutableExtension newMove) {
+		DialogueTrace trace = new DialogueTrace();
+		trace.addAll(this);
+		trace.add(newMove);
+		return trace;
 	}
 }

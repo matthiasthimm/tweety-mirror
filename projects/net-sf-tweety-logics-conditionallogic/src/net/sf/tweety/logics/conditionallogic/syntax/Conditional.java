@@ -4,8 +4,8 @@ import java.util.*;
 
 import net.sf.tweety.*;
 import net.sf.tweety.logics.propositionallogic.syntax.*;
-import net.sf.tweety.util.*;
 import net.sf.tweety.util.rules.*;
+import net.sf.tweety.math.probability.*;
 
 /**
  * This class represents a basic conditional (B|A) with formulas A,B.

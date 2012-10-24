@@ -64,4 +64,51 @@ public class GroundedGameUtilityFunction extends UtilityFunction {
 		}
 		return 0;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((argument == null) ? 0 : argument.hashCode());
+		result = prime * result + ((epsilon == null) ? 0 : epsilon.hashCode());
+		result = prime * result + ((theory == null) ? 0 : theory.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		GroundedGameUtilityFunction other = (GroundedGameUtilityFunction) obj;
+		if (argument == null) {
+			if (other.argument != null)
+				return false;
+		} else if (!argument.equals(other.argument))
+			return false;
+		if (epsilon == null) {
+			if (other.epsilon != null)
+				return false;
+		} else if (!epsilon.equals(other.epsilon))
+			return false;
+		if (theory == null) {
+			if (other.theory != null)
+				return false;
+		} else if (!theory.equals(other.theory))
+			return false;
+		if (type != other.type)
+			return false;
+		return true;
+	}
 }

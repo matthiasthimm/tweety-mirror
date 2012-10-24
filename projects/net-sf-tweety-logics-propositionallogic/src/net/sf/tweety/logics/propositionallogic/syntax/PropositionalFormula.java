@@ -4,6 +4,7 @@ import java.util.*;
 
 import net.sf.tweety.*;
 import net.sf.tweety.logics.propositionallogic.semantics.*;
+import net.sf.tweety.math.probability.*;
 import net.sf.tweety.util.*;
 
 /**

@@ -12,7 +12,7 @@ import net.sf.tweety.math.equation.*;
 import net.sf.tweety.math.opt.*;
 import net.sf.tweety.math.opt.solver.*;
 import net.sf.tweety.math.term.*;
-import net.sf.tweety.util.*;
+import net.sf.tweety.math.probability.*;
 
 /**
  * This class implements a consistency restorer using balanced distance minimization, see [Diss, Thimm] for details.

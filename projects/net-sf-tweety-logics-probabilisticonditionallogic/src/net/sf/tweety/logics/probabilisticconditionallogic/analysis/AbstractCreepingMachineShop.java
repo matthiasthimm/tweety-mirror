@@ -7,7 +7,7 @@ import org.apache.commons.logging.*;
 import net.sf.tweety.*;
 import net.sf.tweety.logics.probabilisticconditionallogic.*;
 import net.sf.tweety.logics.probabilisticconditionallogic.syntax.*;
-import net.sf.tweety.util.*;
+import net.sf.tweety.math.probability.*;
 
 /**
  * The common ancestor vor creeping machine shops, see [Diss, Thimm] for details.

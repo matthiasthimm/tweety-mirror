@@ -11,7 +11,7 @@ import net.sf.tweety.util.Probability;
 
 
 /**
- * This class implements a probabilistic interpretation for Dung argumentation frameworks, cf. [Thimm:2012, in preparation].
+ * This class implements a probabilistic interpretation for Dung argumentation frameworks, cf. [Thimm:2012].
  * 
  * @author Matthias Thimm
  */

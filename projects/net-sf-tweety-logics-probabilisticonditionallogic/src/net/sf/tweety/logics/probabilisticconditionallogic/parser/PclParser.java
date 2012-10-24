@@ -9,7 +9,7 @@ import net.sf.tweety.logics.probabilisticconditionallogic.*;
 import net.sf.tweety.logics.probabilisticconditionallogic.syntax.*;
 import net.sf.tweety.logics.propositionallogic.parser.*;
 import net.sf.tweety.logics.propositionallogic.syntax.*;
-import net.sf.tweety.util.*;
+import net.sf.tweety.math.probability.Probability;
 
 
 /**

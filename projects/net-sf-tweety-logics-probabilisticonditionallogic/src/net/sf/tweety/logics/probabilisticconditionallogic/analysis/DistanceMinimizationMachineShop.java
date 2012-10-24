@@ -3,7 +3,7 @@ package net.sf.tweety.logics.probabilisticconditionallogic.analysis;
 import net.sf.tweety.*;
 import net.sf.tweety.logics.probabilisticconditionallogic.*;
 import net.sf.tweety.logics.probabilisticconditionallogic.syntax.*;
-import net.sf.tweety.util.*;
+import net.sf.tweety.math.probability.*;
 
 /**
  * This consistency restorer uses the distance minimization inconsistency measure

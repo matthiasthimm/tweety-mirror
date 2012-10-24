@@ -15,7 +15,7 @@ import net.sf.tweety.math.equation.*;
 import net.sf.tweety.math.opt.*;
 import net.sf.tweety.math.opt.solver.*;
 import net.sf.tweety.math.term.*;
-import net.sf.tweety.util.*;
+import net.sf.tweety.math.probability.*;
 
 /**
  * This consistency restorer uses the idea of the upper approximative distance minimization inconsistency measure to compute a

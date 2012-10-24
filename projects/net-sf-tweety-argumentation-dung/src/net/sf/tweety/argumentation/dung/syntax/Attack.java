@@ -15,8 +15,8 @@ public class Attack implements Formula {
 	/**
 	 * The two arguments that stand in the attack-relation
 	 */
-	Argument attacker;
-	Argument attacked;
+	private Argument attacker;
+	private Argument attacked;
 
 	/**
 	 * Default constructor; initializes the two arguments used in this attack relation

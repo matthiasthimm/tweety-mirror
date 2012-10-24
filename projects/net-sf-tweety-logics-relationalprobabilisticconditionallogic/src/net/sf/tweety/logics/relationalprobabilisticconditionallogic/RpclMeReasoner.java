@@ -141,9 +141,12 @@ public class RpclMeReasoner extends Reasoner {
 			Set<Set<Constant>> equivalenceClasses = kb.getEquivalenceClasses(this.getSignature());
 			// determine the reference worlds needed to represent a probability distribution on the knowledge base.
 			Set<ReferenceWorld> worlds = ReferenceWorld.enumerateReferenceWorlds(this.getSignature().getPredicates(), equivalenceClasses);
-			int numberOfInterpretations = 0;
+			
+			/*  int numberOfInterpretations = 0;
+			 
 			for(ReferenceWorld w: worlds)
-				numberOfInterpretations += w.spanNumber();
+				numberOfInterpretations += w.spanNumber();*/
+			
 			// Generate Variables for the probability of each reference world,
 			// range constraints for probabilities, and construct normalization sum
 			Map<ReferenceWorld,FloatVariable> worlds2vars = new HashMap<ReferenceWorld,FloatVariable>();

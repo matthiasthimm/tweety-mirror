@@ -168,9 +168,22 @@ public class DungTheory extends BeliefSet<Argument> {
 	 * @return true if some argument of <source>ext</source> attacks argument.
 	 */
 	public boolean isAttacked(Argument argument, Extension ext){
-		Set<Argument> attackers = getAttackers(argument);
+		Set<Argument> attackers = this.getAttackers(argument);
 		attackers.retainAll(ext);
 		return attackers.size() > 0;
+	}
+	
+	/**
+	 * returns true if some argument of <source>ext2</source> attacks some argument
+	 * in <source>ext1</source>
+	 * @param ext1 an extension, ie. a set of arguments
+	 * @param ext2 an extension, ie. a set of arguments
+	 * @return true if ext an extension, ie. a set of arguments
+	 */
+	public boolean isAttacked(Extension ext1, Extension ext2){
+		for(Argument a: ext1)
+			if(this.isAttacked(a, ext2)) return true;
+		return false;
 	}
 
 	/**
@@ -353,5 +366,36 @@ public class DungTheory extends BeliefSet<Argument> {
 			if(arguments.contains(attack.getAttacked()) && arguments.contains(attack.getAttacker()))
 				theory.add(attack);
 		return theory;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((attacks == null) ? 0 : attacks.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DungTheory other = (DungTheory) obj;
+		if (attacks == null) {
+			if (other.attacks != null)
+				return false;
+		} else if (!attacks.equals(other.attacks))
+			return false;
+		return true;
 	}
 }

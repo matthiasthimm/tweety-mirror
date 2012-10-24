@@ -35,9 +35,10 @@ public class ArguingAgent extends Agent {
 		if(percepts.size()!=1)
 			throw new IllegalArgumentException("Only one percept expected.");
 		if(!(percepts.iterator().next() instanceof DialogueTrace))
-			throw new IllegalArgumentException("Object of type DialogueTrace expected.");
-		this.beliefState.update((DialogueTrace)percepts.iterator().next());		
-		return this.beliefState.move();
+			throw new IllegalArgumentException("Object of type GroundedEnvironment expected.");
+		GroundedEnvironment env = (GroundedEnvironment)percepts.iterator().next();
+		this.beliefState.update(env.getDialogueTrace());		
+		return this.beliefState.move(env);
 	}
 
 }

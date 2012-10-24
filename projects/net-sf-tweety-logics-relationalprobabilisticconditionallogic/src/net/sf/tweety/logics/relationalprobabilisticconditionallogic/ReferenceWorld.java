@@ -28,12 +28,7 @@ public class ReferenceWorld extends Interpretation implements Map<Predicate,Inst
 	 * The instance assignments of this reference worlds
 	 */
 	private Map<Predicate,InstanceAssignment> assignments;
-	
-	/**
-	 * For serialization.
-	 */
-	private static final long serialVersionUID = 1L;
-	
+		
 	/**
 	 * The equivalence classes this reference world bases on.
 	 */

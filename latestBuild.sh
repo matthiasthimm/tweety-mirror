@@ -2,7 +2,7 @@ ant -f projects/net-sf-tweety-action/update_latest_build.xml
 ant -f projects/net-sf-tweety-action-description-c/update_latest_build.xml
 ant -f projects/net-sf-tweety-action-query-s/update_latest_build.xml
 ant -f projects/net-sf-tweety-agents/update_latest_build.xml
-ant -f projects/net-sf-tweety-agents-structuredargumentationsystems/update_latest_build.xml
+ant -f projects/net-sf-tweety-agents-dialoguesystems/update_latest_build.xml
 ant -f projects/net-sf-tweety-argumentation-deductive/update_latest_build.xml
 ant -f projects/net-sf-tweety-argumentation-delp/update_latest_build.xml
 ant -f projects/net-sf-tweety-argumentation-dung/update_latest_build.xml

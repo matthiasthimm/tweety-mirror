@@ -1,4 +1,4 @@
-package net.sf.tweety.util;
+package net.sf.tweety.math.probability;
 
 /**
  * This class represents a probability, i.e. a double in the interval [0,1].

@@ -7,6 +7,7 @@ import net.sf.tweety.agents.ProtocolTerminatedException;
 import net.sf.tweety.agents.RoundRobinProtocol;
 import net.sf.tweety.agents.argumentation.oppmodels.ArguingAgent;
 import net.sf.tweety.agents.argumentation.oppmodels.GroundedGameSystem;
+import net.sf.tweety.argumentation.dung.DungTheory;
 
 public class GroundedTest {
 
@@ -22,7 +23,8 @@ public class GroundedTest {
 	public void run(){
 		ArguingAgent proAgent = new ArguingAgent("PRO", null);
 		ArguingAgent oppAgent = new ArguingAgent("OPP", null);
-		GroundedGameSystem system = new GroundedGameSystem();
+		DungTheory myTheory = new DungTheory();
+		GroundedGameSystem system = new GroundedGameSystem(myTheory);
 		system.add(proAgent);
 		system.add(oppAgent);		
 		try {

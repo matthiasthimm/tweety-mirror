@@ -10,7 +10,7 @@ import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 import net.sf.tweety.logics.firstorderlogic.semantics.*;
 import net.sf.tweety.logics.probabilisticconditionallogic.semantics.ProbabilityDistribution;
-import net.sf.tweety.util.Probability;
+import net.sf.tweety.math.probability.Probability;
 import net.sf.tweety.util.RandomSubsetIterator;
 import net.sf.tweety.util.SubsetIterator;
 

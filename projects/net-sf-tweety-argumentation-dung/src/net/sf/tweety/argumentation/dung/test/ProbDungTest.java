@@ -87,7 +87,7 @@ public class ProbDungTest {
 		
 		
 		String output = "";
-		String error = "";
+		//String error = "";
 		InputStream in = null;
 		Process child = null;
 		try{
@@ -106,8 +106,8 @@ public class ProbDungTest {
 	        }
 			in.close();		        		        
 	        in = child.getErrorStream();
-	        while ((c = in.read()) != -1)
-	            error += (char)c;	        	        
+	       /*while ((c = in.read()) != -1)
+	            error += (char)c;*/	        	        
 		}catch(IOException e){
 			return null;
 		}finally{

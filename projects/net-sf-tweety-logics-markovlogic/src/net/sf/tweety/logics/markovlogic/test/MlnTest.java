@@ -162,7 +162,7 @@ public class MlnTest {
 	
 	public static void main(String[] args) throws ParserException, IOException{
 		//MlnTest.createChart(null, "", "");
-		String expPath = "/home/share/mln/results_2012-09-30__00001_1000/";//"/Users/mthimm/Desktop/test/";
+		String expPath = "/home/share/mln/results_2012-10-04__000001_10000/";//"/Users/mthimm/Desktop/test/";
 					
 //		List<AggregationFunction> aggrFunctions = new ArrayList<AggregationFunction>();
 //		aggrFunctions.add(new MaxAggregator());
@@ -191,13 +191,13 @@ public class MlnTest {
 		
 		//cohMeasures.add(new AggregatingCoherenceMeasure(new AggregatingDistanceFunction(new MaxAggregator()),new MaxAggregator()));
 		
-		for(int i = 1; i < 4; i++){
+		for(int i = 1; i < 2; i++){
 			Map<AggregatingCoherenceMeasure,double[][]> results = new HashMap<AggregatingCoherenceMeasure,double[][]>();
-			for(int dsize = 3; dsize < 14; dsize++){
+			for(int dsize = 3; dsize < 15; dsize++){
 				Pair<MarkovLogicNetwork,FolSignature> ex = MlnTest.iterateExamples(i, dsize);
 				MarkovLogicNetwork mln = ex.getFirst();
 				FolSignature sig = ex.getSecond();
-				SimpleSamplingMlnReasoner reasoner = new SimpleSamplingMlnReasoner(mln,sig,0.00001,1000);//new ApproximateNaiveMlnReasoner(mln, sig, 1000000, 100000);
+				SimpleSamplingMlnReasoner reasoner = new SimpleSamplingMlnReasoner(mln,sig,0.000001,10000);//new ApproximateNaiveMlnReasoner(mln, sig, 1000000, 100000);
 				//reasoner.setTempDirectory("/home/share/mln/results_2012-09-21__precise/temp");
 				//for(AggregationFunction af: aggrFunctions){
 				///	for(DistanceFunction df: distFunctions){

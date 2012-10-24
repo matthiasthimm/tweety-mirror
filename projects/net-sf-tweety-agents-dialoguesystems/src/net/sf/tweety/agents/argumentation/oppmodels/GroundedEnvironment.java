@@ -10,24 +10,31 @@ import net.sf.tweety.agents.Executable;
 import net.sf.tweety.agents.Perceivable;
 import net.sf.tweety.agents.argumentation.DialogueTrace;
 import net.sf.tweety.agents.argumentation.ExecutableExtension;
+import net.sf.tweety.argumentation.dung.DungTheory;
+import net.sf.tweety.argumentation.dung.semantics.Extension;
 
 /**
  * This class models the environment for agents in a grounded
- * argumentation game. It only consists of the current trace of
- * disclosed arguments.
+ * argumentation game. It consists of the universal Dung theory used
+ * for argumentation (but not completely revealed to all agents) and
+ * the current trace of disclosed arguments.
  * 
  * @author Matthias Thimm
  */
-public class GroundedEnvironment implements Environment {
+public class GroundedEnvironment implements Environment, Perceivable {
 
 	/** The actual dialogue trace. */
 	private DialogueTrace trace;
+	/** The universal Dung theory used for argumentation. */
+	private DungTheory universalTheory;
 	
 	/**
 	 * Creates a new grounded environment.
+	 * @param universalTheory the universal Dung theory used for argumentation.
 	 */
-	public GroundedEnvironment(){
+	public GroundedEnvironment(DungTheory universalTheory){
 		this.trace = new DialogueTrace();
+		this.universalTheory = universalTheory;
 	}
 	
 	/* (non-Javadoc)
@@ -59,8 +66,29 @@ public class GroundedEnvironment implements Environment {
 	 */
 	@Override
 	public Set<Perceivable> getPercepts(Agent agent) {
+		//this environment is added as percept so that
+		//the agent can inquire the necessay information
+		//himself.
 		Set<Perceivable> percepts = new HashSet<Perceivable>();
-		percepts.add(this.trace);
+		percepts.add(this);
 		return percepts;
+	}
+	
+	/**
+	 * Returns the current dialogue trace.
+	 * @return the current dialogue trace.
+	 */
+	public DialogueTrace getDialogueTrace(){
+		return this.trace;
+	}
+	
+	/**
+	 * Returns the view of the universal Dung theory restricted to
+	 * the given set of arguments.
+	 * @param arguments a set of arguments.
+	 * @return the projection of the universal theory.
+	 */
+	public DungTheory getPerceivedDungTheory(Extension arguments){
+		return this.universalTheory.getRestriction(arguments);
 	}
 }

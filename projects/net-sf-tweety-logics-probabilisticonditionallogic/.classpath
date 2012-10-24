@@ -2,10 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/net-sf-tweety-logics-propositionallogic.jar"/>
-	<classpathentry kind="lib" path="lib/net-sf-tweety.jar"/>
-	<classpathentry kind="lib" path="lib/net-sf-tweety-logics-conditionallogic.jar"/>
-	<classpathentry kind="lib" path="lib/net-sf-tweety-math.jar"/>
 	<classpathentry kind="lib" path="lib/commons-logging-1.1.1-javadoc.jar"/>
 	<classpathentry kind="lib" path="lib/commons-logging-1.1.1-sources.jar"/>
 	<classpathentry kind="lib" path="lib/commons-logging-1.1.1.jar"/>
@@ -13,5 +9,9 @@
 	<classpathentry kind="lib" path="lib/commons-logging-api-1.1.1.jar"/>
 	<classpathentry kind="lib" path="lib/commons-logging-tests.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.16.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Conditional Logic Library)"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Core Library)"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Math Library)"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Propositional Logic Library)"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
