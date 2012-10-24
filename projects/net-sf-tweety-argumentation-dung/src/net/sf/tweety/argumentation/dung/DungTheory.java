@@ -367,6 +367,25 @@ public class DungTheory extends BeliefSet<Argument> {
 				theory.add(attack);
 		return theory;
 	}
+	
+	/**
+	 * Generates a random Dung theory with the given number of arguments
+	 * and the given probability of an attack between any two arguments.
+	 * @param numberOfArguments number of arguments
+	 * @param attackProbability probability of an attack between two arguments.
+	 * @return a Dung theory
+	 */
+	public static DungTheory generateRandomTheory(int numberOfArguments, double attackProbability){
+		DungTheory theory = new DungTheory();
+		for(int i = 0; i < numberOfArguments; i++)
+			theory.add(new Argument("A" + i));
+		Random rand = new Random();
+		for(Argument a: theory)
+			for(Argument b: theory)
+				if(rand.nextDouble() <= attackProbability)
+					theory.add(new Attack(a,b));				
+		return theory;
+	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
