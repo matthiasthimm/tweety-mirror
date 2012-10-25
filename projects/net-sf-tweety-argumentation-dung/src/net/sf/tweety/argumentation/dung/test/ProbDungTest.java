@@ -34,7 +34,7 @@ import net.sf.tweety.math.term.FloatVariable;
 import net.sf.tweety.math.term.Logarithm;
 import net.sf.tweety.math.term.Term;
 import net.sf.tweety.math.term.Variable;
-import net.sf.tweety.util.Probability;
+import net.sf.tweety.math.probability.*;
 import net.sf.tweety.util.SetTools;
 
 /**

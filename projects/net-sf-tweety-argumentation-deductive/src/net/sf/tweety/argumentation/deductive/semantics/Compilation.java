@@ -5,10 +5,7 @@ import java.util.Set;
 import java.util.Stack;
 
 import net.sf.tweety.argumentation.deductive.DeductiveKnowledgeBase;
-import net.sf.tweety.graphs.DirectedEdge;
-import net.sf.tweety.graphs.Edge;
-import net.sf.tweety.graphs.Graph;
-import net.sf.tweety.graphs.UndirectedEdge;
+import net.sf.tweety.graphs.*;
 import net.sf.tweety.logics.propositionallogic.PlBeliefSet;
 import net.sf.tweety.logics.propositionallogic.syntax.Conjunction;
 import net.sf.tweety.logics.propositionallogic.syntax.Negation;
@@ -33,7 +30,7 @@ import net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula;
  * @author mthimm
  *
  */
-public class Compilation extends Graph<CompilationNode>{
+public class Compilation extends DefaultGraph<CompilationNode>{
 
 	/** Creates the compilation of the given knowledge base.
 	 * @param kb some deductive knowledge base.

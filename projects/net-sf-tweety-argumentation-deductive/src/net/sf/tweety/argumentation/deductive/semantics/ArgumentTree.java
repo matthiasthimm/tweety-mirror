@@ -3,7 +3,7 @@ package net.sf.tweety.argumentation.deductive.semantics;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.graphs.Graph;
+import net.sf.tweety.graphs.*;
 
 /**
  * Instances of this class represent argument trees in the sense
@@ -14,7 +14,7 @@ import net.sf.tweety.graphs.Graph;
  * 
  * @author Matthias Thimm
  */
-public class ArgumentTree extends Graph<DeductiveArgument> {
+public class ArgumentTree extends DefaultGraph<DeductiveArgument> {
 	
 	/** The root node of this tree. */
 	private DeductiveArgument rootNode;

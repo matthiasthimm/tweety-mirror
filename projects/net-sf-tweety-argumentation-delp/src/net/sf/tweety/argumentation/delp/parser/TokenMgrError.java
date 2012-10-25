@@ -3,7 +3,6 @@
 package net.sf.tweety.argumentation.delp.parser;
 
 /** Token Manager Error. */
-@SuppressWarnings("all")
 public class TokenMgrError extends Error
 {
 

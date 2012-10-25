@@ -5,7 +5,7 @@ import net.sf.tweety.logics.relationalconditionallogic.syntax.*;
 import net.sf.tweety.logics.relationalprobabilisticconditionallogic.*;
 import net.sf.tweety.logics.relationalprobabilisticconditionallogic.semantics.*;
 import net.sf.tweety.logics.relationalprobabilisticconditionallogic.syntax.*;
-import net.sf.tweety.util.*;
+import net.sf.tweety.math.probability.*;
 
 public class RpclMeReasonerTest {
 	public static void main(String[] args){

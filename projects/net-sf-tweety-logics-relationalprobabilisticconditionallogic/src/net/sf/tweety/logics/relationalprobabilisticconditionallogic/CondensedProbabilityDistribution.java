@@ -7,7 +7,7 @@ import net.sf.tweety.logics.firstorderlogic.syntax.*;
 import net.sf.tweety.logics.probabilisticconditionallogic.semantics.*;
 import net.sf.tweety.logics.relationalprobabilisticconditionallogic.semantics.*;
 import net.sf.tweety.logics.relationalprobabilisticconditionallogic.syntax.*;
-import net.sf.tweety.util.*;
+import net.sf.tweety.math.probability.Probability;
 
 
 /**

@@ -7,7 +7,7 @@ import net.sf.tweety.argumentation.dung.syntax.Argument;
 import net.sf.tweety.argumentation.dung.syntax.DungSignature;
 import net.sf.tweety.logics.conditionallogic.syntax.Conditional;
 import net.sf.tweety.logics.probabilisticconditionallogic.semantics.ProbabilityDistribution;
-import net.sf.tweety.util.Probability;
+import net.sf.tweety.math.probability.*;
 
 
 /**

@@ -14,7 +14,7 @@ import net.sf.tweety.util.Pair;
  * This belief state consists of a probability distribution over 
  * other opponent models.
  * 
- * @author Tjitze, Rienstra, Matthias Thimm
+ * @author Tjitze Rienstra, Matthias Thimm
  */
 public class T2BeliefState extends BeliefState {
 

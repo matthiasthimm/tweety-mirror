@@ -86,7 +86,7 @@ public class OpenOptSolver extends Solver {
 	@Override
 	public Map<Variable, Term> solve() throws GeneralMathException {		
 		String output = "";
-		String error = "";
+		//String error = "";
 		InputStream in = null;
 		Process child = null;
 		try{
@@ -108,8 +108,8 @@ public class OpenOptSolver extends Solver {
 	        }
 			in.close();		        		        
 	        in = child.getErrorStream();
-	        while ((c = in.read()) != -1)
-	            error += (char)c;	        	        
+	      //  while ((c = in.read()) != -1)
+	      //      error += (char)c;	        	        
 		}catch(IOException e){
 			log.error(e.getMessage());
 			return null;

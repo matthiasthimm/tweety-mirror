@@ -15,7 +15,7 @@ import net.sf.tweety.logics.relationalprobabilisticconditionallogic.parser.rpclp
 import net.sf.tweety.logics.relationalprobabilisticconditionallogic.semantics.*;
 import net.sf.tweety.logics.relationalprobabilisticconditionallogic.writers.*;
 import net.sf.tweety.math.opt.*;
-import net.sf.tweety.util.*;
+import net.sf.tweety.math.probability.*;
 
 import org.apache.commons.logging.*;
 

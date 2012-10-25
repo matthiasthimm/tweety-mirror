@@ -37,4 +37,11 @@ public abstract class Agent {
 	 */
 	public abstract Executable next(Collection<? extends Perceivable> percepts);
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString(){
+		return this.name;
+	}
+	
 }

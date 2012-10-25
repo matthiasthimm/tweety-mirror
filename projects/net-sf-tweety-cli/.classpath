@@ -2,19 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/net-sf-tweety-agents-structuredargumentationsystems.jar"/>
-	<classpathentry kind="lib" path="lib/net-sf-tweety-agents.jar"/>
-	<classpathentry kind="lib" path="lib/net-sf-tweety-argumentation-dung.jar"/>
-	<classpathentry kind="lib" path="lib/net-sf-tweety-argumentation-structuredargumentationframeworks.jar"/>
-	<classpathentry kind="lib" path="lib/net-sf-tweety-logics-conditionallogic.jar"/>
-	<classpathentry kind="lib" path="lib/net-sf-tweety-logics-firstorderlogic.jar"/>
-	<classpathentry kind="lib" path="lib/net-sf-tweety-logics-modallogic.jar"/>
-	<classpathentry kind="lib" path="lib/net-sf-tweety-logics-probabilisticconditionallogic.jar"/>
-	<classpathentry kind="lib" path="lib/net-sf-tweety-logics-propositionallogic.jar"/>
-	<classpathentry kind="lib" path="lib/net-sf-tweety-logics-relationalconditionallogic.jar"/>
-	<classpathentry kind="lib" path="lib/net-sf-tweety-logics-relationalprobabilisticconditionallogic.jar"/>
-	<classpathentry kind="lib" path="lib/net-sf-tweety-math.jar"/>
-	<classpathentry kind="lib" path="lib/net-sf-tweety.jar"/>
 	<classpathentry kind="lib" path="lib/commons-logging-1.1.1-javadoc.jar"/>
 	<classpathentry kind="lib" path="lib/commons-logging-1.1.1-sources.jar"/>
 	<classpathentry kind="lib" path="lib/commons-logging-1.1.1.jar"/>
@@ -22,5 +9,28 @@
 	<classpathentry kind="lib" path="lib/commons-logging-api-1.1.1.jar"/>
 	<classpathentry kind="lib" path="lib/commons-logging-tests.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.16.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Action and Change Library)"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Action Description Language C Library)"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Action Query Language S Library)"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Agents Library)"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Belief Dynamics Library)"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Conditional Logic Library)"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Core Library)"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Deductive Argumentation Library)"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Defeasible Logic Programming Library)"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Dialogue Systems Library)"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Dung Argumentation Library)"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (First-Order Logic Library)"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Graph Library)"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Logic Programming Interface Library)"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Markov Logic Library)"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Math Library)"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Modal Logic Library)"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Preferences Library)"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Probabilistic Conditional Logic Library)"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Propositional Logic Library)"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Relational Conditional Logic Library)"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Relational Probabilistic Conditional Logic Library)"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Structured Argumentation Frameworks Library)"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

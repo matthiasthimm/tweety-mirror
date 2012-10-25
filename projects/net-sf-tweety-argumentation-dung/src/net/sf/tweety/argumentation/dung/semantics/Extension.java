@@ -5,7 +5,7 @@ import java.util.*;
 import net.sf.tweety.*;
 import net.sf.tweety.argumentation.dung.*;
 import net.sf.tweety.argumentation.dung.syntax.*;
-import net.sf.tweety.util.Probability;
+import net.sf.tweety.math.probability.*;
 
 
 /**

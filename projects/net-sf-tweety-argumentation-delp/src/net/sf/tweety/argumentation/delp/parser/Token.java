@@ -6,7 +6,6 @@ package net.sf.tweety.argumentation.delp.parser;
  * Describes the input token stream.
  */
 
-@SuppressWarnings("all")
 public class Token implements java.io.Serializable {
 
   /**

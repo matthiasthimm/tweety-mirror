@@ -63,7 +63,7 @@ public class RoundRobinProtocol extends RigidProtocol {
 	}
 
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.agents.Protocol#hasTerminated()
+	 * @see net.sf.tweety.agents.RigidProtocol#hasTerminated()
 	 */
 	@Override
 	protected boolean hasTerminated() {

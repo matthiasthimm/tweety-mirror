@@ -3,7 +3,7 @@ package net.sf.tweety.logics.relationalprobabilisticconditionallogic.syntax;
 import net.sf.tweety.*;
 import net.sf.tweety.logics.firstorderlogic.syntax.*;
 import net.sf.tweety.logics.relationalconditionallogic.syntax.*;
-import net.sf.tweety.util.*;
+import net.sf.tweety.math.probability.*;
 
 /**
  * This class represents a relational probabilistic conditional, i.e. a structure (B|A)[p]

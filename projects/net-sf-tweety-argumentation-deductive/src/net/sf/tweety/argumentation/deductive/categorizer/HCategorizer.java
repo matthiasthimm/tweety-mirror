@@ -1,6 +1,6 @@
 package net.sf.tweety.argumentation.deductive.categorizer;
 
-import java.util.Set;
+import java.util.Collection;
 
 import net.sf.tweety.argumentation.deductive.semantics.ArgumentTree;
 import net.sf.tweety.argumentation.deductive.semantics.DeductiveArgument;
@@ -31,7 +31,7 @@ public class HCategorizer implements Categorizer{
 	 * @return the categorization of the node.
 	 */
 	private double categorize(ArgumentTree argumentTree, DeductiveArgument parent, DeductiveArgument node){
-		Set<DeductiveArgument> children = argumentTree.getNeighbors(node);
+		Collection<DeductiveArgument> children = argumentTree.getNeighbors(node);
 		if(parent != null) children.remove(parent);
 		if(children.isEmpty())
 			return 1;

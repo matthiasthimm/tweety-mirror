@@ -16,6 +16,7 @@ import net.sf.tweety.logics.firstorderlogic.syntax.*;
 import net.sf.tweety.logics.relationalprobabilisticconditionallogic.*;
 import net.sf.tweety.logics.relationalprobabilisticconditionallogic.semantics.*;
 import net.sf.tweety.util.*;
+import net.sf.tweety.math.probability.*;
 
 /**
  * This class implements a parser for condensed relational probability distributions. The BNF for 

@@ -67,7 +67,7 @@ public class GroundedEnvironment implements Environment, Perceivable {
 	@Override
 	public Set<Perceivable> getPercepts(Agent agent) {
 		//this environment is added as percept so that
-		//the agent can inquire the necessay information
+		//the agent can inquire the necessary information
 		//himself.
 		Set<Perceivable> percepts = new HashSet<Perceivable>();
 		percepts.add(this);

@@ -15,14 +15,11 @@ import net.sf.tweety.argumentation.dung.syntax.Argument;
  *
  */
 public class GroundedGameUtilityFunction extends UtilityFunction {
-
-	/** The type of this utility function. */
-	public enum Type {PRO, CONTRA};
 	
 	/** The argument which is played for or against. */
 	private final Argument argument;
-	/** The type of this utility function */
-	private Type type;
+	/** The faction of this utility function */
+	private GroundedGameSystem.AgentFaction faction;
 	/** The underlying Dung theory*/ 
 	private final DungTheory theory;
 	/** The epsilon value. */
@@ -35,10 +32,10 @@ public class GroundedGameUtilityFunction extends UtilityFunction {
 	 * @param argument the argument which is played for or against.
 	 * @param type the type of this utility function.
 	 */
-	public GroundedGameUtilityFunction(DungTheory theory, Argument argument, Type type) {
+	public GroundedGameUtilityFunction(DungTheory theory, Argument argument, GroundedGameSystem.AgentFaction faction) {
 		this.theory = theory;
 		this.argument = argument;
-		this.type = type;
+		this.faction = faction;
 	}
 	
 	/* (non-Javadoc)
@@ -48,7 +45,7 @@ public class GroundedGameUtilityFunction extends UtilityFunction {
 	public float getUtility(DialogueTrace trace) {		
 		DungTheory theory = this.theory.getRestriction(trace.getArguments());
 		Extension groundedExtension = new GroundReasoner(theory).getExtensions().iterator().next();				
-		switch(this.type){
+		switch(this.faction){
 			case PRO:
 				if(groundedExtension.contains(this.argument))
 					return 1f - (this.epsilon * (float)trace.size());				
@@ -76,7 +73,7 @@ public class GroundedGameUtilityFunction extends UtilityFunction {
 				+ ((argument == null) ? 0 : argument.hashCode());
 		result = prime * result + ((epsilon == null) ? 0 : epsilon.hashCode());
 		result = prime * result + ((theory == null) ? 0 : theory.hashCode());
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		result = prime * result + ((faction == null) ? 0 : faction.hashCode());
 		return result;
 	}
 
@@ -107,7 +104,7 @@ public class GroundedGameUtilityFunction extends UtilityFunction {
 				return false;
 		} else if (!theory.equals(other.theory))
 			return false;
-		if (type != other.type)
+		if (faction != other.faction)
 			return false;
 		return true;
 	}

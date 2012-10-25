@@ -8,7 +8,7 @@ import java.util.*;
  * other action thereafter. 
  * @author Matthias Thimm
  */
-public abstract class RigidProtocol extends Protocol {
+public abstract class RigidProtocol extends AbstractProtocol {
 
 	/**
 	 * Keeps track of whether an agent has performed a NO_OPERATION;
@@ -27,7 +27,7 @@ public abstract class RigidProtocol extends Protocol {
 	}
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.agents.Protocol#hasTerminated()
+	 * @see net.sf.tweety.agents.AbstractProtocol#hasTerminated()
 	 */
 	@Override
 	protected boolean hasTerminated() {

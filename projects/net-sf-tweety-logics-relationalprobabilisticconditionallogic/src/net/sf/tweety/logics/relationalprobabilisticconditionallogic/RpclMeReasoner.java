@@ -16,8 +16,8 @@ import net.sf.tweety.math.*;
 import net.sf.tweety.math.equation.*;
 import net.sf.tweety.math.opt.*;
 import net.sf.tweety.math.opt.solver.*;
+import net.sf.tweety.math.probability.Probability;
 import net.sf.tweety.math.term.*;
-import net.sf.tweety.util.*;
 
 import org.apache.commons.logging.*;
 

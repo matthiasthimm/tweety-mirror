@@ -66,13 +66,12 @@ public class MultiAgentSystem<T extends Agent> implements Collection<T>{
 	 * @throws IllegalArgumentException if the given number of steps is zero or
 	 * 	negative and not equal to Protocol.EXECUTE_TILL_TERMINATION.
 	 */
-	public boolean execute(Protocol protocol, int numOfSteps) throws ProtocolTerminatedException, IllegalArgumentException{
+	public boolean execute(AbstractProtocol protocol, int numOfSteps) throws ProtocolTerminatedException, IllegalArgumentException{
 		if(numOfSteps <= 0 && numOfSteps != EXECUTE_TILL_TERMINATION)
 			throw new IllegalArgumentException("Illegal number of steps: " + numOfSteps);
 		if(numOfSteps == EXECUTE_TILL_TERMINATION){
-			do{
-				protocol.step();
-			}while(!protocol.hasTerminated());
+			while(!protocol.hasTerminated())
+				protocol.step();			
 			return true;
 		}
 		for(int i = 0; i < numOfSteps;i++){
@@ -86,7 +85,7 @@ public class MultiAgentSystem<T extends Agent> implements Collection<T>{
 	 * @param protocol a protocol.
 	 * @throws ProtocolTerminatedException if the protocol has already terminated.
 	 */
-	public void execute(Protocol protocol) throws ProtocolTerminatedException{
+	public void execute(AbstractProtocol protocol) throws ProtocolTerminatedException{
 		this.execute(protocol, EXECUTE_TILL_TERMINATION);
 	}
 	

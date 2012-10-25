@@ -13,19 +13,39 @@ import net.sf.tweety.agents.argumentation.DialogueTrace;
  *
  */
 public class ArguingAgent extends Agent {
-
+	
 	/** The belief state of the agent. */
 	private BeliefState beliefState;
+	/** The faction of the agent. */
+	private GroundedGameSystem.AgentFaction faction;
+	
 	/**
 	 * Create a new agent with the given name and belief state.
-	 * @param name some name
+	 * @param type the type of the agent.
 	 * @param beliefState a belief state
 	 */
-	public ArguingAgent(String name, BeliefState beliefState) {
-		super(name);
+	public ArguingAgent(GroundedGameSystem.AgentFaction faction, BeliefState beliefState) {
+		super(faction.toString());
+		this.faction = faction;
 		this.beliefState = beliefState;
 	}
 
+	/**
+	 * Returns the faction of the agent.
+	 * @return the faction of the agent.
+	 */
+	public GroundedGameSystem.AgentFaction getFaction(){
+		return this.faction;
+	}
+	
+	/**
+	 * Returns the belief state of the agent.
+	 * @return the belief state of the agent.
+	 */
+	public BeliefState getBeliefState(){
+		return this.beliefState;
+	}
+	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.agents.Agent#next(java.util.Collection)
 	 */
@@ -39,6 +59,15 @@ public class ArguingAgent extends Agent {
 		GroundedEnvironment env = (GroundedEnvironment)percepts.iterator().next();
 		this.beliefState.update(env.getDialogueTrace());		
 		return this.beliefState.move(env);
+	}
+	
+	/**
+	 * Assess the given dialogue trace with the belief states utility function.
+	 * @param trace a dialogue trace
+	 * @return the utility of this agent for this dialog trace
+	 */
+	protected float getUtility(DialogueTrace trace){
+		return this.beliefState.getUtilityFunction().getUtility(trace);
 	}
 
 }

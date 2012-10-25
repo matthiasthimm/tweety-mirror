@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/net-sf-tweety.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Math Library)"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Core Library)"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
