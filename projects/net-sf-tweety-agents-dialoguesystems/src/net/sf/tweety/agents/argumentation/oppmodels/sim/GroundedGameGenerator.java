@@ -37,6 +37,7 @@ public class GroundedGameGenerator implements MultiAgentSystemGenerator<ArguingA
 	public GroundedGameGenerator(int argumentSize, double attackProb, double viewPercentage){
 		this.argumentSize = argumentSize;
 		this.attackProb = attackProb;
+		this.viewPercentage = viewPercentage;
 	}
 	
 	/* (non-Javadoc)
