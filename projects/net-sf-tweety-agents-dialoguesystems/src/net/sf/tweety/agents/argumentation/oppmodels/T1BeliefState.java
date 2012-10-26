@@ -46,24 +46,31 @@ public class T1BeliefState extends BeliefState {
 	@Override
 	public void update(DialogueTrace trace) {
 		this.getKnownArguments().addAll(trace.getArguments());
-		this.oppModel.update(trace);
+		if(this.oppModel != null)
+			this.oppModel.update(trace);
 	}
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.agents.argumentation.oppmodels.BeliefState#doMove(net.sf.tweety.agents.argumentation.oppmodels.GroundedEnvironment, net.sf.tweety.agents.argumentation.DialogueTrace)
 	 */
 	@Override
-	public Pair<Float,Set<ExecutableExtension>> doMove(GroundedEnvironment env, DialogueTrace trace) {
-		float maxUtility = this.getUtilityFunction().getUtility(env.getDialogueTrace());
+	public Pair<Double,Set<ExecutableExtension>> doMove(GroundedEnvironment env, DialogueTrace trace) {
+		double maxUtility = this.getUtilityFunction().getUtility(trace);
 		Set<ExecutableExtension> bestMoves = new HashSet<ExecutableExtension>();
-		for(ExecutableExtension move: this.getLegalMoves(env)){
-			float eu = 0;
+		Set<ExecutableExtension> ee = this.getLegalMoves(env, trace);		
+		bestMoves.add(new ExecutableExtension());
+		for(ExecutableExtension move: ee){
+			double eu = 0;
 			if(this.oppModel == null)
-				eu = this.getUtilityFunction().getUtility(env.getDialogueTrace().addAndCopy(move));
+				eu = this.getUtilityFunction().getUtility(trace.addAndCopy(move));
 			else{			
-				Pair<Float,Set<ExecutableExtension>> opponentMoves = this.oppModel.doMove(env,trace.addAndCopy(move));
+				Pair<Double,Set<ExecutableExtension>> opponentMoves = this.oppModel.doMove(env,trace.addAndCopy(move));
 				for(ExecutableExtension move2: opponentMoves.getSecond()){
-					Pair<Float,Set<ExecutableExtension>> myMoves = this.doMove(env, trace.addAndCopy(move).addAndCopy(move2));
+					// this avoids infinite loops
+					// (if there are two consecutive noops the game is over anyway)
+					if(move.isNoOperation() && move2.isNoOperation())
+						continue;
+					Pair<Double,Set<ExecutableExtension>> myMoves = this.doMove(env, trace.addAndCopy(move).addAndCopy(move2));
 					eu += myMoves.getFirst() * 1f/opponentMoves.getSecond().size();
 				}				
 			}
@@ -74,9 +81,16 @@ public class T1BeliefState extends BeliefState {
 			}else if(eu == maxUtility)
 				bestMoves.add(move);
 		}		
-		return new Pair<Float,Set<ExecutableExtension>>(maxUtility,bestMoves);
+		return new Pair<Double,Set<ExecutableExtension>>(maxUtility,bestMoves);
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString(){
+		return "<" + this.getKnownArguments() + ", " + this.getUtilityFunction() + ", " + this.oppModel + ">";
+	}
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */

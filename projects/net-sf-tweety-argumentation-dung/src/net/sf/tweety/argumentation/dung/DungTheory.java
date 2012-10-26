@@ -300,6 +300,15 @@ public class DungTheory extends BeliefSet<Argument> {
 		return this.attacks.add(attack);
 	}
 	
+	/**
+	 * Removes the given attack from this Dung theory.
+	 * @param attack an attack
+	 * @return "true" if the set of attacks has been modified.
+	 */
+	public boolean remove(Attack attack){
+		return this.attacks.remove(attack);
+	}
+	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.kr.BeliefSet#contains(java.lang.Object)
 	 */
@@ -365,25 +374,6 @@ public class DungTheory extends BeliefSet<Argument> {
 		for (Attack attack: this.attacks)
 			if(arguments.contains(attack.getAttacked()) && arguments.contains(attack.getAttacker()))
 				theory.add(attack);
-		return theory;
-	}
-	
-	/**
-	 * Generates a random Dung theory with the given number of arguments
-	 * and the given probability of an attack between any two arguments.
-	 * @param numberOfArguments number of arguments
-	 * @param attackProbability probability of an attack between two arguments.
-	 * @return a Dung theory
-	 */
-	public static DungTheory generateRandomTheory(int numberOfArguments, double attackProbability){
-		DungTheory theory = new DungTheory();
-		for(int i = 0; i < numberOfArguments; i++)
-			theory.add(new Argument("A" + i));
-		Random rand = new Random();
-		for(Argument a: theory)
-			for(Argument b: theory)
-				if(rand.nextDouble() <= attackProbability)
-					theory.add(new Attack(a,b));				
 		return theory;
 	}
 

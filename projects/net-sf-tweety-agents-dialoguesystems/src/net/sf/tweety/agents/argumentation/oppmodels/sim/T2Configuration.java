@@ -2,12 +2,13 @@ package net.sf.tweety.agents.argumentation.oppmodels.sim;
 
 /**
  * This class encapsulates configuration options for generating
- * T1 belief states.
+ * T2 belief states.
  * @author Matthias Thimm
  */
-public class T1Configuration extends BeliefStateConfiguration{
-	/** this parameter indicates whether the nested model is correct wrt. the other agent. */
-	public boolean oppModelCorrect;
+public class T2Configuration extends BeliefStateConfiguration{
+	/** The maximal number of sub-models in the probability distribution
+	 * of a model */
+	public int maxRecursionWidth;
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
@@ -16,7 +17,7 @@ public class T1Configuration extends BeliefStateConfiguration{
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + (oppModelCorrect ? 1231 : 1237);
+		result = prime * result + maxRecursionWidth;
 		return result;
 	}
 
@@ -31,8 +32,8 @@ public class T1Configuration extends BeliefStateConfiguration{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		T1Configuration other = (T1Configuration) obj;
-		if (oppModelCorrect != other.oppModelCorrect)
+		T2Configuration other = (T2Configuration) obj;
+		if (maxRecursionWidth != other.maxRecursionWidth)
 			return false;
 		return true;
 	}

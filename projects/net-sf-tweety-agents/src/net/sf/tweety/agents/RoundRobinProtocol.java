@@ -2,6 +2,9 @@ package net.sf.tweety.agents;
 
 import java.util.*;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * This class models a round robin protocol for multi-agent systems.
  * This protocol assumes some order of the agents and asks each agent
@@ -20,25 +23,17 @@ import java.util.*;
  */
 public class RoundRobinProtocol extends RigidProtocol {
 
-	/**
-	 * The ordering of the agents.
-	 */
-	private List<Agent> agentsOrdered;
+	/** Logger */
+	private Log log = LogFactory.getLog(RoundRobinProtocol.class);
 	
-	/**
-	 * The index of the agent who may perform the next action.
-	 */
-	private int currendIdx;
-	
-	/**
-	 * The number of agents that skipped performing an action
-	 * within the last round.
-	 */
+	/** The ordering of the agents. */
+	private List<Agent> agentsOrdered;	
+	/** The index of the agent who may perform the next action. */
+	private int currendIdx;	
+	/** The number of agents that skipped performing an action
+	 * within the last round. */
 	private int agentsSkipped;
-	
-	/**
-	 * Indicates whether this protocol is rigid. 
-	 */
+	/** Indicates whether this protocol is rigid. */
 	private boolean isRigid;
 	
 	/**
@@ -78,7 +73,8 @@ public class RoundRobinProtocol extends RigidProtocol {
 	protected Set<ActionEvent> doStep() throws ProtocolTerminatedException{
 		Environment environment = this.getMultiAgentSystem().getEnvironment();
 		Executable action = this.agentsOrdered.get(this.currendIdx).next(environment.getPercepts(this.agentsOrdered.get(this.currendIdx)));
-		if(!action.equals(Executable.NO_OPERATION)){
+		this.log.trace("Action of agent " + this.agentsOrdered.get(this.currendIdx) + ": " + action);
+		if(!action.isNoOperation()){
 			environment.execute(action);
 			this.setHasPerformedNoOperation(this.agentsOrdered.get(this.currendIdx));
 			this.agentsSkipped = 0;			

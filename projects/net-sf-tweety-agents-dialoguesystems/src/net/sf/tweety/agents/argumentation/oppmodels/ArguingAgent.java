@@ -54,7 +54,7 @@ public class ArguingAgent extends Agent {
 		// There should be just a single percept and that should be a dialogue trace
 		if(percepts.size()!=1)
 			throw new IllegalArgumentException("Only one percept expected.");
-		if(!(percepts.iterator().next() instanceof DialogueTrace))
+		if(!(percepts.iterator().next() instanceof GroundedEnvironment))
 			throw new IllegalArgumentException("Object of type GroundedEnvironment expected.");
 		GroundedEnvironment env = (GroundedEnvironment)percepts.iterator().next();
 		this.beliefState.update(env.getDialogueTrace());		
@@ -66,7 +66,7 @@ public class ArguingAgent extends Agent {
 	 * @param trace a dialogue trace
 	 * @return the utility of this agent for this dialog trace
 	 */
-	protected float getUtility(DialogueTrace trace){
+	protected double getUtility(DialogueTrace trace){
 		return this.beliefState.getUtilityFunction().getUtility(trace);
 	}
 

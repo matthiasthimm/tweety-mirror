@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import net.sf.tweety.agents.AbstractProtocol;
 import net.sf.tweety.agents.Agent;
 import net.sf.tweety.agents.MultiAgentSystem;
@@ -16,9 +19,13 @@ import net.sf.tweety.agents.ProtocolTerminatedException;
  * @author Matthias Thimm
  * @param <T> The actual type of agents.
  * @param <S> The actual type of protocols.
+ * @param <R> The actual type of the multi-agent system.
  */
 public class GameSimulator<S extends AbstractProtocol & GameProtocol, T extends Agent, R extends MultiAgentSystem<T>> {
 
+	/** Logger */
+	private Log log = LogFactory.getLog(GameSimulator.class);
+	
 	/** The multi-agent system generator. */
 	private MultiAgentSystemGenerator<T,R> masGenerator;
 	/** The protocol generator. */
@@ -49,28 +56,31 @@ public class GameSimulator<S extends AbstractProtocol & GameProtocol, T extends 
 	 * @throws ProtocolTerminatedException if a protocol is asked
 	 *  to perform a step but has already terminated. 
 	 */
-	public Map<AgentGenerator<T,R>, Integer> run(int repetitions) throws ProtocolTerminatedException{
-		Map<AgentGenerator<T,R>,Integer> wins = new HashMap<AgentGenerator<T,R>,Integer>();
-		Map<Agent,AgentGenerator<T,R>> a2ag = new HashMap<Agent,AgentGenerator<T,R>>();
-		for(AgentGenerator<T,R> ag: this.agentGenerators)
-			wins.put(ag, 0);
+	public SimulationResult<S,T,R> run(int repetitions) throws ProtocolTerminatedException{
+		SimulationResult<S,T,R> result = new SimulationResult<S,T,R>(this.agentGenerators);
 		for(int i = 0; i < repetitions; i++){
+			this.log.info("Starting simulation run #" + (i+1) + "/" + repetitions);
+			Map<Agent,AgentGenerator<T,R>> a2ag = new HashMap<Agent,AgentGenerator<T,R>>();
 			SimulationParameters params = new SimulationParameters();
 			R mas = this.masGenerator.generate(params);
-			S prot = this.protGenerator.generate(mas,params);
 			// create agents
 			for(AgentGenerator<T,R> ag: this.agentGenerators){
 				T a = ag.generate(mas,params);
 				mas.add(a);
 				a2ag.put(a, ag);
 			}		
+			S prot = this.protGenerator.generate(mas,params);
 			mas.execute(prot);	
 			if(prot.hasWinner()){
-				Agent a = prot.getWinner();
-				AgentGenerator<T,R> ag = a2ag.get(a);
-				wins.put(ag, wins.get(ag) + 1);
+				Agent winner = prot.getWinner();
+				Map<AgentGenerator<T,R>,Double> utilities = new HashMap<AgentGenerator<T,R>,Double>();
+				for(Agent a: a2ag.keySet())
+					utilities.put(a2ag.get(a), prot.getUtility(a));
+				result.addEntry(a2ag.get(winner), utilities);				
+				this.log.info("Winner of simulation run #" + (i+1) + "/" + repetitions + " is " + winner);
 			}
+			this.log.info("Ending simulation run #" + (i+1) + "/" + repetitions);
 		}		
-		return wins;
+		return result;
 	}
 }

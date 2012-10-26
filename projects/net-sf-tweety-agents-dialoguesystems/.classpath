@@ -9,5 +9,12 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Dung Argumentation Library)"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Graph Library)"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Math Library)"/>
+	<classpathentry kind="lib" path="../../generalLibraries/commons-logging-1.1.1-javadoc.jar"/>
+	<classpathentry kind="lib" path="../../generalLibraries/commons-logging-1.1.1-sources.jar"/>
+	<classpathentry kind="lib" path="../../generalLibraries/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="../../generalLibraries/commons-logging-adapters-1.1.1.jar"/>
+	<classpathentry kind="lib" path="../../generalLibraries/commons-logging-api-1.1.1.jar"/>
+	<classpathentry kind="lib" path="../../generalLibraries/commons-logging-tests.jar"/>
+	<classpathentry kind="lib" path="../../generalLibraries/log4j-1.2.16.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

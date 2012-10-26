@@ -1,5 +1,8 @@
 package net.sf.tweety.agents.argumentation.oppmodels;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import net.sf.tweety.agents.argumentation.DialogueTrace;
 import net.sf.tweety.argumentation.dung.DungTheory;
 import net.sf.tweety.argumentation.dung.GroundReasoner;
@@ -16,6 +19,9 @@ import net.sf.tweety.argumentation.dung.syntax.Argument;
  */
 public class GroundedGameUtilityFunction extends UtilityFunction {
 	
+	/** Logger */
+	private Log log = LogFactory.getLog(GroundedGameUtilityFunction.class);
+	
 	/** The argument which is played for or against. */
 	private final Argument argument;
 	/** The faction of this utility function */
@@ -23,7 +29,7 @@ public class GroundedGameUtilityFunction extends UtilityFunction {
 	/** The underlying Dung theory*/ 
 	private final DungTheory theory;
 	/** The epsilon value. */
-	private final Float epsilon = 0.01f;	
+	private final Double epsilon = 0.01d;	
 	
 	/**
 	 * Construct utility function.
@@ -42,26 +48,35 @@ public class GroundedGameUtilityFunction extends UtilityFunction {
 	 * @see net.sf.tweety.agents.argumentation.oppmodels.UtilityFunction#getUtility(net.sf.tweety.agents.argumentation.DialogueTrace)
 	 */
 	@Override
-	public float getUtility(DialogueTrace trace) {		
+	public double getUtility(DialogueTrace trace) {		
 		DungTheory theory = this.theory.getRestriction(trace.getArguments());
-		Extension groundedExtension = new GroundReasoner(theory).getExtensions().iterator().next();				
+		Extension groundedExtension = new GroundReasoner(theory).getExtensions().iterator().next();
+		double utility = 0;
 		switch(this.faction){
 			case PRO:
 				if(groundedExtension.contains(this.argument))
-					return 1f - (this.epsilon * (float)trace.size());				
-				if(theory.isAttacked(this.argument, groundedExtension))
-					return -1f - (epsilon * (float)trace.size());				
+					utility = 1d - (this.epsilon * (float)trace.size());				
+				else//if(theory.isAttacked(this.argument, groundedExtension))
+					utility = -1d - (this.epsilon * (float)trace.size());				
 				break;
 			case CONTRA:
 				if(groundedExtension.contains(this.argument)) 
-					return -1f - (epsilon * (float)trace.size());
-				if(theory.isAttacked(this.argument, groundedExtension))
-					return 1f - (epsilon * (float)trace.size());			
+					utility = -1d - (this.epsilon * (float)trace.size());
+				else//if(theory.isAttacked(this.argument, groundedExtension))
+					utility = 1d - (this.epsilon * (float)trace.size());			
 				break;
 		}
-		return 0;
+		this.log.trace("Utility of " + this.faction + " for " + trace + ": " + utility);
+		return utility;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString(){
+		return "GUF";
+	}
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */

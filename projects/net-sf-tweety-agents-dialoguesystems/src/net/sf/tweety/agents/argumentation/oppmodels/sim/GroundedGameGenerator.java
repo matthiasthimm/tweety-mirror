@@ -2,6 +2,9 @@ package net.sf.tweety.agents.argumentation.oppmodels.sim;
 
 import java.util.Random;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import net.sf.tweety.agents.argumentation.oppmodels.ArguingAgent;
 import net.sf.tweety.agents.argumentation.oppmodels.GroundedGameSystem;
 import net.sf.tweety.agents.sim.MultiAgentSystemGenerator;
@@ -9,6 +12,7 @@ import net.sf.tweety.agents.sim.SimulationParameters;
 import net.sf.tweety.argumentation.dung.DungTheory;
 import net.sf.tweety.argumentation.dung.semantics.Extension;
 import net.sf.tweety.argumentation.dung.syntax.Argument;
+import net.sf.tweety.argumentation.util.DungTheoryGenerator;
 
 /**
  * Generates grounded games.
@@ -16,28 +20,32 @@ import net.sf.tweety.argumentation.dung.syntax.Argument;
  */
 public class GroundedGameGenerator implements MultiAgentSystemGenerator<ArguingAgent,GroundedGameSystem> {
 
+	/** Logger */
+	private Log log = LogFactory.getLog(GroundedGameGenerator.class);
+	
 	/** Key for the simulation parameter which refers to the universal theory generated. */
 	public static final int PARAM_UNIVERSALTHEORY = 0;
 	/** Key for the simulation parameter which refers to the argument of the dialogue. */
 	public static final int PARAM_ARGUMENT = 1;
+
+	/** The percentage of the arguments known to the PRO agent. */
+	private double viewPercentagePro;
+	/** The percentage of the arguments known to the CON agent. */
+	private double viewPercentageCon;
 	
-	/** The number of arguments to be created in each game. */
-	private int argumentSize;
-	/** The attack probability for each two arguments in the game. */
-	private double attackProb;
-	/** The percentage of the arguments known to each agent. */
-	private double viewPercentage;
+	/** for generating Dung theories. */
+	private DungTheoryGenerator gen;
 	
 	/**
 	 * Creates a new game generator.
-	 * @param argumentSize The number of arguments to be created in each game.
-	 * @param attackProb The attack probability for each two arguments in the game.
-	 * @param viewPercentage the percentage of the arguments known to each agent
+	 * @param gen for generating Dung theories.
+	 * @param viewPercentagePro the percentage of the arguments known to the PRO agent
+	 * @param viewPercentageCon the percentage of the arguments known to the CON agent
 	 */
-	public GroundedGameGenerator(int argumentSize, double attackProb, double viewPercentage){
-		this.argumentSize = argumentSize;
-		this.attackProb = attackProb;
-		this.viewPercentage = viewPercentage;
+	public GroundedGameGenerator(DungTheoryGenerator gen, double viewPercentagePro, double viewPercentageCon){
+		this.gen = gen;
+		this.viewPercentagePro = viewPercentagePro;
+		this.viewPercentageCon = viewPercentageCon;
 	}
 	
 	/* (non-Javadoc)
@@ -45,8 +53,12 @@ public class GroundedGameGenerator implements MultiAgentSystemGenerator<ArguingA
 	 */
 	@Override
 	public GroundedGameSystem generate(SimulationParameters params) {
-		DungTheory theory = DungTheory.generateRandomTheory(this.argumentSize, this.attackProb);
-		Argument arg = theory.iterator().next();
+		this.log.info("Starting to generate a grounded game system");
+		Argument arg = new Argument("A");
+		DungTheory theory = this.gen.generate(arg);
+		this.log.trace("Generated Dung theory with " + this.gen + ":\n" +
+				"=========\n" + theory.toString() + "\n=========");		
+		this.log.trace("Central argument of dialog is: " + arg);
 		params.put(GroundedGameGenerator.PARAM_UNIVERSALTHEORY, theory);
 		params.put(GroundedGameGenerator.PARAM_ARGUMENT, arg);
 		// generate each agent view
@@ -57,13 +69,18 @@ public class GroundedGameGenerator implements MultiAgentSystemGenerator<ArguingA
 		conView.add(arg);
 		Random rand = new Random();
 		for(Argument a: theory){
-			if(rand.nextDouble()<= this.viewPercentage)
+			if(rand.nextDouble()<= this.viewPercentagePro)
 				proView.add(a);
-			if(rand.nextDouble()<= this.viewPercentage)
+			if(rand.nextDouble()<= this.viewPercentageCon)
 				conView.add(a);
 		}
 		params.put(GroundedGameSystem.AgentFaction.PRO, proView);
-		params.put(GroundedGameSystem.AgentFaction.CONTRA, conView);		
+		params.put(GroundedGameSystem.AgentFaction.CONTRA, conView);
+		this.log.trace("Arguments in the view of agent PRO are:\n" +
+				"=========\n" + proView + "\n=========");
+		this.log.trace("Arguments in the view of agent CON are:\n" +
+				"=========\n" + conView + "\n=========");
+		this.log.info("Ending to generate a grounded game system");
 		return new GroundedGameSystem(theory);
 	}
 

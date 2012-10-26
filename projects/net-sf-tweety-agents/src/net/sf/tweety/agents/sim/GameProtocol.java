@@ -24,4 +24,13 @@ public interface GameProtocol extends Protocol{
 	 * @return the winner of the game.
 	 */
 	public Agent getWinner();
+	
+	/**
+	 * Returns the utility of the given agent for
+	 * the final situation.
+	 * @param agent some agent.
+	 * @return the utility of the agent for the final
+	 * 	situation.
+	 */
+	public Double getUtility(Agent agent);
 }

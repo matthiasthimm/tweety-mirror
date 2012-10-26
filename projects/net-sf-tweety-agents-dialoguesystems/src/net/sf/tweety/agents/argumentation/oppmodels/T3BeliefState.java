@@ -69,7 +69,7 @@ public class T3BeliefState extends BeliefState{
 	 * @see net.sf.tweety.agents.argumentation.oppmodels.BeliefState#doMove(net.sf.tweety.agents.argumentation.oppmodels.GroundedEnvironment, net.sf.tweety.agents.argumentation.DialogueTrace)
 	 */
 	@Override
-	protected Pair<Float, Set<ExecutableExtension>> doMove(GroundedEnvironment env, DialogueTrace trace) {
+	protected Pair<Double, Set<ExecutableExtension>> doMove(GroundedEnvironment env, DialogueTrace trace) {
 		// TODO
 		return null;
 	}

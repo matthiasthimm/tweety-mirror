@@ -2,6 +2,9 @@ package net.sf.tweety.agents.argumentation.oppmodels.sim;
 
 import java.util.Random;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import net.sf.tweety.agents.argumentation.oppmodels.BeliefState;
 import net.sf.tweety.agents.argumentation.oppmodels.GroundedGameSystem;
 import net.sf.tweety.agents.argumentation.oppmodels.GroundedGameUtilityFunction;
@@ -17,6 +20,9 @@ import net.sf.tweety.argumentation.dung.syntax.Argument;
  */
 public class GroundedGameT1AgentGenerator extends GroundedGameAgentGenerator {
 
+	/** Logger */
+	private Log log = LogFactory.getLog(GroundedGameT1AgentGenerator.class);
+	
 	/** The configuration for generating agents. */
 	private T1Configuration config;
 	
@@ -35,9 +41,20 @@ public class GroundedGameT1AgentGenerator extends GroundedGameAgentGenerator {
 	 */
 	@Override
 	protected BeliefState generateBeliefState(GroundedGameSystem mas, SimulationParameters params) {
-		return this.generateBeliefState(mas,params,this.config.maxRecursionDepth,(Extension)params.get(this.getFaction()),this.getFaction());	
+		BeliefState state = this.generateBeliefState(mas,params,this.config.maxRecursionDepth,(Extension)params.get(this.getFaction()),this.getFaction());
+		this.log.info("Generated a T1-belief state for " + this.getFaction() + " agent: " + state);
+		return state;	
 	}
 	
+	/**
+	 * Generates the (sub-)belief state of a T1-belief state.
+	 * @param mas the multi-agent system under consideration.
+	 * @param params parameters for the simulation.
+	 * @param depth the maximal depth of the recursive model.
+	 * @param arguments the arguments that are currently in the view
+	 * @param faction the faction of the model to be generated.
+	 * @return a T1-belief state
+	 */
 	private T1BeliefState generateBeliefState(GroundedGameSystem mas, SimulationParameters params, int depth, Extension arguments, GroundedGameSystem.AgentFaction faction) {
 		// end of recursion
 		if(depth < 0 || arguments.isEmpty())

@@ -15,6 +15,6 @@ public abstract class UtilityFunction {
 	 * @param trace some dialogue trace.
 	 * @return the utility of the trace
 	 */
-	public abstract float getUtility(DialogueTrace t);
+	public abstract double getUtility(DialogueTrace t);
 	
 }

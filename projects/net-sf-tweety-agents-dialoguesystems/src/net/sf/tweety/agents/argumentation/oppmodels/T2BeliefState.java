@@ -60,11 +60,12 @@ public class T2BeliefState extends BeliefState {
 	 * @see net.sf.tweety.agents.argumentation.oppmodels.BeliefState#doMove(net.sf.tweety.agents.argumentation.oppmodels.GroundedEnvironment, net.sf.tweety.agents.argumentation.DialogueTrace)
 	 */
 	@Override
-	protected Pair<Float, Set<ExecutableExtension>> doMove(GroundedEnvironment env, DialogueTrace trace) {
-		float bestEU = this.getUtilityFunction().getUtility(env.getDialogueTrace());
-		Set<ExecutableExtension> bestMoves = new HashSet<ExecutableExtension>();		
+	protected Pair<Double, Set<ExecutableExtension>> doMove(GroundedEnvironment env, DialogueTrace trace) {
+		double bestEU = this.getUtilityFunction().getUtility(env.getDialogueTrace());
+		Set<ExecutableExtension> bestMoves = new HashSet<ExecutableExtension>();
+		bestMoves.add(new ExecutableExtension());
 		/* For every legal move newMove ... */		
-		for(ExecutableExtension newMove: this.getLegalMoves(env)){			
+		for(ExecutableExtension newMove: this.getLegalMoves(env,trace)){			
 			DialogueTrace t2 = trace.addAndCopy(newMove);
 			float newMoveEU = 0;			
 			/* For all possible opponent states oppState ... */
@@ -81,9 +82,13 @@ public class T2BeliefState extends BeliefState {
 					float oppResponseProb = 1f / (float)bestOppResponses.size();	
 					/* For every possible opponent response oppResponse ... */
 					for (ExecutableExtension oppResponse: bestOppResponses) {
+						// this avoids infinite loops
+						// (if there are two consecutive noops the game is over anyway)
+						if(newMove.isNoOperation() && oppResponse.isNoOperation())
+							continue;
 						DialogueTrace t3 = t2.addAndCopy(oppResponse);		
 						/* Get best response to oppResponse */
-						Pair<Float, Set<ExecutableExtension>> r = this.doMove(env, t3);						
+						Pair<Double, Set<ExecutableExtension>> r = this.doMove(env, t3);						
 						/* Expected utility is utility of best response times probability of 
 						   opponent model times probability of opponent response */
 						newMoveEU += r.getFirst() * oppStateProb.doubleValue() * oppResponseProb;						
@@ -97,6 +102,82 @@ public class T2BeliefState extends BeliefState {
 				bestEU = newMoveEU;
 			}			
 		}		
-		return new Pair<Float, Set<ExecutableExtension>>(bestEU, bestMoves);
+		return new Pair<Double, Set<ExecutableExtension>>(bestEU, bestMoves);
 	}
+
+	/**
+	 * Pretty print of this belief state.
+	 * @return a string representation of this state.
+	 */
+	public String display(){
+		return this.display(0);
+	}
+	
+	/**
+	 * Aux method for pretty print();
+	 * @param indent indentation for display, depending on recursion depth
+	 * @return a string representation of this state.
+	 */
+	private String display(int indent){
+		int origIndent = indent;
+		String result = "";
+		for(int i = 0; i < indent; i++) result += "  ";
+		result += "<\n";
+		indent++;
+		for(int i = 0; i < indent; i++) result += "  ";
+		result += this.getKnownArguments() + ",\n";
+		for(int i = 0; i < indent; i++) result += "  ";
+		result += this.getUtilityFunction() + ",\n";
+		for(int i = 0; i < indent; i++) result += "  ";
+		result += "Prob\n";
+		indent++;
+		for(T2BeliefState state: this.prob.keySet()){
+			for(int i = 0; i < indent; i++) result += "  ";
+			result += this.prob.get(state) + ":\n";
+			result += state.display(indent+1) + "\n";
+		}
+		for(int i = 0; i < origIndent; i++) result += "  ";
+		result += ">";
+		return result;
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString(){
+		return "<" + this.getKnownArguments() + ", " + this.getUtilityFunction() + ", " + this.prob + ">";
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((prob == null) ? 0 : prob.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		T2BeliefState other = (T2BeliefState) obj;
+		if (prob == null) {
+			if (other.prob != null)
+				return false;
+		} else if (!prob.equals(other.prob))
+			return false;
+		return true;
+	}
+	
+	
 }

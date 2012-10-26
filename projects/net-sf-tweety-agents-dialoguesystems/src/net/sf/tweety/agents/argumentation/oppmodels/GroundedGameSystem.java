@@ -11,7 +11,7 @@ import net.sf.tweety.argumentation.dung.DungTheory;
  * @author Matthias Thimm
  */
 public class GroundedGameSystem extends MultiAgentSystem<ArguingAgent> {
-
+	
 	/** The factions of agents in this game. */
 	public enum AgentFaction {
 		PRO, CONTRA;

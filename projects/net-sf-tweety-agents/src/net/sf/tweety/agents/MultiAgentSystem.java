@@ -2,6 +2,9 @@ package net.sf.tweety.agents;
 
 import java.util.*;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * A multi-agent system is a collection of agents with some environment.
  * 
@@ -11,6 +14,9 @@ import java.util.*;
  */
 public class MultiAgentSystem<T extends Agent> implements Collection<T>{
 
+	/** Logger */
+	private Log log = LogFactory.getLog(MultiAgentSystem.class);
+	
 	/**
 	 * Indicates that the execution of this system's protocol should 
 	 * be repeated until it has terminated.
@@ -67,6 +73,7 @@ public class MultiAgentSystem<T extends Agent> implements Collection<T>{
 	 * 	negative and not equal to Protocol.EXECUTE_TILL_TERMINATION.
 	 */
 	public boolean execute(AbstractProtocol protocol, int numOfSteps) throws ProtocolTerminatedException, IllegalArgumentException{
+		this.log.info("Executing protocol " + protocol);
 		if(numOfSteps <= 0 && numOfSteps != EXECUTE_TILL_TERMINATION)
 			throw new IllegalArgumentException("Illegal number of steps: " + numOfSteps);
 		if(numOfSteps == EXECUTE_TILL_TERMINATION){

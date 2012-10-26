@@ -1,11 +1,8 @@
 package net.sf.tweety.agents.argumentation;
 
-import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.Set;
 
 import net.sf.tweety.argumentation.dung.semantics.Extension;
-import net.sf.tweety.argumentation.dung.syntax.Argument;
 
 /**
  * Objects of this class represent traces of dialogue, ie. sequences of sets of
@@ -23,8 +20,8 @@ public class DialogueTrace extends LinkedList<Extension>{
 	 * Returns all arguments mentioned in this dialogue trace.
 	 * @return a set of arguments.
 	 */
-	public Set<Argument> getArguments(){
-		Set<Argument> arguments = new HashSet<Argument>();
+	public Extension getArguments(){
+		Extension arguments = new Extension();
 		for(Extension e: this)
 			arguments.addAll(e);
 		return arguments;
@@ -41,5 +38,16 @@ public class DialogueTrace extends LinkedList<Extension>{
 		trace.addAll(this);
 		trace.add(newMove);
 		return trace;
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.util.LinkedList#size()
+	 */
+	public int size(){
+		//return the number of arguments, not the number of moves
+		int size = 0;
+		for(Extension e: this)
+			size += e.size();
+		return size;
 	}
 }

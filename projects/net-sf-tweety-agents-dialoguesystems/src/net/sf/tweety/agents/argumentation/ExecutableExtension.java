@@ -27,4 +27,12 @@ public class ExecutableExtension extends Extension implements Executable {
 	public ExecutableExtension(Collection<? extends Argument> arguments) {
 		super(arguments);
 	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.agents.Executable#isNoOperation()
+	 */
+	@Override
+	public boolean isNoOperation() {
+		return this.isEmpty();
+	}
 }
