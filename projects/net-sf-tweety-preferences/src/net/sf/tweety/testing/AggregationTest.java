@@ -1,4 +1,4 @@
-package net.sf.tweety.testing;
+package net.sf.tweety.preferences.testing;
 
 import java.util.ArrayList;
 

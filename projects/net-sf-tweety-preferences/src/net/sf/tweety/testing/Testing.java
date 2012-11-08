@@ -1,4 +1,4 @@
-package net.sf.tweety.testing;
+package net.sf.tweety.preferences.testing;
 
 
 import net.sf.tweety.preferences.PreferenceOrder;

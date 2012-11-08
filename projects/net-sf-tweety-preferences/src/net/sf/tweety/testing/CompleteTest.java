@@ -1,16 +1,14 @@
-package net.sf.tweety.testing;
+package net.sf.tweety.preferences.testing;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import net.sf.tweety.preferences.PreferenceOrder;
-import net.sf.tweety.preferences.Relation;
 import net.sf.tweety.preferences.aggregation.BordaScoringPreferenceAggregator;
 import net.sf.tweety.preferences.aggregation.PluralityScoringPreferenceAggregator;
 import net.sf.tweety.preferences.aggregation.VetoScoringPreferenceAggregator;
 import net.sf.tweety.preferences.io.POParser;
-import net.sf.tweety.preferences.io.POWriter;
 import net.sf.tweety.preferences.io.ParseException;
-import net.sf.tweety.util.Triple;
+import net.sf.tweety.preferences.ranking.RankingFunction;
 
 public class CompleteTest {
 	public static void main(String[] args) {
@@ -41,6 +39,15 @@ public class CompleteTest {
 //				}
 			}
 		}
+		
+		PreferenceOrder<String> t1 = orders.get(0);
+		RankingFunction<String> r1 = t1.getRankingFunction();
+		System.out.println(t1);
+		System.out.println(r1);
+		t1.weakenElement("a");
+		System.out.println(t1);
+		r1 = t1.getRankingFunction();
+		System.out.println(r1);
 		
 		/**
 		 * Aggregation:
@@ -103,6 +110,7 @@ public class CompleteTest {
 		 * POWriter<String> writer = new POWriter<String>();
 		 * writer.writeToFile("TestZ.po", po);
 		 */
+		
 	}
 	
 	/**
