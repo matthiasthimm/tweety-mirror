@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import net.sf.tweety.preferences.PreferenceOrder;
 import net.sf.tweety.preferences.Relation;
+import net.sf.tweety.preferences.ranking.RankingFunction;
 import net.sf.tweety.util.Triple;
 
 /**
@@ -81,7 +82,7 @@ public abstract class ScoringPreferenceAggregator<T> implements
 		// for each element in each po the weight vector value is
 		// requested
 		// and
-		// added to the current value in the HashMap
+		// subtracted from the current value in the HashMap
 		ListIterator<PreferenceOrder<T>> it2 = input.listIterator();
 		while (it2.hasNext()) {
 			PreferenceOrder<T> tPO = it2.next();
@@ -90,21 +91,22 @@ public abstract class ScoringPreferenceAggregator<T> implements
 				T t = e.getKey();
 				Integer i = e.getValue();
 				int val = v.getWeight(i);
-				elem.put(t, elem.get(t)+val);				
+				elem.put(t, elem.get(t)-val);
 			}
 		}
 
 		// finally each two elements are compared and set to relation in
 		// the
 		// final po, if not done yet
+		
+		// TODO: Merging with RankingFunction line 149.
 		for (Entry<T, Integer> f : elem.entrySet()) {
 			for (Entry<T, Integer> s : elem.entrySet()) {
 				if (!f.getKey().equals(s.getKey())){
-					int diff = f.getValue()-s.getValue();
-					if (diff > 0){
+					if (f.getValue() < s.getValue()){
 						Triple<T, T, Relation> rel = new Triple<T, T, Relation>(f.getKey(), s.getKey(), Relation.LESS);
 						tempPO.add(rel);
-					} else if (diff == 0){
+					} else if (f.getValue() == s.getValue()){
 						Triple<T, T, Relation> rel = new Triple<T, T, Relation>(f.getKey(), s.getKey(), Relation.LESS_EQUAL);
 						tempPO.add(rel);
 					} else

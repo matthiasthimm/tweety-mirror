@@ -414,5 +414,16 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	}
 
 
+	public void weakenElement(T element){
+		RankingFunction<T> tempRF = this.getRankingFunction();
+		tempRF.weakenElement(element);
+		this.relations = tempRF.generatePreferenceOrder();
+	}
+	
+	public void strengthenElement(T element){
+		RankingFunction<T> tempRF = this.getRankingFunction();
+		tempRF.strengthenElement(element);
+		this.relations = tempRF.generatePreferenceOrder();
+	}
 
 }

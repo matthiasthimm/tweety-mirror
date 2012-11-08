@@ -145,6 +145,7 @@ public class RankingFunction<T> extends HashMap<T, Integer> implements
 	 * 
 	 * @returns a preference order out of a given ranking function
 	 */
+	//TODO Merging with ScoringPreferenceAggregator line 102.
 	public PreferenceOrder<T> generatePreferenceOrder() {
 		Set<Triple<T, T, Relation>> tempPO = new HashSet<Triple<T, T, Relation>>();
 		
@@ -152,12 +153,12 @@ public class RankingFunction<T> extends HashMap<T, Integer> implements
 
 		for (Entry<T, Integer> f : in.entrySet()) {
 			for (Entry<T, Integer> s : in.entrySet()) {
+				
 				if (!f.getKey().equals(s.getKey())){
-					int diff = f.getValue()-s.getValue();
-					if (diff > 0){
+					if (f.getValue() < s.getValue()){
 						Triple<T, T, Relation> rel = new Triple<T, T, Relation>(f.getKey(), s.getKey(), Relation.LESS);
 						tempPO.add(rel);
-					} else if (diff == 0){
+					} else if (f.getValue() == s.getValue()){
 						Triple<T, T, Relation> rel = new Triple<T, T, Relation>(f.getKey(), s.getKey(), Relation.LESS_EQUAL);
 						tempPO.add(rel);
 					} else
@@ -219,6 +220,7 @@ public class RankingFunction<T> extends HashMap<T, Integer> implements
 		return null;
 	}
 
+	
 	/**
 	 * returns a collection containing all values of the map
 	 */
@@ -236,4 +238,12 @@ public class RankingFunction<T> extends HashMap<T, Integer> implements
 		return v;
 	}
 
+	public void weakenElement(T element){
+		this.put(element, this.get(element)+1);
+	}
+	
+	public void strengthenElement(T element){
+		this.put(element, this.get(element)-1);
+	}
+	
 }

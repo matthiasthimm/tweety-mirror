@@ -49,7 +49,7 @@ public class POWriter<T> {
 			if(temp.getThird() == Relation.LESS){
 				pw.println(temp.getFirst() + " < " + temp.getSecond());
 			}
-			if(temp.getSecond() == Relation.LESS_EQUAL){
+			if(temp.getThird() == Relation.LESS_EQUAL){
 				pw.println(temp.getFirst() + " <= " + temp.getSecond());
 			}
 		}
