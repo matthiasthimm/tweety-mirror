@@ -12,8 +12,10 @@ import net.sf.tweety.agents.argumentation.oppmodels.sim.GroundedGameGenerator;
 import net.sf.tweety.agents.argumentation.oppmodels.sim.GroundedGameProtocolGenerator;
 import net.sf.tweety.agents.argumentation.oppmodels.sim.GroundedGameT1AgentGenerator;
 import net.sf.tweety.agents.argumentation.oppmodels.sim.GroundedGameT2AgentGenerator;
+import net.sf.tweety.agents.argumentation.oppmodels.sim.GroundedGameT3AgentGenerator;
 import net.sf.tweety.agents.argumentation.oppmodels.sim.T1Configuration;
 import net.sf.tweety.agents.argumentation.oppmodels.sim.T2Configuration;
+import net.sf.tweety.agents.argumentation.oppmodels.sim.T3Configuration;
 import net.sf.tweety.agents.sim.AgentGenerator;
 import net.sf.tweety.agents.sim.GameSimulator;
 import net.sf.tweety.agents.sim.MultiAgentSystemGenerator;
@@ -41,7 +43,8 @@ public class GroundedTest {
 			// agent should always win)
 			DungTheoryGenerationParameters params = new DungTheoryGenerationParameters();
 			params.attackProbability = 0.3;
-			params.numberOfArguments = 10;			
+			params.numberOfArguments = 15;	
+			params.enforceTreeShape = true;	
 			DungTheoryGenerator gen = new DefaultDungTheoryGenerator(params);
 			// PRO agent knows 50% of all arguments, CONTRA agent knows 90% of all arguments
 			MultiAgentSystemGenerator<ArguingAgent,GroundedGameSystem> masGenerator = new GroundedGameGenerator(gen, 0.5, 0.9);
@@ -73,10 +76,11 @@ public class GroundedTest {
 	}
 	
 	public static void runSimulationT2() throws ProtocolTerminatedException{
-		// UNDER CONSTRUCTION
+		// TODO: plausibility check
 		DungTheoryGenerationParameters params = new DungTheoryGenerationParameters();
 		params.attackProbability = 0.3;
 		params.numberOfArguments = 5;			
+		params.enforceTreeShape = true;	
 		DungTheoryGenerator gen = new DefaultDungTheoryGenerator(params);
 		// PRO agent knows 50% of all arguments, CONTRA agent knows 90% of all arguments
 		MultiAgentSystemGenerator<ArguingAgent,GroundedGameSystem> masGenerator = new GroundedGameGenerator(gen, 0.5, 0.9);
@@ -103,6 +107,40 @@ public class GroundedTest {
 		System.out.println(result.display());
 	}
 	
+	public static void runSimulationT3() throws ProtocolTerminatedException{
+		// TODO: plausibility check
+		DungTheoryGenerationParameters params = new DungTheoryGenerationParameters();
+		params.attackProbability = 0.3;
+		params.numberOfArguments = 10;	
+		params.enforceTreeShape = true;
+		DungTheoryGenerator gen = new DefaultDungTheoryGenerator(params);
+		// PRO agent knows 50% of all arguments, CONTRA agent knows 90% of all arguments
+		MultiAgentSystemGenerator<ArguingAgent,GroundedGameSystem> masGenerator = new GroundedGameGenerator(gen, 0.5, 0.9);
+		List<AgentGenerator<ArguingAgent,GroundedGameSystem>> agentGenerators = new ArrayList<AgentGenerator<ArguingAgent,GroundedGameSystem>>();
+		
+		// The PRO agent has a T1 belief state without opponent model
+		T1Configuration configPro = new T1Configuration();
+		configPro.maxRecursionDepth = 0;
+		configPro.probRecursionDecay = 0;
+		configPro.oppModelCorrect = true;
+		// The CONTRA agent has a T3 belief state
+		T3Configuration configCon = new T3Configuration();
+		configCon.maxRecursionDepth = 2;
+		configCon.probRecursionDecay = 0.1;
+		configCon.maxRecursionWidth = 3;
+		configCon.percentageVirtualArguments = 0.2;
+		configCon.percentageVirtualAttacks = 0.9;
+				
+		agentGenerators.add(new GroundedGameT1AgentGenerator(GroundedGameSystem.AgentFaction.PRO,configPro));
+		agentGenerators.add(new GroundedGameT3AgentGenerator(GroundedGameSystem.AgentFaction.CONTRA,configCon));
+		
+		ProtocolGenerator<GroundedGameProtocol,ArguingAgent,GroundedGameSystem> protGenerator = new GroundedGameProtocolGenerator();
+		GameSimulator<GroundedGameProtocol,ArguingAgent,GroundedGameSystem> sim = new GameSimulator<GroundedGameProtocol,ArguingAgent,GroundedGameSystem>(masGenerator,protGenerator,agentGenerators);
+		// run iterated simulations and show aggregated results
+		SimulationResult<GroundedGameProtocol,ArguingAgent,GroundedGameSystem> result = sim.run(100);		
+		System.out.println(result.display());
+	}
+	
 	public static void main(String[] args) throws ProtocolTerminatedException{
 		// set logging level to "TRACE" to get detailed descriptions
 		TweetyLogging.logLevel = TweetyConfiguration.LogLevel.ERROR;
@@ -110,5 +148,6 @@ public class GroundedTest {
 		
 		GroundedTest.runSimulationT1();
 		//GroundedTest.runSimulationT2();
+		//GroundedTest.runSimulationT3();
 	}
 }

@@ -1,8 +1,22 @@
 package net.sf.tweety.agents.argumentation.oppmodels.sim;
 
-import net.sf.tweety.agents.argumentation.oppmodels.BeliefState;
-import net.sf.tweety.agents.argumentation.oppmodels.GroundedGameSystem;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import net.sf.tweety.agents.argumentation.oppmodels.*;
 import net.sf.tweety.agents.sim.SimulationParameters;
+import net.sf.tweety.argumentation.dung.DungTheory;
+import net.sf.tweety.argumentation.dung.semantics.Extension;
+import net.sf.tweety.argumentation.dung.syntax.Argument;
+import net.sf.tweety.argumentation.dung.syntax.Attack;
+import net.sf.tweety.math.probability.Probability;
+import net.sf.tweety.math.probability.ProbabilityFunction;
 
 /**
  * Generates agents of type T3.
@@ -10,13 +24,20 @@ import net.sf.tweety.agents.sim.SimulationParameters;
  */
 public class GroundedGameT3AgentGenerator extends GroundedGameAgentGenerator {
 
+	/** Logger */
+	private Log log = LogFactory.getLog(GroundedGameT3AgentGenerator.class);
+	
+	/** The configuration for generating agents. */
+	private T3Configuration config;
+	
 	/**
 	 * Creates a new generator for agents of type T1.
 	 * @param faction the faction of the agents to be generated.
+	 * @param config configuration for creating belief states.
 	 */
-	public GroundedGameT3AgentGenerator(GroundedGameSystem.AgentFaction faction) {
+	public GroundedGameT3AgentGenerator(GroundedGameSystem.AgentFaction faction, T3Configuration config) {
 		super(faction);
-		// TODO
+		this.config = config;
 	}
 	
 	/* (non-Javadoc)
@@ -24,8 +45,105 @@ public class GroundedGameT3AgentGenerator extends GroundedGameAgentGenerator {
 	 */
 	@Override
 	protected BeliefState generateBeliefState(GroundedGameSystem mas, SimulationParameters params) {
-		// TODO Auto-generated method stub
-		return null;
+		T3BeliefState state = this.generateBeliefState(mas,params,this.config.maxRecursionDepth,(Extension)params.get(this.getFaction()),this.getFaction());
+		this.log.info("Generated a T3-belief state for " + this.getFaction() + " agent: ");
+		this.log.info("=========\n" + state.display() + "\n=========");
+		return state;
 	}
 
+	/**
+	 * Generates the (sub-)belief state of a T3-belief state.
+	 * @param mas the multi-agent system under consideration.
+	 * @param params parameters for the simulation.
+	 * @param depth the maximal depth of the recursive model.
+	 * @param arguments the arguments that are currently in the view
+	 * @param faction the faction of the model to be generated.
+	 * @return a T3-belief state
+	 */
+	private T3BeliefState generateBeliefState(GroundedGameSystem mas, SimulationParameters params, int depth, Extension arguments, GroundedGameSystem.AgentFaction faction) {
+		ProbabilityFunction<T3BeliefState> prob = new ProbabilityFunction<T3BeliefState>();
+		Map<T3BeliefState,Double> mass = new HashMap<T3BeliefState,Double>();
+		double totalMass = 0;
+		Random rand = new Random();
+		// select some arguments and make them virtual
+		Set<Argument> virtualArguments = new HashSet<Argument>();
+		Set<Attack> virtualAttacks = new HashSet<Attack>();
+		RecognitionFunction rec = new RecognitionFunction();
+		int k = 0;
+		// virtualize arguments
+		// For simplicity we only consider the case that no more
+		// than one virtual argument is mapped to a real one.
+		Extension arguments2 = new Extension();
+		for(Argument arg: arguments){
+			// do not virtualize the argument of the dialog
+			if(params.get(GroundedGameGenerator.PARAM_ARGUMENT).equals(arg))
+				continue;			
+			if(rand.nextDouble() <= this.config.percentageVirtualArguments){
+				Argument vArg = new Argument(faction + "_" + k++);				
+				Set<Argument> vArgs = new HashSet<Argument>();
+				vArgs.add(vArg);						
+				rec.put(arg, vArgs);
+				virtualArguments.add(vArg);
+			}else arguments2.add(arg);
+		}
+		arguments = arguments2;
+		// virtualize attacks
+		for(Argument vArg: virtualArguments){
+			for(Argument a: ((DungTheory)params.get(GroundedGameGenerator.PARAM_UNIVERSALTHEORY)).getAttacked(rec.getPreimage(vArg))){
+				if(arguments.contains(a))
+					if(rand.nextDouble() <= this.config.percentageVirtualAttacks)
+						virtualAttacks.add(new Attack(vArg,a));
+				if(rec.get(a) != null){
+					for(Argument vArg2: rec.get(a))
+						if(rand.nextDouble() <= this.config.percentageVirtualAttacks)
+							virtualAttacks.add(new Attack(vArg,vArg2));
+				}
+			}
+		}
+		for(Argument vArg: virtualArguments){
+			for(Argument a: ((DungTheory)params.get(GroundedGameGenerator.PARAM_UNIVERSALTHEORY)).getAttackers(rec.getPreimage(vArg))){
+				if(arguments.contains(a))
+					if(rand.nextDouble() <= this.config.percentageVirtualAttacks)
+						virtualAttacks.add(new Attack(a,vArg));
+				if(rec.get(a) != null){
+					for(Argument vArg2: rec.get(a))
+						if(rand.nextDouble() <= this.config.percentageVirtualAttacks)
+							virtualAttacks.add(new Attack(vArg2,vArg));
+				}
+			}
+		}
+		//if the maximal recursion depth is reached
+		//leave the probability function "empty" 
+		if(depth >= 0)
+			for(int i = 0; i < this.config.maxRecursionWidth; i++){			
+				Extension subView = new Extension();				
+				for(Argument a: arguments)
+					if(rand.nextDouble() >= this.config.probRecursionDecay)				
+						subView.add(a);				
+				//if the subview is empty, do not consider it further
+				//(this corresponds to the end of the recursion)
+				if(subView.isEmpty())
+					continue;
+				// everything is uniformly distributed
+				T3BeliefState state = this.generateBeliefState(mas, params, depth-1, subView, faction.getComplement());
+				if(mass.keySet().contains(state))
+					mass.put(state, mass.get(state)+1);
+				else mass.put(state, 1d);
+				totalMass +=1;
+			}
+		// normalize probability function
+		if(!mass.isEmpty())
+			for(T3BeliefState bs: mass.keySet())
+				prob.put(bs, new Probability(mass.get(bs)/totalMass));
+		return new T3BeliefState(
+				arguments,
+				new GroundedGameUtilityFunction(
+						(DungTheory)params.get(GroundedGameGenerator.PARAM_UNIVERSALTHEORY),
+						(Argument)params.get(GroundedGameGenerator.PARAM_ARGUMENT),
+						faction),
+				virtualArguments,
+				virtualAttacks,
+				rec,
+				prob);	
+	}
 }

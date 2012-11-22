@@ -103,6 +103,12 @@ public abstract class BeliefState {
 	protected abstract Pair<Double,Set<ExecutableExtension>> doMove(GroundedEnvironment env, DialogueTrace trace);
 	
 	/**
+	 * Pretty print of this belief state.
+	 * @return a string representation of this state.
+	 */
+	public abstract String display();
+	
+	/**
 	 * Gives the next best move according to the
 	 * belief state and the given trace.
 	 * @param env the environment (gives access to the current trace)

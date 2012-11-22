@@ -105,10 +105,10 @@ public class T2BeliefState extends BeliefState {
 		return new Pair<Double, Set<ExecutableExtension>>(bestEU, bestMoves);
 	}
 
-	/**
-	 * Pretty print of this belief state.
-	 * @return a string representation of this state.
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.agents.argumentation.oppmodels.BeliefState#display()
 	 */
+	@Override
 	public String display(){
 		return this.display(0);
 	}

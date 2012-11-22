@@ -12,6 +12,8 @@ public class DungTheoryGenerationParameters{
 	public double attackProbability = 0.5;
 	/** Whether to avoid self-attacks. */
 	public boolean avoidSelfAttacks = true;
+	/** Whether the generated theory must have a tree shape. */
+	public boolean enforceTreeShape = false;
 	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
@@ -19,6 +21,7 @@ public class DungTheoryGenerationParameters{
 	public String toString(){
 		return "<numberOfArguments=" + this.numberOfArguments + "," +
 				"attackProbability=" + this.attackProbability + "," +
-				"avoidSelfAttacks=" + this.avoidSelfAttacks +">";
+				"avoidSelfAttacks=" + this.avoidSelfAttacks + "," +
+				"enforceTreeShape=" + this.enforceTreeShape +">";
 	}
 }

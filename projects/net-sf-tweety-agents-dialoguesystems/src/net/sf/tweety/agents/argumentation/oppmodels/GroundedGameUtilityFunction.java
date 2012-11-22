@@ -1,5 +1,7 @@
 package net.sf.tweety.agents.argumentation.oppmodels;
 
+import java.util.Set;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -8,6 +10,7 @@ import net.sf.tweety.argumentation.dung.DungTheory;
 import net.sf.tweety.argumentation.dung.GroundReasoner;
 import net.sf.tweety.argumentation.dung.semantics.Extension;
 import net.sf.tweety.argumentation.dung.syntax.Argument;
+import net.sf.tweety.argumentation.dung.syntax.Attack;
 
 /**
  * The grounded game utility function u_a^g. See definition in paper.
@@ -44,13 +47,14 @@ public class GroundedGameUtilityFunction extends UtilityFunction {
 		this.faction = faction;
 	}
 	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.agents.argumentation.oppmodels.UtilityFunction#getUtility(net.sf.tweety.agents.argumentation.DialogueTrace)
+	/**
+	 * Determines the utility of the given trace with
+	 * the given grounded extension.
+	 * @param groundedExtension a grounded extension.
+	 * @param trace some trace
+	 * @return a utility
 	 */
-	@Override
-	public double getUtility(DialogueTrace trace) {		
-		DungTheory theory = this.theory.getRestriction(trace.getArguments());
-		Extension groundedExtension = new GroundReasoner(theory).getExtensions().iterator().next();
+	private double getUtility(Extension groundedExtension, DialogueTrace trace){
 		double utility = 0;
 		switch(this.faction){
 			case PRO:
@@ -69,7 +73,29 @@ public class GroundedGameUtilityFunction extends UtilityFunction {
 		this.log.trace("Utility of " + this.faction + " for " + trace + ": " + utility);
 		return utility;
 	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.agents.argumentation.oppmodels.UtilityFunction#getUtility(net.sf.tweety.agents.argumentation.DialogueTrace)
+	 */
+	@Override
+	public double getUtility(DialogueTrace trace) {		
+		DungTheory theory = this.theory.getRestriction(trace.getArguments());
+		Extension groundedExtension = new GroundReasoner(theory).getExtensions().iterator().next();
+		return this.getUtility(groundedExtension, trace);
+	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.agents.argumentation.oppmodels.UtilityFunction#getUtility(net.sf.tweety.agents.argumentation.DialogueTrace, java.util.Set, java.util.Set)
+	 */
+	@Override
+	public double getUtility(DialogueTrace trace, Set<Argument> additionalArguments, Set<Attack> additionalAttacks){
+		DungTheory theory = this.theory.getRestriction(trace.getArguments());
+		theory.addAll(additionalArguments);
+		theory.addAllAttacks(additionalAttacks);
+		Extension groundedExtension = new GroundReasoner(theory).getExtensions().iterator().next();
+		return this.getUtility(groundedExtension, trace);
+	}
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */

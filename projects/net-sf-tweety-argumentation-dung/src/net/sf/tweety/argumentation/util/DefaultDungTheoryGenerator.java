@@ -1,5 +1,7 @@
 package net.sf.tweety.argumentation.util;
 
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Random;
 
 import net.sf.tweety.argumentation.dung.*;
@@ -28,6 +30,8 @@ public class DefaultDungTheoryGenerator implements DungTheoryGenerator {
 	 */
 	@Override
 	public DungTheory generate() {
+		if(this.params.enforceTreeShape)
+			return this.generateTreeShape(new Argument("A"));
 		DungTheory theory = new DungTheory();
 		for(int i = 0; i < this.params.numberOfArguments; i++)
 			theory.add(new Argument("A" + i));
@@ -48,6 +52,14 @@ public class DefaultDungTheoryGenerator implements DungTheoryGenerator {
 	@Override
 	public DungTheory generate(Argument arg){
 		DungTheory theory = new DungTheory();
+		if(this.params.enforceTreeShape){
+			boolean inExtension = false;
+			do{
+				theory = this.generateTreeShape(arg);
+				inExtension = new GroundReasoner(theory).getExtensions().iterator().next().contains(arg);
+			}while(!inExtension);
+			return theory;
+		}		
 		theory.add(arg);
 		for(int i = 1; i < this.params.numberOfArguments; i++)
 			theory.add(new Argument("A" + i));
@@ -64,6 +76,27 @@ public class DefaultDungTheoryGenerator implements DungTheoryGenerator {
 						theory.remove(att);
 				}
 			}
+		return theory;
+	}
+	
+	/**
+	 * Generates a Dung theory with a tree shape where the given argument
+	 * is the root.
+	 * @param arg some argument.
+	 * @return a Dung theory.
+	 */
+	private DungTheory generateTreeShape(Argument arg){
+		DungTheory theory = new DungTheory();
+		theory.add(arg);
+		int numOfArguments = 1;
+		Random rand = new Random();
+		Queue<Argument> q = new LinkedList<Argument>();
+		q.add(arg);
+		while(numOfArguments <= this.params.numberOfArguments){
+			Argument a = new Argument("A" + numOfArguments++);
+			theory.add(new Attack(a, (Argument)theory.toArray()[rand.nextInt(numOfArguments-1)]));
+			theory.add(a);
+		}
 		return theory;
 	}
 	

@@ -85,6 +85,14 @@ public class T1BeliefState extends BeliefState {
 	}
 
 	/* (non-Javadoc)
+	 * @see net.sf.tweety.agents.argumentation.oppmodels.BeliefState#display()
+	 */
+	@Override
+	public String display(){
+		return this.toString();
+	}
+	
+	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString(){
