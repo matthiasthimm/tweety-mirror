@@ -2,14 +2,15 @@ package net.sf.tweety.logics.markovlogic;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.StringTokenizer;
 
 import net.sf.tweety.BeliefBase;
 import net.sf.tweety.logics.firstorderlogic.syntax.*;
@@ -17,7 +18,8 @@ import net.sf.tweety.logics.markovlogic.syntax.MlnFormula;
 
 /**
  * This class implements a wrapper for Alchemy in order to
- * reason with MLNs.
+ * reason with MLNs. Note: implementation inspired by 
+ * AlchemyWrapper of KReator (http://kreator-ide.sourceforge.net)
  * 
  * @author Matthias Thimm
  */
@@ -70,30 +72,55 @@ public class AlchemyMlnReasoner extends AbstractMlnReasoner {
 			resultFile.deleteOnExit();
 			//execute Alchemy inference on problem and retrieve console output		
 			//TODO parametrize parameters
-			Process child = Runtime.getRuntime().exec(this.inferCmd + " -i " + mlnFile.getAbsolutePath() + " -q tweetyQueryFormula(TWEETYQUERYCONSTANT) -e " + evidenceFile.getAbsolutePath() + " -r " + resultFile.getAbsolutePath() + " -p true -numChains 50 -epsilonError 0.000001 -fracConverged 0.9999 -delta 0.0001");
-			//int c;				
-			//String output = "", error = "";
-	        InputStream in = child.getInputStream();
-	        while ((in.read()) != -1);
-	            //output += ((char)c);
-	        in.close();		        		        
-	        in = child.getErrorStream();
-	        while ((in.read()) != -1);
-	            //error += (char)c;
-	        in.close();	
-	        FileInputStream inStream = new FileInputStream(resultFile.getAbsoluteFile());
-			BufferedReader br = new BufferedReader(new InputStreamReader(new DataInputStream(inStream)));
-			String strLine;
-			while((strLine = br.readLine()) != null){
-				System.out.append(strLine);				
-			}
-			in.close();
-			//TODO go on
-	        //System.out.println(output);
-	        //System.out.println();
-	        //System.out.println(error);
-			return -1;
-		}catch(IOException e) {
+			List<String> processCommandsList = new ArrayList<String>();
+			processCommandsList.add(this.inferCmd);
+	        processCommandsList.add("-i");
+	        processCommandsList.add(mlnFile.getAbsolutePath());
+	        processCommandsList.add("-e");
+	        processCommandsList.add(evidenceFile.getAbsolutePath());
+	        processCommandsList.add("-r");
+	        processCommandsList.add(resultFile.getAbsolutePath() );
+            processCommandsList.add("-q");
+            processCommandsList.add("tweetyQueryFormula(TWEETYQUERYCONSTANT)");
+            processCommandsList.add("-p");
+            processCommandsList.add("true");
+            processCommandsList.add("-numChains");
+            processCommandsList.add("50");
+            processCommandsList.add("-epsilonError");
+            processCommandsList.add("0.000001");
+            processCommandsList.add("-fracConverged");
+            processCommandsList.add("0.9999");
+            processCommandsList.add("-delta");
+            processCommandsList.add("0.0001");
+
+	        ProcessBuilder processBuilder = new ProcessBuilder(processCommandsList);
+	        processBuilder.redirectErrorStream(true);
+	        final Process process;
+            process = processBuilder.start();
+	        BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
+	        String line = "";
+	        while (true) {
+                line = br.readLine();
+                if (line == null) {
+                    break;
+	            }
+	        }
+        	process.waitFor();
+	        String resultString = "";
+            BufferedReader resultReader = new BufferedReader(new FileReader(resultFile));
+            line = "";
+            while(line != null) {	        		
+                line = resultReader.readLine();
+                resultString += line != null ? line + "\n" : "";
+            }
+	        StringTokenizer tokenizer = new StringTokenizer(resultString);
+	        String token = null;
+	        while(tokenizer.hasMoreTokens())
+	        	token = tokenizer.nextToken();
+	        if(token == null)
+	        	throw new RuntimeException();	        	       
+			return new Double(token);
+		}catch(Exception e) {
 			// TODO
 			e.printStackTrace();
 			return -1;
@@ -151,7 +178,7 @@ public class AlchemyMlnReasoner extends AbstractMlnReasoner {
 		out.append("tweetyQueryFormula(tweetyqueryconstant)");
 		out.append("\n");	
 		// write query formula
-		out.append("tweetyQueryFormula(TWEETYQUERYCONSTANT) <=> " + formula + " .\n\n");
+		out.append("tweetyQueryFormula(TWEETYQUERYCONSTANT) <=> " + this.alchemyStringForFormula(formula) + " .\n\n");
 		// write formulas
 		for(MlnFormula f: mln){
 			if(f.isStrict())

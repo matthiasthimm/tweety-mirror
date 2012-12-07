@@ -197,7 +197,8 @@ public class MlnTest {
 				Pair<MarkovLogicNetwork,FolSignature> ex = MlnTest.iterateExamples(i, dsize);
 				MarkovLogicNetwork mln = ex.getFirst();
 				FolSignature sig = ex.getSecond();
-				SimpleSamplingMlnReasoner reasoner = new SimpleSamplingMlnReasoner(mln,sig,0.000001,10000);//new ApproximateNaiveMlnReasoner(mln, sig, 1000000, 100000);
+				AlchemyMlnReasoner reasoner = new AlchemyMlnReasoner(mln);//new SimpleSamplingMlnReasoner(mln,sig,0.000001,10000);//new ApproximateNaiveMlnReasoner(mln, sig, 1000000, 100000);
+				reasoner.setAlchemyInferenceCommand("/Users/mthimm/Desktop/macos_alchemy_infer");
 				//reasoner.setTempDirectory("/home/share/mln/results_2012-09-21__precise/temp");
 				//for(AggregationFunction af: aggrFunctions){
 				///	for(DistanceFunction df: distFunctions){
