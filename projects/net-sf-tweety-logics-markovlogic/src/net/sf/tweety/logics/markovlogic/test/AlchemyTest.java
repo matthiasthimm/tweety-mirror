@@ -1,4 +1,4 @@
-package net.sf.tweety.logics.markovlogic.syntax;
+package net.sf.tweety.logics.markovlogic.test;
 
 import java.io.IOException;
 
@@ -8,7 +8,6 @@ import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 import net.sf.tweety.logics.markovlogic.AlchemyMlnReasoner;
 import net.sf.tweety.logics.markovlogic.MarkovLogicNetwork;
-import net.sf.tweety.logics.markovlogic.test.MlnTest;
 import net.sf.tweety.util.Pair;
 
 public class AlchemyTest {
