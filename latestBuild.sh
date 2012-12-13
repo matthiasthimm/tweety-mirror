@@ -20,5 +20,6 @@ ant -f projects/net-sf-tweety-logics-propositionallogic/update_latest_build.xml
 ant -f projects/net-sf-tweety-logics-relationalconditionallogic/update_latest_build.xml
 ant -f projects/net-sf-tweety-logics-relationalprobabilisticconditionallogic/update_latest_build.xml
 ant -f projects/net-sf-tweety-math/update_latest_build.xml
+ant -f projects/net-sf-tweety-preferences/update_latest_build.xml
 ant -f projects/net-sf-tweety/update_latest_build.xml
 ant -f projects/net-sf-tweety/update_latest_build_\(complete\).xml
