@@ -1,6 +1,11 @@
 package net.sf.tweety.agents.argumentation.test;
 
 import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import net.sf.tweety.TweetyConfiguration;
 import net.sf.tweety.TweetyLogging;
@@ -31,9 +36,10 @@ public class GroundedTest {
 	public static int frameworkSize;
 	public static double attackProbability;
 	public static boolean enforceTreeShape;
+	public static int timeout = 60*60*24; // timeout of one day
 	
 	public static int numberOfRunsEach = 100;
-	
+		
 	/**
 	 * This method shows that with increasing complexity of the T1-belief state of
 	 * the CONTRA agent (and constant model of the PRO agent), the average utility of
@@ -73,12 +79,27 @@ public class GroundedTest {
 			agentGenerators.add(new GroundedGameT1AgentGenerator(GroundedGameSystem.AgentFaction.CONTRA,configCon));
 			
 			ProtocolGenerator<GroundedGameProtocol,ArguingAgent,GroundedGameSystem> protGenerator = new GroundedGameProtocolGenerator();
-			GameSimulator<GroundedGameProtocol,ArguingAgent,GroundedGameSystem> sim = new GameSimulator<GroundedGameProtocol,ArguingAgent,GroundedGameSystem>(masGenerator,protGenerator,agentGenerators);
-			// Run iterated simulations and show aggregated results
-			SimulationResult<GroundedGameProtocol,ArguingAgent,GroundedGameSystem> result = sim.run(GroundedTest.numberOfRunsEach);
-			System.out.println("================= T1 vs T1 ==== " + GroundedTest.frameworkSize + " arguments, " + GroundedTest.attackProbability + " attack probability, " + (GroundedTest.enforceTreeShape?("tree shape"):("no tree shape")) + " ==========");
-			System.out.println("Depth of CONTRA agent model (T1): " + i);
-			System.out.println(result.display());
+			final GameSimulator<GroundedGameProtocol,ArguingAgent,GroundedGameSystem> sim = new GameSimulator<GroundedGameProtocol,ArguingAgent,GroundedGameSystem>(masGenerator,protGenerator,agentGenerators);
+			final int j = i;
+			// Run iterated simulations and show aggregated results (with timeout)
+			Callable<String> callee = new Callable<String>(){
+			    @Override
+			    public String call() throws Exception {
+			    	SimulationResult<GroundedGameProtocol,ArguingAgent,GroundedGameSystem> result = sim.run(GroundedTest.numberOfRunsEach);
+					System.out.println("================= T1 vs T1 ==== " + GroundedTest.frameworkSize + " arguments, " + GroundedTest.attackProbability + " attack probability, " + (GroundedTest.enforceTreeShape?("tree shape"):("no tree shape")) + " ==========");
+					System.out.println("Depth of CONTRA agent model (T1): " + j);
+					System.out.println(result.display());
+			        return null;
+			    }
+			};			
+			ExecutorService executor = Executors.newSingleThreadExecutor();
+	        Future<String> future = executor.submit(callee);
+	        try {
+	            future.get(GroundedTest.timeout, TimeUnit.SECONDS);	            
+	        } catch (Exception e) {
+	            System.out.println("Aborted...");
+	        }
+	        executor.shutdownNow();			
 		}
 	}
 	
@@ -117,12 +138,29 @@ public class GroundedTest {
 			agentGenerators.add(new GroundedGameT2AgentGenerator(GroundedGameSystem.AgentFaction.CONTRA,configCon));
 			
 			ProtocolGenerator<GroundedGameProtocol,ArguingAgent,GroundedGameSystem> protGenerator = new GroundedGameProtocolGenerator();
-			GameSimulator<GroundedGameProtocol,ArguingAgent,GroundedGameSystem> sim = new GameSimulator<GroundedGameProtocol,ArguingAgent,GroundedGameSystem>(masGenerator,protGenerator,agentGenerators);
-			// run iterated simulations and show aggregated results
-			SimulationResult<GroundedGameProtocol,ArguingAgent,GroundedGameSystem> result = sim.run(GroundedTest.numberOfRunsEach);		
-			System.out.println("================= T1 vs T2 ==== " + GroundedTest.frameworkSize + " arguments, " + GroundedTest.attackProbability + " attack probability, " + (GroundedTest.enforceTreeShape?("tree shape"):("no tree shape")) + " ==========");			
-			System.out.println("Complexity of CONTRA agent model (T2): (" + depth[i] + "," + decay[i] + "," + width[i] + ")");
-			System.out.println(result.display());
+			final GameSimulator<GroundedGameProtocol,ArguingAgent,GroundedGameSystem> sim = new GameSimulator<GroundedGameProtocol,ArguingAgent,GroundedGameSystem>(masGenerator,protGenerator,agentGenerators);
+			final int d1 = depth[i];
+			final double d2 = decay[i];
+			final int d3 =  width[i];
+			// Run iterated simulations and show aggregated results (with timeout)
+			Callable<String> callee = new Callable<String>(){
+			    @Override
+			    public String call() throws Exception {
+			    	SimulationResult<GroundedGameProtocol,ArguingAgent,GroundedGameSystem> result = sim.run(GroundedTest.numberOfRunsEach);		
+					System.out.println("================= T1 vs T2 ==== " + GroundedTest.frameworkSize + " arguments, " + GroundedTest.attackProbability + " attack probability, " + (GroundedTest.enforceTreeShape?("tree shape"):("no tree shape")) + " ==========");			
+					System.out.println("Complexity of CONTRA agent model (T2): (" + d1 + "," + d2 + "," + d3 + ")");
+					System.out.println(result.display());
+			        return null;
+			    }
+			};			
+			ExecutorService executor = Executors.newSingleThreadExecutor();
+	        Future<String> future = executor.submit(callee);
+	        try {
+	            future.get(GroundedTest.timeout, TimeUnit.SECONDS);	            
+	        } catch (Exception e) {
+	            System.out.println("Aborted...");
+	        }
+	        executor.shutdownNow();			
 		}
 	}
 	
@@ -165,12 +203,31 @@ public class GroundedTest {
 			agentGenerators.add(new GroundedGameT3AgentGenerator(GroundedGameSystem.AgentFaction.CONTRA,configCon));
 		
 			ProtocolGenerator<GroundedGameProtocol,ArguingAgent,GroundedGameSystem> protGenerator = new GroundedGameProtocolGenerator();
-			GameSimulator<GroundedGameProtocol,ArguingAgent,GroundedGameSystem> sim = new GameSimulator<GroundedGameProtocol,ArguingAgent,GroundedGameSystem>(masGenerator,protGenerator,agentGenerators);
-			// run iterated simulations and show aggregated results
-			SimulationResult<GroundedGameProtocol,ArguingAgent,GroundedGameSystem> result = sim.run(GroundedTest.numberOfRunsEach);
-			System.out.println("================= T1 vs T3 ==== " + GroundedTest.frameworkSize + " arguments, " + GroundedTest.attackProbability + " attack probability, " + (GroundedTest.enforceTreeShape?("tree shape"):("no tree shape")) + " ==========");
-			System.out.println("Complexity of CONTRA agent model (T3): (" + depth[i] + "," + decay[i] + "," + width[i] + "," + virtArg[i] + "," + virtAtt[i] + ")");
-			System.out.println(result.display());
+			final GameSimulator<GroundedGameProtocol,ArguingAgent,GroundedGameSystem> sim = new GameSimulator<GroundedGameProtocol,ArguingAgent,GroundedGameSystem>(masGenerator,protGenerator,agentGenerators);
+			final int d1 = depth[i];
+			final double d2 = decay[i];
+			final int d3 =  width[i];
+			final double d4 = virtArg[i];
+			final double d5 = virtAtt[i];
+			// Run iterated simulations and show aggregated results (with timeout)
+			Callable<String> callee = new Callable<String>(){
+			    @Override
+			    public String call() throws Exception {
+			    	SimulationResult<GroundedGameProtocol,ArguingAgent,GroundedGameSystem> result = sim.run(GroundedTest.numberOfRunsEach);
+					System.out.println("================= T1 vs T3 ==== " + GroundedTest.frameworkSize + " arguments, " + GroundedTest.attackProbability + " attack probability, " + (GroundedTest.enforceTreeShape?("tree shape"):("no tree shape")) + " ==========");
+					System.out.println("Complexity of CONTRA agent model (T3): (" + d1 + "," + d2 + "," + d3 + "," + d4 + "," + d5 + ")");
+					System.out.println(result.display());
+					return null;
+			    }
+			};			
+			ExecutorService executor = Executors.newSingleThreadExecutor();
+	        Future<String> future = executor.submit(callee);
+	        try {
+	            future.get(GroundedTest.timeout, TimeUnit.SECONDS);	            
+	        } catch (Exception e) {
+	            System.out.println("Aborted...");
+	        }
+	        executor.shutdownNow();
 		}
 	}
 	
