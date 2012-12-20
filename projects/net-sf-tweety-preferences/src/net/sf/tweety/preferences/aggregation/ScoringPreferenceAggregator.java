@@ -6,9 +6,7 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import net.sf.tweety.preferences.PreferenceOrder;
-import net.sf.tweety.preferences.Relation;
-import net.sf.tweety.preferences.ranking.RankingFunction;
-import net.sf.tweety.util.Triple;
+import net.sf.tweety.preferences.ranking.LevelingFunction;
 
 /**
  * This class extends the interface for preference aggregation with scoring
@@ -45,7 +43,7 @@ public abstract class ScoringPreferenceAggregator<T> implements
 	 */
 	public PreferenceOrder<T> aggregate(List<PreferenceOrder<T>> input) {
 		
-		PreferenceOrder<T> tempPO = new PreferenceOrder<T>();
+//		PreferenceOrder<T> tempPO = new PreferenceOrder<T>();
 		Map<T, Integer> elem = new HashMap<T, Integer>();
 		
 		// all single elements are store in one HashMap
@@ -86,7 +84,7 @@ public abstract class ScoringPreferenceAggregator<T> implements
 		ListIterator<PreferenceOrder<T>> it2 = input.listIterator();
 		while (it2.hasNext()) {
 			PreferenceOrder<T> tPO = it2.next();
-			Map<T, Integer> temp = tPO.getRankingFunction();
+			Map<T, Integer> temp = tPO.getLevelingFunction();
 			for (Entry<T, Integer> e : temp.entrySet()) {
 				T t = e.getKey();
 				Integer i = e.getValue();
@@ -95,11 +93,13 @@ public abstract class ScoringPreferenceAggregator<T> implements
 			}
 		}
 
-		// finally each two elements are compared and set to relation in
-		// the
-		// final po, if not done yet
+		// finally a temporary ranking function is created an generates the
+		// aggregated preference order
 		
-		// TODO: Merging with RankingFunction line 149.
+		LevelingFunction<T> tempRF = new LevelingFunction<T>();
+		tempRF.putAll(elem);
+	
+/*		//Outdated:
 		for (Entry<T, Integer> f : elem.entrySet()) {
 			for (Entry<T, Integer> s : elem.entrySet()) {
 				if (!f.getKey().equals(s.getKey())){
@@ -114,8 +114,9 @@ public abstract class ScoringPreferenceAggregator<T> implements
 				}
 			}
 		}
-		
-
-		return tempPO;
+ * 
+ */
+		return tempRF.generatePreferenceOrder();
+//		return tempPO;
 	}
 }

@@ -2,7 +2,7 @@ package net.sf.tweety.preferences;
 
 import java.util.*;
 
-import net.sf.tweety.preferences.ranking.RankingFunction;
+import net.sf.tweety.preferences.ranking.LevelingFunction;
 import net.sf.tweety.util.Triple;
 
 /**
@@ -51,8 +51,8 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	 * returns the ranking function for this preference order
 	 * @return the ranking function for this preference order
 	 */
-	public RankingFunction<T> getRankingFunction() {
-		return new RankingFunction<T>(this);
+	public LevelingFunction<T> getLevelingFunction() {
+		return new LevelingFunction<T>(this);
 	}
 
 	
@@ -383,18 +383,6 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	 * adds all given elements to the preference order
 	 * @return true if element-set changed, false if not
 	 */
-//	@Override
-//	public boolean addAll(Collection<? extends Pair<T, T>> c) {
-//		Set<Pair<T, T>> temp = this;
-//		for (Pair<T, T> p : c){
-//			temp.add(p);
-//		}
-//		if(!this.equals(temp))
-//			return true;
-//		else
-//			return false;
-//	}
-
 	@Override
 	public boolean addAll(Collection<? extends Triple<T, T, Relation>> c) {
 		Set<Triple<T,T,Relation>> tempRel = this.relations;
@@ -415,13 +403,13 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 
 
 	public void weakenElement(T element){
-		RankingFunction<T> tempRF = this.getRankingFunction();
+		LevelingFunction<T> tempRF = this.getLevelingFunction();
 		tempRF.weakenElement(element);
 		this.relations = tempRF.generatePreferenceOrder();
 	}
 	
 	public void strengthenElement(T element){
-		RankingFunction<T> tempRF = this.getRankingFunction();
+		LevelingFunction<T> tempRF = this.getLevelingFunction();
 		tempRF.strengthenElement(element);
 		this.relations = tempRF.generatePreferenceOrder();
 	}

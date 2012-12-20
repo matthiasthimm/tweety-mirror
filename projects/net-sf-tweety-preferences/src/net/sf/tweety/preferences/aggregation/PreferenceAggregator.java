@@ -22,5 +22,4 @@ public interface PreferenceAggregator<T> {
 	 */
 	public PreferenceOrder<T> aggregate(List<PreferenceOrder<T>> input);
 
-	
 }

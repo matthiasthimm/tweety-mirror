@@ -19,19 +19,17 @@ import net.sf.tweety.preferences.Relation;
 import net.sf.tweety.util.Triple;
 
 /**
- * This class is meant to provide ranking functions to given preference orders
- * and vice versa. To be implemented. A ranking function characterizes a
- * preference order uniquely as: 1.: rank: O -> N+ where O is the set of
- * elements in the preference order. 2.: the sum of all ranks for each element
- * in O is minimal
+ * This class is meant to provide leveling functions to given preference orders
+ * and vice versa.
  * 
  * TODO exception handling for invalid preference orders (total preorder)
+ * TOOD neue Ordnung RankingFunction (rank(o) = |Elemente echt größer o|)
  * @author Bastian Wolf
  * @param <T>
  * 
  */
 
-public class RankingFunction<T> extends Functions<T>{
+public class LevelingFunction<T> extends Functions<T> {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -39,7 +37,7 @@ public class RankingFunction<T> extends Functions<T>{
 	 * constructs a new, empty ranking function
 	 * caller can use Map-method putAll to fill this empty ranking function
 	 */
-	public RankingFunction(){
+	public LevelingFunction(){
 		new HashMap<T, Integer>();
 	}
 	
@@ -50,12 +48,11 @@ public class RankingFunction<T> extends Functions<T>{
 	 * @param po
 	 *            the given preference order
 	 */
-	public RankingFunction(PreferenceOrder<T> po) {
+	public LevelingFunction(PreferenceOrder<T> po) {
 
 		Map<T, IntegerVariable> intVar = new HashMap<T, IntegerVariable>();
 
 		Set<Triple<IntegerVariable, IntegerVariable, Relation>> optIneq = new HashSet<Triple<IntegerVariable, IntegerVariable, Relation>>();
-		// TODO: changing optimization problem (otherwise rank-gaps between two elements are closed)
 		OptimizationProblem opt = new OptimizationProblem(
 				OptimizationProblem.MINIMIZE);
 
@@ -116,12 +113,13 @@ public class RankingFunction<T> extends Functions<T>{
 
 		this.putAll(sol);
 	}
+
 	/**
 	 * returns the ranking function
 	 * 
 	 * @return ranking function
 	 */
-	public Map<T, Integer> getRankingFunction() {
+	public Map<T, Integer> getLevelingFunction() {
 		return this;
 	}
 	
@@ -154,7 +152,6 @@ public class RankingFunction<T> extends Functions<T>{
 		PreferenceOrder<T> po = new PreferenceOrder<T>(tempPO);
 		return po;
 	}
-
 	
 	
 	/**
