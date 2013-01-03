@@ -21,4 +21,12 @@ public interface AgentGenerator<T extends Agent, S extends MultiAgentSystem<T>> 
 	 * @return an agent for type T
 	 */
 	public T generate(S mas, SimulationParameters params);
+	
+	/**
+	 * Set the seed for the generation. Every two
+	 * runs of generations with the same seed
+	 * are ensured to be identical.
+	 * @param seed some seed.
+	 */
+	public void setSeed(long seed);
 }

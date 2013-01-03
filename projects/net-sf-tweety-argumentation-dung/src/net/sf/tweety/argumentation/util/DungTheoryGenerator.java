@@ -24,4 +24,12 @@ public interface DungTheoryGenerator {
 	 * @return a Dung theory,
 	 */
 	public DungTheory generate(Argument arg);
+	
+	/**
+	 * Set the seed for the generation. Every two
+	 * runs of generations with the same seed
+	 * are ensured to be identical.
+	 * @param seed some seed.
+	 */
+	public void setSeed(long seed);
 }

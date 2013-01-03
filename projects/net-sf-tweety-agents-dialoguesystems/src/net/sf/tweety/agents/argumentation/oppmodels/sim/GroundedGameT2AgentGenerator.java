@@ -2,7 +2,6 @@ package net.sf.tweety.agents.argumentation.oppmodels.sim;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -69,9 +68,8 @@ public class GroundedGameT2AgentGenerator extends GroundedGameAgentGenerator {
 		if(depth >= 0)
 			for(int i = 0; i < this.config.maxRecursionWidth; i++){			
 				Extension subView = new Extension();
-				Random rand = new Random();
 				for(Argument a: arguments)
-					if(rand.nextDouble() >= this.config.probRecursionDecay)				
+					if(this.getRandom().nextDouble() >= this.config.probRecursionDecay)				
 						subView.add(a);				
 				//if the subview is empty, do not consider it further
 				//(this corresponds to the end of the recursion)

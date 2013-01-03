@@ -3,7 +3,6 @@ package net.sf.tweety.agents.argumentation.oppmodels.sim;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -64,7 +63,6 @@ public class GroundedGameT3AgentGenerator extends GroundedGameAgentGenerator {
 		ProbabilityFunction<T3BeliefState> prob = new ProbabilityFunction<T3BeliefState>();
 		Map<T3BeliefState,Double> mass = new HashMap<T3BeliefState,Double>();
 		double totalMass = 0;
-		Random rand = new Random();
 		// select some arguments and make them virtual
 		Set<Argument> virtualArguments = new HashSet<Argument>();
 		Set<Attack> virtualAttacks = new HashSet<Attack>();
@@ -78,7 +76,7 @@ public class GroundedGameT3AgentGenerator extends GroundedGameAgentGenerator {
 			// do not virtualize the argument of the dialog
 			if(params.get(GroundedGameGenerator.PARAM_ARGUMENT).equals(arg))
 				continue;			
-			if(rand.nextDouble() <= this.config.percentageVirtualArguments){
+			if(this.getRandom().nextDouble() <= this.config.percentageVirtualArguments){
 				Argument vArg = new Argument(faction + "_" + k++);				
 				Set<Argument> vArgs = new HashSet<Argument>();
 				vArgs.add(vArg);						
@@ -91,11 +89,11 @@ public class GroundedGameT3AgentGenerator extends GroundedGameAgentGenerator {
 		for(Argument vArg: virtualArguments){
 			for(Argument a: ((DungTheory)params.get(GroundedGameGenerator.PARAM_UNIVERSALTHEORY)).getAttacked(rec.getPreimage(vArg))){
 				if(arguments.contains(a))
-					if(rand.nextDouble() <= this.config.percentageVirtualAttacks)
+					if(this.getRandom().nextDouble() <= this.config.percentageVirtualAttacks)
 						virtualAttacks.add(new Attack(vArg,a));
 				if(rec.get(a) != null){
 					for(Argument vArg2: rec.get(a))
-						if(rand.nextDouble() <= this.config.percentageVirtualAttacks)
+						if(this.getRandom().nextDouble() <= this.config.percentageVirtualAttacks)
 							virtualAttacks.add(new Attack(vArg,vArg2));
 				}
 			}
@@ -103,11 +101,11 @@ public class GroundedGameT3AgentGenerator extends GroundedGameAgentGenerator {
 		for(Argument vArg: virtualArguments){
 			for(Argument a: ((DungTheory)params.get(GroundedGameGenerator.PARAM_UNIVERSALTHEORY)).getAttackers(rec.getPreimage(vArg))){
 				if(arguments.contains(a))
-					if(rand.nextDouble() <= this.config.percentageVirtualAttacks)
+					if(this.getRandom().nextDouble() <= this.config.percentageVirtualAttacks)
 						virtualAttacks.add(new Attack(a,vArg));
 				if(rec.get(a) != null){
 					for(Argument vArg2: rec.get(a))
-						if(rand.nextDouble() <= this.config.percentageVirtualAttacks)
+						if(this.getRandom().nextDouble() <= this.config.percentageVirtualAttacks)
 							virtualAttacks.add(new Attack(vArg2,vArg));
 				}
 			}
@@ -118,7 +116,7 @@ public class GroundedGameT3AgentGenerator extends GroundedGameAgentGenerator {
 			for(int i = 0; i < this.config.maxRecursionWidth; i++){			
 				Extension subView = new Extension();				
 				for(Argument a: arguments)
-					if(rand.nextDouble() >= this.config.probRecursionDecay)				
+					if(this.getRandom().nextDouble() >= this.config.probRecursionDecay)				
 						subView.add(a);				
 				//if the subview is empty, do not consider it further
 				//(this corresponds to the end of the recursion)

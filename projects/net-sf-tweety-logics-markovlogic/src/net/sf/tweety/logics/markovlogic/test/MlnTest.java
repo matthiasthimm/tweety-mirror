@@ -162,7 +162,7 @@ public class MlnTest {
 	
 	public static void main(String[] args) throws ParserException, IOException{
 		//MlnTest.createChart(null, "", "");
-		String expPath = "/home/share/mln/results_2012-12-07__alchemy/";//"/Users/mthimm/Desktop/test/";
+		String expPath = "/home/share/mln/results_2013-01-03__alchemy/";//"/Users/mthimm/Desktop/test/";
 		String alchemyInferPath = "/home/share/mln/infer";
 					
 //		List<AggregationFunction> aggrFunctions = new ArrayList<AggregationFunction>();
@@ -186,15 +186,20 @@ public class MlnTest {
 		
 		List<AggregatingCoherenceMeasure> cohMeasures = new ArrayList<AggregatingCoherenceMeasure>();
 		cohMeasures.add(new AggregatingCoherenceMeasure(new PNormDistanceFunction(2,true),new MaxAggregator()));
+		cohMeasures.add(new AggregatingCoherenceMeasure(new PNormDistanceFunction(2,true),new MinAggregator()));
 		cohMeasures.add(new AggregatingCoherenceMeasure(new AggregatingDistanceFunction(new AverageAggregator()),new MaxAggregator()));
 		cohMeasures.add(new AggregatingCoherenceMeasure(new AggregatingDistanceFunction(new MaxAggregator()),new AverageAggregator()));
 		cohMeasures.add(new AggregatingCoherenceMeasure(new AggregatingDistanceFunction(new MinAggregator()),new MinAggregator()));
+		cohMeasures.add(new AggregatingCoherenceMeasure(new AggregatingDistanceFunction(new MinAggregator()),new MaxAggregator()));
+		cohMeasures.add(new AggregatingCoherenceMeasure(new AggregatingDistanceFunction(new MaxAggregator()),new MinAggregator()));
+		cohMeasures.add(new AggregatingCoherenceMeasure(new AggregatingDistanceFunction(new MaxAggregator()),new MaxAggregator()));
+		cohMeasures.add(new AggregatingCoherenceMeasure(new AggregatingDistanceFunction(new AverageAggregator()),new MinAggregator()));
 		
 		//cohMeasures.add(new AggregatingCoherenceMeasure(new AggregatingDistanceFunction(new MaxAggregator()),new MaxAggregator()));
 		
-		for(int i = 0; i < 3; i++){
+		for(int i = 1; i < 2; i++){
 			Map<AggregatingCoherenceMeasure,double[][]> results = new HashMap<AggregatingCoherenceMeasure,double[][]>();
-			for(int dsize = 3; dsize < 15; dsize++){
+			for(int dsize = 3; dsize < 11; dsize++){
 				Pair<MarkovLogicNetwork,FolSignature> ex = MlnTest.iterateExamples(i, dsize);
 				MarkovLogicNetwork mln = ex.getFirst();
 				FolSignature sig = ex.getSecond();

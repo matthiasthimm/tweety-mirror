@@ -1,5 +1,7 @@
 package net.sf.tweety.agents.argumentation.oppmodels.sim;
 
+import java.util.Random;
+
 import net.sf.tweety.agents.argumentation.oppmodels.ArguingAgent;
 import net.sf.tweety.agents.argumentation.oppmodels.BeliefState;
 import net.sf.tweety.agents.argumentation.oppmodels.GroundedGameSystem;
@@ -15,6 +17,9 @@ public abstract class GroundedGameAgentGenerator implements AgentGenerator<Argui
 
 	/** The faction of the agents to be generated */
 	private GroundedGameSystem.AgentFaction faction;
+	
+	/** Random numbers generator. */
+	private Random random = new Random();
 	
 	/**
 	 * Creates a new agent generator.
@@ -55,6 +60,21 @@ public abstract class GroundedGameAgentGenerator implements AgentGenerator<Argui
 		return this.faction.toString();
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.agents.sim.AgentGenerator#setSeed(long)
+	 */
+	public void setSeed(long seed){
+		this.random = new Random(seed);
+	}
+	
+	/**
+	 * Returns the random number generator.
+	 * @return the random number generator.
+	 */
+	protected Random getRandom(){
+		return this.random;
+	}
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */

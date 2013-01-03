@@ -116,7 +116,7 @@ public class MinimumAggregatedDistanceMachineShop implements BeliefBaseMachineSh
 				targetFunction = t.mult(t);
 			else targetFunction = targetFunction.add(t.mult(t));			
 		}
-		problem.setTargetFunction(targetFunction);		
+		problem.setTargetFunction(targetFunction);	
 		try{			
 			OpenOptSolver solver = new OpenOptSolver(problem);			
 			solver.contol = 1e-6;
@@ -142,7 +142,8 @@ public class MinimumAggregatedDistanceMachineShop implements BeliefBaseMachineSh
 	}
 
 	public static void main(String[] args) throws FileNotFoundException, ParserException, IOException{
-		PclBeliefSet kb = (PclBeliefSet) new PclParser().parseBeliefBaseFromFile("/Users/mthimm/Desktop/R8.pcl");
+		PclParser parser = new PclParser();
+		PclBeliefSet kb = (PclBeliefSet) parser.parseBeliefBase("(a)[0.3]\n(a)[0.7]");
 		System.out.println("INITIAL: " + kb);
 		
 		System.out.println();

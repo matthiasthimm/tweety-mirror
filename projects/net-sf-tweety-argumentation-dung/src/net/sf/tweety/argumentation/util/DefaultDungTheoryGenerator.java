@@ -17,6 +17,9 @@ public class DefaultDungTheoryGenerator implements DungTheoryGenerator {
 	/** The parameters for generation. */
 	private DungTheoryGenerationParameters params;
 	
+	/** Random numbers generator. */
+	private Random random = new Random();
+	
 	/**
 	 * Creates a new generator with the given parameters.
 	 * @param params some generation parameters.
@@ -34,13 +37,12 @@ public class DefaultDungTheoryGenerator implements DungTheoryGenerator {
 			return this.generateTreeShape(new Argument("A"));
 		DungTheory theory = new DungTheory();
 		for(int i = 0; i < this.params.numberOfArguments; i++)
-			theory.add(new Argument("A" + i));
-		Random rand = new Random();
+			theory.add(new Argument("A" + i));		
 		for(Argument a: theory)
 			for(Argument b: theory){
 				if(a == b && this.params.avoidSelfAttacks)
 					continue;
-				if(rand.nextDouble() <= this.params.attackProbability)
+				if(this.random.nextDouble() <= this.params.attackProbability)
 					theory.add(new Attack(a,b));
 			}
 		return theory;
@@ -63,12 +65,11 @@ public class DefaultDungTheoryGenerator implements DungTheoryGenerator {
 		theory.add(arg);
 		for(int i = 1; i < this.params.numberOfArguments; i++)
 			theory.add(new Argument("A" + i));
-		Random rand = new Random();
 		for(Argument a: theory)
 			for(Argument b: theory){
 				if(a == b && this.params.avoidSelfAttacks)
 					continue;
-				if(rand.nextDouble() <= this.params.attackProbability){
+				if(this.random.nextDouble() <= this.params.attackProbability){
 					Attack att = new Attack(a,b);
 					theory.add(att);
 					//Check whether this makes the argument out
@@ -77,6 +78,13 @@ public class DefaultDungTheoryGenerator implements DungTheoryGenerator {
 				}
 			}
 		return theory;
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.argumentation.util.DungTheoryGenerator#setSeed(double)
+	 */
+	public void setSeed(long seed){
+		this.random = new Random(seed);
 	}
 	
 	/**
@@ -89,17 +97,19 @@ public class DefaultDungTheoryGenerator implements DungTheoryGenerator {
 		DungTheory theory = new DungTheory();
 		theory.add(arg);
 		int numOfArguments = 1;
-		Random rand = new Random();
 		Queue<Argument> q = new LinkedList<Argument>();
 		q.add(arg);
 		while(numOfArguments <= this.params.numberOfArguments){
 			Argument a = new Argument("A" + numOfArguments++);
-			theory.add(new Attack(a, (Argument)theory.toArray()[rand.nextInt(numOfArguments-1)]));
+			theory.add(new Attack(a, (Argument)theory.toArray()[this.random.nextInt(numOfArguments-1)]));
 			theory.add(a);
 		}
 		return theory;
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	public String toString(){
 		return "Def"+this.params.toString();
 	}

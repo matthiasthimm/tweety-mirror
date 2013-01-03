@@ -1,7 +1,5 @@
 package net.sf.tweety.agents.argumentation.oppmodels.sim;
 
-import java.util.Random;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -60,9 +58,8 @@ public class GroundedGameT1AgentGenerator extends GroundedGameAgentGenerator {
 		if(depth < 0 || arguments.isEmpty())
 			return null;
 		Extension subView = new Extension();
-		Random rand = new Random();
 		for(Argument a: arguments){
-			if(rand.nextDouble() >= this.config.probRecursionDecay){
+			if(this.getRandom().nextDouble() >= this.config.probRecursionDecay){
 				if(this.config.oppModelCorrect)
 					if(!((Extension)params.get(this.getFaction().getComplement())).contains(a))
 						continue;				

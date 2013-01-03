@@ -39,6 +39,12 @@ public class GroundedTest {
 	public static int timeout = 60*60*24; // timeout of one day
 	
 	public static int numberOfRunsEach = 100;
+	
+	//to ensure comparability
+	public static long RANDOM_SEED1 = 43589744589l;
+	public static long RANDOM_SEED2 = 96498321389l;
+	public static long RANDOM_SEED3 = 647597568l;
+	public static long RANDOM_SEED4 = 213596455579l;
 		
 	/**
 	 * This method shows that with increasing complexity of the T1-belief state of
@@ -50,7 +56,7 @@ public class GroundedTest {
 		// We run different simulations with increasing recursion depth
 		// of the CON agent's belief state
 		for(int i = 0; i < 3; i++){
-			// We generate Dung theories with 10 arguments and attack probability 0.3.
+			// We generate Dung theories with the given number of arguments and attack probability.
 			// In every theory, the argument under consideration is guaranteed to
 			// be in the grounded extension (so under perfect information, the PRO
 			// agent should always win)
@@ -59,8 +65,10 @@ public class GroundedTest {
 			params.numberOfArguments = GroundedTest.frameworkSize;	
 			params.enforceTreeShape = GroundedTest.enforceTreeShape;	
 			DungTheoryGenerator gen = new DefaultDungTheoryGenerator(params);
-			// PRO agent knows 50% of all arguments, CONTRA agent knows 90% of all arguments
+			gen.setSeed(GroundedTest.RANDOM_SEED1);
+			// PRO agent knows 50% of all arguments, CONTRA agent knows 90% of all arguments			
 			MultiAgentSystemGenerator<ArguingAgent,GroundedGameSystem> masGenerator = new GroundedGameGenerator(gen, 0.5, 0.9);
+			masGenerator.setSeed(GroundedTest.RANDOM_SEED2);
 			List<AgentGenerator<ArguingAgent,GroundedGameSystem>> agentGenerators = new ArrayList<AgentGenerator<ArguingAgent,GroundedGameSystem>>();
 			
 			// The PRO agent has a T1 belief state without opponent model
@@ -77,6 +85,8 @@ public class GroundedTest {
 			
 			agentGenerators.add(new GroundedGameT1AgentGenerator(GroundedGameSystem.AgentFaction.PRO,configPro));
 			agentGenerators.add(new GroundedGameT1AgentGenerator(GroundedGameSystem.AgentFaction.CONTRA,configCon));
+			agentGenerators.get(0).setSeed(GroundedTest.RANDOM_SEED3);
+			agentGenerators.get(1).setSeed(GroundedTest.RANDOM_SEED4);			
 			
 			ProtocolGenerator<GroundedGameProtocol,ArguingAgent,GroundedGameSystem> protGenerator = new GroundedGameProtocolGenerator();
 			final GameSimulator<GroundedGameProtocol,ArguingAgent,GroundedGameSystem> sim = new GameSimulator<GroundedGameProtocol,ArguingAgent,GroundedGameSystem>(masGenerator,protGenerator,agentGenerators);
@@ -119,8 +129,10 @@ public class GroundedTest {
 			params.numberOfArguments = GroundedTest.frameworkSize;			
 			params.enforceTreeShape = GroundedTest.enforceTreeShape;	
 			DungTheoryGenerator gen = new DefaultDungTheoryGenerator(params);
+			gen.setSeed(GroundedTest.RANDOM_SEED1);
 			// PRO agent knows 50% of all arguments, CONTRA agent knows 90% of all arguments
 			MultiAgentSystemGenerator<ArguingAgent,GroundedGameSystem> masGenerator = new GroundedGameGenerator(gen, 0.5, 0.9);
+			masGenerator.setSeed(GroundedTest.RANDOM_SEED2);
 			List<AgentGenerator<ArguingAgent,GroundedGameSystem>> agentGenerators = new ArrayList<AgentGenerator<ArguingAgent,GroundedGameSystem>>();
 		
 			// The PRO agent has a T1 belief state without opponent model
@@ -136,6 +148,8 @@ public class GroundedTest {
 		
 			agentGenerators.add(new GroundedGameT1AgentGenerator(GroundedGameSystem.AgentFaction.PRO,configPro));
 			agentGenerators.add(new GroundedGameT2AgentGenerator(GroundedGameSystem.AgentFaction.CONTRA,configCon));
+			agentGenerators.get(0).setSeed(GroundedTest.RANDOM_SEED3);
+			agentGenerators.get(1).setSeed(GroundedTest.RANDOM_SEED4);
 			
 			ProtocolGenerator<GroundedGameProtocol,ArguingAgent,GroundedGameSystem> protGenerator = new GroundedGameProtocolGenerator();
 			final GameSimulator<GroundedGameProtocol,ArguingAgent,GroundedGameSystem> sim = new GameSimulator<GroundedGameProtocol,ArguingAgent,GroundedGameSystem>(masGenerator,protGenerator,agentGenerators);
@@ -182,8 +196,10 @@ public class GroundedTest {
 			params.numberOfArguments = GroundedTest.frameworkSize;	
 			params.enforceTreeShape = GroundedTest.enforceTreeShape;
 			DungTheoryGenerator gen = new DefaultDungTheoryGenerator(params);
+			gen.setSeed(GroundedTest.RANDOM_SEED1);
 			// PRO agent knows 50% of all arguments, CONTRA agent knows 90% of all arguments
 			MultiAgentSystemGenerator<ArguingAgent,GroundedGameSystem> masGenerator = new GroundedGameGenerator(gen, 0.5, 0.9);
+			masGenerator.setSeed(GroundedTest.RANDOM_SEED2);
 			List<AgentGenerator<ArguingAgent,GroundedGameSystem>> agentGenerators = new ArrayList<AgentGenerator<ArguingAgent,GroundedGameSystem>>();
 		
 			// The PRO agent has a T1 belief state without opponent model
@@ -201,6 +217,8 @@ public class GroundedTest {
 				
 			agentGenerators.add(new GroundedGameT1AgentGenerator(GroundedGameSystem.AgentFaction.PRO,configPro));
 			agentGenerators.add(new GroundedGameT3AgentGenerator(GroundedGameSystem.AgentFaction.CONTRA,configCon));
+			agentGenerators.get(0).setSeed(GroundedTest.RANDOM_SEED3);
+			agentGenerators.get(1).setSeed(GroundedTest.RANDOM_SEED4);
 		
 			ProtocolGenerator<GroundedGameProtocol,ArguingAgent,GroundedGameSystem> protGenerator = new GroundedGameProtocolGenerator();
 			final GameSimulator<GroundedGameProtocol,ArguingAgent,GroundedGameSystem> sim = new GameSimulator<GroundedGameProtocol,ArguingAgent,GroundedGameSystem>(masGenerator,protGenerator,agentGenerators);
@@ -235,8 +253,8 @@ public class GroundedTest {
 		// set logging level to "TRACE" to get detailed descriptions
 		TweetyLogging.logLevel = TweetyConfiguration.LogLevel.ERROR;
 		TweetyLogging.initLogging();
-				
-		for(int numArguments = 10; numArguments <= 30; numArguments += 5){
+		
+		for(int numArguments = 10; numArguments <= 20; numArguments += 5){
 			GroundedTest.frameworkSize = numArguments;
 			for(double attackProbability = 0.2; attackProbability <= 0.4; attackProbability += 0.5){
 				GroundedTest.attackProbability = attackProbability;

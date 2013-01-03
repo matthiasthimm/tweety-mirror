@@ -84,7 +84,7 @@ public class OpenOptSolver extends Solver {
 	 * @see net.sf.tweety.math.opt.Solver#solve()
 	 */
 	@Override
-	public Map<Variable, Term> solve() throws GeneralMathException {		
+	public Map<Variable, Term> solve() throws GeneralMathException {
 		String output = "";
 		//String error = "";
 		InputStream in = null;

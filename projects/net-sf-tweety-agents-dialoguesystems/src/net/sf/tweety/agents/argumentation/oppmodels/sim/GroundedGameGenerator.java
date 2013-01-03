@@ -36,6 +36,9 @@ public class GroundedGameGenerator implements MultiAgentSystemGenerator<ArguingA
 	/** for generating Dung theories. */
 	private DungTheoryGenerator gen;
 	
+	/** Random numbers generator. */
+	private Random random = new Random();
+	
 	/**
 	 * Creates a new game generator.
 	 * @param gen for generating Dung theories.
@@ -67,11 +70,10 @@ public class GroundedGameGenerator implements MultiAgentSystemGenerator<ArguingA
 		//both views must contain the argument of the discussion
 		proView.add(arg);
 		conView.add(arg);
-		Random rand = new Random();
 		for(Argument a: theory){
-			if(rand.nextDouble()<= this.viewPercentagePro)
+			if(this.random.nextDouble()<= this.viewPercentagePro)
 				proView.add(a);
-			if(rand.nextDouble()<= this.viewPercentageCon)
+			if(this.random.nextDouble()<= this.viewPercentageCon)
 				conView.add(a);
 		}
 		params.put(GroundedGameSystem.AgentFaction.PRO, proView);
@@ -84,4 +86,10 @@ public class GroundedGameGenerator implements MultiAgentSystemGenerator<ArguingA
 		return new GroundedGameSystem(theory);
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.agents.sim.MultiAgentSystemGenerator#setSeed(long)
+	 */
+	public void setSeed(long seed){
+		this.random = new Random(seed);
+	}
 }
