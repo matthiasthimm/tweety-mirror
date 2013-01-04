@@ -55,7 +55,7 @@ public class GroundedTest {
 	public static void runSimulationT1() throws ProtocolTerminatedException{
 		// We run different simulations with increasing recursion depth
 		// of the CON agent's belief state
-		for(int i = 0; i < 4; i++){
+		for(int i = 1; i < 4; i++){
 			// We generate Dung theories with the given number of arguments and attack probability.
 			// In every theory, the argument under consideration is guaranteed to
 			// be in the grounded extension (so under perfect information, the PRO
@@ -295,15 +295,15 @@ public class GroundedTest {
 		TweetyLogging.logLevel = TweetyConfiguration.LogLevel.ERROR;
 		TweetyLogging.initLogging();
 		GroundedTest.attackProbability = 0.3;
-		GroundedTest.frameworkSize = 10;
+		GroundedTest.frameworkSize = 15;
 		
-		GroundedTest.enforceTreeShape = true;
-		GroundedTest.runSimulationT1();
-		GroundedTest.runSimulationT2();
-		GroundedTest.runSimulationT3();
 		GroundedTest.enforceTreeShape = false;
 		GroundedTest.runSimulationT1();
-		GroundedTest.runSimulationT2();
-		GroundedTest.runSimulationT3();
+		//GroundedTest.runSimulationT2();
+		//GroundedTest.runSimulationT3();
+		//GroundedTest.enforceTreeShape = false;
+		//GroundedTest.runSimulationT1();
+		//GroundedTest.runSimulationT2();
+		//GroundedTest.runSimulationT3();
 	}
 }
