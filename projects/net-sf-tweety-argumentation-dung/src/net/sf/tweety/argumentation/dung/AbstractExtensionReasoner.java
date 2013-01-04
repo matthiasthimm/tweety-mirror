@@ -12,15 +12,6 @@ import net.sf.tweety.argumentation.dung.syntax.*;
  * @author Matthias Thimm
  */
 public abstract class AbstractExtensionReasoner extends Reasoner {
-
-	// some global constants
-	public static final int GROUNDED_SEMANTICS = 0;
-	public static final int STABLE_SEMANTICS = 1;
-	public static final int PREFERRED_SEMANTICS = 2;
-	public static final int COMPLETE_SEMANTICS = 3;
-	
-	public static final int SCEPTICAL_INFERENCE = 4;
-	public static final int CREDULOUS_INFERENCE = 5;
 	
 	/**
 	 * The extensions this reasoner bases upon.
@@ -42,7 +33,7 @@ public abstract class AbstractExtensionReasoner extends Reasoner {
 		super(beliefBase);
 		if(!(beliefBase instanceof DungTheory))
 			throw new IllegalArgumentException("Knowledge base of class DungTheory expected.");
-		if(inferenceType != AbstractExtensionReasoner.CREDULOUS_INFERENCE && inferenceType != AbstractExtensionReasoner.SCEPTICAL_INFERENCE)
+		if(inferenceType != Semantics.CREDULOUS_INFERENCE && inferenceType != Semantics.SCEPTICAL_INFERENCE)
 			throw new IllegalArgumentException("Inference type must be either sceptical or credulous.");
 		this.inferenceType = inferenceType;
 	}
@@ -52,8 +43,25 @@ public abstract class AbstractExtensionReasoner extends Reasoner {
 	 * @param beliefBase The knowledge base for this reasoner.
 	 */
 	public AbstractExtensionReasoner(BeliefBase beliefBase){
-		this(beliefBase,AbstractExtensionReasoner.SCEPTICAL_INFERENCE);		
+		this(beliefBase,Semantics.SCEPTICAL_INFERENCE);		
 	}	
+	
+	/**
+	 * Creates a reasoner for the given semantics.
+	 * @param beliefBase some Dung theory
+	 * @param semantics a semantics
+	 * @param inferenceType an inference type
+	 * @return a reasoner for the given Dung theory, inference type, and semantics
+	 */
+	public static AbstractExtensionReasoner getReasonerForSemantics(BeliefBase beliefBase, int semantics, int inferenceType){
+		switch(semantics){
+			case Semantics.COMPLETE_SEMANTICS: return new CompleteReasoner(beliefBase, inferenceType);
+			case Semantics.GROUNDED_SEMANTICS: return new GroundReasoner(beliefBase, inferenceType);
+			case Semantics.PREFERRED_SEMANTICS: return new PreferredReasoner(beliefBase, inferenceType);
+			case Semantics.STABLE_SEMANTICS: return new StableReasoner(beliefBase, inferenceType);
+		}
+		throw new IllegalArgumentException("Unknown semantics.");
+	}
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.kr.Reasoner#query(net.sf.tweety.kr.Formula)
@@ -62,7 +70,7 @@ public abstract class AbstractExtensionReasoner extends Reasoner {
 		if(!(query instanceof Argument))
 			throw new IllegalArgumentException("Formula of class argument expected");
 		Argument arg = (Argument) query;
-		if(this.inferenceType == AbstractExtensionReasoner.SCEPTICAL_INFERENCE){
+		if(this.inferenceType == Semantics.SCEPTICAL_INFERENCE){
 			Answer answer = new Answer(this.getKnowledgBase(),arg);
 			for(Extension e: this.getExtensions()){
 				if(!e.contains(arg)){
