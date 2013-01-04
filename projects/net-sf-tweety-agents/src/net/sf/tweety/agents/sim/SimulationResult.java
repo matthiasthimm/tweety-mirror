@@ -69,4 +69,17 @@ public class SimulationResult<S extends AbstractProtocol & GameProtocol, T exten
 		return str;
 	}
 	
+	/**
+	 * Returns a CSV representation of the result.
+	 * @return a CSV representation of the result.
+	 */
+	public String csvDisplay(){
+		String str = "100;";
+		for(AgentGenerator<T,R> ag: this.wins.keySet())
+			str += ag.toString() + ";" + this.wins.get(ag) +";";
+		for(AgentGenerator<T,R> ag: this.avgUtility.keySet())
+			str += ag.toString() + ";" + this.avgUtility.get(ag) +";";
+		return str;
+	}
+	
 }

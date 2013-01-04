@@ -36,7 +36,7 @@ public class GroundedTest {
 	public static int frameworkSize;
 	public static double attackProbability;
 	public static boolean enforceTreeShape;
-	public static int timeout = 60*60*24; // timeout of one day
+	public static int timeout = 60*60*6; // timeout of six hours
 	
 	public static int numberOfRunsEach = 100;
 	
@@ -96,9 +96,9 @@ public class GroundedTest {
 			    @Override
 			    public String call() throws Exception {
 			    	SimulationResult<GroundedGameProtocol,ArguingAgent,GroundedGameSystem> result = sim.run(GroundedTest.numberOfRunsEach);
-					System.out.println("================= T1 vs T1 ==== " + GroundedTest.frameworkSize + " arguments, " + GroundedTest.attackProbability + " attack probability, " + (GroundedTest.enforceTreeShape?("tree shape"):("no tree shape")) + " ==========");
-					System.out.println("Depth of CONTRA agent model (T1): " + j);
-					System.out.println(result.display());
+					System.out.print("T1;T1;" + GroundedTest.frameworkSize + ";" + GroundedTest.attackProbability + ";" + (GroundedTest.enforceTreeShape?("tree"):("no-tree")));
+					System.out.print(";T1-" + j+ ";");					
+					System.out.println(result.csvDisplay());
 			        return null;
 			    }
 			};			
@@ -120,10 +120,14 @@ public class GroundedTest {
 	public static void runSimulationT2() throws ProtocolTerminatedException{
 		// We run different simulations with increasing complexity
 		// of the CON agent's belief state
-		int depth[] = {1,2,3,4};				//depth complexity
-		double decay[] = {0.4,0.3,0.2,0.1};		//decay complexity
-		int width[] = {4,3,2,2};				//width complexity
-		for(int i = 0; i < 3; i++){
+		int depth[] = {2,3,4};				//depth complexity
+		double decay[] = {0.4,0.3,0.2};		//decay complexity
+		int width[] = {4,3,2};				//width complexity
+		int idx[] = new int[3];
+		idx[0] = 0;
+		idx[1] = 0;
+		idx[2] = 0;
+		for(int i = 0; i < 27; i++){
 			DungTheoryGenerationParameters params = new DungTheoryGenerationParameters();
 			params.attackProbability = GroundedTest.attackProbability;
 			params.numberOfArguments = GroundedTest.frameworkSize;			
@@ -142,9 +146,9 @@ public class GroundedTest {
 			configPro.oppModelCorrect = true;
 			// The CONTRA agent has a T2 belief state of complexity i
 			T2Configuration configCon = new T2Configuration();
-			configCon.maxRecursionDepth = depth[i];
-			configCon.probRecursionDecay = decay[i];
-			configCon.maxRecursionWidth = width[i];
+			configCon.maxRecursionDepth = depth[idx[0]];
+			configCon.probRecursionDecay = decay[idx[1]];
+			configCon.maxRecursionWidth = width[idx[2]];
 		
 			agentGenerators.add(new GroundedGameT1AgentGenerator(GroundedGameSystem.AgentFaction.PRO,configPro));
 			agentGenerators.add(new GroundedGameT2AgentGenerator(GroundedGameSystem.AgentFaction.CONTRA,configCon));
@@ -153,9 +157,9 @@ public class GroundedTest {
 			
 			ProtocolGenerator<GroundedGameProtocol,ArguingAgent,GroundedGameSystem> protGenerator = new GroundedGameProtocolGenerator();
 			final GameSimulator<GroundedGameProtocol,ArguingAgent,GroundedGameSystem> sim = new GameSimulator<GroundedGameProtocol,ArguingAgent,GroundedGameSystem>(masGenerator,protGenerator,agentGenerators);
-			final int d1 = depth[i];
-			final double d2 = decay[i];
-			final int d3 =  width[i];
+			final int d1 = depth[idx[0]];
+			final double d2 = decay[idx[1]];
+			final int d3 =  width[idx[2]];
 			// Run iterated simulations and show aggregated results (with timeout)
 			Callable<String> callee = new Callable<String>(){
 			    @Override
@@ -174,7 +178,18 @@ public class GroundedTest {
 	        } catch (Exception e) {
 	            System.out.println("Aborted...");
 	        }
-	        executor.shutdownNow();			
+	        executor.shutdownNow();
+	        idx[2]++;
+	        if(idx[2]>2){
+	        	idx[2] = 0;
+	        	idx[1]++;
+	        	if(idx[1]>2){
+	        		idx[1] = 0;
+	        		idx[0]++;
+	        		if(idx[0]>2)
+	        			idx[0] = 0;
+	        	}
+	        }
 		}
 	}
 	
@@ -185,12 +200,19 @@ public class GroundedTest {
 	public static void runSimulationT3() throws ProtocolTerminatedException{
 		// We run different simulations with increasing complexity
 		// of the CON agent's belief state
-		int depth[] = {1,2,3,4};				//depth complexity
-		double decay[] = {0.4,0.3,0.2,0.1};		//decay complexity
-		int width[] = {4,3,2,2};				//width complexity
-		double virtArg[] = {0.3,0.25,0.2,0.15};	//virtual arguments
-		double virtAtt[] = {0.6,0.7,0.8,0.9};	//virtual attacks
-		for(int i = 0; i < 3; i++){
+		int depth[] = {2,3,4};				//depth complexity
+		double decay[] = {0.4,0.3,0.2};		//decay complexity
+		int width[] = {4,3,2};				//width complexity
+		double virtArg[] = {0.3,0.2,0.1};	//virtual arguments
+		double virtAtt[] = {0.7,0.8,0.9};	//virtual attacks
+		int idx[] = new int[5];
+		idx[0] = 0;
+		idx[1] = 0;
+		idx[2] = 0;
+		idx[3] = 0;
+		idx[4] = 0;
+		
+		for(int i = 0; i < 243; i++){
 			DungTheoryGenerationParameters params = new DungTheoryGenerationParameters();
 			params.attackProbability = GroundedTest.attackProbability;
 			params.numberOfArguments = GroundedTest.frameworkSize;	
@@ -209,11 +231,11 @@ public class GroundedTest {
 			configPro.oppModelCorrect = true;
 			// The CONTRA agent has a T3 belief state
 			T3Configuration configCon = new T3Configuration();
-			configCon.maxRecursionDepth = depth[i];
-			configCon.probRecursionDecay = decay[i];
-			configCon.maxRecursionWidth = width[i];
-			configCon.percentageVirtualArguments = virtArg[i];
-			configCon.percentageVirtualAttacks = virtAtt[i];
+			configCon.maxRecursionDepth = depth[idx[0]];
+			configCon.probRecursionDecay = decay[idx[1]];
+			configCon.maxRecursionWidth = width[idx[2]];
+			configCon.percentageVirtualArguments = virtArg[idx[3]];
+			configCon.percentageVirtualAttacks = virtAtt[idx[4]];
 				
 			agentGenerators.add(new GroundedGameT1AgentGenerator(GroundedGameSystem.AgentFaction.PRO,configPro));
 			agentGenerators.add(new GroundedGameT3AgentGenerator(GroundedGameSystem.AgentFaction.CONTRA,configCon));
@@ -222,11 +244,11 @@ public class GroundedTest {
 		
 			ProtocolGenerator<GroundedGameProtocol,ArguingAgent,GroundedGameSystem> protGenerator = new GroundedGameProtocolGenerator();
 			final GameSimulator<GroundedGameProtocol,ArguingAgent,GroundedGameSystem> sim = new GameSimulator<GroundedGameProtocol,ArguingAgent,GroundedGameSystem>(masGenerator,protGenerator,agentGenerators);
-			final int d1 = depth[i];
-			final double d2 = decay[i];
-			final int d3 =  width[i];
-			final double d4 = virtArg[i];
-			final double d5 = virtAtt[i];
+			final int d1 = depth[idx[0]];
+			final double d2 = decay[idx[1]];
+			final int d3 =  width[idx[2]];
+			final double d4 = virtArg[idx[3]];
+			final double d5 = virtAtt[idx[4]];
 			// Run iterated simulations and show aggregated results (with timeout)
 			Callable<String> callee = new Callable<String>(){
 			    @Override
@@ -246,6 +268,25 @@ public class GroundedTest {
 	            System.out.println("Aborted...");
 	        }
 	        executor.shutdownNow();
+	        idx[4]++;
+	        if(idx[4]>2){
+	        	idx[4] = 0;
+	        	idx[3]++;
+	        	if(idx[3]>2){
+	        		idx[3] = 0;
+	        		idx[2]++;
+	        		if(idx[2]>2){
+	        			idx[2] = 0;
+	        			idx[1]++;
+	        			if(idx[1]>2){
+	        				idx[1] = 0;
+	        				idx[0]++;
+	        				if(idx[0]>2)
+	        					idx[0] = 0;
+	        			}
+	        		}
+	        	}
+	        }
 		}
 	}
 	
@@ -253,20 +294,22 @@ public class GroundedTest {
 		// set logging level to "TRACE" to get detailed descriptions
 		TweetyLogging.logLevel = TweetyConfiguration.LogLevel.ERROR;
 		TweetyLogging.initLogging();
+		GroundedTest.attackProbability = 0.3;
+		GroundedTest.frameworkSize = 10;
 		
-		for(int numArguments = 10; numArguments <= 20; numArguments += 5){
-			GroundedTest.frameworkSize = numArguments;
-			for(double attackProbability = 0.2; attackProbability <= 0.4; attackProbability += 0.5){
-				GroundedTest.attackProbability = attackProbability;
-				GroundedTest.enforceTreeShape = true;
-				GroundedTest.runSimulationT1();
-				GroundedTest.runSimulationT2();
-				GroundedTest.runSimulationT3();
-				GroundedTest.enforceTreeShape = false;
-				GroundedTest.runSimulationT1();
-				GroundedTest.runSimulationT2();
-				GroundedTest.runSimulationT3();
-			}
-		}
+		GroundedTest.enforceTreeShape = true;
+		GroundedTest.runSimulationT1();
+		System.out.println("\n=============================================\n=============================================\n");
+		GroundedTest.runSimulationT2();
+		System.out.println("\n=============================================\n=============================================\n");
+		GroundedTest.runSimulationT3();
+		System.out.println("\n=============================================\n=============================================\n");
+		GroundedTest.enforceTreeShape = false;
+		GroundedTest.runSimulationT1();
+		System.out.println("\n=============================================\n=============================================\n");
+		GroundedTest.runSimulationT2();
+		System.out.println("\n=============================================\n=============================================\n");
+		GroundedTest.runSimulationT3();
+		System.out.println("\n=============================================\n=============================================\n");
 	}
 }
