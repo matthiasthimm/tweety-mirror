@@ -55,7 +55,7 @@ public class GroundedTest {
 	public static void runSimulationT1() throws ProtocolTerminatedException{
 		// We run different simulations with increasing recursion depth
 		// of the CON agent's belief state
-		for(int i = 0; i < 3; i++){
+		for(int i = 0; i < 4; i++){
 			// We generate Dung theories with the given number of arguments and attack probability.
 			// In every theory, the argument under consideration is guaranteed to
 			// be in the grounded extension (so under perfect information, the PRO
@@ -165,9 +165,9 @@ public class GroundedTest {
 			    @Override
 			    public String call() throws Exception {
 			    	SimulationResult<GroundedGameProtocol,ArguingAgent,GroundedGameSystem> result = sim.run(GroundedTest.numberOfRunsEach);		
-					System.out.println("================= T1 vs T2 ==== " + GroundedTest.frameworkSize + " arguments, " + GroundedTest.attackProbability + " attack probability, " + (GroundedTest.enforceTreeShape?("tree shape"):("no tree shape")) + " ==========");			
-					System.out.println("Complexity of CONTRA agent model (T2): (" + d1 + "," + d2 + "," + d3 + ")");
-					System.out.println(result.display());
+			    	System.out.print("T1;T2;" + GroundedTest.frameworkSize + ";" + GroundedTest.attackProbability + ";" + (GroundedTest.enforceTreeShape?("tree"):("no-tree")));
+					System.out.print(";T2-(" + d1 + "," + d2 + "," + d3 + ");");					
+					System.out.println(result.csvDisplay());
 			        return null;
 			    }
 			};			
@@ -254,9 +254,9 @@ public class GroundedTest {
 			    @Override
 			    public String call() throws Exception {
 			    	SimulationResult<GroundedGameProtocol,ArguingAgent,GroundedGameSystem> result = sim.run(GroundedTest.numberOfRunsEach);
-					System.out.println("================= T1 vs T3 ==== " + GroundedTest.frameworkSize + " arguments, " + GroundedTest.attackProbability + " attack probability, " + (GroundedTest.enforceTreeShape?("tree shape"):("no tree shape")) + " ==========");
-					System.out.println("Complexity of CONTRA agent model (T3): (" + d1 + "," + d2 + "," + d3 + "," + d4 + "," + d5 + ")");
-					System.out.println(result.display());
+			    	System.out.print("T1;T3;" + GroundedTest.frameworkSize + ";" + GroundedTest.attackProbability + ";" + (GroundedTest.enforceTreeShape?("tree"):("no-tree")));
+					System.out.print(";T3-(" + d1 + "," + d2 + "," + d3 + "," + d4 + "," + d5 + ");");					
+					System.out.println(result.csvDisplay());					
 					return null;
 			    }
 			};			
@@ -299,17 +299,11 @@ public class GroundedTest {
 		
 		GroundedTest.enforceTreeShape = true;
 		GroundedTest.runSimulationT1();
-		System.out.println("\n=============================================\n=============================================\n");
 		GroundedTest.runSimulationT2();
-		System.out.println("\n=============================================\n=============================================\n");
 		GroundedTest.runSimulationT3();
-		System.out.println("\n=============================================\n=============================================\n");
 		GroundedTest.enforceTreeShape = false;
 		GroundedTest.runSimulationT1();
-		System.out.println("\n=============================================\n=============================================\n");
 		GroundedTest.runSimulationT2();
-		System.out.println("\n=============================================\n=============================================\n");
 		GroundedTest.runSimulationT3();
-		System.out.println("\n=============================================\n=============================================\n");
 	}
 }
