@@ -295,10 +295,14 @@ public class GroundedTest {
 		TweetyLogging.logLevel = TweetyConfiguration.LogLevel.ERROR;
 		TweetyLogging.initLogging();
 		GroundedTest.attackProbability = 0.3;
-		GroundedTest.frameworkSize = 15;
+		GroundedTest.frameworkSize = 10;
 		
+		GroundedTest.enforceTreeShape = true;
+		GroundedTest.runSimulationT1();
 		GroundedTest.enforceTreeShape = false;
 		GroundedTest.runSimulationT1();
+				
+		
 		//GroundedTest.runSimulationT2();
 		//GroundedTest.runSimulationT3();
 		//GroundedTest.enforceTreeShape = false;
