@@ -150,17 +150,18 @@ public class NaiveMlnReasoner extends AbstractMlnReasoner {
 			out = new BufferedWriter(fstream);
 			in = new DataInputStream(inStream);
 			br = new BufferedReader(new InputStreamReader(in));			
-			emptyLine = false;
 			while((strLine = br.readLine()) != null){
-				if(strLine.equals("")){
-					if(emptyLine) continue;
-					else emptyLine = true;
-				}
+				if(strLine.equals("")) break;					
 				StringTokenizer tokenizer = new StringTokenizer(strLine,"#");
 				try{
-					out.append(tokenizer.nextToken() + "#" + (new Double(tokenizer.nextToken())/sum));
+					if(tokenizer.countTokens() == 1)
+						out.append("#" + (new Double(tokenizer.nextToken())/sum));
+					else
+						out.append(tokenizer.nextToken() + "#" + (new Double(tokenizer.nextToken())/sum));
 					out.newLine();
-				}catch(Exception e){}				
+				}catch(Exception e){
+					
+				}				
 			}
 			in.close();
 			out.close();
@@ -192,10 +193,15 @@ public class NaiveMlnReasoner extends AbstractMlnReasoner {
 			while((strLine = br.readLine()) != null){
 				StringTokenizer tokenizer = new StringTokenizer(strLine,"#");
 				try{
-					HerbrandInterpretation hInt = this.parseInterpretation(tokenizer.nextToken());
+					HerbrandInterpretation hInt;
+					if(tokenizer.countTokens() == 1)
+						hInt = new HerbrandInterpretation();
+					else hInt = this.parseInterpretation(tokenizer.nextToken());
 					if(hInt.satisfies(query))
 						prob += new Double(tokenizer.nextToken());					
-				}catch(Exception e){}				
+				}catch(Exception e){
+					e.printStackTrace();
+				}				
 			}
 			in.close();
 			return prob;

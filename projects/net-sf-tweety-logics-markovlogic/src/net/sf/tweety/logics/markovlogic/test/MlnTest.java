@@ -28,6 +28,74 @@ import net.sf.tweety.util.Pair;
 
 public class MlnTest {
 
+	public static Pair<MarkovLogicNetwork,FolSignature> Nixon1() throws ParserException, IOException{
+		Predicate quaker = new Predicate("quaker",1);
+		Predicate republican = new Predicate("republican",1);
+		Predicate pacifist = new Predicate("pacifist",1);
+		
+		FolSignature sig = new FolSignature();
+		sig.add(quaker);
+		sig.add(republican);
+		sig.add(pacifist);
+		
+		sig.add(new Constant("d1"));
+		
+		FolParser parser = new FolParser();
+		parser.setSignature(sig);
+		
+		MarkovLogicNetwork mln = new MarkovLogicNetwork();
+		
+		mln.add(new MlnFormula((FolFormula)parser.parseFormula("!quaker(X)|| pacifist(X)"), new Double(3))); // p = 0.95
+		mln.add(new MlnFormula((FolFormula)parser.parseFormula("!republican(X) || !pacifist(X)"), new Double(3))); // p = 0.95
+
+		return new Pair<MarkovLogicNetwork,FolSignature>(mln,sig);
+	}
+
+	public static Pair<MarkovLogicNetwork,FolSignature> Nixon2() throws ParserException, IOException{
+		Predicate quaker = new Predicate("quaker",1);
+		Predicate republican = new Predicate("republican",1);
+		Predicate president = new Predicate("president",1);
+		
+		FolSignature sig = new FolSignature();
+		sig.add(quaker);
+		sig.add(republican);
+		sig.add(president);
+		
+		sig.add(new Constant("nixon"));
+		
+		FolParser parser = new FolParser();
+		parser.setSignature(sig);
+		
+		MarkovLogicNetwork mln = new MarkovLogicNetwork();
+		
+		mln.add(new MlnFormula((FolFormula)parser.parseFormula("quaker(nixon) && republican(nixon) && president(nixon)"))); // p = 1
+		 
+
+		return new Pair<MarkovLogicNetwork,FolSignature>(mln,sig);
+	}
+	
+	public static Pair<MarkovLogicNetwork,FolSignature> Nixon3() throws ParserException, IOException{
+		Predicate actor = new Predicate("actor",1);
+		Predicate president = new Predicate("president",1);
+		
+		FolSignature sig = new FolSignature();
+		sig.add(actor);
+		sig.add(president);
+		
+		sig.add(new Constant("reagan"));
+		
+		FolParser parser = new FolParser();
+		parser.setSignature(sig);
+		
+		MarkovLogicNetwork mln = new MarkovLogicNetwork();
+		
+		mln.add(new MlnFormula((FolFormula)parser.parseFormula("!president(X) || actor(X)"), new Double(2.2))); // p = 0.9
+		mln.add(new MlnFormula((FolFormula)parser.parseFormula("president(reagan) && actor(reagan)"))); // p = 1
+		 
+
+		return new Pair<MarkovLogicNetwork,FolSignature>(mln,sig);
+	}
+	
 	public static Pair<MarkovLogicNetwork,FolSignature> SmokersExample(int domain_size) throws ParserException, IOException{
 		// see [Richardson:2006]
 		Predicate friends = new Predicate("friends",2);
@@ -57,7 +125,7 @@ public class MlnTest {
 		mln.add(new MlnFormula((FolFormula)parser.parseFormula("!friends(X,Y) || ((smokes(X) && smokes(Y))||(!smokes(X) && !smokes(Y)))"), new Double(1.1)));
 		// friends relationship is symmetric (strict formula)
 		mln.add(new MlnFormula((FolFormula)parser.parseFormula("(friends(X,Y) && friends(Y,X))||(!friends(X,Y) && !friends(Y,X))")));
-				
+		
 		return new Pair<MarkovLogicNetwork,FolSignature>(mln,sig);
 	}
 	
@@ -162,8 +230,8 @@ public class MlnTest {
 	
 	public static void main(String[] args) throws ParserException, IOException{
 		//MlnTest.createChart(null, "", "");
-		String expPath = "/home/share/mln/results_2013-01-03__alchemy/";//"/Users/mthimm/Desktop/test/";
-		String alchemyInferPath = "/home/share/mln/infer";
+		String expPath = "/home/share/mln/";//"/Users/mthimm/Desktop/test/";
+		String alchemyInferPath = "/Users/mthimm/Desktop/infer";//"/home/share/mln/infer";
 					
 //		List<AggregationFunction> aggrFunctions = new ArrayList<AggregationFunction>();
 //		aggrFunctions.add(new MaxAggregator());
@@ -185,26 +253,26 @@ public class MlnTest {
 //			distFunctions.add(new ProbabilisticPNormDistanceFunction(i,3));
 		
 		List<AggregatingCoherenceMeasure> cohMeasures = new ArrayList<AggregatingCoherenceMeasure>();
-		cohMeasures.add(new AggregatingCoherenceMeasure(new PNormDistanceFunction(2,true),new MaxAggregator()));
-		cohMeasures.add(new AggregatingCoherenceMeasure(new PNormDistanceFunction(2,true),new MinAggregator()));
-		cohMeasures.add(new AggregatingCoherenceMeasure(new AggregatingDistanceFunction(new AverageAggregator()),new MaxAggregator()));
-		cohMeasures.add(new AggregatingCoherenceMeasure(new AggregatingDistanceFunction(new MaxAggregator()),new AverageAggregator()));
-		cohMeasures.add(new AggregatingCoherenceMeasure(new AggregatingDistanceFunction(new MinAggregator()),new MinAggregator()));
-		cohMeasures.add(new AggregatingCoherenceMeasure(new AggregatingDistanceFunction(new MinAggregator()),new MaxAggregator()));
-		cohMeasures.add(new AggregatingCoherenceMeasure(new AggregatingDistanceFunction(new MaxAggregator()),new MinAggregator()));
+		//cohMeasures.add(new AggregatingCoherenceMeasure(new PNormDistanceFunction(2,true),new MaxAggregator()));
+		//cohMeasures.add(new AggregatingCoherenceMeasure(new PNormDistanceFunction(2,true),new MinAggregator()));
+		//cohMeasures.add(new AggregatingCoherenceMeasure(new AggregatingDistanceFunction(new AverageAggregator()),new MaxAggregator()));
+		//cohMeasures.add(new AggregatingCoherenceMeasure(new AggregatingDistanceFunction(new MaxAggregator()),new AverageAggregator()));
+		//cohMeasures.add(new AggregatingCoherenceMeasure(new AggregatingDistanceFunction(new MinAggregator()),new MinAggregator()));
+		//cohMeasures.add(new AggregatingCoherenceMeasure(new AggregatingDistanceFunction(new MinAggregator()),new MaxAggregator()));
+		//cohMeasures.add(new AggregatingCoherenceMeasure(new AggregatingDistanceFunction(new MaxAggregator()),new MinAggregator()));
 		cohMeasures.add(new AggregatingCoherenceMeasure(new AggregatingDistanceFunction(new MaxAggregator()),new MaxAggregator()));
-		cohMeasures.add(new AggregatingCoherenceMeasure(new AggregatingDistanceFunction(new AverageAggregator()),new MinAggregator()));
+		//cohMeasures.add(new AggregatingCoherenceMeasure(new AggregatingDistanceFunction(new AverageAggregator()),new MinAggregator()));
 		
 		//cohMeasures.add(new AggregatingCoherenceMeasure(new AggregatingDistanceFunction(new MaxAggregator()),new MaxAggregator()));
 		
 		for(int i = 1; i < 2; i++){
 			Map<AggregatingCoherenceMeasure,double[][]> results = new HashMap<AggregatingCoherenceMeasure,double[][]>();
-			for(int dsize = 3; dsize < 11; dsize++){
-				Pair<MarkovLogicNetwork,FolSignature> ex = MlnTest.iterateExamples(i, dsize);
+			for(int dsize = 3; dsize < 4; dsize++){
+				Pair<MarkovLogicNetwork,FolSignature> ex = Nixon1();//MlnTest.iterateExamples(i, dsize);
 				MarkovLogicNetwork mln = ex.getFirst();
 				FolSignature sig = ex.getSecond();
-				AlchemyMlnReasoner reasoner = new AlchemyMlnReasoner(mln);//new SimpleSamplingMlnReasoner(mln,sig,0.000001,10000);//new ApproximateNaiveMlnReasoner(mln, sig, 1000000, 100000);
-				reasoner.setAlchemyInferenceCommand(alchemyInferPath);
+				NaiveMlnReasoner reasoner = new NaiveMlnReasoner(mln,sig);//AlchemyMlnReasoner(mln);//new SimpleSamplingMlnReasoner(mln,sig,0.000001,10000);//new ApproximateNaiveMlnReasoner(mln, sig, 1000000, 100000);
+				reasoner.setTempDirectory("/Users/mthimm/Desktop/tmp");
 				//reasoner.setTempDirectory("/home/share/mln/results_2012-09-21__precise/temp");
 				//for(AggregationFunction af: aggrFunctions){
 				///	for(DistanceFunction df: distFunctions){
@@ -214,16 +282,19 @@ public class MlnTest {
 							results.put(measure, new double[2][12]);
 						results.get(measure)[0][dsize-3] = new Double(dsize);
 						results.get(measure)[1][dsize-3] = measure.coherence(mln, reasoner, sig);						
-						System.out.println("Example " + i + ", domain size " + dsize + ", measure " + measure.toString() + ", coherence value " + results.get(measure)[1][dsize-3]);
+						System.out.print("Example " + i + ", domain size " + dsize + ", measure " + measure.toString() + ", coherence value " + results.get(measure)[1][dsize-3] + "\t\t");
 						//check for NaN or infty						
 						if(results.get(measure)[1][dsize-3] == Double.NaN || results.get(measure)[1][dsize-3] == Double.NEGATIVE_INFINITY || results.get(measure)[1][dsize-3] == Double.POSITIVE_INFINITY)
 							results.get(measure)[1][dsize-3] = -10000;
 				}
+				System.out.println();
 				//	}
 				//}
 			}
 			//for(AggregationFunction af: aggrFunctions){
 			//	for(DistanceFunction df: distFunctions){
+			
+			/*
 			for(AggregatingCoherenceMeasure measure: cohMeasures){
 					//AggregatingCoherenceMeasure measure = new AggregatingCoherenceMeasure(df,af);
 					List<double[][]> series = new ArrayList<double[][]>();
@@ -240,6 +311,8 @@ public class MlnTest {
 					out.writeObject(expResult);
 					out.close();
 			}
+			
+			*/
 				//}
 			//}
 		}

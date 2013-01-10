@@ -299,8 +299,8 @@ public class GroundedTest {
 		
 		GroundedTest.enforceTreeShape = true;
 		GroundedTest.runSimulationT1();
-		GroundedTest.enforceTreeShape = false;
-		GroundedTest.runSimulationT1();
+		//GroundedTest.enforceTreeShape = false;
+		//GroundedTest.runSimulationT1();
 				
 		
 		//GroundedTest.runSimulationT2();
