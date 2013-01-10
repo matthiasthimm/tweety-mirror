@@ -2,7 +2,7 @@ package net.sf.tweety.logics.markovlogic.syntax;
 
 import java.util.Set;
 
-import net.sf.tweety.ClassicalFormula;
+import net.sf.tweety.logics.commons.*;
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.Constant;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
@@ -12,6 +12,7 @@ import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
 import net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Term;
 import net.sf.tweety.logics.firstorderlogic.syntax.Variable;
+import net.sf.tweety.math.probability.Probability;
 
 /**
  * Instances of this class represent first-order formulas with a weight.
@@ -197,5 +198,13 @@ public class MlnFormula extends RelationalFormula {
 	 */
 	public boolean isStrict(){
 		return this.weight == null;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula#getUniformProbability()
+	 */
+	@Override
+	public Probability getUniformProbability() {
+		return this.formula.getUniformProbability();
 	}
 }

@@ -32,5 +32,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Relational Conditional Logic Library)"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Relational Probabilistic Conditional Logic Library)"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Structured Argumentation Frameworks Library)"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Logic Commons Library)"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

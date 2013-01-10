@@ -11,5 +11,7 @@
 	<classpathentry kind="lib" path="lib/log4j-1.2.16.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Core Library)"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (First-Order Logic Library)"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Logic Commons Library)"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Math Library)"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

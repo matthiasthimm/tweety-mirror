@@ -2,7 +2,8 @@ package net.sf.tweety.logics.firstorderlogic.syntax;
 
 import java.util.*;
 
-import net.sf.tweety.*;
+import net.sf.tweety.logics.commons.ClassicalFormula;
+import net.sf.tweety.math.probability.Probability;
 import net.sf.tweety.util.SetTools;
 
 
@@ -136,6 +137,11 @@ public abstract class FolFormula extends RelationalFormula{
 	 * @return the set of all conjunctions appearing in this formula.
 	 */
 	public abstract Set<Conjunction> getConjunctions();
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula#getUniformProbability()
+	 */
+	public abstract Probability getUniformProbability();
 	
 	/**
 	 * Checks whether this formula is in disjunctive normal form.

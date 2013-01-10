@@ -2,6 +2,8 @@ package net.sf.tweety.logics.firstorderlogic.syntax;
 
 import java.util.*;
 
+import net.sf.tweety.math.probability.Probability;
+
 /**
  * An atom in first-order logic, i.e. a predicate and a list of argument terms.
  * @author Matthias Thimm
@@ -175,6 +177,13 @@ public class Atom extends FolFormula {
 	 */
 	public boolean containsQuantifier(){
 		return false;
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getUniformProbability()
+	 */
+	public Probability getUniformProbability(){
+		return new Probability(0.5);
 	}
 	
 	/**

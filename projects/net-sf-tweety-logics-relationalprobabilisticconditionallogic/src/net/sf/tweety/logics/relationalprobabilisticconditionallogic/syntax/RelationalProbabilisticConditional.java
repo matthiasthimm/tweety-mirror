@@ -1,6 +1,6 @@
 package net.sf.tweety.logics.relationalprobabilisticconditionallogic.syntax;
 
-import net.sf.tweety.*;
+import net.sf.tweety.logics.commons.ClassicalFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.*;
 import net.sf.tweety.logics.relationalconditionallogic.syntax.*;
 import net.sf.tweety.math.probability.*;

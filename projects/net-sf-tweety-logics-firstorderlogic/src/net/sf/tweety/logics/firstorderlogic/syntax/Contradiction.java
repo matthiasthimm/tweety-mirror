@@ -1,5 +1,7 @@
 package net.sf.tweety.logics.firstorderlogic.syntax;
 
+import net.sf.tweety.math.probability.Probability;
+
 /**
  * A contradictory formula.
  * @author Matthias Thimm
@@ -19,6 +21,13 @@ public class Contradiction extends SpecialFormula{
 	@Override
 	public String toString() {
 		return FolSignature.CONTRADICTION;
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getUniformProbability()
+	 */
+	public Probability getUniformProbability(){	
+		return new Probability(0d);
 	}
 	
 	/* (non-Javadoc)

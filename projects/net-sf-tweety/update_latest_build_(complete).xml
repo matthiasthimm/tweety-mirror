@@ -15,6 +15,7 @@
 			<zipfileset dir="../../latestBuild" includes="net-sf-tweety-beliefdynamics.jar"/>
 			<zipfileset dir="../../latestBuild" includes="net-sf-tweety-cli.jar"/>
 			<zipfileset dir="../../latestBuild" includes="net-sf-tweety-graphs.jar"/>
+			<zipfileset dir="../../latestBuild" includes="net-sf-tweety-logics-commons.jar"/>
 			<zipfileset dir="../../latestBuild" includes="net-sf-tweety-logics-conditionallogic.jar"/>
 			<zipfileset dir="../../latestBuild" includes="net-sf-tweety-logics-firstorderlogic.jar"/>
 			<zipfileset dir="../../latestBuild" includes="net-sf-tweety-logics-markovlogic.jar"/>

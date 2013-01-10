@@ -6,5 +6,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Dung Argumentation Library)"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Propositional Logic Library)"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Graph Library)"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Math Library)"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Logic Commons Library)"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -4,5 +4,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Core Library)"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (First-Order Logic Library)"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Logic Commons Library)"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

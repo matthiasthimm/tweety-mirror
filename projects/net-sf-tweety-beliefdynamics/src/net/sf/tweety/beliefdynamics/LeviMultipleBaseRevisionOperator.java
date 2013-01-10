@@ -2,7 +2,7 @@ package net.sf.tweety.beliefdynamics;
 
 import java.util.*;
 
-import net.sf.tweety.*;
+import net.sf.tweety.logics.commons.ClassicalFormula;
 
 /**
  * This class implements the Levi identity for multiple revision, ie. an revision that is composed of the

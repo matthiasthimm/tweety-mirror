@@ -1,4 +1,4 @@
-package net.sf.tweety.logics;
+package net.sf.tweety.logics.commons;
 
 /**
  * This interface provides some String constants for logical symbols.

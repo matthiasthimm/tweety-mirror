@@ -3,6 +3,7 @@ package net.sf.tweety.logics.conditionallogic.syntax;
 import java.util.*;
 
 import net.sf.tweety.*;
+import net.sf.tweety.logics.commons.ClassicalFormula;
 import net.sf.tweety.logics.propositionallogic.syntax.*;
 import net.sf.tweety.util.rules.*;
 import net.sf.tweety.math.probability.*;
@@ -60,9 +61,8 @@ public class Conditional implements ClassicalFormula, Rule {
 		return this.conclusion;
 	}
 	
-	/**
-	 * Returns this conditional's probability in the uniform distribution. 
-	 * @return this conditional's probability in the uniform distribution.
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.commons.ClassicalFormula#getUniformProbability()
 	 */
 	public Probability getUniformProbability(){
 		Double n = ((PropositionalFormula)this.conclusion.combineWithAnd(this.premise)).getUniformProbability().getValue();

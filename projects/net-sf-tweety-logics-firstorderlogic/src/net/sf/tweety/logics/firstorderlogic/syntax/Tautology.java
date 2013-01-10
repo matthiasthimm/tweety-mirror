@@ -1,5 +1,7 @@
 package net.sf.tweety.logics.firstorderlogic.syntax;
 
+import net.sf.tweety.math.probability.Probability;
+
 /**
  * A tautological formula.
  * @author Matthias Thimm
@@ -18,6 +20,13 @@ public class Tautology extends SpecialFormula {
 	@Override
 	public String toString() {
 		return FolSignature.TAUTOLOGY;
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getUniformProbability()
+	 */
+	public Probability getUniformProbability(){	
+		return new Probability(1d);
 	}
 	
 	/* (non-Javadoc)

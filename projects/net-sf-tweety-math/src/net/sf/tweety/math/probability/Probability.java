@@ -74,6 +74,15 @@ public class Probability extends Number {
 	}
 	
 	/**
+	 * Computes the product of this probability and the given probability.
+	 * @param other a probability.
+	 * @return a probability.
+	 */
+	public Probability mult(Probability other){
+		return new Probability(this.value * other.value);
+	}
+	
+	/**
 	 * Divides this probability by other and returns the result.
 	 * @param other a probability.
 	 * @return a probability.

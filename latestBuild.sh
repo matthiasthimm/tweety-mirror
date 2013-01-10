@@ -11,6 +11,7 @@ ant -f projects/net-sf-tweety-beliefdynamics/update_latest_build.xml
 ant -f projects/net-sf-tweety-cli/update_latest_build.xml
 ant -f projects/net-sf-tweety-graphs/update_latest_build.xml
 ant -f projects/net-sf-tweety-logicprogramming-asp/update_latest_build.xml
+ant -f projects/net-sf-tweety-logics-commons/update_latest_build.xml
 ant -f projects/net-sf-tweety-logics-conditionallogic/update_latest_build.xml
 ant -f projects/net-sf-tweety-logics-firstorderlogic/update_latest_build.xml
 ant -f projects/net-sf-tweety-logics-markovlogic/update_latest_build.xml

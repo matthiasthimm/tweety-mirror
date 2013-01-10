@@ -3,7 +3,7 @@ package net.sf.tweety.logics.firstorderlogic.syntax;
 import java.util.*;
 
 import net.sf.tweety.*;
-import net.sf.tweety.logics.*;
+import net.sf.tweety.logics.commons.LogicalSymbols;
 
 /**
  * This class captures the signature of a specific

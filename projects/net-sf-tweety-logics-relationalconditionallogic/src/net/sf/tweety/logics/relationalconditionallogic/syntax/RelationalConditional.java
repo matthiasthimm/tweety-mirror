@@ -3,8 +3,10 @@ package net.sf.tweety.logics.relationalconditionallogic.syntax;
 import java.util.*;
 
 import net.sf.tweety.*;
+import net.sf.tweety.logics.commons.ClassicalFormula;
 import net.sf.tweety.logics.firstorderlogic.lang.*;
 import net.sf.tweety.logics.firstorderlogic.syntax.*;
+import net.sf.tweety.math.probability.Probability;
 import net.sf.tweety.util.rules.*;
 
 
@@ -273,6 +275,14 @@ public class RelationalConditional extends RelationalFormula implements Rule{
 		} else if (!premise.equals(other.premise))
 			return false;
 		return true;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula#getUniformProbability()
+	 */
+	@Override
+	public Probability getUniformProbability() {
+		throw new UnsupportedOperationException("IMPLEMENT ME");
 	}
 
 }

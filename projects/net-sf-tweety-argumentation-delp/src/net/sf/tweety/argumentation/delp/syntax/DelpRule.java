@@ -5,6 +5,8 @@ import java.util.*;
 import net.sf.tweety.*;
 import net.sf.tweety.logics.firstorderlogic.syntax.*;
 import net.sf.tweety.util.rules.*;
+import net.sf.tweety.logics.commons.*;
+import net.sf.tweety.math.probability.Probability;
 
 /**
  * This method is the superclass for both a strict rule and a defeasible rule in defeasible logic programming
@@ -242,6 +244,13 @@ public abstract class DelpRule extends RelationalFormula implements Rule{
 		return terms;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.ClassicalFormula#getUniformProbability()
+	 */
+	public Probability getUniformProbability(){
+		throw new UnsupportedOperationException("IMPLEMENT ME");
+	}
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */

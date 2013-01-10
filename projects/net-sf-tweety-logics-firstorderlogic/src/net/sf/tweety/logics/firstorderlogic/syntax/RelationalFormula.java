@@ -3,6 +3,8 @@ package net.sf.tweety.logics.firstorderlogic.syntax;
 import java.util.*;
 
 import net.sf.tweety.*;
+import net.sf.tweety.logics.commons.ClassicalFormula;
+import net.sf.tweety.math.probability.Probability;
 import net.sf.tweety.util.*;
 
 
@@ -153,6 +155,12 @@ public abstract class RelationalFormula extends LogicStructure implements Classi
 	 * @return "true" if this formula is closed wrt. "boundVariables", "false" otherwise.
 	 */
 	public abstract boolean isClosed(Set<Variable> boundVariables);
+	
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.ClassicalFormula#getUniformProbability()
+	 */
+	public abstract Probability getUniformProbability();
 	
 	/**
 	 * Checks whether this formula is ground, i.e. whether there appears

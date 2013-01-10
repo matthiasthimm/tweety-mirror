@@ -15,5 +15,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Probabilistic Conditional Logic Library)"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Relational Conditional Logic Library)"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Math Library)"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Tweety (Logic Commons Library)"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

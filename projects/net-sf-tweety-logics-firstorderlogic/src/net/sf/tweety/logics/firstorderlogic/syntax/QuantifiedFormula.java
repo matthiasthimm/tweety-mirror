@@ -2,6 +2,8 @@ package net.sf.tweety.logics.firstorderlogic.syntax;
 
 import java.util.*;
 
+import net.sf.tweety.math.probability.Probability;
+
 /**
  * The common parent of exists and forall quantified formulas, which contains common
  * functionalities.
@@ -66,6 +68,13 @@ public abstract class QuantifiedFormula extends FolFormula{
 	 */
 	public boolean containsQuantifier(){
 		return true;
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getUniformProbability()
+	 */
+	public Probability getUniformProbability(){	
+		throw new UnsupportedOperationException("IMPLEMENT ME");
 	}
 	
 	/* (non-Javadoc)

@@ -3,8 +3,9 @@ package net.sf.tweety.logics.modallogic.syntax;
 import java.util.*;
 
 import net.sf.tweety.*;
+import net.sf.tweety.logics.commons.ClassicalFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.*;
-
+import net.sf.tweety.math.probability.Probability;
 
 /**
  * This class models a modal formula, i.e. it encapsulates an modal operator
@@ -31,6 +32,14 @@ public abstract class ModalFormula extends RelationalFormula {
 	@Override
 	public Signature getSignature() {
 		return this.formula.getSignature();
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula#getUniformProbability()
+	 */
+	@Override
+	public Probability getUniformProbability() {
+		throw new UnsupportedOperationException("IMPLEMENT ME");
 	}
 	
 	/**

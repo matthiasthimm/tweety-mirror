@@ -3,7 +3,7 @@ package net.sf.tweety.logics.propositionallogic.syntax;
 import java.util.*;
 
 import net.sf.tweety.*;
-import net.sf.tweety.logics.*;
+import net.sf.tweety.logics.commons.LogicalSymbols;
 
 
 /**

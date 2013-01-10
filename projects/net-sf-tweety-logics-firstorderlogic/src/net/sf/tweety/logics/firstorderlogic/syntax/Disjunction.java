@@ -2,6 +2,8 @@ package net.sf.tweety.logics.firstorderlogic.syntax;
 
 import java.util.*;
 
+import net.sf.tweety.math.probability.Probability;
+
 /**
  * The classical disjunction of first-order logic.
  * @author Matthias Thimm
@@ -51,6 +53,16 @@ public class Disjunction extends AssociativeFormula{
 		this.add(first);
 		this.add(second);
 	}	
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getUniformProbability()
+	 */
+	public Probability getUniformProbability(){
+		Conjunction conj = new Conjunction();		
+		for(RelationalFormula f: this)
+			conj.add(new Negation(f));
+		return conj.getUniformProbability().complement();
+	}
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#toString()
