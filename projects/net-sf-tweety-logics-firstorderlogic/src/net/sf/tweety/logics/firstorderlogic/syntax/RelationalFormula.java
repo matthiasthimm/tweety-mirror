@@ -135,6 +135,16 @@ public abstract class RelationalFormula extends LogicStructure implements Classi
 	}
 	
 	/**
+	 * Returns the ratio of worlds not satisfying this formula to
+	 *  worlds satisfying this formula.
+	 * @return the ratio of worlds not satisfying this formula to
+	 *  worlds satisfying this formula.
+	 */
+	public double getSatisfactionRatio(){
+		return this.complement().getUniformProbability().doubleValue() / this.getUniformProbability().doubleValue();
+	}
+	
+	/**
 	 * Gets all unbound variables in this formula.
 	 * @return the set of unbound variables of this formula.
 	 */

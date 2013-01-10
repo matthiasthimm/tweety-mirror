@@ -18,11 +18,13 @@ public class ProbTest {
 		Predicate a = new Predicate("a",1);
 		Predicate b = new Predicate("b",1);
 		Predicate c = new Predicate("c",1);
+		Predicate d = new Predicate("d",1);
 		
 		FolSignature sig = new FolSignature();
 		sig.add(a);
 		sig.add(b);
 		sig.add(c);
+		sig.add(d);
 		
 		sig.add(new Constant("d1"));
 		
@@ -31,19 +33,19 @@ public class ProbTest {
 		
 		MarkovLogicNetwork mln = new MarkovLogicNetwork();
 		
-		FolFormula f = (FolFormula)parser.parseFormula("a(X) && b(X)");
+		FolFormula f = (FolFormula)parser.parseFormula("a(X) && b(X) || c(X) && d(X)");
+		double p = 0.1;		
 		
+		double factor = f.getSatisfactionRatio(); 
 		
-		
-		double p = 0.9;		
-		double w = Math.log(p/(1-p)*3);
+		double w = Math.log(p/(1-p)*factor);
 		
 		mln.add(new MlnFormula(f, w));
 		
 		NaiveMlnReasoner reasoner = new NaiveMlnReasoner(mln,sig);
 		reasoner.setTempDirectory("/Users/mthimm/Desktop/tmp");
 		
-		System.out.println(w + "\t\t" + reasoner.query((FolFormula)parser.parseFormula("a(d1) && b(d1)")).getAnswerDouble());
+		System.out.println(w + "\t\t" + reasoner.query((FolFormula)parser.parseFormula("a(d1) && b(d1) || c(d1) && d(d1)")).getAnswerDouble());
 		
 
 	}

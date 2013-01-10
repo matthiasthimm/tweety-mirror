@@ -2,7 +2,6 @@ package net.sf.tweety.logics.firstorderlogic.syntax;
 
 import java.util.*;
 
-import net.sf.tweety.math.probability.Probability;
 
 /**
  * This class captures the common functionalities of binary formulas like conjunction,
@@ -41,12 +40,7 @@ public abstract class AssociativeFormula extends FolFormula implements Collectio
 		this.add(first);
 		this.add(second);
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getUniformProbability()
-	 */
-	public abstract Probability getUniformProbability();
-	
+		
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getConstants()
 	 */

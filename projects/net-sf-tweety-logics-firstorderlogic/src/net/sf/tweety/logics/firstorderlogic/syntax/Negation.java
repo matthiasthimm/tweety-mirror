@@ -2,8 +2,6 @@ package net.sf.tweety.logics.firstorderlogic.syntax;
 
 import java.util.*;
 
-import net.sf.tweety.math.probability.Probability;
-
 /**
  * The classical negation of first-order logic.
  * @author Matthias Thimm
@@ -22,13 +20,6 @@ public class Negation extends FolFormula{
 	
 	public FolFormula getFormula(){
 		return this.folFormula;
-	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getUniformProbability()
-	 */
-	public Probability getUniformProbability(){	
-		return this.folFormula.getUniformProbability().complement();
 	}
 	
 	/* (non-Javadoc)

@@ -2,8 +2,6 @@ package net.sf.tweety.logics.firstorderlogic.syntax;
 
 import java.util.*;
 
-import net.sf.tweety.math.probability.Probability;
-
 /**
  * The classical conjunction of first-order logic.
  * @author Matthias Thimm
@@ -98,17 +96,7 @@ public class Conjunction extends AssociativeFormula {
     }
     return c;
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getUniformProbability()
-	 */
-	public Probability getUniformProbability(){
-		Probability p = new Probability(1d);
-		for(RelationalFormula f: this)
-			p = p.mult(f.getUniformProbability());
-		return p;
-	}
-	
+		
 	/*
 	 * (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#collapseAssociativeFormulas()

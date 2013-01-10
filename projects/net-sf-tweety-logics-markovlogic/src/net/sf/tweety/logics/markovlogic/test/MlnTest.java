@@ -24,6 +24,7 @@ import net.sf.tweety.logics.firstorderlogic.syntax.*;
 import net.sf.tweety.logics.markovlogic.*;
 import net.sf.tweety.logics.markovlogic.analysis.*;
 import net.sf.tweety.logics.markovlogic.syntax.MlnFormula;
+import net.sf.tweety.math.probability.Probability;
 import net.sf.tweety.util.Pair;
 
 public class MlnTest {
@@ -44,9 +45,9 @@ public class MlnTest {
 		parser.setSignature(sig);
 		
 		MarkovLogicNetwork mln = new MarkovLogicNetwork();
-		
-		mln.add(new MlnFormula((FolFormula)parser.parseFormula("!quaker(X)|| pacifist(X)"), new Double(3))); // p = 0.95
-		mln.add(new MlnFormula((FolFormula)parser.parseFormula("!republican(X) || !pacifist(X)"), new Double(3))); // p = 0.95
+				
+		mln.add(new MlnFormula((FolFormula)parser.parseFormula("!quaker(X)|| pacifist(X)"), new Probability(0.95)));
+		mln.add(new MlnFormula((FolFormula)parser.parseFormula("!republican(X) || !pacifist(X)"), new Probability(0.95))); 
 
 		return new Pair<MarkovLogicNetwork,FolSignature>(mln,sig);
 	}
@@ -89,7 +90,7 @@ public class MlnTest {
 		
 		MarkovLogicNetwork mln = new MarkovLogicNetwork();
 		
-		mln.add(new MlnFormula((FolFormula)parser.parseFormula("!president(X) || actor(X)"), new Double(2.2))); // p = 0.9
+		mln.add(new MlnFormula((FolFormula)parser.parseFormula("!president(X) || actor(X)"), new Probability(0.9)));
 		mln.add(new MlnFormula((FolFormula)parser.parseFormula("president(reagan) && actor(reagan)"))); // p = 1
 		 
 
@@ -268,7 +269,7 @@ public class MlnTest {
 		for(int i = 1; i < 2; i++){
 			Map<AggregatingCoherenceMeasure,double[][]> results = new HashMap<AggregatingCoherenceMeasure,double[][]>();
 			for(int dsize = 3; dsize < 4; dsize++){
-				Pair<MarkovLogicNetwork,FolSignature> ex = Nixon1();//MlnTest.iterateExamples(i, dsize);
+				Pair<MarkovLogicNetwork,FolSignature> ex = Nixon3();//MlnTest.iterateExamples(i, dsize);
 				MarkovLogicNetwork mln = ex.getFirst();
 				FolSignature sig = ex.getSecond();
 				NaiveMlnReasoner reasoner = new NaiveMlnReasoner(mln,sig);//AlchemyMlnReasoner(mln);//new SimpleSamplingMlnReasoner(mln,sig,0.000001,10000);//new ApproximateNaiveMlnReasoner(mln, sig, 1000000, 100000);

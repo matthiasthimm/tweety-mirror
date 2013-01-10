@@ -31,7 +31,8 @@ public class MlnFormula extends RelationalFormula {
 	 * @param formula the first-order formula.
 	 */
 	public MlnFormula(FolFormula formula){
-		this(formula, null);
+		this.formula = formula;
+		this.weight = null;
 	}
 	
 	/** Creates a new MLN formula with the given formula and weight.
@@ -41,6 +42,18 @@ public class MlnFormula extends RelationalFormula {
 	public MlnFormula(FolFormula formula, Double weight){
 		this.formula = formula;
 		this.weight = weight;
+	}
+		
+	/** Creates a new MLN formula and estimates its weight w by the given
+	 * probability p using the formula w = log(p/(1-p)*f) where "f" is the
+	 * ratio of the number of worlds not satisfying the formula and the
+	 * worlds satisfying the formula. 
+	 * @param formula the first-order formula.
+	 * @param probability the intended probability of the formula.
+	 */
+	public MlnFormula(FolFormula formula, Probability p){
+		this.formula = formula;
+		this.weight = Math.log(p.doubleValue()/(1-p.doubleValue())*formula.getSatisfactionRatio());
 	}
 		
 	/* (non-Javadoc)
