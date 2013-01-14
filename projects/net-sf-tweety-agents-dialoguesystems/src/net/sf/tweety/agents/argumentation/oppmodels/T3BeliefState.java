@@ -78,34 +78,39 @@ public class T3BeliefState extends BeliefState{
 		/* For every legal move newMove ... */		
 		for(ExecutableExtension newMove: this.getLegalMoves(env,trace)){			
 			DialogueTrace t2 = trace.addAndCopy(newMove);
-			float newMoveEU = 0;			
+			double newMoveEU = 0;			
 			/* For all possible opponent states oppState ... */
-			for (T3BeliefState oppState: this.prob.keySet()) {
-				Probability oppStateProb = this.prob.probability(oppState);				
-				/* Get opponent's best responses to newMove */
-				Set<ExecutableExtension> bestOppResponses = this.doMove(env,t2).getSecond();				
-				/* If opponent has no response, then utility of newMove is determined by current trace / oppStateProb */
-				if (bestOppResponses.isEmpty()) {
-					newMoveEU += this.getUtilityFunction().getUtility(t2, this.virtualArguments, this.virtualAttacks) * oppStateProb.doubleValue();
-				}else{
-					/* There may be more than 1 opp response, we don't know which one is best, so 
-					 * we assign equal probability to each response */
-					float oppResponseProb = 1f / (float)bestOppResponses.size();	
-					/* For every possible opponent response oppResponse ... */
-					for (ExecutableExtension oppResponse: bestOppResponses) {
-						// this avoids infinite loops
-						// (if there are two consecutive noops the game is over anyway)
-						if(newMove.isNoOperation() && oppResponse.isNoOperation())
-							continue;
-						DialogueTrace t3 = t2.addAndCopy(oppResponse);		
-						/* Get best response to oppResponse */
-						Pair<Double, Set<ExecutableExtension>> r = this.doMove(env, t3);						
-						/* Expected utility is utility of best response times probability of 
-						   opponent model times probability of opponent response */
-						newMoveEU += r.getFirst() * oppStateProb.doubleValue() * oppResponseProb;						
+			if(this.prob.isEmpty())
+				newMoveEU = this.getUtilityFunction().getUtility(t2);
+			else
+				for (T3BeliefState oppState: this.prob.keySet()) {
+					Probability oppStateProb = this.prob.probability(oppState);				
+					/* Get opponent's best responses to newMove */
+					Set<ExecutableExtension> bestOppResponses = oppState.doMove(env,t2).getSecond();				
+					/* If opponent has no response, then utility of newMove is determined by current trace / oppStateProb */
+					if (bestOppResponses.isEmpty()) {
+						newMoveEU += this.getUtilityFunction().getUtility(t2, this.virtualArguments, this.virtualAttacks) * oppStateProb.doubleValue();
+					}else{
+						/* There may be more than 1 opp response, we don't know which one is best, so 
+						 * we assign equal probability to each response */
+						float oppResponseProb = 1f / (float)bestOppResponses.size();	
+						/* For every possible opponent response oppResponse ... */
+						for (ExecutableExtension oppResponse: bestOppResponses) {
+							// this avoids infinite loops
+							// (if there are two consecutive noops the game is over anyway)
+							if(newMove.isNoOperation() && oppResponse.isNoOperation()){
+								newMoveEU += this.getUtilityFunction().getUtility(t2, this.virtualArguments, this.virtualAttacks) * oppStateProb.doubleValue() * oppResponseProb;
+								continue;
+							}
+							DialogueTrace t3 = t2.addAndCopy(oppResponse);		
+							/* Get best response to oppResponse */
+							Pair<Double, Set<ExecutableExtension>> r = this.doMove(env, t3);						
+							/* Expected utility is utility of best response times probability of 
+						   		opponent model times probability of opponent response */
+							newMoveEU += r.getFirst() * oppStateProb.doubleValue() * oppResponseProb;						
+						}
 					}
-				}
-			}			
+				}			
 			/* Keep track of the set of best responses */
 			if (newMoveEU > bestEU) bestMoves.clear();
 			if (newMoveEU >= bestEU) {
@@ -116,6 +121,31 @@ public class T3BeliefState extends BeliefState{
 		return new Pair<Double, Set<ExecutableExtension>>(bestEU, bestMoves);
 	}
 
+	/**
+	 * Returns a T2-belief state that is a projection of this belief state,
+	 * i.e. all virtual arguments and virtual attacks are removed from
+	 * all nested models.
+	 * @return the T2-projection of this belief state.
+	 */
+	public T2BeliefState projectToT2BeliefState(){
+		ProbabilityFunction<T2BeliefState> prob = new ProbabilityFunction<T2BeliefState>();
+		for(T3BeliefState subState: this.prob.keySet())
+			prob.put(subState.projectToT2BeliefState(), new Probability(this.prob.get(subState)));
+		return new T2BeliefState(this.getKnownArguments(), this.getUtilityFunction(), prob);
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.agents.argumentation.oppmodels.BeliefState#clone()
+	 */
+	public Object clone(){
+		if(this.prob.isEmpty())
+			return new T3BeliefState(new Extension(this.getKnownArguments()), this.getUtilityFunction(), new HashSet<Argument>(this.virtualArguments), new HashSet<Attack>(this.virtualAttacks),this.rec, new ProbabilityFunction<T3BeliefState>());
+		ProbabilityFunction<T3BeliefState> prob = new ProbabilityFunction<T3BeliefState>();
+		for(java.util.Map.Entry<T3BeliefState, Probability> entry: this.prob.entrySet())
+			prob.put((T3BeliefState)entry.getKey().clone(), entry.getValue());
+		return new T3BeliefState(new Extension(this.getKnownArguments()), this.getUtilityFunction(), new HashSet<Argument>(this.virtualArguments), new HashSet<Attack>(this.virtualAttacks),this.rec, prob);
+	}
+	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.agents.argumentation.oppmodels.BeliefState#display()
 	 */
@@ -156,5 +186,5 @@ public class T3BeliefState extends BeliefState{
 		for(int i = 0; i < origIndent; i++) result += "  ";
 		result += ">";
 		return result;
-	}
+	}	
 }

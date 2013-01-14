@@ -68,8 +68,10 @@ public class T1BeliefState extends BeliefState {
 				for(ExecutableExtension move2: opponentMoves.getSecond()){
 					// this avoids infinite loops
 					// (if there are two consecutive noops the game is over anyway)
-					if(move.isNoOperation() && move2.isNoOperation())
-						continue;
+					if(move.isNoOperation() && move2.isNoOperation()){
+						eu += this.getUtilityFunction().getUtility(trace.addAndCopy(move)) * 1f/opponentMoves.getSecond().size();
+						continue;						
+					}
 					Pair<Double,Set<ExecutableExtension>> myMoves = this.doMove(env, trace.addAndCopy(move).addAndCopy(move2));
 					eu += myMoves.getFirst() * 1f/opponentMoves.getSecond().size();
 				}				
@@ -84,6 +86,15 @@ public class T1BeliefState extends BeliefState {
 		return new Pair<Double,Set<ExecutableExtension>>(maxUtility,bestMoves);
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.agents.argumentation.oppmodels.BeliefState#clone()
+	 */
+	public Object clone(){
+		if(this.oppModel != null)
+			return new T1BeliefState(new Extension(this.getKnownArguments()), this.getUtilityFunction(), (T1BeliefState) this.oppModel.clone());
+		return new T1BeliefState(new Extension(this.getKnownArguments()), this.getUtilityFunction());
+	}
+	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.agents.argumentation.oppmodels.BeliefState#display()
 	 */

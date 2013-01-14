@@ -78,6 +78,15 @@ public class StructuredArgumentationSystem extends MultiAgentSystem<SasAgent> {
 			percepts.add(this.commonView);
 			return percepts;
 		}
+
+		/* (non-Javadoc)
+		 * @see net.sf.tweety.agents.Environment#reset()
+		 */
+		@Override
+		public boolean reset() {
+			this.commonView = new PerceivableStructuredArgumentationFramework();
+			return true;
+		}
 		
 	}
 	

@@ -38,6 +38,14 @@ public class Probability extends Number {
 	}
 	
 	/**
+	 * Creates a new probability from the given probability
+	 * @param other another probability
+	 */
+	public Probability(Probability other){		
+		this.value = other.value;
+	}
+	
+	/**
 	 * Returns the complement of this probability, i.e. a probability of
 	 * one minus the value of this probability.
 	 * @return the complement of this probability.

@@ -124,6 +124,11 @@ public abstract class BeliefState {
 	}
 
 	/* (non-Javadoc)
+	 * @see java.lang.Object#clone()
+	 */
+	public abstract Object clone();
+	
+	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override

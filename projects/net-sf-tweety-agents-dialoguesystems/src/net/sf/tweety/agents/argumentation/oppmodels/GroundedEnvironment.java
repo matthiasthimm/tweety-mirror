@@ -23,7 +23,7 @@ import net.sf.tweety.argumentation.dung.semantics.Extension;
  */
 public class GroundedEnvironment implements Environment, Perceivable {
 
-	/** The actual dialogue trace. */
+	/** The current dialogue trace. */
 	private DialogueTrace trace;
 	/** The universal Dung theory used for argumentation. */
 	private DungTheory universalTheory;
@@ -80,6 +80,14 @@ public class GroundedEnvironment implements Environment, Perceivable {
 	 */
 	public DialogueTrace getDialogueTrace(){
 		return this.trace;
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.agents.Environment#reset()
+	 */
+	public boolean reset(){
+		this.trace = new DialogueTrace();
+		return true;
 	}
 	
 	/**

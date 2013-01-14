@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 /**
@@ -15,6 +16,9 @@ import java.util.Set;
  * @param <T> The class of the objects used.
  */
 public class ProbabilityFunction<T> implements Map<T,Probability> {
+	
+		/** For random sampling. */
+		private static Random random = new Random();
 	
 		/**
 		 * The probabilities of the objects.
@@ -168,6 +172,23 @@ public class ProbabilityFunction<T> implements Map<T,Probability> {
 			for(S i: objects)
 				p.put(i, new Probability(1d/size));
 			return p;
+		}
+		
+		/**
+		 * Samples one element from the domain of this
+		 * probability function, depending on its probability.
+		 * @return a sample from this probability function.
+		 */
+		public T sample(){
+			double p = ProbabilityFunction.random.nextDouble();
+			Probability prob = new Probability(0d);
+			for(Entry<T, Probability> entry: this.entrySet()){
+				prob.add(entry.getValue());
+				if(p <= prob.doubleValue())
+					return entry.getKey();
+			}
+			// this should not happen
+			throw new RuntimeException("Mass of this probability function is larger than one!");
 		}
 		
 		/* (non-Javadoc)

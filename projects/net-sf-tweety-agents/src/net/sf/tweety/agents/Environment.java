@@ -32,4 +32,10 @@ public interface Environment {
 	 * @return a set of percepts perceivable for the given agent.
 	 */
 	public Set<Perceivable> getPercepts(Agent agent);
+	
+	/** Resets the environment, i.e. brings it to
+	 * its initialization state.
+	 * @return "true" iff reset was successful.
+	 */
+	public boolean reset();
 }
