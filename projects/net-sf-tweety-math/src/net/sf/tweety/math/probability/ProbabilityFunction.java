@@ -66,6 +66,20 @@ public class ProbabilityFunction<T> implements Map<T,Probability> {
 		}
 		
 		/**
+		 * Checks whether this probability function is normalized, i.e.
+		 * the sum of all probabilities is 1.
+		 * @return "true" if this probability function is normalized.
+		 */
+		public boolean isNormalized(){
+			if(this.isEmpty())
+				return true;
+			double sum = 0;
+			for(Probability p : this.probabilities.values())
+				sum += p.doubleValue();
+			return sum == 1;
+		}
+		
+		/**
 		 * Returns the entropy of this probability distribution.
 		 * @return the entropy of this probability distribution.
 		 */
@@ -183,7 +197,7 @@ public class ProbabilityFunction<T> implements Map<T,Probability> {
 			double p = ProbabilityFunction.random.nextDouble();
 			Probability prob = new Probability(0d);
 			for(Entry<T, Probability> entry: this.entrySet()){
-				prob.add(entry.getValue());
+				prob = prob.add(entry.getValue());
 				if(p <= prob.doubleValue())
 					return entry.getKey();
 			}

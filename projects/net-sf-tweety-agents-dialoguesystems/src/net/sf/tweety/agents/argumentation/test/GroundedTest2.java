@@ -24,7 +24,7 @@ public class GroundedTest2 {
 
 	public static void main(String[] args) throws ProtocolTerminatedException{
 		GroundedTest.attackProbability = 0.3;
-		GroundedTest.frameworkSize = 15;	
+		GroundedTest.frameworkSize = 10;	
 		GroundedTest.enforceTreeShape = false;
 		
 		
@@ -45,10 +45,10 @@ public class GroundedTest2 {
 		configPro.oppModelCorrect = true;
 		// The CONTRA agent
 		T3Configuration configCon = new T3Configuration();
-		configCon.maxRecursionDepth = 3;
+		configCon.maxRecursionDepth = 2;
 		configCon.probRecursionDecay = 0.6;
-		configCon.maxRecursionWidth = 4;
-		configCon.percentageVirtualArguments = 0.4;
+		configCon.maxRecursionWidth = 3;
+		configCon.percentageVirtualArguments = 0.3;
 		configCon.percentageVirtualAttacks = 0.8;
 		
 		GroundedGameT1AgentGenerator proGenerator = new GroundedGameT1AgentGenerator(GroundedGameSystem.AgentFaction.PRO,configPro);
@@ -91,7 +91,7 @@ public class GroundedTest2 {
 			// create agents for T2 test
 			mas.getEnvironment().reset();
 			proAgent = new ArguingAgent(proBackup.getFaction(), (BeliefState) proBackup.getBeliefState().clone());
-			ArguingAgent conAgentT2 = new ArguingAgent(conBackup.getFaction(), ((T3BeliefState) conAgentT3.getBeliefState()).projectToT2BeliefState() );
+			ArguingAgent conAgentT2 = new ArguingAgent(conBackup.getFaction(), ((T3BeliefState) conBackup.getBeliefState()).projectToT2BeliefState() );
 			mas.add(proAgent);
 			mas.add(conAgentT2);								
 			prot = protGenerator.generate(mas,sParams);
@@ -107,7 +107,7 @@ public class GroundedTest2 {
 			// create agents for T1 test
 			mas.getEnvironment().reset();
 			proAgent = new ArguingAgent(proBackup.getFaction(), (BeliefState) proBackup.getBeliefState().clone());
-			ArguingAgent conAgentT1 = new ArguingAgent(conBackup.getFaction(), ((T3BeliefState) conAgentT3.getBeliefState()).projectToT2BeliefState().sampleT1BeliefState() );
+			ArguingAgent conAgentT1 = new ArguingAgent(conBackup.getFaction(), ((T3BeliefState) conBackup.getBeliefState()).projectToT2BeliefState().sampleT1BeliefState() );
 			mas.add(proAgent);
 			mas.add(conAgentT1);								
 			prot = protGenerator.generate(mas,sParams);

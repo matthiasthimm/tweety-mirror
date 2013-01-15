@@ -49,9 +49,11 @@ public class T2BeliefState extends BeliefState {
 		this.getKnownArguments().addAll(trace.getArguments());
 		ProbabilityFunction<T2BeliefState> newProb = new ProbabilityFunction<T2BeliefState>();
 		for(T2BeliefState state: this.prob.keySet()){
+			Probability p = this.prob.get(state);
 			state.update(trace);
 			if(newProb.keySet().contains(state))
-				newProb.put(state, newProb.get(state).add(this.prob.get(state)));
+				newProb.put(state, newProb.get(state).add(p));
+			else newProb.put(state, p);
 		}
 		this.prob = newProb;		
 	}

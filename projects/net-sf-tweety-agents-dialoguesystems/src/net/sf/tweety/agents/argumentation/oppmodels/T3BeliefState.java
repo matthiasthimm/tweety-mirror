@@ -60,9 +60,11 @@ public class T3BeliefState extends BeliefState{
 		this.virtualAttacks = newVirtualAttacks;
 		ProbabilityFunction<T3BeliefState> newProb = new ProbabilityFunction<T3BeliefState>();
 		for(T3BeliefState state: this.prob.keySet()){
+			Probability p = this.prob.get(state);
 			state.update(trace);
 			if(newProb.keySet().contains(state))
-				newProb.put(state, newProb.get(state).add(this.prob.get(state)));
+				newProb.put(state, newProb.get(state).add(p));
+			else newProb.put(state, p);			
 		}
 		this.prob = newProb;		
 	}
@@ -107,7 +109,7 @@ public class T3BeliefState extends BeliefState{
 							Pair<Double, Set<ExecutableExtension>> r = this.doMove(env, t3);						
 							/* Expected utility is utility of best response times probability of 
 						   		opponent model times probability of opponent response */
-							newMoveEU += r.getFirst() * oppStateProb.doubleValue() * oppResponseProb;						
+							newMoveEU += r.getFirst() * oppStateProb.doubleValue() * oppResponseProb;							
 						}
 					}
 				}			
@@ -186,5 +188,57 @@ public class T3BeliefState extends BeliefState{
 		for(int i = 0; i < origIndent; i++) result += "  ";
 		result += ">";
 		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((prob == null) ? 0 : prob.hashCode());
+		result = prime * result + ((rec == null) ? 0 : rec.hashCode());
+		result = prime
+				* result
+				+ ((virtualArguments == null) ? 0 : virtualArguments.hashCode());
+		result = prime * result
+				+ ((virtualAttacks == null) ? 0 : virtualAttacks.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		T3BeliefState other = (T3BeliefState) obj;
+		if (prob == null) {
+			if (other.prob != null)
+				return false;
+		} else if (!prob.equals(other.prob))
+			return false;
+		if (rec == null) {
+			if (other.rec != null)
+				return false;
+		} else if (!rec.equals(other.rec))
+			return false;
+		if (virtualArguments == null) {
+			if (other.virtualArguments != null)
+				return false;
+		} else if (!virtualArguments.equals(other.virtualArguments))
+			return false;
+		if (virtualAttacks == null) {
+			if (other.virtualAttacks != null)
+				return false;
+		} else if (!virtualAttacks.equals(other.virtualAttacks))
+			return false;
+		return true;
 	}	
 }
