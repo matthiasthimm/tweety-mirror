@@ -194,6 +194,7 @@ public class ProbabilityFunction<T> implements Map<T,Probability> {
 		 * @return a sample from this probability function.
 		 */
 		public T sample(){
+			if(this.isEmpty()) return null;
 			double p = ProbabilityFunction.random.nextDouble();
 			Probability prob = new Probability(0d);
 			for(Entry<T, Probability> entry: this.entrySet()){
@@ -202,7 +203,11 @@ public class ProbabilityFunction<T> implements Map<T,Probability> {
 					return entry.getKey();
 			}
 			// this should not happen
-			throw new RuntimeException("Mass of this probability function is larger than one!");
+			// ... but sometimes this happens
+			// until I figure it out just return the first element
+			// TODO fix this
+			return this.keySet().iterator().next();
+			//throw new RuntimeException("Mass of this probability function is larger than one!");
 		}
 		
 		/* (non-Javadoc)
