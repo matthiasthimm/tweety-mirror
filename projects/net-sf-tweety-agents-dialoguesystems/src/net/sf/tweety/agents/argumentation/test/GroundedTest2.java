@@ -31,7 +31,7 @@ import net.sf.tweety.argumentation.util.DungTheoryGenerator;
 public class GroundedTest2 {
 
 	public static int timeout = 60*10; // 10 minutes
-	public static int numberOfRunsEach = 1000;
+	public static int numberOfRunsEach = 5000;
 	
 	public static void main(String[] args) throws ProtocolTerminatedException{
 		TweetyLogging.logLevel = TweetyConfiguration.LogLevel.ERROR;

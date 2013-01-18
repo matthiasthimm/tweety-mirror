@@ -30,7 +30,7 @@ public class MlnTest2 {
 		
 		MarkovLogicNetwork mln = new MarkovLogicNetwork();
 				
-		mln.add(new MlnFormula((FolFormula)parser.parseFormula("!quaker(X)|| pacifist(X)"), new Probability(0.95)));
+		mln.add(new MlnFormula((FolFormula)parser.parseFormula("!quaker(X)|| pacifist(X)"), new Probability(0.95)));		
 		mln.add(new MlnFormula((FolFormula)parser.parseFormula("!republican(X) || !pacifist(X)"), new Probability(0.95))); 
 
 		return new Pair<MarkovLogicNetwork,FolSignature>(mln,sig);
@@ -74,7 +74,7 @@ public class MlnTest2 {
 		
 		MarkovLogicNetwork mln = new MarkovLogicNetwork();
 		
-		mln.add(new MlnFormula((FolFormula)parser.parseFormula("!president(X) || actor(X)"), new Probability(0.9)));
+		mln.add(new MlnFormula((FolFormula)parser.parseFormula("!president(X) || actor(X)"), new Probability(0.9)));		
 		mln.add(new MlnFormula((FolFormula)parser.parseFormula("president(reagan) && actor(reagan)"))); // p = 1
 		 
 
