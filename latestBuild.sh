@@ -6,6 +6,7 @@ ant -f projects/net-sf-tweety-agents-dialoguesystems/update_latest_build.xml
 ant -f projects/net-sf-tweety-argumentation-deductive/update_latest_build.xml
 ant -f projects/net-sf-tweety-argumentation-delp/update_latest_build.xml
 ant -f projects/net-sf-tweety-argumentation-dung/update_latest_build.xml
+ant -f projects/net-sf-tweety-argumentation-probabilistic/update_latest_build.xml
 ant -f projects/net-sf-tweety-argumentation-structuredargumentationframeworks/update_latest_build.xml
 ant -f projects/net-sf-tweety-beliefdynamics/update_latest_build.xml
 ant -f projects/net-sf-tweety-cli/update_latest_build.xml

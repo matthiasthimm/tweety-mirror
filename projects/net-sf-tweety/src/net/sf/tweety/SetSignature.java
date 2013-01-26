@@ -192,4 +192,10 @@ public class SetSignature<T extends Formula> extends Signature implements Collec
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString(){
+		return this.formulas.toString();
+	}
 }

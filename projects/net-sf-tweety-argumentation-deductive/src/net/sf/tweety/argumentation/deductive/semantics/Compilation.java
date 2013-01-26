@@ -26,10 +26,6 @@ import net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula;
  * @author Matthias Thimm
  *
  */
-/**
- * @author mthimm
- *
- */
 public class Compilation extends DefaultGraph<CompilationNode>{
 
 	/** Creates the compilation of the given knowledge base.

@@ -54,4 +54,36 @@ public class DeductiveArgument implements Node {
 	public String toString(){
 		return "<" + this.support.toString() + "," + this.claim.toString() + ">";
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((support == null) ? 0 : support.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		// arguments are equal if there support is equal
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DeductiveArgument other = (DeductiveArgument) obj;
+		if (support == null) {
+			if (other.support != null)
+				return false;
+		} else if (!support.equals(other.support))
+			return false;
+		return true;
+	}
 }
