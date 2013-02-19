@@ -18,6 +18,7 @@
 			<zipfileset dir="../../latestBuild" includes="net-sf-tweety-logics-commons.jar"/>
 			<zipfileset dir="../../latestBuild" includes="net-sf-tweety-logics-conditionallogic.jar"/>
 			<zipfileset dir="../../latestBuild" includes="net-sf-tweety-logics-firstorderlogic.jar"/>
+			<zipfileset dir="../../latestBuild" includes="net-sf-tweety-logics-inconsistencyhandling.jar"/>
 			<zipfileset dir="../../latestBuild" includes="net-sf-tweety-logics-markovlogic.jar"/>
 			<zipfileset dir="../../latestBuild" includes="net-sf-tweety-logics-modallogic.jar"/>
 			<zipfileset dir="../../latestBuild" includes="net-sf-tweety-logics-probabilisticconditionallogic.jar"/>

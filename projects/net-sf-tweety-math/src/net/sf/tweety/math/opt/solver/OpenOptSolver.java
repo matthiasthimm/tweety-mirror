@@ -32,6 +32,7 @@ public class OpenOptSolver extends Solver {
 	public double maxFunEvals = 1e16;
 	public String solver = "lincher";
 	public boolean ignoreNotFeasibleError = false;
+	public String python = "python";
 	
 	/**
 	 * A starting point for the optimization.
@@ -86,7 +87,7 @@ public class OpenOptSolver extends Solver {
 	@Override
 	public Map<Variable, Term> solve() throws GeneralMathException {
 		String output = "";
-		//String error = "";
+		String error = "";
 		InputStream in = null;
 		Process child = null;
 		try{
@@ -100,19 +101,19 @@ public class OpenOptSolver extends Solver {
 			out.close();
 			//execute openopt on problem and retrieve console output
 			this.log.info("Calling OpenOpt optimization library.");
-			child = Runtime.getRuntime().exec("python " + ooFile.getAbsolutePath());
+			child = Runtime.getRuntime().exec(this.python + " " + ooFile.getAbsolutePath());			
 			int c;		
 			in = child.getInputStream();
 	        while ((c = in.read()) != -1){
 	            output += ((char)c);
 	        }
-			in.close();		        		        
+	        in.close();
 	        in = child.getErrorStream();
-	      //  while ((c = in.read()) != -1)
-	      //      error += (char)c;	        	        
-		}catch(IOException e){
-			log.error(e.getMessage());
-			return null;
+	        while ((c = in.read()) != -1)
+	            error += (char)c;
+		}catch(Exception e){
+			log.error(e.getMessage() + "\n" + error);
+			throw new RuntimeException(e.getMessage() + "\n" + error);
 		}finally{
 			try {
 				if(in != null) in.close();
@@ -136,7 +137,7 @@ public class OpenOptSolver extends Solver {
 			return result;
 		}catch(Exception e){
 			this.log.error(e.getMessage());
-			throw new GeneralMathException(e.getMessage());
+			throw new GeneralMathException(e.getMessage() + "\n" + error);
 		}
 	}
 
