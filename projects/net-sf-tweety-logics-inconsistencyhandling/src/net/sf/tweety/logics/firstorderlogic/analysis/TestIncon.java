@@ -29,27 +29,31 @@ public class TestIncon {
 		FolSignature sig = new FolSignature();
 		sig.add(new Constant("c1"));
 		sig.add(new Constant("c2"));
+		sig.add(new Constant("c3"));
 		sig.add(new Predicate("S",1));
-		sig.add(new Predicate("R",2));
+		sig.add(new Predicate("R",1));
 		FolParser parser = new FolParser();
 		parser.setSignature(sig);
 		FolBeliefSet beliefSet = new FolBeliefSet();
 		beliefSet.add((FolFormula)parser.parseFormula("S(c1)"));
 		beliefSet.add((FolFormula)parser.parseFormula("S(c2)"));
-		beliefSet.add((FolFormula)parser.parseFormula("R(c1,c2)"));
-		// to realize closed-world assumption just add the rest as negation
-		beliefSet.add((FolFormula)parser.parseFormula("!R(c1,c1)"));
-		beliefSet.add((FolFormula)parser.parseFormula("!R(c2,c1)"));
-		beliefSet.add((FolFormula)parser.parseFormula("!R(c2,c2)"));
+		beliefSet.add((FolFormula)parser.parseFormula("S(c3)"));
+		beliefSet.add((FolFormula)parser.parseFormula("R(c1)"));
+		// to realize closed-world assumption just add the rest as negation		
+		beliefSet.add((FolFormula)parser.parseFormula("R(c2)"));
+		beliefSet.add((FolFormula)parser.parseFormula("!R(c3)"));
 		
 		
-		beliefSet.add((FolFormula)parser.parseFormula("forall X:(!S(X) || (exists Y:(R(X,Y))))"));
+		beliefSet.add((FolFormula)parser.parseFormula("forall X:(!S(X) || R(X))"));
 		//beliefSet.add((FolFormula)parser.parseFormula("forall X: (forall Y: (!R(X,Y) || R(Y,X)))"));
+		
+		//p = 2/3			2/3
+		//maxent = 2.488	3.2	
 		
 		System.out.println(beliefSet);
 		System.out.println();
 		//TestIncon.getMaxProb(beliefSet);
-		TestIncon.getMaxEnt(beliefSet,0.745f);
+		TestIncon.getMaxEnt(beliefSet,0.665f);
 	}
 	
 	public static void getMaxEnt(FolBeliefSet beliefSet, float p){
