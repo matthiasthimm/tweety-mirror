@@ -2,50 +2,43 @@ package net.sf.tweety.argumentation.probabilistic;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import net.sf.tweety.*;
 import net.sf.tweety.argumentation.deductive.DeductiveKnowledgeBase;
-import net.sf.tweety.argumentation.deductive.semantics.DeductiveArgument;
 import net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula;
+import net.sf.tweety.logics.propositionallogic.syntax.PropositionalSignature;
 import net.sf.tweety.math.probability.Probability;
-import net.sf.tweety.math.probability.ProbabilityFunction;
 
 /**
  * This class represents a probabilistic knowledge base in the sense of [Hunter, Thimm, 2013, in preparation].
  * 
- * It consists of a (possibly inconsistent) set of propositional formulas (ie. a deductive knowledge base),
- * a set of probability assignments to some set of formulas, and a probability function on the set of sets of
- * arguments contained in the first set.
+ * It consists of a (possibly inconsistent) set of propositional formulas (ie. a deductive knowledge base)
+ * and a set of probability assignments to some set of formulas.
  *  
  * @author Matthias Thimm
  */
-public class ProbabilisticKnowledgebase extends BeliefBase {
+public class DeductiveProbabilisticKnowledgebase extends BeliefBase {
 
 	/** The deductive knowledge base. */
 	private DeductiveKnowledgeBase kb;
 	/** Probability assignments for formulas. */
 	private Map<PropositionalFormula,Probability> probabilityAssignments;
-	/** Probability function on set of arguments of kb */
-	private ProbabilityFunction<Set<DeductiveArgument>> probFunction;
 	
 	/**
 	 * Creates a new empty probabilistic knowledge base
 	 */
-	public ProbabilisticKnowledgebase() {		
-		this(new DeductiveKnowledgeBase(), new HashMap<PropositionalFormula, Probability>(), new ProbabilityFunction<Set<DeductiveArgument>>());
+	public DeductiveProbabilisticKnowledgebase() {		
+		this(new DeductiveKnowledgeBase(), new HashMap<PropositionalFormula, Probability>());
 	}
 	
 	/**
 	 * Creates a new probabilistic knowledge base from the given parameters.
 	 * @param kb a deductive knowledge base.
 	 * @param probabilityAssignments probability assignments for formulas.
-	 * @param probFunction probability function on sets of arguments of kb.
 	 */
-	public ProbabilisticKnowledgebase(DeductiveKnowledgeBase kb, Map<PropositionalFormula, Probability> probabilityAssignments,	ProbabilityFunction<Set<DeductiveArgument>> probFunction) {		
+	public DeductiveProbabilisticKnowledgebase(DeductiveKnowledgeBase kb, Map<PropositionalFormula, Probability> probabilityAssignments) {		
 		this.kb = kb;
 		this.probabilityAssignments = probabilityAssignments;
-		this.probFunction = probFunction;
 	}
 
 	/* (non-Javadoc)
@@ -53,7 +46,10 @@ public class ProbabilisticKnowledgebase extends BeliefBase {
 	 */
 	@Override
 	public Signature getSignature() {
-		return this.kb.getSignature();
+		PropositionalSignature sig = (PropositionalSignature) this.kb.getSignature();
+		for(PropositionalFormula f: this.probabilityAssignments.keySet())
+			sig.addSignature(f.getSignature());
+		return sig;
 	}
 
 	/* (non-Javadoc)
@@ -61,7 +57,7 @@ public class ProbabilisticKnowledgebase extends BeliefBase {
 	 */
 	@Override
 	public String toString() {
-		return "<" + this.kb.toString() + "," + this.probabilityAssignments.toString() + "," + this.probFunction.toString() + ">";
+		return "<" + this.kb.toString() + "," + this.probabilityAssignments.toString() + ">";
 	}
 
 	/**
@@ -78,14 +74,6 @@ public class ProbabilisticKnowledgebase extends BeliefBase {
 	 */
 	public Map<PropositionalFormula, Probability> getProbabilityAssignments() {
 		return probabilityAssignments;
-	}
-
-	/**
-	 * Returns the probability function on sets of arguments
-	 * @return the probability function on sets of arguments
-	 */
-	public ProbabilityFunction<Set<DeductiveArgument>> getProbFunction() {
-		return probFunction;
 	}
 
 }

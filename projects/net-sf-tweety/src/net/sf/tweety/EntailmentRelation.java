@@ -68,6 +68,17 @@ public abstract class EntailmentRelation<T extends Formula> {
 	}
 	
 	/**
+	 * Checks whether the two formula are equivalent, i.e. whether
+	 * the first entails the second and vice versa.
+	 * @param formula some formula
+	 * @param formula2 some formula
+	 * @return "true" iff the two formulas are equivalent.
+	 */
+	public boolean isEquivalent(T formula, T formula2){
+		return this.entails(formula, formula2) && this.entails(formula2, formula);
+	}
+	
+	/**
 	 * Retrieves the set of kernels for the given formula
 	 * from the given set of formulas.
 	 * @param formulas a set of formulas.
