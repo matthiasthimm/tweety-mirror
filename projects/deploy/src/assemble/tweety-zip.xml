@@ -1,0 +1,50 @@
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+  <id>zip</id>
+  <formats>
+    <format>zip</format>
+  </formats>
+  <includeBaseDirectory>false</includeBaseDirectory>
+  <moduleSets>
+    <moduleSet>
+    
+      <!-- Enable access to all projects in the current multimodule build! -->
+      <useAllReactorProjects>true</useAllReactorProjects>
+      
+      <!-- Now, select which projects to include in this module-set. -->
+      <includes>
+        <include>net.sf:tweety</include>
+        <include>net.sf.tweety:math</include>
+        <include>net.sf.tweety:graphs</include>
+		<include>net.sf.tweety.logics:commons</include>
+		<include>net.sf.tweety:action</include>
+		<include>net.sf.tweety.action.description:c</include>
+		<include>net.sf.tweety.action.query:s</include>
+		<include>net.sf.tweety:agents</include>
+		<include>net.sf.tweety.agents:argumentation</include>
+		<include>net.sf.tweety:beliefsdynamics</include>
+		<include>net.sf.tweety:cli</include>
+		<include>net.sf.tweety.logics:propositionallogic</include>
+		<include>net.sf.tweety.logics:conditionallogic</include>
+		<include>net.sf.tweety.logics:firstorderlogic</include>
+		<include>net.sf.tweety.logics:markovlogic</include>
+		<include>net.sf.tweety.logics:modallogic</include>
+		<include>net.sf.tweety.logics:probablisticconditionallogic</include>
+		<include>net.sf.tweety.logics:relationalconditionallogic</include>
+		<include>net.sf.tweety.logics:relationalprobabilisticconditionallogic</include>
+		<include>net.sf.tweety.logicprogramming:asp</include>
+		<include>net.sf.tweety.argumentation:deductive</include>
+		<include>net.sf.tweety.argumentation:delp</include>
+		<include>net.sf.tweety.argumentation:dung</include>
+		<include>net.sf.tweety.argumentation:probabilistic</include>
+		<include>net.sf.tweety.argumentation:structuredargumentationframeworks</include>
+		<include>net.sf.tweety:preferences</include>
+	  </includes>
+      <binaries>
+        <outputDirectory>modules/</outputDirectory>
+        <unpack>false</unpack>
+      </binaries>
+    </moduleSet>
+  </moduleSets>
+</assembly>
