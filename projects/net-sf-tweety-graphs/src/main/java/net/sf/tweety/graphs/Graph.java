@@ -3,6 +3,16 @@ package net.sf.tweety.graphs;
 import java.util.Collection;
 import java.util.Iterator;
 
+import Jama.Matrix;
+
+/**
+ * Common interface for graphs with
+ * nodes of type T
+ * 
+ * @author Matthias Thimm
+ * 
+ * @param <T> The type of the node.
+ */
 public interface Graph<T extends Node> extends Iterable<T>{
 
 	/**
@@ -24,6 +34,22 @@ public interface Graph<T extends Node> extends Iterable<T>{
 	 * @return the nodes of this graph.
 	 */
 	public Collection<T> getNodes();
+	
+	/**
+	 * Returns the number of nodes in this graph.
+	 * @return the number of nodes in this graph.
+	 */
+	public int getNumberOfNodes();
+	
+	/**
+	 * Returns "true" iff the two nodes are connected by a directed edge
+	 * from a to b or an undirected edge.
+	 * @param a some node
+	 * @param b some node
+	 * @return "true" iff the two nodes are connected by a directed edge
+	 * from a to b or an undirected edge.
+	 */
+	public boolean areAdjacent(T a, T b);
 	
 	/**
 	 * Returns the edges of this graph.
@@ -76,6 +102,13 @@ public interface Graph<T extends Node> extends Iterable<T>{
 	 * @return the set of neighbors of the given node.
 	 */
 	public Collection<T> getNeighbors(Node node);
+	
+	/**
+	 * Returns the adjacency matrix of this graph (the order
+	 * of the nodes is the same as returned by "iterator()").
+	 * @return the adjacency matrix of this graph
+	 */
+	public Matrix getAdjancyMatrix();
 	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()

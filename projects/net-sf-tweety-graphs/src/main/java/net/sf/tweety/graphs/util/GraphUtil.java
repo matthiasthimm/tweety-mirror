@@ -2,8 +2,12 @@ package net.sf.tweety.graphs.util;
 
 import java.util.*;
 
+import Jama.EigenvalueDecomposition;
+import Jama.Matrix;
+
 import net.sf.tweety.graphs.Graph;
 import net.sf.tweety.graphs.Node;
+import net.sf.tweety.math.ComplexNumber;
 
 /**
  * This abstract class contains some auxiliary methods for working
@@ -63,6 +67,21 @@ public abstract class GraphUtil {
 			GraphUtil.archivePageRank.get(g).put(dampingFactor, new HashMap<Double,Map<Node,Double>>());
 		GraphUtil.archivePageRank.get(g).get(dampingFactor).put(precision, pageRanks);		
 		return pageRanks.get(n);
+	}
+	
+	/**
+	 * Computes the (real parts of the) Eigenvalues of the given graph.
+	 * @param g some graph
+	 * @return an array of double (the real parts of the Eigenvalues).
+	 */
+	public static ComplexNumber[] eigenvalues(Graph<? extends Node> g){
+		Matrix m = g.getAdjancyMatrix();
+		EigenvalueDecomposition ed = new EigenvalueDecomposition(m);		
+		ComplexNumber[] result = new ComplexNumber[ed.getRealEigenvalues().length];
+		for(int i = 0; i < ed.getImagEigenvalues().length; i++){
+			result[i] = new ComplexNumber(ed.getRealEigenvalues()[i], ed.getImagEigenvalues()[i]);
+		}			
+		return result;
 	}
 	
 }

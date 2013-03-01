@@ -2,6 +2,8 @@ package net.sf.tweety.graphs;
 
 import java.util.*;
 
+import Jama.Matrix;
+
 /**
  * Instance of this class represent graphs with
  * nodes of type T
@@ -47,6 +49,13 @@ public class DefaultGraph<T extends Node> implements Graph<T>{
 	 */
 	public Collection<T> getNodes(){
 		return this.nodes;
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.graphs.Graph#getNumberOfNodes()
+	 */
+	public int getNumberOfNodes(){
+		return this.nodes.size();
 	}
 	
 	/* (non-Javadoc)
@@ -119,6 +128,17 @@ public class DefaultGraph<T extends Node> implements Graph<T>{
 		return parents;
 	}
 	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.graphs.Graph#areAdjacent(net.sf.tweety.graphs.Node, net.sf.tweety.graphs.Node)
+	 */
+	public boolean areAdjacent(T a, T b){
+		for(Edge<T> edge: this.edges){
+			if(edge.getNodeA().equals(a) || (edge instanceof UndirectedEdge && edge.getNodeB().equals(a)))
+				if(edge.getNodeB().equals(b) || (edge instanceof UndirectedEdge && edge.getNodeA().equals(b)))
+					return true;
+		}
+		return false;
+	}
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.graphs.Graph#existsDirectedPath(net.sf.tweety.graphs.Node, net.sf.tweety.graphs.Node)
@@ -138,6 +158,23 @@ public class DefaultGraph<T extends Node> implements Graph<T>{
 			stack.addAll(this.getChildren(node));
 		}
 		return false;
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.graphs.Graph#getAdjancyMatrix()
+	 */
+	public Matrix getAdjancyMatrix(){
+		Matrix m = new Matrix(this.getNumberOfNodes(), this.getNumberOfNodes());
+		int i = 0, j;
+		for(T a: this.nodes){
+			j = 0;
+			for(T b : this.nodes){
+				m.set(i, j, this.areAdjacent(a, b) ? 1 : 0);				
+				j++;
+			}
+			i++;
+		}
+		return m;
 	}
 	
 	/* (non-Javadoc)
