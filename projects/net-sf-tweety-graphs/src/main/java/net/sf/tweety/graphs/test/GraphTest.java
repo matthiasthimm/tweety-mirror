@@ -61,17 +61,19 @@ public class GraphTest {
 	
 	public void run2(){
 		Graph<SimpleNode> g = new DefaultGraph<SimpleNode>();
-		SimpleNode[] nodes = new SimpleNode[3];
+		SimpleNode[] nodes = new SimpleNode[5];
 		nodes[0] = new GraphTest.SimpleNode("A");
 		nodes[1] = new GraphTest.SimpleNode("B");
 		nodes[2] = new GraphTest.SimpleNode("C");
-//		nodes[3] = new GraphTest.SimpleNode("D");
-//		nodes[4] = new GraphTest.SimpleNode("E");
+		nodes[3] = new GraphTest.SimpleNode("D");
+		nodes[4] = new GraphTest.SimpleNode("E");
 		for(SimpleNode n: nodes)
 			g.add(n);
 		g.add(new DirectedEdge<SimpleNode>(nodes[0],nodes[1]));
 		g.add(new DirectedEdge<SimpleNode>(nodes[1],nodes[2]));
-		g.add(new DirectedEdge<SimpleNode>(nodes[2],nodes[0]));
+		g.add(new DirectedEdge<SimpleNode>(nodes[2],nodes[3]));
+		//g.add(new DirectedEdge<SimpleNode>(nodes[3],nodes[0]));
+		//g.add(new DirectedEdge<SimpleNode>(nodes[4],nodes[4]));
 		
 //		g.add(new DirectedEdge<SimpleNode>(nodes[1],nodes[0]));
 //		g.add(new DirectedEdge<SimpleNode>(nodes[1],nodes[2]));

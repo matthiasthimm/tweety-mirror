@@ -276,10 +276,11 @@ public class DungTheory extends BeliefSet<Argument> {
 
 	// Misc methods
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
+	
+	/** Pretty print of the theory.
+	 * @return
 	 */
-	public String toString(){
+	public String prettyPrint(){
 		String output = new String();
 		Iterator<Argument> it = this.iterator();
 		while(it.hasNext())
@@ -289,6 +290,13 @@ public class DungTheory extends BeliefSet<Argument> {
 		while(it2.hasNext())
 			output += "attack"+it2.next().toString()+".\n";
 		return output;
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString(){		
+		return "<" + super.toString() + "," + this.attacks + ">";
 	}
 	
 	/**
