@@ -90,6 +90,6 @@
   	<module>
   		net-sf-tweety-argumentation-structuredargumentationframeworks
   	</module>
-  	<module>deploy</module>
+  	<module>../deploy</module>
   </modules>
 </project>
