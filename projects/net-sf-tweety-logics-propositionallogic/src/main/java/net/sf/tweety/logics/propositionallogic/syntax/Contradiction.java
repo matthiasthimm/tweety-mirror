@@ -21,4 +21,14 @@ public class Contradiction extends SpecialFormula{
 	public String toString() {
 		return LogicalSymbols.CONTRADICTION();
 	}
+
+	@Override
+	public boolean equals(Object other) {
+		return other instanceof Contradiction;
+	}
+
+	@Override
+	public int hashCode() {
+		return 31;
+	}
 }

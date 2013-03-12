@@ -136,4 +136,9 @@ public abstract class PropositionalFormula implements ClassicalFormula {
 		return new Negation(this);
 	}
 
+	@Override
+	public abstract boolean equals(Object other);
+	
+	@Override
+	public abstract int hashCode();
 }

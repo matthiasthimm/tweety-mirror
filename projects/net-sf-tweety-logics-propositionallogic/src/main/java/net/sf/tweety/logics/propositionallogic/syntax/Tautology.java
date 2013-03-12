@@ -22,4 +22,14 @@ public class Tautology extends SpecialFormula {
 	public String toString() {
 		return LogicalSymbols.TAUTOLOGY();
 	}
+
+	@Override
+	public boolean equals(Object other) {
+		return other instanceof Tautology;
+	}
+
+	@Override
+	public int hashCode() {
+		return 13;
+	}
 }
