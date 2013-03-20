@@ -210,12 +210,18 @@ FolFormula formula(FolSignature signature) :
   Variable v = null;
 }
 {
-  (  
+  (
 	  (
 	    temp = atom(signature) ex = formulaex(signature)
 	    {
 	      reval = helper(temp, ex);	    }	  )
-	  | 
+	  |
+	  (
+      	< LBRA > temp = formula(signature) < RBRA > ex = formulaex(signature)
+      	{
+      	  reval = helper(temp, ex);      	}
+      )
+      |  
 	  (
 	    < FORALL > t = < VARIABLE > < DDOT > temp = formula(signature) ex = formulaex(signature)	    {
 	      v = new Variable(t.image);

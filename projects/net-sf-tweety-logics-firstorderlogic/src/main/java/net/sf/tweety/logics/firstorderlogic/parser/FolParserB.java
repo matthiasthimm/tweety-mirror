@@ -164,6 +164,7 @@ public class FolParserB implements FolParserBConstants {
       case NOT:
       case TAUTOLOGY:
       case CONTRADICTION:
+      case LBRA:
       case CONSTANT:
       case VARIABLE:
         ;
@@ -191,6 +192,13 @@ public class FolParserB implements FolParserBConstants {
       temp = atom(signature);
       ex = formulaex(signature);
               reval = helper(temp, ex);
+      break;
+    case LBRA:
+      jj_consume_token(LBRA);
+      temp = formula(signature);
+      jj_consume_token(RBRA);
+      ex = formulaex(signature);
+          reval = helper(temp, ex);
       break;
     case FORALL:
       jj_consume_token(FORALL);
@@ -580,17 +588,6 @@ public class FolParserB implements FolParserBConstants {
     finally { jj_save(1, xla); }
   }
 
-  private boolean jj_3_1() {
-    if (jj_3R_9()) return true;
-    return false;
-  }
-
-  private boolean jj_3_2() {
-    if (jj_3R_10()) return true;
-    if (jj_scan_token(EQUAL)) return true;
-    return false;
-  }
-
   private boolean jj_3R_9() {
     Token xsp;
     if (jj_3_2()) return true;
@@ -611,6 +608,17 @@ public class FolParserB implements FolParserBConstants {
     return false;
   }
 
+  private boolean jj_3_1() {
+    if (jj_3R_9()) return true;
+    return false;
+  }
+
+  private boolean jj_3_2() {
+    if (jj_3R_10()) return true;
+    if (jj_scan_token(EQUAL)) return true;
+    return false;
+  }
+
   /** Generated Token Manager. */
   public FolParserBTokenManager token_source;
   SimpleCharStream jj_input_stream;
@@ -628,7 +636,7 @@ public class FolParserB implements FolParserBConstants {
       jj_la1_init_0();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x100,0x180e0c0,0x180e0c0,0x1800,0x1800,0x20000000,0x10000,0x20000000,0x10000,0x1c00000,0x1800000,0x20000000,0x30400,0x20000000,0x10000,0x20000000,};
+      jj_la1_0 = new int[] {0x100,0x181e0c0,0x181e0c0,0x1800,0x1800,0x20000000,0x10000,0x20000000,0x10000,0x1c00000,0x1800000,0x20000000,0x30400,0x20000000,0x10000,0x20000000,};
    }
   final private JJCalls[] jj_2_rtns = new JJCalls[2];
   private boolean jj_rescan = false;
