@@ -18,16 +18,18 @@ public interface Graph<T extends Node> extends Iterable<T>{
 	/**
 	 * Adds the given node to this graph.
 	 * @param node some node.
+	 * @return "true" iff the edge has been added successfully.
 	 */
-	public void add(T node);
+	public boolean add(T node);
 	
 	/**
 	 * Adds the given edge to this graph. If at least one
 	 * of the nodes the given edge connects is not in the
 	 * graph, an illegal argument exception is thrown.
 	 * @param node some edge.
+	 * @return "true" iff the edge has been added successfully.
 	 */
-	public void add(Edge<T> edge);
+	public boolean add(Edge<T> edge);
 	
 	/**
 	 * Returns the nodes of this graph.
@@ -101,7 +103,7 @@ public interface Graph<T extends Node> extends Iterable<T>{
 	 * @param node some node (must be in the graph).
 	 * @return the set of neighbors of the given node.
 	 */
-	public Collection<T> getNeighbors(Node node);
+	public Collection<T> getNeighbors(T node);
 	
 	/**
 	 * Returns the adjacency matrix of this graph (the order

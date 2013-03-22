@@ -2,6 +2,8 @@ package net.sf.tweety.argumentation.dung;
 
 import java.util.*;
 
+import Jama.Matrix;
+
 import net.sf.tweety.*;
 import net.sf.tweety.argumentation.dung.semantics.*;
 import net.sf.tweety.argumentation.dung.syntax.*;
@@ -20,7 +22,7 @@ import net.sf.tweety.graphs.*;
  * @author Matthias Thimm, Tjitze Rienstra
  *
  */
-public class DungTheory extends BeliefSet<Argument> {
+public class DungTheory extends BeliefSet<Argument> implements Graph<Argument> {
 
 	/**
 	 * The set of attacks
@@ -357,20 +359,6 @@ public class DungTheory extends BeliefSet<Argument> {
 	}
 	
 	/**
-	 * Returns a simple graph representation of this
-	 * Dung theory.
-	 * @return a graph representing this Dung Theory
-	 */
-	public Graph<Argument> getGraph(){
-		Graph<Argument> graph = new DefaultGraph<Argument>();
-		for(Argument a: this)
-			graph.add(a);
-		for(Attack a: this.attacks)
-			graph.add(new DirectedEdge<Argument>(a.getAttacker(),a.getAttacked()));
-		return graph;
-	}
-	
-	/**
 	 * Returns copy of this theory consisting only of the given 
 	 * arguments 
 	 * @param arguments a set of arguments
@@ -414,5 +402,102 @@ public class DungTheory extends BeliefSet<Argument> {
 		} else if (!attacks.equals(other.attacks))
 			return false;
 		return true;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.graphs.Graph#add(net.sf.tweety.graphs.Edge)
+	 */
+	@Override
+	public boolean add(Edge<Argument> edge) {
+		throw new UnsupportedOperationException();
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.graphs.Graph#getNodes()
+	 */
+	@Override
+	public Collection<Argument> getNodes() {		
+		return this;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.graphs.Graph#getNumberOfNodes()
+	 */
+	@Override
+	public int getNumberOfNodes() {
+		return this.size();
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.graphs.Graph#areAdjacent(net.sf.tweety.graphs.Node, net.sf.tweety.graphs.Node)
+	 */
+	@Override
+	public boolean areAdjacent(Argument a, Argument b) {
+		return this.isAttackedBy(b, a);
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.graphs.Graph#getEdges()
+	 */
+	@Override
+	public Collection<Edge<Argument>> getEdges() {
+		throw new UnsupportedOperationException();
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.graphs.Graph#getChildren(net.sf.tweety.graphs.Node)
+	 */
+	@Override
+	public Collection<Argument> getChildren(Node node) {
+		if(!(node instanceof Argument))
+			throw new IllegalArgumentException("Node of type argument expected");
+		return this.getAttacked((Argument)node);
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.graphs.Graph#getParents(net.sf.tweety.graphs.Node)
+	 */
+	@Override
+	public Collection<Argument> getParents(Node node) {
+		if(!(node instanceof Argument))
+			throw new IllegalArgumentException("Node of type argument expected");
+		return this.getAttackers((Argument)node);
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.graphs.Graph#existsDirectedPath(net.sf.tweety.graphs.Node, net.sf.tweety.graphs.Node)
+	 */
+	@Override
+	public boolean existsDirectedPath(Argument node1, Argument node2) {
+		throw new UnsupportedOperationException();
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.graphs.Graph#getNeighbors(net.sf.tweety.graphs.Node)
+	 */
+	@Override
+	public Collection<Argument> getNeighbors(Argument node) {
+		Set<Argument> neighbours = new HashSet<Argument>();
+		neighbours.addAll(this.getAttacked(node));
+		neighbours.addAll(this.getAttackers(node));
+		return neighbours;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.graphs.Graph#getAdjancyMatrix()
+	 */
+	@Override
+	public Matrix getAdjancyMatrix() {
+		Matrix m = new Matrix(this.getNumberOfNodes(), this.getNumberOfNodes());
+		int i = 0, j;
+		for(Argument a: this){
+			j = 0;
+			for(Argument b : this){
+				m.set(i, j, this.areAdjacent(a, b) ? 1 : 0);				
+				j++;
+			}
+			i++;
+		}
+		return m;
 	}
 }

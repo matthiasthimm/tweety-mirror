@@ -3,14 +3,14 @@ package net.sf.tweety.argumentation.dung.test;
 import net.sf.tweety.argumentation.dung.DungTheory;
 import net.sf.tweety.argumentation.dung.StableReasoner;
 import net.sf.tweety.argumentation.util.DungTheoryGenerator;
-import net.sf.tweety.argumentation.util.EnumeratingDungTheoryGenerator;
+import net.sf.tweety.argumentation.util.IsoSafeEnumeratingDungTheoryGenerator;
 import net.sf.tweety.graphs.util.GraphUtil;
 import net.sf.tweety.math.ComplexNumber;
 
 public class AnalysisTest {
 
 	public static void main(String[] args){
-		DungTheoryGenerator gen = new EnumeratingDungTheoryGenerator();
+		DungTheoryGenerator gen = new IsoSafeEnumeratingDungTheoryGenerator();
 		StableReasoner reasoner;
 		// 1: theory
 		// 2: number of stable extensions
@@ -23,7 +23,7 @@ public class AnalysisTest {
 			DungTheory theory = gen.generate();
 			reasoner = new StableReasoner(theory);			
 			
-			ComplexNumber[] eigenvalues = GraphUtil.eigenvalues(theory.getGraph());
+			ComplexNumber[] eigenvalues = GraphUtil.eigenvalues(theory);
 			byte real = 0;
 			byte imag = 0;
 			ComplexNumber largestRealEV = new ComplexNumber(Double.MIN_VALUE,0); 

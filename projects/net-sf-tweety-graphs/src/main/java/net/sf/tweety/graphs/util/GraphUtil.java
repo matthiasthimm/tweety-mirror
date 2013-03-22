@@ -8,6 +8,7 @@ import Jama.Matrix;
 import net.sf.tweety.graphs.Graph;
 import net.sf.tweety.graphs.Node;
 import net.sf.tweety.math.ComplexNumber;
+import net.sf.tweety.util.MapTools;
 
 /**
  * This abstract class contains some auxiliary methods for working
@@ -82,6 +83,33 @@ public abstract class GraphUtil {
 			result[i] = new ComplexNumber(ed.getRealEigenvalues()[i], ed.getImagEigenvalues()[i]);
 		}			
 		return result;
+	}
+	
+	/**
+	 * Checks whether the two graphs are isomorphic.
+	 * @param g1 some graph.
+	 * @param g2 some graph.
+	 * @return "true" iff the two graphs are isomorphic.
+	 */
+	public static boolean isIsomorphic(Graph<? extends Node> g1, Graph<? extends Node> g2){
+		// NOTE: we simply try out every possible permutation (note that this is an NP-hard problem anyway)
+		MapTools<Node, Node> mapTools = new MapTools<Node,Node>();
+		for(Map<Node,Node> isomorphism: mapTools.allBijections(new HashSet<Node>(g1.getNodes()), new HashSet<Node>(g2.getNodes()))){
+			boolean isomorphic = true;
+			for(Node a: g1){
+				for(Node b: g1.getChildren(a)){
+					if(!g2.getChildren(isomorphism.get(a)).contains(isomorphism.get(b))){
+						isomorphic = false;
+						break;
+					}
+				}
+				if(!isomorphic)
+					break;
+			}
+			if(isomorphic)
+				return true;
+		}		
+		return false;
 	}
 	
 }

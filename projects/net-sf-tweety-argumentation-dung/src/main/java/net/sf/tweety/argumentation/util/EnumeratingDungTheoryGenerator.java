@@ -79,8 +79,6 @@ public class EnumeratingDungTheoryGenerator implements DungTheoryGenerator {
 			arguments.add(new Argument("A1"));
 			this.possibleAttacks = this.generatePossibleAttacks(arguments);
 			this.attacks = new BitSet(this.possibleAttacks.size());
-			
-						
 		}else{
 			if(this.addOneToBitSet(this.attacks, this.possibleAttacks.size())){
 				this.currentSize++;

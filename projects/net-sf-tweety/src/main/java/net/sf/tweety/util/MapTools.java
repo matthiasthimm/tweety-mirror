@@ -44,6 +44,37 @@ public class MapTools<E,F> {
 		return result;
 	}
 	
+	/** Computes all bijections from E to F.
+	 * E and F have to be of the same cardinality.
+	 * @param domain some set.
+	 * @param range some set.
+	 * @return all bijections from E to F.
+	 */
+	public Set<Map<E,F>> allBijections(Collection<E> domain, Collection<F> range){
+		if(domain.size() != range.size())
+			throw new IllegalArgumentException("Domain and range have to be of the same cardinality");
+		Set<Map<E,F>> result = new HashSet<Map<E,F>>();
+		if(domain.size() == 1){
+			Map<E,F> newMap = new HashMap<E,F>();
+			newMap.put(domain.iterator().next(), range.iterator().next());
+			result.add(newMap);
+			return result;
+		}
+		E elem = domain.iterator().next();
+		Set<E> newDomain = new HashSet<E>(domain);
+		newDomain.remove(elem);
+		for(F elem2: range){			
+			Set<F> newRange = new HashSet<F>(range);
+			newRange.remove(elem2);
+			Set<Map<E,F>> subResult = this.allBijections(newDomain, newRange);
+			for(Map<E,F> map: subResult){
+				map.put(elem, elem2);
+				result.add(map);
+			}			
+		}		
+		return result;
+	}
+	
 	/**
 	 * This methods computes all maps from domain to range.
 	 * @param domain a set of elements.

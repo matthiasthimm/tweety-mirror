@@ -31,17 +31,17 @@ public class DefaultGraph<T extends Node> implements Graph<T>{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.graphs.Graph#add(net.sf.tweety.graphs.Node)
 	 */
-	public void add(T node){
-		this.nodes.add(node);
+	public boolean add(T node){
+		return this.nodes.add(node);
 	}
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.graphs.Graph#add(net.sf.tweety.graphs.Edge)
 	 */
-	public void add(Edge<T> edge){
+	public boolean add(Edge<T> edge){
 		if(!this.nodes.contains(edge.getNodeA()) || !this.nodes.contains(edge.getNodeB()))
 			throw new IllegalArgumentException("The edge connects node that are not in this graph.");
-		this.edges.add(edge);
+		return this.edges.add(edge);
 	}
 		
 	/* (non-Javadoc)
@@ -83,7 +83,7 @@ public class DefaultGraph<T extends Node> implements Graph<T>{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.graphs.Graph#getNeighbors(net.sf.tweety.graphs.Node)
 	 */
-	public Collection<T> getNeighbors(Node node){
+	public Collection<T> getNeighbors(T node){
 		if(!this.nodes.contains(node))
 			throw new IllegalArgumentException("The node is not in this graph.");
 		Set<T> neighbors = new HashSet<T>();
