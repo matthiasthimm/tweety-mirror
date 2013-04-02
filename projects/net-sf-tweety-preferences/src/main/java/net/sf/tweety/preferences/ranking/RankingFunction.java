@@ -2,18 +2,9 @@ package net.sf.tweety.preferences.ranking;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import net.sf.tweety.math.equation.Inequation;
-import net.sf.tweety.math.opt.*;
-import net.sf.tweety.math.opt.solver.*;
-import net.sf.tweety.math.term.IntegerVariable;
-import net.sf.tweety.math.term.Term;
-import net.sf.tweety.math.term.Variable;
 import net.sf.tweety.preferences.PreferenceOrder;
 import net.sf.tweety.preferences.Relation;
 import net.sf.tweety.util.Triple;
@@ -50,72 +41,22 @@ public class RankingFunction<T> extends Functions<T>{
 	 * @param po
 	 *            the given preference order
 	 */
-	public RankingFunction(PreferenceOrder<T> po) {
-
-		Map<T, IntegerVariable> intVar = new HashMap<T, IntegerVariable>();
-
-		Set<Triple<IntegerVariable, IntegerVariable, Relation>> optIneq = new HashSet<Triple<IntegerVariable, IntegerVariable, Relation>>();
-		// TODO: changing optimization problem (otherwise rank-gaps between two elements are closed)
-		OptimizationProblem opt = new OptimizationProblem(
-				OptimizationProblem.MINIMIZE);
-
-		for (final T e : po.getDomainElements()) {
-			intVar.put(e, new IntegerVariable(e.toString(), true));
-		}
-
-		Iterator<Triple<T, T, Relation>> it = po.iterator();
-
-		while (it.hasNext()) {
-			Triple<T, T, Relation> tempRel = it.next();
-
-			IntegerVariable tempVarF = null;
-			IntegerVariable tempVarS = null;
-
-			if (po.contains(tempRel)) {
-				tempVarF = intVar.get(tempRel.getFirst());
-				tempVarS = intVar.get(tempRel.getSecond());
-				switch (tempRel.getThird()) {
-				case LESS:
-					opt.add(new Inequation(tempVarF, tempVarS, Inequation.LESS));
-				case LESS_EQUAL:
-					opt.add(new Inequation(tempVarF, tempVarS,
-							Inequation.LESS_EQUAL));
-				default:
-					continue;
+	public RankingFunction(LevelingFunction<T> lf) {
+			Set<Entry<T, Integer>> tempRF = lf.entrySet();
+			HashMap<T, Integer> rf = new HashMap<T, Integer>();
+			
+			for(Entry<T, Integer> e : tempRF){
+				int pre = 0;
+				for(Entry<T, Integer> f : tempRF){
+					if (!e.equals(f) && f.getValue() < e.getValue()){
+						pre++;
+					}
 				}
-			} else {
-				continue;
+				rf.put(e.getKey(), pre);
 			}
-		}
-
-		List<Term> terms = new LinkedList<Term>();
-
-		for (Entry<T, IntegerVariable> e : intVar.entrySet()) {
-			Term t = e.getValue();
-			terms.add(t);
-		}
-
-		Iterator<Term> termIt = terms.listIterator();
-
-		if (termIt.hasNext()) {
-			Term t = termIt.next();
-			while (termIt.hasNext()) {
-				t = t.add(termIt.next());
-			}
-			opt.setTargetFunction(t);
-		}
-
-		LpSolve solver = new LpSolve(opt);
-		Map<Variable, Term> solution = solver.solve();
-		Map<T, Integer> sol = new HashMap<T, Integer>();
-		for (Entry<Variable, Term> e : solution.entrySet()) {
-			T key = (T) e.getKey().toString();
-			Integer val = (int) e.getValue().doubleValue();
-			sol.put(key, val);
-		}
-
-		this.putAll(sol);
+			this.putAll(rf);
 	}
+	
 	/**
 	 * returns the ranking function
 	 * 

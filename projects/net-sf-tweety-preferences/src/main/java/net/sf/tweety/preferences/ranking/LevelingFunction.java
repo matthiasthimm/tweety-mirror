@@ -22,25 +22,26 @@ import net.sf.tweety.util.Triple;
  * This class is meant to provide leveling functions to given preference orders
  * and vice versa.
  * 
- * TODO exception handling for invalid preference orders (total preorder)
- * TOOD neue Ordnung RankingFunction (rank(o) = |Elemente echt grÃ¶ÃŸer o|)
+ * TODO exception handling for invalid preference orders (total preorder) TOOD
+ * neue Ordnung RankingFunction (rank(o) = |Elemente echt größer o|)
+ * 
  * @author Bastian Wolf
  * @param <T>
  * 
  */
 
 public class LevelingFunction<T> extends Functions<T> {
-	
+
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
-	 * constructs a new, empty ranking function
-	 * caller can use Map-method putAll to fill this empty ranking function
+	 * constructs a new, empty ranking function caller can use Map-method putAll
+	 * to fill this empty ranking function
 	 */
-	public LevelingFunction(){
+	public LevelingFunction() {
 		new HashMap<T, Integer>();
 	}
-	
+
 	/**
 	 * this constructor creates a ranking function using a given preference
 	 * order
@@ -122,7 +123,16 @@ public class LevelingFunction<T> extends Functions<T> {
 	public Map<T, Integer> getLevelingFunction() {
 		return this;
 	}
-	
+
+	/**
+	 * returns a new RankingFunction based on this LevelingFunction
+	 * 
+	 * @return
+	 */
+	public RankingFunction<T> getRankingFunction() {
+		return new RankingFunction<T>(this);
+	}
+
 	/**
 	 * this method returns a preference order made out of an ranking function
 	 * 
@@ -130,65 +140,100 @@ public class LevelingFunction<T> extends Functions<T> {
 	 */
 	public PreferenceOrder<T> generatePreferenceOrder() {
 		Set<Triple<T, T, Relation>> tempPO = new HashSet<Triple<T, T, Relation>>();
-		
+
 		Map<T, Integer> in = this;
 
 		for (Entry<T, Integer> f : in.entrySet()) {
 			for (Entry<T, Integer> s : in.entrySet()) {
-				
-				if (!f.getKey().equals(s.getKey())){
-					if (f.getValue() < s.getValue()){
-						Triple<T, T, Relation> rel = new Triple<T, T, Relation>(f.getKey(), s.getKey(), Relation.LESS);
+
+				if (!f.getKey().equals(s.getKey())) {
+					if (f.getValue() < s.getValue()) {
+						Triple<T, T, Relation> rel = new Triple<T, T, Relation>(
+								f.getKey(), s.getKey(), Relation.LESS);
 						tempPO.add(rel);
-					} else if (f.getValue() == s.getValue()){
-						Triple<T, T, Relation> rel = new Triple<T, T, Relation>(f.getKey(), s.getKey(), Relation.LESS_EQUAL);
+					} else if (f.getValue() == s.getValue()) {
+						Triple<T, T, Relation> rel = new Triple<T, T, Relation>(
+								f.getKey(), s.getKey(), Relation.LESS_EQUAL);
 						tempPO.add(rel);
 					} else
 						continue;
-						
-				}				
+
+				}
 			}
 		}
 		PreferenceOrder<T> po = new PreferenceOrder<T>(tempPO);
 		return po;
 	}
-	
-	
+
 	/**
 	 * weakens the given element in the ranking function
-	 * @param element the element being weakened
+	 * 
+	 * @param element
+	 *            the element being weakened
 	 */
-	public void weakenElement(T element){
-		// the amount of elements that are predecessors of element
-		int amount = this.getElementsByValue(this.get(element)-1).size();
-		// weakening the elements rank by this amount
-		this.put(element, this.get(element)+amount);
-		
-		// strengthen each element on the same rank as the now weaken element
-		for(Entry<T, Integer> e : getElementsByValue(this.get(element))){
-			if (!e.getKey().equals(element)){
-				this.put(e.getKey(), e.getValue()-1);
-			}				
+	public void weakenElement(T element) {
+		// // the amount of elements that are predecessors of element
+		// int amount = this.getElementsByValue(this.get(element)-1).size();
+		// // weakening the elements rank by this amount
+		// this.put(element, this.get(element)+amount);
+		//
+		// // strengthen each element on the same rank as the now weaken element
+		// for(Entry<T, Integer> e : getElementsByValue(this.get(element))){
+		// if (!e.getKey().equals(element)){
+		// this.put(e.getKey(), e.getValue()-1);
+		// }
+		// }
+
+		HashMap<T, Integer> lf = this;
+		int level = getElementsByValue(this.get(element)).size();
+		int val = this.get(element);
+
+		if (level > 1) {
+			for (Entry<T, Integer> e : this.entrySet()) {
+				if (e.getValue() > val
+						|| e.getKey().toString().equals(element.toString())) {
+					lf.put(e.getKey(), e.getValue() + 1);
+				}
+			}
 		}
+		
+		this.putAll(lf);
 	}
-	
-	
+
 	/**
 	 * strengthens the given element in the ranking function
-	 * @param element the element being strengthened 
+	 * 
+	 * @param element
+	 *            the element being strengthened
 	 */
-	public void strengthenElement(T element){
-		// calculating the amount of elements ranked equally to the element
-		int amount = this.getElementsByValue(this.get(element)).size()-1;
-		// strengthening the elements rank by this amount
-		this.put(element, this.get(element)-amount);
+	public void strengthenElement(T element) {
+//		// calculating the amount of elements ranked equally to the element
+//		int amount = this.getElementsByValue(this.get(element)).size();
+//		// strengthening the elements rank by this amount
+//		this.put(element, this.get(element) - amount);
+//
+//		// weakening each element on the same rank as the now strengthen element
+//		for (Entry<T, Integer> e : getElementsByValue(this.get(element))) {
+//			if (!e.getKey().equals(element)) {
+//				this.put(e.getKey(), e.getValue() + 1);
+//			}
+//		}
 		
-		// weakening each element on the same rank as the now strengthen element
-		for(Entry<T, Integer> e : getElementsByValue(this.get(element))){
-			if (!e.getKey().equals(element)){
-				this.put(e.getKey(), e.getValue()+1);
-			}				
+		HashMap<T, Integer> lf = this;
+		int level = getElementsByValue(this.get(element)).size();
+		int val = this.get(element);
+
+		if (level > 1) {
+			for (Entry<T, Integer> e : this.entrySet()) {
+				if (e.getValue() >= val
+						&& !e.getKey().toString().equals(element.toString())) {
+					lf.put(e.getKey(), e.getValue() + 1);
+				}
+			}
+		} else {
+			lf.put(element, this.get(element)-1);
 		}
+		this.putAll(lf);
 	}
-	
+
 }

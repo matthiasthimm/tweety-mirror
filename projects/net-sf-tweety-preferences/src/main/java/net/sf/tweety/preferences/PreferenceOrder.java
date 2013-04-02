@@ -71,7 +71,7 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 		return this.relations.add(t);
 	}
 	
-	
+
 	/**
 	 * adds two given (single) elements as pair into the set
 	 * 
@@ -217,6 +217,11 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	public boolean contains(Object o){
 		return (relations.contains(o));
 	}
+	
+	
+//	public boolean containsElement(T element){
+//		return (relations.contain)
+//	}
 	
 	/**
 	 * returns the size of the set

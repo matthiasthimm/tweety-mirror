@@ -99,24 +99,8 @@ public abstract class ScoringPreferenceAggregator<T> implements
 		LevelingFunction<T> tempRF = new LevelingFunction<T>();
 		tempRF.putAll(elem);
 	
-/*		//Outdated:
-		for (Entry<T, Integer> f : elem.entrySet()) {
-			for (Entry<T, Integer> s : elem.entrySet()) {
-				if (!f.getKey().equals(s.getKey())){
-					if (f.getValue() < s.getValue()){
-						Triple<T, T, Relation> rel = new Triple<T, T, Relation>(f.getKey(), s.getKey(), Relation.LESS);
-						tempPO.add(rel);
-					} else if (f.getValue() == s.getValue()){
-						Triple<T, T, Relation> rel = new Triple<T, T, Relation>(f.getKey(), s.getKey(), Relation.LESS_EQUAL);
-						tempPO.add(rel);
-					} else
-						continue;
-				}
-			}
-		}
- * 
- */
+
 		return tempRF.generatePreferenceOrder();
-//		return tempPO;
+
 	}
 }
