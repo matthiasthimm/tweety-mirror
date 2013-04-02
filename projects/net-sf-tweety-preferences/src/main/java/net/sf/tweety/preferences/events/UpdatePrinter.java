@@ -6,7 +6,7 @@ public class UpdatePrinter<T> implements UpdateListener<T> {
 	
 	public void eventOccurred(UpdateEvent<T> e) {
 		
-		Object agg = e.getSource();
+//		Object agg = e.getSource();
 		
 	}
 
