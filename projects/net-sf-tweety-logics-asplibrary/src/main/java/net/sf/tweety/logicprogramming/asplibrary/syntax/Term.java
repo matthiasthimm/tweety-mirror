@@ -17,12 +17,18 @@ public interface Term<T> {
 	 * of the term.
 	 * @return
 	 */
-	public T get();
+	T get();
 	
 	/**
 	 * changes the java-object representation 
 	 * of the term.
 	 * @param value
 	 */
-	public void set(T value);
+	void set(T value);
+	
+	/**
+	 * Copies the data of the term to a new object
+	 * @return	The cloned object
+	 */
+	Object clone();
 }

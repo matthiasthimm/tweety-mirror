@@ -22,6 +22,15 @@ public class ListTerm implements Term<List<Term<?>>> {
 		this.head.addAll(head);
 	}
 	
+	public ListTerm(ListTerm other) {
+		for(Term<?> t : other.head) {
+			this.head.add((Term<?>)t.clone());
+		}
+		for(Term<?> t : other.tail) {
+			this.tail.add((Term<?>)t.clone());
+		}
+	}
+	
 	/**
 	 * constructor for list elements with given [head|tail].
 	 * @param head
@@ -45,6 +54,11 @@ public class ListTerm implements Term<List<Term<?>>> {
 		return reval;
 	}
 
+	@Override
+	public Object clone() {
+		return new ListTerm(this);
+	}
+	
 	@Override
 	public String toString() {
 		// return list

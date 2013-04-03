@@ -14,18 +14,25 @@ import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
 
 public class BeliefSet {
 
-	public Map<String, Set<Literal>>	literals;
+	public Map<String, Set<Literal>>	literals = new HashMap<String, Set<Literal>>();
 	
+	public BeliefSet() {}
+	
+	public BeliefSet(BeliefSet other) {
+		for(String key : other.literals.keySet()) {
+			Set<Literal> set = new HashSet<Literal>();
+			this.literals.put(key, set);
+			
+			for(Literal l : other.literals.get(key)) {
+				set.add((Literal)l.clone());
+			}
+		}
+	}
 	
 	public BeliefSet(Collection<Literal> lits) {
 		literals = new HashMap<String,Set<Literal>>();
 		for (Literal l : lits)
 			add(l);
-	}
-	
-	
-	public BeliefSet() {
-		literals = new HashMap<String,Set<Literal>>();
 	}
 	
 	
@@ -48,6 +55,20 @@ public class BeliefSet {
 			reval.addAll(literals.get(key));
 		}
 		return reval;
+	}
+	
+	public Set<String> getFunctors() {
+		return literals.keySet();
+	}
+	
+	public void remove(String functor) {
+		literals.remove(functor);
+	}
+	
+	public void removeAll(Collection<String> functors) {
+		for(String str : functors) {
+			remove(str);
+		}
 	}
 	
 	public Set<Literal> getLiteralsBySymbol(String functor) {
@@ -95,7 +116,7 @@ public class BeliefSet {
 			for (Literal l : lits) {
 				Rule r = new Rule();
 				r.addHead(l);
-				p.addRule(r);
+				p.add(r);
 			}
 		}
 		
@@ -132,6 +153,11 @@ public class BeliefSet {
 		this.literals.put(functor, sl);
 	}
 
+	public boolean contains(Literal lit) {
+		Set<Literal> set = literals.get(lit.getAtom().getPredicate().getName());
+		return set != null ? set.contains(lit) : false;
+	}
+	
 	public boolean containsAll(Collection<Literal> lits) {
 		if(lits == null)
 			throw new NullPointerException();
@@ -167,5 +193,10 @@ public class BeliefSet {
 		}
 		
 		return true;
+	}
+	
+	@Override
+	public Object clone() {
+		return new BeliefSet(this);
 	}
 }

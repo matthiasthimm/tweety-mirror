@@ -5,20 +5,21 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.Reader;
+import java.io.StringReader;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import net.sf.tweety.Signature;
 import net.sf.tweety.logicprogramming.asplibrary.parser.ELPParser;
 
 /**
- * this class models a logical program, which is
- * a collection of rules.
+ * this class models an disjunctiv logical program, which is
+ * a collection of rules. The rules are ordered alphabetically 
  * 
  * @author Tim Janus
  * @author Thomas Vengels
@@ -29,11 +30,8 @@ public class Program {
 	/** The signature of the logic program */
 	private ElpSignature signature;
 	
-	/** a set of all atoms used in the logic program */
-	private Set<Atom> atoms = new HashSet<Atom>();
-	
 	/** a set of all rules of the logic program */
-	private Set<Rule> rules = new HashSet<Rule>();
+	private Set<Rule> rules = new TreeSet<Rule>();
 	
 	/** Default Ctor: Does nothing */
 	public Program() {}
@@ -42,13 +40,7 @@ public class Program {
 	public Program(Program other) {
 		// TODO: COpy signature
 		//this.signature = new ElpSignature(other.signature);
-		this.atoms.addAll(other.getAtoms());
 		this.rules.addAll(other.getRules()); 
-	}
-	
-	/** @return	the set of atoms */
-	public Set<Atom> getAtoms() {
-		return atoms;
 	}
 	
 	//Differs from contains in that it does a deep comparision of the rules rather than a reference-based one
@@ -69,21 +61,35 @@ public class Program {
 		return false;
 	}
 	
+	public void add(String expr) {
+		try {
+			expr = expr.trim();
+			if(expr.charAt(expr.length() -1) != '.')
+				expr += ".";
+			
+			ELPParser ep = new ELPParser( new StringReader( expr ));
+			List<Rule> rules = ep.program();
+			this.addAll(rules);
+		} catch (Exception e) {
+			System.err.println("Rule: could not parse input!");
+			System.err.println(e);
+			System.err.println("Input: " + expr);
+		}
+	}
+	
 	/**
 	 * Adds the given rule to the program
 	 * @param rule	Reference to the rule to add
 	 * @return		true if the rule was successful added (not part of the programs
 	 * 				rules yet), false otherwise
 	 */
-	public boolean addRule(Rule rule) {
+	public boolean add(Rule rule) {
 		boolean reval = rules.add(rule);
-		updateAtoms(rule);
 		return reval;
 	}
 	
-	public void addAllRules(Collection<Rule> rules) {
-		rules.addAll(rules);
-		updateAtoms();
+	public void addAll(Collection<Rule> rules) {
+		this.rules.addAll(rules);
 	}
 	
 	/** @return 	An unmodifiable set of the rules of the program */
@@ -97,7 +103,6 @@ public class Program {
 	 */
 	public void removeAllRules(Collection<Rule> toRemove) {
 		rules.removeAll(toRemove);
-		updateAtoms();
 	}
 	
 	/** 
@@ -105,7 +110,6 @@ public class Program {
 	 */
 	public void clearRules() {
 		rules.clear();
-		atoms.clear();
 	}
 	
 	public int size() {
@@ -118,7 +122,6 @@ public class Program {
 	 */
 	public void add(Program other) {
 		rules.addAll(other.getRules());
-		atoms.addAll(other.getAtoms());
 	}
 	
 	@Override
@@ -153,7 +156,7 @@ public class Program {
 			List<Rule> lr = ep.program();
 			ret = new Program();
 			for(Rule r: lr)
-				ret.addRule(r);
+				ret.add(r);
 			ret.calcSignature();
 		} catch (Exception e) {
 			System.err.println("Error while loading program: " + e.getMessage());
@@ -172,14 +175,27 @@ public class Program {
 	private void calcSignature() {
 		signature = new ElpSignature();
 		for(Rule r : rules) {
-			List<Literal> literals = new LinkedList<Literal>();
+			List<RuleElement> literals = new LinkedList<RuleElement>();
 			literals.addAll(r.getBody());
 			literals.addAll(r.getHead());
 			
-			for(Literal l : literals) {
+			for(RuleElement l : literals) {
 				signature.add(l);
 			}
 		}
+	}
+	
+	/**
+	 * Checks if the program is an extendend programs, that means the heads of the
+	 * literals have not more than one literal.
+	 * @return	True if the program is an extended program, false otherwise.
+	 */
+	public boolean isExtendedProgram() {
+		for(Rule r : rules) {
+			if(r.head.size() > 1)
+				return false;
+		}
+		return true;
 	}
 	
 	public void saveTo(String filename) {
@@ -240,7 +256,7 @@ public class Program {
 			} else {
 				defRule.addBody(origRule.getBody());
 			}
-			reval.addRule(defRule);
+			reval.add(defRule);
 		}
 		return reval;
 	}
@@ -253,7 +269,15 @@ public class Program {
 	public boolean add(Atom fact) {
 		Rule r = new Rule();
 		r.addHead(fact);
-		return addRule(r);
+		return add(r);
+	}
+	
+	public boolean add(Literal head, RuleElement... bodyElements) {
+		Rule r = new Rule(head);
+		for(RuleElement a : bodyElements) {
+			r.addBody(a);
+		}
+		return add(r);
 	}
 	
 	@Override
@@ -261,32 +285,15 @@ public class Program {
 		return new Program(this);
 	}
 	
-	private void updateAtoms(Rule r) {
-		for(Literal l : r.getLiterals()) {
-			atoms.add(l.getAtom());
-		}
-	}
-	
-	private void updateAtoms() {
-		atoms.clear();
-		for(Rule r : rules) {
-			for(Literal l : r.getLiterals()) {
-				atoms.add(l.getAtom());
-			}
-		}
-	}
-	
 	@Override
 	public boolean equals(Object other) {
 		if(!(other instanceof Program)) return false;
 		Program op = (Program)other;
-		boolean eq1 =  op.rules.equals(rules); 
-		boolean eq2 =  op.atoms.equals(atoms);
-		return eq1 && eq2;
+		return op.rules.equals(rules);
 	}
 	
 	@Override
 	public int hashCode() {
-		return rules.hashCode() + atoms.hashCode();
+		return rules.hashCode();
 	}
 }

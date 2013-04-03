@@ -1,5 +1,9 @@
 package net.sf.tweety.logicprogramming.asplibrary.syntax;
 
+import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
 /**
  * this class models a default negated literal. in answer set
  * programming, the body of a rule is usually composed of a
@@ -19,7 +23,7 @@ package net.sf.tweety.logicprogramming.asplibrary.syntax;
  * @author Thomas Vengels
  *
  */
-public class Not implements Literal {
+public class Not implements RuleElement {
 
 	Literal		lit;
 
@@ -27,9 +31,8 @@ public class Not implements Literal {
 		this.lit = inner;		
 	}
 	
-	@Override
-	public Atom getAtom() {
-		return lit.getAtom();
+	public Not(Not other) {
+		this.lit = (Literal)other.lit.clone();
 	}
 
 	@Override
@@ -50,5 +53,27 @@ public class Not implements Literal {
 	@Override
 	public boolean isGround() {
 		return lit.isGround();
+	}
+	
+	@Override
+	public Object clone() {
+		return new Not(this);
+	}
+
+	@Override
+	public RuleElement invert() {
+		return new Not((Literal)lit.invert());
+	}
+
+	@Override
+	public List<Term<?>> getTerms() {
+		return lit.getTerms();
+	}
+
+	@Override
+	public SortedSet<Literal> getLiterals() {
+		SortedSet<Literal> reval = new TreeSet<Literal>();
+		reval.add(lit);
+		return reval;
 	}
 }

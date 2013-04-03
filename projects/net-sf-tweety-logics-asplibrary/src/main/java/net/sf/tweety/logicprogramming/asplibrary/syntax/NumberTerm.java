@@ -1,15 +1,19 @@
 package net.sf.tweety.logicprogramming.asplibrary.syntax;
 
-public class Number implements Term<Integer> {
+public class NumberTerm implements Term<Integer> {
 
 	protected int	num;
 	
-	public	Number(int n) {
+	public	NumberTerm(int n) {
 		this.num = n;
 	}
 	
-	public	Number(String n) {
+	public	NumberTerm(String n) {
 		this.num = Integer.parseInt(n);
+	}
+	
+	public NumberTerm(NumberTerm other) {
+		this.num = other.num;
 	}
 
 	public void set(String value) {
@@ -30,5 +34,9 @@ public class Number implements Term<Integer> {
 	@Override
 	public String	toString() {
 		return ""+this.num;
+	}
+	
+	public Object clone() {
+		return new NumberTerm(this);
 	}
 }

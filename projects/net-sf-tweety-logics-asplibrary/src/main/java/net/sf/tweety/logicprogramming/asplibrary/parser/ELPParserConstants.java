@@ -49,7 +49,7 @@ public interface ELPParserConstants {
   /** RegularExpression Id. */
   int UCHAR = 24;
   /** RegularExpression Id. */
-  int BLANK = 25;
+  int NEG = 25;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -81,7 +81,7 @@ public interface ELPParserConstants {
     "<VAR>",
     "<CHAR>",
     "<UCHAR>",
-    "\"_\"",
+    "\"-\"",
     "\",\"",
     "\"=\"",
     "\"<=\"",
@@ -91,7 +91,6 @@ public interface ELPParserConstants {
     "\"!=\"",
     "\"+\"",
     "\"*\"",
-    "\"-\"",
   };
 
 }

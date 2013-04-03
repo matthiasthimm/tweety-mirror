@@ -2,8 +2,11 @@ package net.sf.tweety.logicprogramming.asplibrary.syntax;
 
 import java.io.StringReader;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import net.sf.tweety.logicprogramming.asplibrary.parser.ELPParser;
 
@@ -19,6 +22,13 @@ public class Atom implements Literal {
 
 	protected Predicate		pred;
 	protected List<Term<?>>	terms = new LinkedList<Term<?>>();
+	
+	public Atom(Atom other) {
+		this.pred = new Predicate(other.getName(), other.getArity());
+		for(Term<?> t : other.getTerms()) {
+			this.terms.add((Term<?>)t.clone());
+		}
+	}
 	
 	public Atom(String symbol, Term<?>... terms) {
 		this.pred = new Predicate(symbol, terms.length);
@@ -42,7 +52,7 @@ public class Atom implements Literal {
 	public Atom(String expr) {
 		try {
 			ELPParser ep = new ELPParser( new StringReader( expr ));
-			Atom a = ep.atom();
+			Atom a = (Atom)ep.atom();
 			this.pred = a.pred;
 			this.terms = a.terms;
 		} catch (Exception e) {
@@ -70,7 +80,7 @@ public class Atom implements Literal {
 	}
 	
 	public List<Term<?>> getTerms() {
-		return this.terms;
+		return Collections.unmodifiableList(this.terms);
 	}
 
 	@Override 
@@ -94,6 +104,14 @@ public class Atom implements Literal {
 			return null;
 		
 		return this.terms.get(index);
+	}
+	
+	@Override
+	public Literal addTerm(Term<?> tval)  {
+		Atom reval = (Atom)this.clone();
+		reval.terms.add(tval);
+		reval.pred.arity = reval.terms.size();
+		return reval;
 	}
 	
 	public void setTerm(int index, Term<?> tval) {
@@ -126,6 +144,11 @@ public class Atom implements Literal {
 		}
 	}
 	
+	@Override
+	public Object clone() {
+		return new Atom(this);
+	}
+	
 	public String getName() {
 		return pred.getName();
 	}
@@ -143,5 +166,17 @@ public class Atom implements Literal {
 			}
 		}
 		return true;
+	}
+
+	@Override
+	public RuleElement invert() {
+		return new Neg(this);
+	}
+
+	@Override
+	public SortedSet<Literal> getLiterals() {
+		SortedSet<Literal> reval = new TreeSet<Literal>();
+		reval.add(this);
+		return reval;
 	}
 }

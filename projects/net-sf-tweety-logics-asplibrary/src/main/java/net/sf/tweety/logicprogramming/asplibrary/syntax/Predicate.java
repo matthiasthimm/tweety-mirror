@@ -9,7 +9,7 @@ public class Predicate {
 
 	private String name;
 	
-	private int arity;
+	protected int arity;
 	
 	public Predicate(String name) {
 		this(name, 0);
@@ -27,7 +27,6 @@ public class Predicate {
 	public int getArity() {
 		return arity;
 	}
-
 
 	@Override
 	public boolean equals(Object other) {

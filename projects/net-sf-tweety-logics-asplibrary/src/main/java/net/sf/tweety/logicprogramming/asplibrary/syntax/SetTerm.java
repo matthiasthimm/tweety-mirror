@@ -14,6 +14,13 @@ public class SetTerm implements Term<Set<Term<?>>> {
 
 	Set<Term<?>>	terms;
 	
+	public SetTerm(SetTerm other) {
+		this.terms = new HashSet<Term<?>>();
+		for(Term<?> t : other.terms) {
+			terms.add((Term<?>)t.clone());
+		}
+	}
+	
 	public SetTerm(Collection<Term<?>> terms) {
 		this.terms = new HashSet<Term<?>>(terms);
 	}
@@ -27,6 +34,11 @@ public class SetTerm implements Term<Set<Term<?>>> {
 	@Override
 	public Set<Term<?>> get() {
 		return terms;
+	}
+	
+	@Override
+	public Object clone() {
+		return new SetTerm(this);
 	}
 
 	@Override

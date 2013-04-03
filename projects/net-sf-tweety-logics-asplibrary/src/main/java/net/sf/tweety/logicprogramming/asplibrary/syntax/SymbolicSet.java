@@ -18,6 +18,14 @@ public class SymbolicSet {
 		this.lits = literals;
 	}
 	
+	public SymbolicSet(SymbolicSet other) {
+		this.vars = new HashSet<String>(other.vars);
+		this.lits = new HashSet<Literal>();
+		for(Literal l : other.lits) {
+			lits.add((Literal)l.clone());
+		}
+	}
+	
 	public Set<String> getVariables() {
 		return this.vars;
 	}
@@ -50,5 +58,10 @@ public class SymbolicSet {
 		ret += "}";
 		
 		return ret;
+	}
+	
+	@Override
+	public Object clone() {
+		return new SymbolicSet(this);
 	}
 }

@@ -1,16 +1,22 @@
 package net.sf.tweety.logicprogramming.asplibrary.syntax;
 
 import java.io.StringReader;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 import net.sf.tweety.logicprogramming.asplibrary.parser.ELPParser;
 
 
 /**
- * This class models a rule for an extended
- * logic program. a rule is a collection
- * of literals, with separate lists for the
- * head and the body.
+ * This class models a rule for a disjunctive logic program.
+ * A rule is a collection of literals and more sophisticated rule elements
+ * like Aggregate or Arithmetic. It uses separate lists for the
+ * head and the body. It also implements the Comperable interface to allow
+ * the ordering in collections.
  * 
  * @author Tim Janus
  * @author Thomas Vengels
@@ -19,12 +25,30 @@ import net.sf.tweety.logicprogramming.asplibrary.parser.ELPParser;
 public class Rule implements Comparable<Rule>{
 
 	List<Literal>	head = new LinkedList<Literal>();
-	List<Literal>	body = new LinkedList<Literal>();
+	List<RuleElement>	body = new LinkedList<RuleElement>();
 	
-	public Rule() {
+	public Rule() {}
+	
+	public Rule(Rule other) {
+		for(Literal headLits : other.head) {
+			this.head.add((Literal)headLits.clone());
+		}
+		
+		for(RuleElement bodyElement : other.body) {
+			this.body.add((RuleElement)bodyElement.clone());
+		}
 	}
 	
-	public Rule(List<Literal> litsHead, List<Literal> litsBody) {
+	public Rule(Literal head) {
+		this.head.add(head);
+	}
+	
+	public Rule(Literal head, List<RuleElement> litsBody) {
+		this.head.add(head);
+		this.body.addAll(litsBody);
+	}
+	
+	public Rule(List<Literal> litsHead, List<RuleElement> litsBody) {
 		this.head.addAll(litsHead);
 		this.body.addAll(litsBody);
 	}
@@ -42,34 +66,43 @@ public class Rule implements Comparable<Rule>{
 		}
 	}
 	
-	public List<Literal>	getHead() {
+	public List<Literal> getHead() {
 		return Collections.unmodifiableList(this.head);
 	}
 	
-	public List<Literal>	getBody() {
+	public List<RuleElement> getBody() {
 		return Collections.unmodifiableList(this.body); 
 	}
 	
-	public List<Literal> getLiterals() {
-		List<Literal> reval = new LinkedList<Literal>();
+	public List<RuleElement> getProgramElements() {
+		List<RuleElement> reval = new LinkedList<RuleElement>();
 		reval.addAll(head);
 		reval.addAll(body);
 		return reval;
 	}
 	
-	public void		addHead(Literal l) {
+	public Set<Literal> getLiterals() {
+		Set<Literal> literals = new HashSet<Literal>();
+		literals.addAll(head);
+		for(RuleElement pe : body) {
+			literals.addAll(pe.getLiterals());
+		}
+		return literals;
+	}
+	
+	public void	addHead(Literal l) {
 		this.head.add(l);
 	}
 	
-	public void		addBody(Literal l) {
+	public void	addBody(RuleElement l) {
 		this.body.add(l);
 	}
 	
-	public void		addHead(Collection<? extends Literal> l) {
+	public void	addHead(Collection<? extends Literal> l) {
 		this.head.addAll(l);
 	}
 	
-	public void		addBody(Collection<? extends Literal> l) {
+	public void	addBody(Collection<? extends RuleElement> l) {
 		this.body.addAll(l);
 	}
 	
@@ -108,9 +141,7 @@ public class Rule implements Comparable<Rule>{
 	 */
 	public boolean isSafe() {
 		Set<Term<?>> variables = new HashSet<Term<?>>();
-		Set<Literal> allLit = new HashSet<Literal>();
-		allLit.addAll(head);
-		allLit.addAll(body);
+		Set<Literal> allLit = getLiterals();
 		
 		// TODO: only depth of one... the entire asp-library has major desing issues... best solution: Redesign core interfaces
 		// TOTALLY HACKED WILL NOT WORK FOR EVERYTHING:...
@@ -218,5 +249,10 @@ public class Rule implements Comparable<Rule>{
 		}
 		
 		return comp;
+	}
+	
+	@Override
+	public Object clone() {
+		return new Rule(this);
 	}
 }

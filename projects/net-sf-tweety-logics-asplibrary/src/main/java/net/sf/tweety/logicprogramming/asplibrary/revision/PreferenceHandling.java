@@ -18,6 +18,7 @@ import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
 import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSet;
 import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSetList;
+import net.sf.tweety.revision.IterativeRevision;
 import net.sf.tweety.util.Pair;
 
 
@@ -37,10 +38,20 @@ import net.sf.tweety.util.Pair;
  * 
  * @author Tim Janus
  **/
-public class PreferenceHandling implements RevisionApproach {
+public class PreferenceHandling extends IterativeRevision<Program> {
+	
+	private Solver solver;
+	
+	public PreferenceHandling(Solver solver) {
+		this.solver = solver;
+	}
+	
+	public void setSolver(Solver solver) {
+		this.solver = solver;
+	}
 	
 	@Override
-	public Program revision(Program p1, Program p2, Solver solver) throws SolverException {
+	public Program revision(Program p1, Program p2) {
 		Program combined = new Program();
 		Program concat = new Program();
 		
@@ -73,7 +84,14 @@ public class PreferenceHandling implements RevisionApproach {
 		// get answerset of combined defaultificated programs.
 		concat.add(pd1);
 		concat.add(pd2);
-		AnswerSetList asDefault = solver.computeModels(concat, 5);
+		AnswerSetList asDefault;
+		try {
+			asDefault = solver.computeModels(concat, 5);
+		} catch (SolverException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 		
 		/*
 		System.out.println("Default Program: " + concat);
@@ -88,7 +106,11 @@ public class PreferenceHandling implements RevisionApproach {
 		Set<Rule> toRemoveCollection = new HashSet<Rule>();
 		for(Pair<Rule, Rule> conflict : conflicts) {
 			for(AnswerSet as : asDefault) {
-				if(	as.containsAll(conflict.getSecond().getBody()) &&
+				Set<Literal> literals = new HashSet<Literal>();
+				literals.addAll(conflict.getSecond().getLiterals());
+				literals.removeAll(conflict.getSecond().getHead());
+				
+				if(	as.containsAll(literals) &&
 					!as.containsAll(conflict.getSecond().getHead())) {
 					toRemoveCollection.add(conflict.getFirst());
 				}
@@ -151,7 +173,6 @@ public class PreferenceHandling implements RevisionApproach {
 	 * Temporary functional test method.
 	 */
 	public static void main(String [] args) throws SolverException {
-		PreferenceHandling ph = new PreferenceHandling();
 		// Example from Mirja diplom thesis.
 		String program1 = "a.\nb:-not c.";
 		String program2 = "-a:-not b.";
@@ -169,7 +190,8 @@ public class PreferenceHandling implements RevisionApproach {
 		System.out.println("P2:");
 		System.out.println(p2.toString()+"\n" + clingo.computeModels(p2, 5) + "\n");
 		
-		Program r = ph.revision(p1, p2, clingo);		
+		PreferenceHandling ph = new PreferenceHandling(clingo);
+		Program r = ph.revision(p1, p2);		
 
 		System.out.println("Revised:");
 		System.out.println(r.toString()+"\n\n");

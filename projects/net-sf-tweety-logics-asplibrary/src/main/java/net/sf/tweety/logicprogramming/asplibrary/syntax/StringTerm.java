@@ -30,6 +30,9 @@ public abstract class StringTerm implements Term<String> {
 	}
 	
 	@Override
+	public abstract Object clone();
+	
+	@Override
 	public boolean equals(Object o) {
 		if (o instanceof StringTerm) {
 			StringTerm st = (StringTerm) o;

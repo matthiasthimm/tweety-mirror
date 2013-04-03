@@ -12,6 +12,10 @@ public class Constant extends StringTerm {
 		super(value);
 	}
 
+	public Constant(Constant other) {
+		super(other.get());
+	}
+	
 	@Override
 	public void set(String value) {
 		if(value == null || value.length() == 0)
@@ -22,6 +26,10 @@ public class Constant extends StringTerm {
 					"'" + value + "'");
 		
 		this.name = value;
+	}
+	
+	public Object clone() {
+		return new Constant(this);
 	}
 }
 

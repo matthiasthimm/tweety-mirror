@@ -4,7 +4,6 @@
 
 import java.util.*;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.*;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Number;
 
 @SuppressWarnings("all")
 public class ELPParser{
@@ -29,15 +28,15 @@ public class ELPParser{
 }TOKEN :{  < NUMBER : (< DIGIT >)+ >| < DIGIT : [ "0"-"9" ] >
 | < NOT : "not" >
 | < TEXTOR : "v" >
-| < SYMBOL : ("#")? < CHAR > (< CHAR >|< BLANK >|< UCHAR >|< DIGIT >)* >
-| < VAR : (["A"-"Z"])+ (< CHAR >|< BLANK >| (["A"-"Z"])+|< DIGIT >)* >
+| < SYMBOL : < VAR > | (("#")? (< CHAR > | "_" | < UCHAR > | < DIGIT >)+) >
+| < VAR : ("_" | < UCHAR >) (< CHAR > | "_" | < UCHAR > | < DIGIT >)* >
 | < CHAR : ["a"-"z"]>
 | < UCHAR : ["A"-"Z"] >
-| < BLANK : "_" >
+| < NEG : "-" >
 }int one_line() :{}{
   rule()  {    return 0;
   }}
-Atom atom() :
+RuleElement atom() :
 {
 	Atom ret = null;
 	Token pred = null;
@@ -103,7 +102,7 @@ Term<?> term() :
   Token s;
   List<Term<?>> tl1 = null, tl2 = null;}
 {
-  	(s = < VAR >|s=< BLANK >)
+  	(s = < VAR >)
   	{		return new Variable(s.image);
   	}
 | 	s = < SYMBOL >
@@ -137,7 +136,7 @@ Term<?> term() :
 	}
 |
 	s = < NUMBER >
-	{		return new Number(s.image);
+	{		return new NumberTerm(s.image);
 	}
 |
 	< SQLBRA >
@@ -167,7 +166,8 @@ Term<?> term() :
 Rule rule() :
 {
   Rule r;
-  List<Literal>	head = new LinkedList<Literal >(), body = new LinkedList<Literal >();	boolean wc = false;
+  List<Literal>	head = new LinkedList<Literal >();
+  List<RuleElement > body = new LinkedList<RuleElement >();	boolean wc = false;
 }
 {
 
@@ -225,9 +225,9 @@ List<Literal> literalList() :
 	}
 }
 
-List<Literal > literalListBody() :
-{	List<Literal >	lits = new LinkedList<Literal>();
-	Literal l = null;	
+List<RuleElement > literalListBody() :
+{	List<RuleElement >	lits = new LinkedList<RuleElement>();
+	RuleElement l = null;	
 }
 {	(		l = LiteralExpr() { lits.add(l); }		(			","
 			l = LiteralExpr() { lits.add(l); }
@@ -262,7 +262,7 @@ List<Literal> literalListHead() :
 	}
 }
 
-Literal LiteralExpr() :
+RuleElement LiteralExpr() :
 {	Object l0 = null, l1 = null, l2 = null;
 	String op01 = null, op12 = null;
 	Term t0 = null, t1 = null;
@@ -296,7 +296,7 @@ Literal LiteralExpr() :
 	  	// check what to do
 	  	if ((l0 != null) && (l1 == null) && (l2 == null))	  	{
 	  	  	if (dbgOut) System.out.println("unary");
-			return (Literal)l0;
+			return (RuleElement)l0;
 	  	}		else if ((l0 != null) && (l1 != null) && (l2 == null))
 		{
 		  	if (dbgOut) System.out.println("binary");
@@ -306,12 +306,7 @@ Literal LiteralExpr() :
 		  	  // l1 is right guard (maybe an assignment guard?)
 		  	  Aggregate ag = (Aggregate) l0;
 		  	  //ag.setRightGuard(l1.getAtom(), op01);
-
-		  	  // was l0 default negated?
-		  	  if (l0 instanceof Not)
-		  	  	return new Not(ag);
-		  	  else
-		  	    return ag;
+	  	      return ag;
 		  	}
 		  	else if (l1 instanceof Aggregate)
 		  	{
@@ -360,14 +355,14 @@ Object literal() :
 	// sets: gringo : cardinality constraints, choice rules
 	// sets: gringo : weighted sets
 	(	  
-		"not"		{	 	 	dneg = true;		}
+		< NOT >		{	 	 	dneg = true;		}
 	)?
 	(	  
-	  "-"
+	    < NEG >
 	 	{			tneg = true;
 		}
 	)?
-	(	 	LOOKAHEAD(3) 
+	(
 		reval = atom()
 		{
 		  	Atom a0 = (Atom)reval;			if (dneg && tneg)
@@ -379,7 +374,6 @@ Object literal() :
 			else
 				return a0;
 		}
-	 |	  reval = term()
 	)
 	{
 	  return reval;	}

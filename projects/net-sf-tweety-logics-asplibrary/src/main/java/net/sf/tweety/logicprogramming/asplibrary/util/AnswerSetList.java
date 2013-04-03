@@ -10,7 +10,8 @@ import net.sf.tweety.logicprogramming.asplibrary.syntax.Literal;
  * this class represents a collection of answer sets and
  * provides some basic reasoning modes.
  * 
- * @author Thomas Vengels, Tim Janus
+ * @author Thomas Vengels
+ * @author Tim Janus
  *
  */
 public class AnswerSetList extends ArrayList<AnswerSet> {
@@ -24,6 +25,13 @@ public class AnswerSetList extends ArrayList<AnswerSet> {
 	/** constant id for the skeptical policy for operations of the AnswerSetList object. */
 	static public final int POLICY_SKEPTICAL = 2;
 	
+	public AnswerSetList() {}
+	
+	public AnswerSetList(AnswerSetList other) {
+		for(AnswerSet as : other) {
+			add(new AnswerSet(as));
+		}
+	}
 
 	public Set<Literal> getFactsByName(String name) {
 		return getFactsByName(name, POLICY_SKEPTICAL);
@@ -82,5 +90,10 @@ public class AnswerSetList extends ArrayList<AnswerSet> {
 		sb.append("\n");
 		
 		return sb.toString();
+	}
+	
+	@Override
+	public Object clone() {
+		return new AnswerSetList(this);
 	}
 }
