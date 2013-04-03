@@ -6,14 +6,13 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.Reader;
 import java.io.StringReader;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import net.sf.tweety.BeliefSet;
 import net.sf.tweety.Signature;
 import net.sf.tweety.logicprogramming.asplibrary.parser.ELPParser;
 
@@ -25,13 +24,10 @@ import net.sf.tweety.logicprogramming.asplibrary.parser.ELPParser;
  * @author Thomas Vengels
  *
  */
-public class Program {
+public class Program extends BeliefSet<Rule>{
 	
 	/** The signature of the logic program */
 	private ElpSignature signature;
-	
-	/** a set of all rules of the logic program */
-	private Set<Rule> rules = new TreeSet<Rule>();
 	
 	/** Default Ctor: Does nothing */
 	public Program() {}
@@ -40,7 +36,12 @@ public class Program {
 	public Program(Program other) {
 		// TODO: COpy signature
 		//this.signature = new ElpSignature(other.signature);
-		this.rules.addAll(other.getRules()); 
+		this.addAll(other); 
+	}
+	
+	@Override
+	protected Set<Rule> instantiateSet() {
+		return new TreeSet<Rule>();
 	}
 	
 	//Differs from contains in that it does a deep comparision of the rules rather than a reference-based one
@@ -78,56 +79,17 @@ public class Program {
 	}
 	
 	/**
-	 * Adds the given rule to the program
-	 * @param rule	Reference to the rule to add
-	 * @return		true if the rule was successful added (not part of the programs
-	 * 				rules yet), false otherwise
-	 */
-	public boolean add(Rule rule) {
-		boolean reval = rules.add(rule);
-		return reval;
-	}
-	
-	public void addAll(Collection<Rule> rules) {
-		this.rules.addAll(rules);
-	}
-	
-	/** @return 	An unmodifiable set of the rules of the program */
-	public Set<Rule> getRules() {
-		return Collections.unmodifiableSet(this.rules);
-	}
-	
-	/**
-	 * removes all the given rules from the program 
-	 * @param toRemove	collection with rules which has to be remove from the program
-	 */
-	public void removeAllRules(Collection<Rule> toRemove) {
-		rules.removeAll(toRemove);
-	}
-	
-	/** 
-	 * empties the program.
-	 */
-	public void clearRules() {
-		rules.clear();
-	}
-	
-	public int size() {
-		return rules.size();
-	}
-	
-	/**
 	 * Adds another programs content to the content of this program.
 	 * @param other	Reference to the other program.
 	 */
 	public void add(Program other) {
-		rules.addAll(other.getRules());
+		addAll(other);
 	}
 	
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		Iterator<Rule> it = rules.iterator();
+		Iterator<Rule> it = iterator();
 		
 		if (it.hasNext()) {
 			sb.append( it.next() );
@@ -174,7 +136,7 @@ public class Program {
 	
 	private void calcSignature() {
 		signature = new ElpSignature();
-		for(Rule r : rules) {
+		for(Rule r : this) {
 			List<RuleElement> literals = new LinkedList<RuleElement>();
 			literals.addAll(r.getBody());
 			literals.addAll(r.getHead());
@@ -191,7 +153,7 @@ public class Program {
 	 * @return	True if the program is an extended program, false otherwise.
 	 */
 	public boolean isExtendedProgram() {
-		for(Rule r : rules) {
+		for(Rule r : this) {
 			if(r.head.size() > 1)
 				return false;
 		}
@@ -201,7 +163,7 @@ public class Program {
 	public void saveTo(String filename) {
 		try {
 			BufferedWriter w = new BufferedWriter(new FileWriter(filename));
-			for (Rule r : rules) {
+			for (Rule r : this) {
 				w.write(r.toString());
 				w.newLine();
 			}
@@ -215,7 +177,7 @@ public class Program {
 	public String toStringFlat() {
 		StringBuilder sb = new StringBuilder();
 		
-		Iterator<Rule> rIter = rules.iterator();
+		Iterator<Rule> rIter = iterator();
 		while (rIter.hasNext()) {
 			Rule r = rIter.next();
 			if (r.isComment())
@@ -235,7 +197,7 @@ public class Program {
 	 */
 	public static Program defaultification(Program p) {
 		Program reval = new Program();
-		for(Rule origRule : p.getRules()) {
+		for(Rule origRule : p) {
 			Rule defRule = new Rule();
 			if(!origRule.isConstraint()) {
 				Literal head = origRule.getHead().get(0);
@@ -283,17 +245,5 @@ public class Program {
 	@Override
 	public Object clone() {
 		return new Program(this);
-	}
-	
-	@Override
-	public boolean equals(Object other) {
-		if(!(other instanceof Program)) return false;
-		Program op = (Program)other;
-		return op.rules.equals(rules);
-	}
-	
-	@Override
-	public int hashCode() {
-		return rules.hashCode();
 	}
 }

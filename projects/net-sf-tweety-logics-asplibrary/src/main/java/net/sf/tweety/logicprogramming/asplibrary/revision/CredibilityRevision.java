@@ -1,5 +1,6 @@
 package net.sf.tweety.logicprogramming.asplibrary.revision;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -8,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import net.sf.tweety.beliefdynamics.CredibilityRevisionNonIterative;
 import net.sf.tweety.logicprogramming.asplibrary.solver.Solver;
 import net.sf.tweety.logicprogramming.asplibrary.solver.SolverException;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Arithmetic;
@@ -23,7 +25,6 @@ import net.sf.tweety.logicprogramming.asplibrary.syntax.RuleElement;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Variable;
 import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSet;
 import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSetList;
-import net.sf.tweety.revision.NonIterativeRevision;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +40,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Tim Janus
  */
-public class CredibilityRevision extends NonIterativeRevision<Program> {
+public class CredibilityRevision extends CredibilityRevisionNonIterative<Rule> {
 
 	/**
 	 * interface defines a method to process the extended answer sets of the 
@@ -92,7 +93,7 @@ public class CredibilityRevision extends NonIterativeRevision<Program> {
 			int removeRuleIndex = indexIndex < indicies.size() ? indicies.get(indexIndex) : -1;
 			Program reval = new Program();
 			for(Program p : orderedPrograms) {
-				for(Rule r : p.getRules()) {
+				for(Rule r : p) {
 					if(countIndex != removeRuleIndex) {
 						reval.add(new Rule(r));
 					} else {
@@ -158,7 +159,19 @@ public class CredibilityRevision extends NonIterativeRevision<Program> {
 	}
 	
 	@Override
-	public Program revision(List<Program> orderedList) {
+	public Program revise(List<Collection<Rule>> ol) {
+		// cast to program:
+		List<Program> orderedList = new LinkedList<Program>();
+		for(Collection<Rule> c : ol) {
+			if(c instanceof Program) {
+				orderedList.add((Program)c);
+			} else {
+				Program p = new Program();
+				p.addAll(c);
+				orderedList.add(p);
+			}
+		}
+		
 		// Check if the input programs are legal
 		for(Program p: orderedList) {
 			if(!p.isExtendedProgram())
@@ -222,7 +235,7 @@ public class CredibilityRevision extends NonIterativeRevision<Program> {
 		Program reval = new Program();
 		String pcp = predCredibilityPrefix;
 		
-		for(Rule r : p.getRules()) {
+		for(Rule r : p) {
 			Variable cred = new Variable("Cred");
 			NumberTerm indexTerm = new NumberTerm(ruleIndex);
 			

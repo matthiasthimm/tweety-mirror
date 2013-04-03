@@ -1,7 +1,10 @@
-package net.sf.tweety.revision;
+package net.sf.tweety.beliefdynamics;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+
+import net.sf.tweety.Formula;
 
 /**
  * Implements the revision method with two belief bases by delegating the processing
@@ -13,17 +16,15 @@ import java.util.List;
  *
  * @param <TBeliefBase> The type of the belief base
  */
-public abstract class NonIterativeRevision<TBeliefBase> implements Revision<TBeliefBase>{
+public abstract class CredibilityRevisionNonIterative<T extends Formula> 
+	extends CredibilityRevision<T>{
 
 	@Override
-	public TBeliefBase revision(TBeliefBase beliefBase1, TBeliefBase beliefBase2) {
-		List<TBeliefBase> param = new LinkedList<TBeliefBase>();
+	public Collection<T> revise(Collection<T> beliefBase1, Collection<T> beliefBase2) {
+		List<Collection<T>> param = new LinkedList<Collection<T>>();
 		param.add(beliefBase1);
 		param.add(beliefBase2);
-		return revision(param);
+		return revise(param);
 	}
-
-	@Override
-	public abstract TBeliefBase revision(List<TBeliefBase> ordererList);
 
 }

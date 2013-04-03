@@ -23,7 +23,7 @@ import net.sf.tweety.util.Triple;
  * and vice versa.
  * 
  * TODO exception handling for invalid preference orders (total preorder) TOOD
- * neue Ordnung RankingFunction (rank(o) = |Elemente echt größer o|)
+ * neue Ordnung RankingFunction (rank(o) = |Elemente echt grÃ¶ÃŸer o|)
  * 
  * @author Bastian Wolf
  * @param <T>

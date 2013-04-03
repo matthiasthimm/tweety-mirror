@@ -1,6 +1,9 @@
-package net.sf.tweety.revision;
+package net.sf.tweety.beliefdynamics;
 
+import java.util.Collection;
 import java.util.List;
+
+import net.sf.tweety.Formula;
 
 /**
  * Implements the list based method of the Revision interface by iterative calling
@@ -11,20 +14,18 @@ import java.util.List;
  *
  * @param <TBeliefBase>	The type of the belief bases
  */
-public abstract class IterativeRevision<TBeliefBase> implements Revision<TBeliefBase> {
+public abstract class CredibilityRevisionIterative<T extends Formula> 
+	extends CredibilityRevision<T> {
 
 	@Override
-	public abstract TBeliefBase revision(TBeliefBase beliefBase1, TBeliefBase beliefBase2);
-
-	@Override
-	public TBeliefBase revision(List<TBeliefBase> ordererList) {
+	public Collection<T> revise(List<Collection<T>> ordererList) {
 		if(ordererList == null || ordererList.size() == 0)
 			throw new IllegalArgumentException("The parameter 'orderList' must not be empty.");
 		
-		TBeliefBase p1 = ordererList.get(0);
+		Collection<T> p1 = ordererList.get(0);
 		for(int i=1; i<ordererList.size(); ++i) {
-			TBeliefBase p2 = ordererList.get(i);
-			p1 = revision(p1,p2);
+			Collection<T> p2 = ordererList.get(i);
+			p1 = revise(p1,p2);
 		}
 		return p1;
 	}

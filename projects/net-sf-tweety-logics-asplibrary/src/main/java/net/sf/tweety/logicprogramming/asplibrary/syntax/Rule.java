@@ -8,6 +8,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import net.sf.tweety.Formula;
+import net.sf.tweety.Signature;
 import net.sf.tweety.logicprogramming.asplibrary.parser.ELPParser;
 
 
@@ -22,7 +24,7 @@ import net.sf.tweety.logicprogramming.asplibrary.parser.ELPParser;
  * @author Thomas Vengels
  *
  */
-public class Rule implements Comparable<Rule>{
+public class Rule implements Comparable<Rule>, Formula {
 
 	List<Literal>	head = new LinkedList<Literal>();
 	List<RuleElement>	body = new LinkedList<RuleElement>();
@@ -254,5 +256,11 @@ public class Rule implements Comparable<Rule>{
 	@Override
 	public Object clone() {
 		return new Rule(this);
+	}
+
+	@Override
+	public Signature getSignature() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

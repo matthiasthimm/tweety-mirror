@@ -37,7 +37,7 @@ public class DefaultificationTest extends TestCase {
     	
     	Program dp = Program.defaultification(p);
     	assertTrue(dp.size() == p.size());
-    	Rule dr = dp.getRules().iterator().next();
+    	Rule dr = dp.iterator().next();
     	
     	assertTrue(dr.getHead().equals(onlyRule.getHead()));
     	assertTrue(dr.getBody().contains(onlyRule.getBody().get(0)));
@@ -51,7 +51,7 @@ public class DefaultificationTest extends TestCase {
     	p.add(onlyRule);
     	dp = Program.defaultification(p);
     	assertTrue(p.size() == dp.size());
-    	dr = dp.getRules().iterator().next();
+    	dr = dp.iterator().next();
     	
     	assertTrue(dr.getHead().equals(onlyRule.getHead()));
     	defNot = new Not(dr.getHead().get(0).getAtom());
@@ -70,7 +70,7 @@ public class DefaultificationTest extends TestCase {
     	// We want the program dp look like p cause p was already
     	// defaultisated
     	Program dp = Program.defaultification(p);
-    	Rule rd = dp.getRules().iterator().next();
+    	Rule rd = dp.iterator().next();
     	assertTrue(rd.equals(r));
     	assertTrue(dp.equals(p));
     }

@@ -1,6 +1,9 @@
 package net.sf.tweety;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * This class models a belief set, i.e. a set of formulae
@@ -31,7 +34,17 @@ public abstract class BeliefSet<T extends Formula> implements BeliefBase, Collec
 	 * @param c a collection of formulae.
 	 */
 	public BeliefSet(Collection<? extends T> c){
-		this.formulas = new HashSet<T>(c);
+		this.formulas = instantiateSet();
+		this.formulas.addAll(c);
+	}
+	
+	/**
+	 * instantiates the set which is used as data holder for the belief set.
+	 * Subclasses might override this method if the do not want to use HashSet
+	 * as container implementation
+	 */
+	protected Set<T> instantiateSet() {
+		return new HashSet<T>();
 	}
 	
 	/* (non-Javadoc)

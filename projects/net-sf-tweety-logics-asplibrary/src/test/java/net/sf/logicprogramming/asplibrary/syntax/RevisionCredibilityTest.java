@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import net.sf.tweety.logicprogramming.asplibrary.solver.DLVComplex;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Atom;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Neg;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
 import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSet;
 import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSetList;
 
@@ -78,12 +80,12 @@ public class RevisionCredibilityTest {
 			if(p1 == null || p2 == null || p3 == null || res == null)
 				return; // skip tests cause missing data
 			
-			List<Program> programs = new LinkedList<Program>();
+			List<Collection<Rule>> programs = new LinkedList<Collection<Rule>>();
 			programs.add(p1);
 			programs.add(p2);
 			programs.add(p3);
 			
-			Program reval = revision.revision(programs);
+			Program reval = revision.revise(programs);
 			assertEquals(res, reval);
 			
 			AnswerSetList asl = revision.getLastProjectedAnswerSet();
@@ -105,12 +107,11 @@ public class RevisionCredibilityTest {
 			if(p1 == null || p2 == null)
 				return; // skip tests cause missing data
 			
-			List<Program> programs = new LinkedList<Program>();
+			List<Collection<Rule>> programs = new LinkedList<Collection<Rule>>();
 			programs.add(p1);
 			programs.add(p2);
 			
-			revision.revision(programs);
-			Program cred = revision.translate(programs);
+			revision.revise(programs);
 			
 			AnswerSetList asl = revision.getLastProjectedAnswerSet();
 			assertEquals(2, asl.size());

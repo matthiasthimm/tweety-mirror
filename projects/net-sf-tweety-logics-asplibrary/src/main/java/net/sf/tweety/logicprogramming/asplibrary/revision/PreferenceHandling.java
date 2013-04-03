@@ -1,6 +1,7 @@
 package net.sf.tweety.logicprogramming.asplibrary.revision;
 
 import java.io.StringReader;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -8,6 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import net.sf.tweety.beliefdynamics.CredibilityRevisionIterative;
 import net.sf.tweety.logicprogramming.asplibrary.solver.DLV;
 import net.sf.tweety.logicprogramming.asplibrary.solver.Solver;
 import net.sf.tweety.logicprogramming.asplibrary.solver.SolverException;
@@ -18,7 +20,6 @@ import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
 import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSet;
 import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSetList;
-import net.sf.tweety.revision.IterativeRevision;
 import net.sf.tweety.util.Pair;
 
 
@@ -38,7 +39,7 @@ import net.sf.tweety.util.Pair;
  * 
  * @author Tim Janus
  **/
-public class PreferenceHandling extends IterativeRevision<Program> {
+public class PreferenceHandling extends CredibilityRevisionIterative<Rule> {
 	
 	private Solver solver;
 	
@@ -51,7 +52,23 @@ public class PreferenceHandling extends IterativeRevision<Program> {
 	}
 	
 	@Override
-	public Program revision(Program p1, Program p2) {
+	public Program revise(Collection<Rule> base, Collection<Rule> formulas) {
+		Program p1 = null;
+		Program p2 = null;
+		if(base instanceof Program) {
+			p1 = (Program)base;
+		} else {
+			p1 = new Program();
+			p1.addAll(base);
+		}
+		
+		if(formulas instanceof Program) {
+			p2 = (Program)formulas;
+		} else {
+			p2 = new Program();
+			p2.addAll(formulas);
+		}
+		
 		Program combined = new Program();
 		Program concat = new Program();
 		
@@ -64,10 +81,10 @@ public class PreferenceHandling extends IterativeRevision<Program> {
 
 		// Assumption: Index of rules in p equals index of rules pd.
 		// TODO: Proof if this assumption is really true.
-		List<Rule> pdr1 = new LinkedList<Rule>(pd1.getRules());
-		List<Rule> pdr2 = new LinkedList<Rule>(pd2.getRules());
-		List<Rule> pr1 = new LinkedList<Rule>(p1.getRules());
-		List<Rule> pr2 = new LinkedList<Rule>(p2.getRules());
+		List<Rule> pdr1 = new LinkedList<Rule>(pd1);
+		List<Rule> pdr2 = new LinkedList<Rule>(pd2);
+		List<Rule> pr1 = new LinkedList<Rule>(p1);
+		List<Rule> pr2 = new LinkedList<Rule>(p2);
 		Collections.sort(pdr1);
 		Collections.sort(pdr2);
 		Collections.sort(pr1);
@@ -122,7 +139,7 @@ public class PreferenceHandling extends IterativeRevision<Program> {
 		
 		combined.add(p1);
 		combined.add(p2);
-		combined.removeAllRules(toRemoveCollection);
+		combined.removeAll(toRemoveCollection);
 		
 		return combined;
 	}
@@ -137,7 +154,7 @@ public class PreferenceHandling extends IterativeRevision<Program> {
 	protected static List<Pair<Rule, Rule>> getConflictingRules(Program p1, Program p2) {
 		List<Pair<Rule, Rule>> reval = new LinkedList<Pair<Rule,Rule>>();
 		
-		Iterator<Rule> p1It = p1.getRules().iterator();
+		Iterator<Rule> p1It = p1.iterator();
 		while(p1It.hasNext()) {
 			Rule r1 = p1It.next();
 			if(r1.isConstraint())
@@ -155,7 +172,7 @@ public class PreferenceHandling extends IterativeRevision<Program> {
 			}
 			
 			// try to find the negated head in the rules of the other program.
-			Iterator<Rule> p2it = p2.getRules().iterator();
+			Iterator<Rule> p2it = p2.iterator();
 			while(p2it.hasNext()) {
 				Rule r2 = p2it.next();
 				if(r2.isConstraint())
@@ -191,7 +208,7 @@ public class PreferenceHandling extends IterativeRevision<Program> {
 		System.out.println(p2.toString()+"\n" + clingo.computeModels(p2, 5) + "\n");
 		
 		PreferenceHandling ph = new PreferenceHandling(clingo);
-		Program r = ph.revision(p1, p2);		
+		Program r = ph.revise(p1, p2);		
 
 		System.out.println("Revised:");
 		System.out.println(r.toString()+"\n\n");

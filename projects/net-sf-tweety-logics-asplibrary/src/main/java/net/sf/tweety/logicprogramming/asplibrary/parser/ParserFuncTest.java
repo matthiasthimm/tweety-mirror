@@ -24,7 +24,7 @@ public class ParserFuncTest {
 		p.addAll(rules);
 		
 		System.out.println("Analyse der Parser-Ausgabe: " + rule);
-		for(Rule r : p.getRules()) {
+		for(Rule r : p) {
 			Atom head = r.getHead().get(0).getAtom();
 			Output(head);
 			System.out.println();
