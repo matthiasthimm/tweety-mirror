@@ -12,7 +12,11 @@ import java.util.EventListener;
  */
 
 public interface UpdateListener<T> extends EventListener {
-
+	
+	/**
+	 * UpdateListener is informed as soon as an update occurs
+	 * @param e the update event observed by the listener
+	 */
 	void eventOccurred(UpdateEvent<T> e);
 	
 }

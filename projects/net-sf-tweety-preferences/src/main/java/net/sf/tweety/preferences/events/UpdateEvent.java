@@ -24,8 +24,8 @@ public class UpdateEvent<T> extends EventObject {
 	/**
 	 * constructor for an update containing the aggregation result
 	 * 
-	 * @paraym source
-	 * @param result
+	 * @param source where the event occurred 
+	 * @param result of the occurring event
 	 */
 	public UpdateEvent(Object source, PreferenceOrder<T> result) {
 		super(source);

@@ -1,4 +1,4 @@
-package net.sf.tweety.preferences.aggregation;
+package net.sf.tweety.preferences.update;
 
 import net.sf.tweety.preferences.Operation;
 import net.sf.tweety.preferences.PreferenceOrder;

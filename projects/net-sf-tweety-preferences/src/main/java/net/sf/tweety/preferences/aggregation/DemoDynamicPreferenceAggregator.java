@@ -13,6 +13,7 @@ import net.sf.tweety.preferences.PreferenceOrder;
 import net.sf.tweety.preferences.events.UpdateEvent;
 import net.sf.tweety.preferences.events.UpdateListener;
 import net.sf.tweety.preferences.ranking.LevelingFunction;
+import net.sf.tweety.preferences.update.Update;
 
 /**
  * This Demo-class provides a basic implementation similar to the ScoringPreferenceAggregator but dynamic aggregation instead of static
@@ -173,7 +174,7 @@ public class DemoDynamicPreferenceAggregator<T> implements
 	
 	
 	/**
-	 * 
+	 * adds a listener to this dynamic preference aggregator
 	 */
 	@Override
 	public synchronized void addListener(UpdateListener<T> listener) {
@@ -182,7 +183,7 @@ public class DemoDynamicPreferenceAggregator<T> implements
 	}
 
 	/**
-	 * 
+	 * removes a listener from this dynamic preference aggregator
 	 */
 	@Override
 	public synchronized void removeListener(UpdateListener<T> listener) {

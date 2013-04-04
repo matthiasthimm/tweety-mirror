@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.sf.tweety.preferences.PreferenceOrder;
 import net.sf.tweety.preferences.events.UpdateListener;
+import net.sf.tweety.preferences.update.Update;
 
 /**
  * This interface is meant to be used for the dynamic aggregation of some generic preference orders
