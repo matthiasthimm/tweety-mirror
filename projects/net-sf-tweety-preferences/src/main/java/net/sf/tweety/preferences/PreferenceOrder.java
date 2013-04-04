@@ -406,13 +406,21 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 		return relations.iterator();
 	}
 
-
+	
+	/**
+	 * weakens the given element in this preference order
+	 * @param element
+	 */
 	public void weakenElement(T element){
 		LevelingFunction<T> tempRF = this.getLevelingFunction();
 		tempRF.weakenElement(element);
 		this.relations = tempRF.generatePreferenceOrder();
 	}
 	
+	/**
+	 * strengthens the given element in this preference order
+	 * @param element
+	 */
 	public void strengthenElement(T element){
 		LevelingFunction<T> tempRF = this.getLevelingFunction();
 		tempRF.strengthenElement(element);

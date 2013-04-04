@@ -145,12 +145,15 @@ public class DemoDynamicPreferenceAggregator<T> implements
 			}			
 		}
 		
-		// firing a new event for every update to every listener
-		UpdateEvent<T> event = new UpdateEvent<T>(this);
+		// aggregate the updated preference orders into a new result
+		PreferenceOrder<T> result = aggregate(this.input);
+		
+		// firing a new event for every update to every listener using this result
+		UpdateEvent<T> event = new UpdateEvent<T>(this, result);
 		fireEvent(event);
 		
-		// return the newly aggregated input
-		return aggregate(this.input);
+		// return the newly aggregated result
+		return result;
 	}
 
 	

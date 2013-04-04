@@ -50,25 +50,31 @@ public class LevelingFunction<T> extends Functions<T> {
 	 *            the given preference order
 	 */
 	public LevelingFunction(PreferenceOrder<T> po) {
-
+		
+		// empty hash map for the integer variables
 		Map<T, IntegerVariable> intVar = new HashMap<T, IntegerVariable>();
-
+		
+		// new optimization problem
 		Set<Triple<IntegerVariable, IntegerVariable, Relation>> optIneq = new HashSet<Triple<IntegerVariable, IntegerVariable, Relation>>();
 		OptimizationProblem opt = new OptimizationProblem(
 				OptimizationProblem.MINIMIZE);
-
+		
+		// creates a new integer variable for each domain element of the given preference order
 		for (final T e : po.getDomainElements()) {
 			intVar.put(e, new IntegerVariable(e.toString(), true));
 		}
 
+		// iterator over the preference orders relations
 		Iterator<Triple<T, T, Relation>> it = po.iterator();
 
 		while (it.hasNext()) {
 			Triple<T, T, Relation> tempRel = it.next();
-
+			
+			// empty initialized IntegerVariables for ech relation
 			IntegerVariable tempVarF = null;
 			IntegerVariable tempVarS = null;
-
+			
+			// mapping the relations between each two elements into the integer variables hash map
 			if (po.contains(tempRel)) {
 				tempVarF = intVar.get(tempRel.getFirst());
 				tempVarS = intVar.get(tempRel.getSecond());
@@ -86,6 +92,7 @@ public class LevelingFunction<T> extends Functions<T> {
 			}
 		}
 
+		// setting the term for the solver
 		List<Term> terms = new LinkedList<Term>();
 
 		for (Entry<T, IntegerVariable> e : intVar.entrySet()) {
@@ -94,7 +101,8 @@ public class LevelingFunction<T> extends Functions<T> {
 		}
 
 		Iterator<Term> termIt = terms.listIterator();
-
+		
+		// using this term for the target function
 		if (termIt.hasNext()) {
 			Term t = termIt.next();
 			while (termIt.hasNext()) {
@@ -172,17 +180,6 @@ public class LevelingFunction<T> extends Functions<T> {
 	 *            the element being weakened
 	 */
 	public void weakenElement(T element) {
-		// // the amount of elements that are predecessors of element
-		// int amount = this.getElementsByValue(this.get(element)-1).size();
-		// // weakening the elements rank by this amount
-		// this.put(element, this.get(element)+amount);
-		//
-		// // strengthen each element on the same rank as the now weaken element
-		// for(Entry<T, Integer> e : getElementsByValue(this.get(element))){
-		// if (!e.getKey().equals(element)){
-		// this.put(e.getKey(), e.getValue()-1);
-		// }
-		// }
 
 		HashMap<T, Integer> lf = this;
 		int level = getElementsByValue(this.get(element)).size();
@@ -207,17 +204,6 @@ public class LevelingFunction<T> extends Functions<T> {
 	 *            the element being strengthened
 	 */
 	public void strengthenElement(T element) {
-//		// calculating the amount of elements ranked equally to the element
-//		int amount = this.getElementsByValue(this.get(element)).size();
-//		// strengthening the elements rank by this amount
-//		this.put(element, this.get(element) - amount);
-//
-//		// weakening each element on the same rank as the now strengthen element
-//		for (Entry<T, Integer> e : getElementsByValue(this.get(element))) {
-//			if (!e.getKey().equals(element)) {
-//				this.put(e.getKey(), e.getValue() + 1);
-//			}
-//		}
 		
 		HashMap<T, Integer> lf = this;
 		int level = getElementsByValue(this.get(element)).size();
