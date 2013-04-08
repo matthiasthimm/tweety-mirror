@@ -72,10 +72,10 @@ public class RevisionCredibilityTest {
 	@Test
 	public void testKrue2008Ex1() {
 		if(revision != null) {
-			Program p1 = loadFromJar("Krue2008_Ex1_Part1");
-			Program p2 = loadFromJar("Krue2008_Ex1_Part2");
-			Program p3 = loadFromJar("Krue2008_Ex1_Part3");
-			Program res = loadFromJar("Krue2008_Ex1_Res");
+			Program p1 = loadFromJar("Krue2008_Ex1_Part1.dl");
+			Program p2 = loadFromJar("Krue2008_Ex1_Part2.dl");
+			Program p3 = loadFromJar("Krue2008_Ex1_Part3.dl");
+			Program res = loadFromJar("Krue2008_Ex1_Res.dl");
 			
 			if(p1 == null || p2 == null || p3 == null || res == null)
 				return; // skip tests cause missing data
@@ -101,8 +101,8 @@ public class RevisionCredibilityTest {
 	@Test
 	public void testKrue2008Ex2() {
 		if(revision != null) {
-			Program p1 = loadFromJar("Krue2008_Ex2_Part1");
-			Program p2 = loadFromJar("Krue2008_Ex2_Part2");
+			Program p1 = loadFromJar("Krue2008_Ex2_Part1.dl");
+			Program p2 = loadFromJar("Krue2008_Ex2_Part2.dl");
 			
 			if(p1 == null || p2 == null)
 				return; // skip tests cause missing data
