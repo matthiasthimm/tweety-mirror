@@ -43,4 +43,12 @@ public class ClBeliefSet extends BeliefSet<Conditional> {
 		return sig;
 	}
 
+	public ClBeliefSet clone(){
+		ClBeliefSet copy = new ClBeliefSet();
+		Iterator<Conditional> i = this.iterator();
+		while(i.hasNext()){
+			copy.add(i.next());
+		}
+		return copy;
+	}
 }

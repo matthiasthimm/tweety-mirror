@@ -12,6 +12,7 @@ import net.sf.tweety.Reasoner;
 import net.sf.tweety.logics.conditionallogic.semantics.RankingFunction;
 import net.sf.tweety.logics.conditionallogic.syntax.Conditional;
 import net.sf.tweety.logics.propositionallogic.semantics.PossibleWorld;
+import net.sf.tweety.logics.propositionallogic.syntax.Contradiction;
 import net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula;
 import net.sf.tweety.logics.propositionallogic.syntax.PropositionalSignature;
 
@@ -125,7 +126,10 @@ public class BruteForceCReasoner extends Reasoner {
 	 * Computes a minimal c-representation for this reasoner's knowledge base. 
 	 * @return a minimal c-representation for this reasoner's knowledge base.
 	 */
-	private RankingFunction computeCRepresentation(){		
+	private RankingFunction computeCRepresentation(){	
+		ArrayList<PropositionalFormula> list = new ArrayList<PropositionalFormula>();
+		this.filter(list);
+		
 		this.numConditionals = ((ClBeliefSet)this.getKnowledgBase()).size();
 		int i = 0;
 		this.indexToConditional = new HashMap<Integer,Conditional>();
@@ -144,9 +148,38 @@ public class BruteForceCReasoner extends Reasoner {
 //				debugMessage += "," + kappa[j];
 //			debugMessage += "]";
 //			BruteForceCReasoner.log.debug(debugMessage);
-		}		
+		}
+		
+		if(list.size()>0){
+			for(PropositionalFormula pl : list){
+				for(PossibleWorld world : candidate.getPossibleWorlds()){
+					if(world.satisfies(pl)){
+						candidate.setRank(world, RankingFunction.INFINITY);
+						System.out.println("set rank INFINITY for : " + world.toString());
+					}
+				}
+			}
+		}
 		candidate.normalize();
 		return candidate;
+	}
+	
+	private void filter(ArrayList<PropositionalFormula> list){
+		ClBeliefSet beliefset = (ClBeliefSet)this.getKnowledgBase();
+		ClBeliefSet copy = beliefset.clone();
+		for(Formula f: copy){
+			Conditional c = (Conditional) f;
+			if(c.getConclusion() instanceof Contradiction){
+				System.out.println("list add: " + c.getPremise().toString() + " remove: " + f.toString());
+				list.addAll(c.getPremise());
+				beliefset.remove(f);
+				for( int i = 0 ; i < c.getPremise().toArray().length ; i++){
+					Conditional c1 = new Conditional((PropositionalFormula) c.getPremise().toArray()[i]);
+					System.out.println("Add to beliefset: " + c1.toString());
+					beliefset.add(c1);
+				}
+			}
+		}
 	}
 	
 	/**
