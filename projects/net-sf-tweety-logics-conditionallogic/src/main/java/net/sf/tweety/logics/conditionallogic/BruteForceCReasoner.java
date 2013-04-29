@@ -128,19 +128,20 @@ public class BruteForceCReasoner extends Reasoner {
 	 */
 	private RankingFunction computeCRepresentation(){	
 		ArrayList<PropositionalFormula> list = new ArrayList<PropositionalFormula>();
-		this.filter(list);
+		ClBeliefSet beliefset = ((ClBeliefSet)this.getKnowledgBase()).clone();
+		this.filter(list, beliefset);
 		
-		this.numConditionals = ((ClBeliefSet)this.getKnowledgBase()).size();
+		this.numConditionals = beliefset.size();
 		int i = 0;
 		this.indexToConditional = new HashMap<Integer,Conditional>();
-		for(Formula f: ((ClBeliefSet)this.getKnowledgBase())){
+		for(Formula f: beliefset){
 			this.indexToConditional.put(i++, (Conditional) f);
 			if(!this.simple)
 				this.indexToConditional.put(i++, (Conditional) f);
 		}
 		Integer[] kappa = null;		
 		RankingFunction candidate = this.constructRankingFunction(kappa);
-		while(!candidate.satisfies(this.getKnowledgBase())){
+		while(!candidate.satisfies((BeliefBase)beliefset)){
 			kappa = this.increment(kappa);			
 			candidate = this.constructRankingFunction(kappa);
 //			String debugMessage = "["+kappa[0];
@@ -164,8 +165,7 @@ public class BruteForceCReasoner extends Reasoner {
 		return candidate;
 	}
 	
-	private void filter(ArrayList<PropositionalFormula> list){
-		ClBeliefSet beliefset = (ClBeliefSet)this.getKnowledgBase();
+	private void filter(ArrayList<PropositionalFormula> list, ClBeliefSet beliefset){
 		ClBeliefSet copy = beliefset.clone();
 		for(Formula f: copy){
 			Conditional c = (Conditional) f;
