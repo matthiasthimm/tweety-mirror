@@ -1,5 +1,7 @@
 package net.sf.tweety.preferences.update;
 
+import java.util.LinkedList;
+
 /**
  * Konzeption:
  * 
@@ -20,10 +22,26 @@ package net.sf.tweety.preferences.update;
 
 public class UpdateStream<T> {
 	
+	public LinkedList<Update<T>> stream;
+	
 	// Konstruktor
 	public UpdateStream(){
-		
+		this.stream = new LinkedList<Update<T>>();
 	}
 	
 	// Methoden....
+	public void add(Update<T> update){
+		this.stream.addLast(update);
+	}
+
+	public Update<T> next(){
+		Update<T> temp = this.stream.getFirst();
+		this.stream.removeFirst();
+		return temp;
+	}
+	
+	public boolean isEmpty(){
+		return this.stream.isEmpty();
+	}
 }
+ 

@@ -14,6 +14,8 @@ import net.sf.tweety.preferences.events.UpdateEvent;
 import net.sf.tweety.preferences.events.UpdateListener;
 import net.sf.tweety.preferences.ranking.LevelingFunction;
 import net.sf.tweety.preferences.update.Update;
+import net.sf.tweety.preferences.update.UpdateStream;
+import net.sf.tweety.preferences.update.UpdateStreamReader;
 
 /**
  * This Demo-class provides a basic implementation similar to the ScoringPreferenceAggregator but dynamic aggregation instead of static
@@ -157,6 +159,20 @@ public class DemoDynamicPreferenceAggregator<T> implements
 		return result;
 	}
 
+	/**
+	 * this method extends the update-functionality with input-streams consisting of
+	 * Update-elements
+	 * @param stream the input stream with the Update-elements
+	 * @return the newly aggregated preference order after all updates are applied
+	 */
+	public PreferenceOrder<T> update(UpdateStream<T> stream){
+		PreferenceOrder<T> temp = new PreferenceOrder<T>();
+		while(!(stream.isEmpty())){
+			temp = this.update(stream.next());
+		}
+		return temp;
+	}
+	
 	
 	/**
 	 * Fires an event every time a change occurred
