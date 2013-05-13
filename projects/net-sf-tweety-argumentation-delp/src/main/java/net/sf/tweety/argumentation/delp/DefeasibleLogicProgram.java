@@ -1,15 +1,29 @@
 package net.sf.tweety.argumentation.delp;
 
-import java.io.*;
-import java.util.*;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
-import net.sf.tweety.*;
-import net.sf.tweety.argumentation.delp.semantics.*;
-import net.sf.tweety.argumentation.delp.syntax.*;
-import net.sf.tweety.argumentation.dung.*;
-import net.sf.tweety.argumentation.dung.syntax.*;
-import net.sf.tweety.logics.firstorderlogic.syntax.*;
-import net.sf.tweety.util.rules.*;
+import net.sf.tweety.BeliefSet;
+import net.sf.tweety.Formula;
+import net.sf.tweety.ParserException;
+import net.sf.tweety.Signature;
+import net.sf.tweety.argumentation.delp.semantics.GeneralizedSpecificity;
+import net.sf.tweety.argumentation.delp.syntax.DefeasibleRule;
+import net.sf.tweety.argumentation.delp.syntax.DelpArgument;
+import net.sf.tweety.argumentation.delp.syntax.DelpFact;
+import net.sf.tweety.argumentation.delp.syntax.DelpRule;
+import net.sf.tweety.argumentation.delp.syntax.StrictRule;
+import net.sf.tweety.argumentation.dung.DungTheory;
+import net.sf.tweety.argumentation.dung.syntax.Argument;
+import net.sf.tweety.argumentation.dung.syntax.Attack;
+import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
+import net.sf.tweety.util.rules.Derivation;
+import net.sf.tweety.util.rules.Rule;
 
 /**
  * This class models a defeasible logic program (DeLP).
@@ -53,7 +67,7 @@ public class DefeasibleLogicProgram extends BeliefSet<DelpRule>{
 	 * @param constants some set of constants. 
 	 * @return the grounded version of <source>this</source>
 	 */
-	public DefeasibleLogicProgram ground(Set<Term> constants){
+	public DefeasibleLogicProgram ground(Set<Constant> constants){
 		if(this.isGround()) return new DefeasibleLogicProgram(this);
 		DefeasibleLogicProgram groundedDelp = new DefeasibleLogicProgram();
 		for(DelpRule rule: this)

@@ -6,6 +6,10 @@ import net.sf.tweety.*;
 import net.sf.tweety.logics.firstorderlogic.syntax.*;
 import net.sf.tweety.util.rules.*;
 import net.sf.tweety.logics.commons.*;
+import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.logics.commons.syntax.Predicate;
+import net.sf.tweety.logics.commons.syntax.Term;
+import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.math.probability.Probability;
 
 /**

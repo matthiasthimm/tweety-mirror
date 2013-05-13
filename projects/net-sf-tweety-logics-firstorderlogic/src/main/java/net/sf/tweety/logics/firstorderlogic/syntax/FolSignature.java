@@ -5,6 +5,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.sf.tweety.Signature;
+import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.logics.commons.syntax.Predicate;
+import net.sf.tweety.logics.commons.syntax.Sort;
+import net.sf.tweety.logics.commons.syntax.Term;
 
 /**
  * This class captures the signature of a specific
@@ -13,7 +17,7 @@ import net.sf.tweety.Signature;
  */
 public class FolSignature extends Signature{
 	
-	private Set<Term> constants;
+	private Set<Constant> constants;
 	private Set<Sort> sorts;
 	private Set<Predicate> predicates;
 	private Set<Functor> functors;
@@ -22,7 +26,7 @@ public class FolSignature extends Signature{
 	 * Creates an empty signature 
 	 */
 	public FolSignature(){
-		this.constants = new HashSet<Term>();
+		this.constants = new HashSet<Constant>();
 		this.sorts = new HashSet<Sort>();
 		this.predicates = new HashSet<Predicate>();
 		this.functors = new HashSet<Functor>();
@@ -77,12 +81,12 @@ public class FolSignature extends Signature{
 		}
 		if(obj instanceof Predicate){
 			predicates.add((Predicate)obj);
-			this.addAll(((Predicate)obj).getArguments());
+			this.addAll(((Predicate)obj).getArgumentTypes());
 			return;
 		}
 		if(obj instanceof Functor){
 			functors.add((Functor)obj);
-			this.addAll(((Functor)obj).getArguments());
+			this.addAll(((Functor)obj).getArgumentTypes());
 			return;
 		}
 		if(obj instanceof FolFormula){
@@ -120,7 +124,7 @@ public class FolSignature extends Signature{
 		return true;
 	}
 
-	public Set<Term> getConstants(){
+	public Set<Constant> getConstants(){
 		return this.constants;
 	}
 	
@@ -137,8 +141,8 @@ public class FolSignature extends Signature{
 	}
 	
 	public Constant getConstant(String s){
-		for(Term t: this.constants)
-			if(((Constant) t).getName().equals(s))
+		for(Term<?> t: this.constants)
+			if(((Constant) t).get().equals(s))
 				return (Constant) t;
 		return null;
 	}

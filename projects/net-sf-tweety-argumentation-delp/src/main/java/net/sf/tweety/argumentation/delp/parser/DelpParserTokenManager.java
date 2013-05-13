@@ -4,6 +4,7 @@ import net.sf.tweety.*;
 import net.sf.tweety.argumentation.delp.*;
 import net.sf.tweety.argumentation.delp.syntax.*;
 import net.sf.tweety.logics.firstorderlogic.syntax.*;
+import net.sf.tweety.logics.commons.syntax.*;
 import java.io.*;
 import java.util.*;
 import java.util.regex.*;

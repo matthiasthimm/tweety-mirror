@@ -3,11 +3,11 @@ package net.sf.tweety.logics.markovlogic.test;
 import java.io.IOException;
 
 import net.sf.tweety.ParserException;
+import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.firstorderlogic.parser.FolParser;
-import net.sf.tweety.logics.firstorderlogic.syntax.Constant;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
-import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
 import net.sf.tweety.logics.markovlogic.MarkovLogicNetwork;
 import net.sf.tweety.logics.markovlogic.NaiveMlnReasoner;
 import net.sf.tweety.logics.markovlogic.syntax.MlnFormula;

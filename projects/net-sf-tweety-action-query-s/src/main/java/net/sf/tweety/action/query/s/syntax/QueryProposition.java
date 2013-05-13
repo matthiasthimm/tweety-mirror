@@ -5,9 +5,9 @@ import java.util.Set;
 
 import net.sf.tweety.action.signature.FolAction;
 import net.sf.tweety.action.signature.ActionSignature;
-import net.sf.tweety.logics.firstorderlogic.syntax.Constant;
+import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
-import net.sf.tweety.logics.firstorderlogic.syntax.Variable;
 import net.sf.tweety.logics.propositionallogic.syntax.Proposition;
 
 /**

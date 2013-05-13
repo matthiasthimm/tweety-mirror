@@ -3,6 +3,7 @@ package net.sf.tweety.logics.firstorderlogic.syntax;
 import java.util.*;
 
 import net.sf.tweety.logics.commons.LogicalSymbols;
+import net.sf.tweety.logics.commons.syntax.Term;
 
 /**
  * The classical conjunction of first-order logic.
@@ -76,7 +77,7 @@ public class Conjunction extends AssociativeFormula {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula#substitute(net.sf.tweety.logics.firstorderlogic.syntax.Term, net.sf.tweety.logics.firstorderlogic.syntax.Term)
 	 */
-	public FolFormula substitute(Term v, Term t) throws IllegalArgumentException{
+	public FolFormula substitute(Term<?> v, Term<?> t) throws IllegalArgumentException{
 		Set<RelationalFormula> newFormulas = new HashSet<RelationalFormula>();
 		for(RelationalFormula f: this)
 			newFormulas.add((FolFormula)f.substitute(v, t));

@@ -3,8 +3,8 @@ package net.sf.tweety.action.signature;
 import java.util.List;
 
 import net.sf.tweety.action.ActionName;
-import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
-import net.sf.tweety.logics.firstorderlogic.syntax.Sort;
+import net.sf.tweety.logics.commons.syntax.Predicate;
+import net.sf.tweety.logics.commons.syntax.Sort;
 
 /**
  * This class represents an action name. It is implemented as a fol predicate to

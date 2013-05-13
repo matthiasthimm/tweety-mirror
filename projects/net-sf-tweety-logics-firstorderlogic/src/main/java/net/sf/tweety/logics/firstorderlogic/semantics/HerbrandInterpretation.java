@@ -3,6 +3,10 @@ package net.sf.tweety.logics.firstorderlogic.semantics;
 import java.util.*;
 
 import net.sf.tweety.*;
+import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.logics.commons.syntax.Predicate;
+import net.sf.tweety.logics.commons.syntax.Term;
+import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.firstorderlogic.*;
 import net.sf.tweety.logics.firstorderlogic.syntax.*;
 import net.sf.tweety.util.*;
@@ -77,11 +81,11 @@ public class HerbrandInterpretation extends InterpretationSet<Atom> {
 			Set<Variable> remainingVariables = e.getQuantifierVariables();
 			remainingVariables.remove(v);
 			if(remainingVariables.isEmpty()){
-				for(Constant c: v.getSort().getConstants())
+				for(Constant c: v.getSort().getTerms(Constant.class))
 					if(this.satisfies(e.getFormula().substitute(v, c)))
 						return true;
 			}else{
-				for(Constant c: v.getSort().getConstants()){
+				for(Constant c: v.getSort().getTerms(Constant.class)){
 					if(this.satisfies(new ExistsQuantifiedFormula(e.getFormula().substitute(v, c),remainingVariables)))
 						return true;
 					}
@@ -94,7 +98,7 @@ public class HerbrandInterpretation extends InterpretationSet<Atom> {
 			Variable v = e.getQuantifierVariables().iterator().next();
 			Set<Variable> remainingVariables = e.getQuantifierVariables();
 			remainingVariables.remove(v);
-			for(Constant c: v.getSort().getConstants()){
+			for(Constant c: v.getSort().getTerms(Constant.class)){
 				if(!this.satisfies(new ForallQuantifiedFormula(e.getFormula().substitute(v, c),remainingVariables)))
 					return false;
 			}
@@ -137,29 +141,29 @@ public class HerbrandInterpretation extends InterpretationSet<Atom> {
 		for(Set<Constant> constantsSubset: new SetTools<Constant>().subsets(constants)){		
 			// project equivalence classes to appearing constants
 			// and for every projected equivalence class retrieve every possible mapping
-			Set<Set<Map<Term,Term>>> subMaps = new HashSet<Set<Map<Term,Term>>>();
+			Set<Set<Map<Term<?>,Term<?>>>> subMaps = new HashSet<Set<Map<Term<?>,Term<?>>>>();
 			for(Collection<? extends Constant> eqClass: equivalenceClasses){
 				Set<Constant> prjClass = new HashSet<Constant>(constantsSubset);
 				prjClass.retainAll(eqClass);
 				if(prjClass.isEmpty()) continue;
-				Set<Map<Term,Term>> subsubMaps = new HashSet<Map<Term,Term>>();
+				Set<Map<Term<?>,Term<?>>> subsubMaps = new HashSet<Map<Term<?>,Term<?>>>();
 				for(Set<Set<Constant>> bipartition: new SetTools<Constant>().getBipartitions(prjClass)){
 					Iterator<Set<Constant>> it = bipartition.iterator();
 					Set<Constant> partition1 = it.next();
 					Set<Constant> partition2 = it.next();
-					Set<Map<Term,Term>> maps = new MapTools<Term,Term>().allMaps(partition1, partition2);
+					Set<Map<Term<?>,Term<?>>> maps = new MapTools<Term<?>,Term<?>>().allMaps(partition1, partition2);
 					// remove every map where two different key is assignet the same value
-					for(Map<Term,Term> map: maps)
+					for(Map<Term<?>,Term<?>> map: maps)
 						if(MapTools.isInjective(map))
 							subsubMaps.add(map);
 				}			
 				subMaps.add(subsubMaps);
 			}
 			// permute the maps
-			subMaps = new SetTools<Map<Term,Term>>().permutations(subMaps);
+			subMaps = new SetTools<Map<Term<?>,Term<?>>>().permutations(subMaps);
 			// now combine every set of maps and check whether this yields an equivalence
-			for(Set<Map<Term,Term>> maps: subMaps){
-				Map<Term,Term> completeMap = new MapTools<Term,Term>().combine(maps);
+			for(Set<Map<Term<?>,Term<?>>> maps: subMaps){
+				Map<Term<?>,Term<?>> completeMap = new MapTools<Term<?>,Term<?>>().combine(maps);
 				if(this.exchange(completeMap).equals(other))
 					return true;				
 			}		
@@ -200,7 +204,7 @@ public class HerbrandInterpretation extends InterpretationSet<Atom> {
 	 * @param t2 a term.
 	 * @return a Herbrand interpretation
 	 */
-	public HerbrandInterpretation exchange(Term t1, Term t2){
+	public HerbrandInterpretation exchange(Term<?> t1, Term<?> t2){
 		Set<Atom> atoms = new HashSet<Atom>();
 		Constant tempConstant = new Constant("__TEMP__");
 		for(Formula f: this){
@@ -218,9 +222,9 @@ public class HerbrandInterpretation extends InterpretationSet<Atom> {
 	 * @param mapping a mapping of terms.
 	 * @return a Herbrand interpretation.
 	 */
-	public HerbrandInterpretation exchange(Map<Term,Term> mapping){
+	public HerbrandInterpretation exchange(Map<Term<?>,Term<?>> mapping){
 		HerbrandInterpretation result = new HerbrandInterpretation(this);
-		for(Term t: mapping.keySet())
+		for(Term<?> t: mapping.keySet())
 			result = result.exchange(t, mapping.get(t));
 		return result;
 	}

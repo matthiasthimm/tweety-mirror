@@ -2,6 +2,7 @@ package net.sf.tweety.argumentation.delp.syntax;
 
 import java.util.*;
 
+import net.sf.tweety.logics.commons.syntax.Term;
 import net.sf.tweety.logics.firstorderlogic.syntax.*;
 
 /**

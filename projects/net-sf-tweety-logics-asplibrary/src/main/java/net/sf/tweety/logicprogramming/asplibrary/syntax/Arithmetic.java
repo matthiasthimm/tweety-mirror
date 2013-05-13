@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import net.sf.tweety.logics.commons.syntax.Term;
+
 /**
  * this class extends an ordinary atom to be used as
  * an arithmetic expression.

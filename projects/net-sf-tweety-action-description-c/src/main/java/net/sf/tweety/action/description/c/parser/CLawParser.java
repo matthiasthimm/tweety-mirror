@@ -16,6 +16,7 @@ import net.sf.tweety.action.description.c.syntax.StaticLaw;
 import net.sf.tweety.action.grounding.GroundingRequirement;
 import net.sf.tweety.action.grounding.parser.GroundingRequirementsParser;
 import net.sf.tweety.action.signature.ActionSignature;
+import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.firstorderlogic.parser.FolParser;
 import net.sf.tweety.logics.firstorderlogic.syntax.AssociativeFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
@@ -24,7 +25,6 @@ import net.sf.tweety.logics.firstorderlogic.syntax.Contradiction;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
 import net.sf.tweety.logics.firstorderlogic.syntax.Tautology;
-import net.sf.tweety.logics.firstorderlogic.syntax.Variable;
 
 /**
  * This class implements a parser for causal laws in C. The BNF of such rules is given by: (starting symbol is DESC) <br>

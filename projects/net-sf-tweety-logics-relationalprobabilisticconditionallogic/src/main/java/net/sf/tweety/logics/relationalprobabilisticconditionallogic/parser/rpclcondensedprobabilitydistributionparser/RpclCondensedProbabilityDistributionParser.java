@@ -4,6 +4,8 @@ package net.sf.tweety.logics.relationalprobabilisticconditionallogic.parser.rpcl
 import java.io.*;
 import java.util.*;
 import net.sf.tweety.*;
+import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.firstorderlogic.syntax.*;
 import net.sf.tweety.logics.relationalprobabilisticconditionallogic.*;
 import net.sf.tweety.logics.relationalprobabilisticconditionallogic.semantics.*;

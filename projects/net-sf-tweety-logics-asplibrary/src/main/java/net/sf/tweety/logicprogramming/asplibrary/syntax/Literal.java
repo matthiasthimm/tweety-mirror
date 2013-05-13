@@ -1,5 +1,7 @@
 package net.sf.tweety.logicprogramming.asplibrary.syntax;
 
+import net.sf.tweety.logics.commons.syntax.Term;
+
 /**
  * This interface defines common functionality for an ELP literal.
  * literals are atoms or strictly negated atoms.

@@ -3,6 +3,8 @@ package net.sf.tweety.logics.firstorderlogic.syntax;
 import java.util.*;
 
 import net.sf.tweety.logics.commons.ClassicalFormula;
+import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.firstorderlogic.semantics.HerbrandBase;
 import net.sf.tweety.logics.firstorderlogic.semantics.HerbrandInterpretation;
 import net.sf.tweety.math.probability.Probability;

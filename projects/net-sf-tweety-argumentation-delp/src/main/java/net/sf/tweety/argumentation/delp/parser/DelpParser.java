@@ -5,6 +5,7 @@ import net.sf.tweety.*;
 import net.sf.tweety.argumentation.delp.*;
 import net.sf.tweety.argumentation.delp.syntax.*;
 import net.sf.tweety.logics.firstorderlogic.syntax.*;
+import net.sf.tweety.logics.commons.syntax.*;
 import java.io.*;
 import java.util.*;
 import java.util.regex.*;
@@ -154,8 +155,8 @@ public class DelpParser extends Parser implements DelpParserConstants {
 
   static final public Atom Atom(DefeasibleLogicProgram delp,FolSignature signature) throws ParseException {
         Token p;
-        List<Term> terms = new ArrayList<Term>();
-        Term t;
+        List<Term<?>> terms = new ArrayList<Term<?>>();
+        Term<?> t;
     p = jj_consume_token(NAME);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case 11:

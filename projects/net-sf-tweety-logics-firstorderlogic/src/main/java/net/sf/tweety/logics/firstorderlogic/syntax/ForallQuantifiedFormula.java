@@ -3,6 +3,8 @@ package net.sf.tweety.logics.firstorderlogic.syntax;
 import java.util.*;
 
 import net.sf.tweety.logics.commons.LogicalSymbols;
+import net.sf.tweety.logics.commons.syntax.Term;
+import net.sf.tweety.logics.commons.syntax.Variable;
 
 /**
  * For-All quantified formula.
@@ -31,7 +33,7 @@ public class ForallQuantifiedFormula extends QuantifiedFormula{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula#substitute(net.sf.tweety.logics.firstorderlogic.syntax.Term, net.sf.tweety.logics.firstorderlogic.syntax.Term)
 	 */
-	public RelationalFormula substitute(Term v, Term t) throws IllegalArgumentException{
+	public RelationalFormula substitute(Term<?> v, Term<?> t) throws IllegalArgumentException{
 		if(this.getQuantifierVariables().contains(v))
 			return new ForallQuantifiedFormula(this.getFormula(),this.getQuantifierVariables());
 		return new ForallQuantifiedFormula(this.getFormula().substitute(v, t),this.getQuantifierVariables());

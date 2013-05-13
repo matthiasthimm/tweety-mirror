@@ -9,6 +9,8 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import net.sf.tweety.logicprogramming.asplibrary.parser.ELPParser;
+import net.sf.tweety.logics.commons.syntax.Term;
+import net.sf.tweety.logics.commons.syntax.Variable;
 
 /**
  * this class models an atom, which is a basic structure for

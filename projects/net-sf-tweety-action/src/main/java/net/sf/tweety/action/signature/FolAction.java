@@ -7,8 +7,8 @@ import java.util.Map;
 import java.util.Set;
 
 import net.sf.tweety.action.ActionName;
+import net.sf.tweety.logics.commons.syntax.Term;
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
-import net.sf.tweety.logics.firstorderlogic.syntax.Term;
 
 /**
  * An action is a truth-valued function on the set of action names, which is
@@ -77,7 +77,7 @@ public class FolAction
    * @param map a map, containing all substitutions to be applied.
    * @return the resulting action.
    */
-  public FolAction substitute( Map< ? extends Term, ? extends Term > map )
+  public FolAction substitute( Map< ? extends Term<?>, ? extends Term<?> > map )
   {
     Set< Atom > result = new HashSet< Atom >();
     for ( Atom a : actionNames )

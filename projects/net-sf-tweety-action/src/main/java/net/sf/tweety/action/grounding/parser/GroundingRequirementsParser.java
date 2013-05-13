@@ -7,9 +7,9 @@ import net.sf.tweety.ParserException;
 import net.sf.tweety.action.grounding.GroundingRequirement;
 import net.sf.tweety.action.grounding.VarConstNeqRequirement;
 import net.sf.tweety.action.grounding.VarsNeqRequirement;
-import net.sf.tweety.logics.firstorderlogic.syntax.Constant;
-import net.sf.tweety.logics.firstorderlogic.syntax.Sort;
-import net.sf.tweety.logics.firstorderlogic.syntax.Variable;
+import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.logics.commons.syntax.Sort;
+import net.sf.tweety.logics.commons.syntax.Variable;
 
 /**
  * This class parses a list of grounding requirements of the form 
@@ -63,9 +63,9 @@ public class GroundingRequirementsParser
     Variable var1 = null;
     Variable var2 = null;
     for ( Variable v : variables ) {
-      if ( v.getName().equals( par1 ) )
+      if ( v.get().equals( par1 ) )
         var1 = v;
-      else if ( v.getName().equals( par2 ) )
+      else if ( v.get().equals( par2 ) )
         var2 = v;
     }
     if ( var1 == null && var2 == null )
@@ -101,8 +101,8 @@ public class GroundingRequirementsParser
    */
   private Constant getConstant( String name, Sort sort )
   {
-    for ( Constant c : sort.getConstants() ) {
-      if ( c.getName().equals( name ) )
+    for ( Constant c : sort.getTerms(Constant.class) ) {
+      if ( c.get() == name)
         return c;
     }
     return null;

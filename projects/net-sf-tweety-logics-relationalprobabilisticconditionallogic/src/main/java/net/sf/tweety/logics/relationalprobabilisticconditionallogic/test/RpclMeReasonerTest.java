@@ -1,5 +1,7 @@
 package net.sf.tweety.logics.relationalprobabilisticconditionallogic.test;
 
+import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.firstorderlogic.syntax.*;
 import net.sf.tweety.logics.relationalconditionallogic.syntax.*;
 import net.sf.tweety.logics.relationalprobabilisticconditionallogic.*;
@@ -13,7 +15,7 @@ public class RpclMeReasonerTest {
 		Predicate b = new Predicate("b", 1);
 		Constant c1 = new Constant("c1");		
 		Constant c2 = new Constant("c2");
-		net.sf.tweety.logics.firstorderlogic.syntax.Variable x = new net.sf.tweety.logics.firstorderlogic.syntax.Variable("X");
+		net.sf.tweety.logics.commons.syntax.Variable x = new net.sf.tweety.logics.commons.syntax.Variable("X");
 		net.sf.tweety.logics.firstorderlogic.syntax.Atom atomA = new net.sf.tweety.logics.firstorderlogic.syntax.Atom(a);
 		atomA.addArgument(x);
 		net.sf.tweety.logics.firstorderlogic.syntax.Atom atomB = new net.sf.tweety.logics.firstorderlogic.syntax.Atom(b);

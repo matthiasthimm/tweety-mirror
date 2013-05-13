@@ -12,8 +12,8 @@ import net.sf.tweety.ParserException;
 import net.sf.tweety.action.signature.ActionSignature;
 import net.sf.tweety.action.signature.FolActionName;
 import net.sf.tweety.action.signature.FolFluentName;
-import net.sf.tweety.logics.firstorderlogic.syntax.Constant;
-import net.sf.tweety.logics.firstorderlogic.syntax.Sort;
+import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.logics.commons.syntax.Sort;
 
 /**
  * This class implements a parser for signatures of action descriptions. The BNF for such signatures is given by: (starting symbol is SIG) <br>

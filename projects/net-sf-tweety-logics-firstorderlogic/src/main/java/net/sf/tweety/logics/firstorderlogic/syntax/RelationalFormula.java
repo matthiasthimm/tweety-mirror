@@ -1,11 +1,20 @@
 package net.sf.tweety.logics.firstorderlogic.syntax;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
-import net.sf.tweety.*;
+import net.sf.tweety.Signature;
 import net.sf.tweety.logics.commons.ClassicalFormula;
+import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.logics.commons.syntax.Predicate;
+import net.sf.tweety.logics.commons.syntax.Sort;
+import net.sf.tweety.logics.commons.syntax.Term;
+import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.math.probability.Probability;
-import net.sf.tweety.util.*;
+import net.sf.tweety.util.MapTools;
 
 
 /**
@@ -46,7 +55,7 @@ public abstract class RelationalFormula extends LogicStructure implements Classi
 	 *    (NOTE: this exception is only thrown when "v" actually appears in this
 	 *    formula).
 	 */
-	public abstract RelationalFormula substitute(Term v, Term t) throws IllegalArgumentException;
+	public abstract RelationalFormula substitute(Term<?> v, Term<?> t) throws IllegalArgumentException;
 		
 	/**
 	 * Substitutes all occurrences of term "v" in this formula
@@ -59,7 +68,7 @@ public abstract class RelationalFormula extends LogicStructure implements Classi
 	 * @return a new relational formula with both "v" and "t" exchanged.
 	 * @throws IllegalArgumentException if "v" and "t" are of different sorts
 	 */
-	public RelationalFormula exchange(Term v, Term t) throws IllegalArgumentException{
+	public RelationalFormula exchange(Term<?> v, Term<?> t) throws IllegalArgumentException{
 		if(!v.getSort().equals(t.getSort()))
 			throw new IllegalArgumentException("Terms '" + v + "' and '" + t + "' are of different sorts.");
 		Constant temp = new Constant("$TEMP$", v.getSort());
@@ -82,9 +91,9 @@ public abstract class RelationalFormula extends LogicStructure implements Classi
 	 *    (NOTE: this exception is only thrown when the variable actually appears in this
 	 *    formula).
 	 */
-	public RelationalFormula substitute(Map<? extends Term,? extends Term> map) throws IllegalArgumentException{
+	public RelationalFormula substitute(Map<? extends Term<?>,? extends Term<?>> map) throws IllegalArgumentException{
 		RelationalFormula f = this;
-		for(Term v: map.keySet())
+		for(Term<?> v: map.keySet())
 			f = f.substitute(v,map.get(v));
 		return f;
 	}
@@ -97,7 +106,7 @@ public abstract class RelationalFormula extends LogicStructure implements Classi
 	 * @throws IllegalArgumentException if there is an unbound variable in this formula for
 	 * 		which there is no term in "terms" with the same sort.
 	 */
-	public Set<Map<Variable,Term>> allSubstitutions(Collection<? extends Term> terms) throws IllegalArgumentException{
+	public Set<Map<Variable,Term<?>>> allSubstitutions(Collection<? extends Term<?>> terms) throws IllegalArgumentException{
 		Set<Variable> variables = this.getUnboundVariables();
 		//partition variables by sorts
 		Map<Sort,Set<Variable>> sorts_variables = new HashMap<Sort,Set<Variable>>();		
@@ -107,15 +116,15 @@ public abstract class RelationalFormula extends LogicStructure implements Classi
 			sorts_variables.get(v.getSort()).add(v);
 		}
 		//partition terms by sorts
-		Map<Sort,Set<Term>> sorts_terms = Sort.sortTerms(terms);
+		Map<Sort,Set<Term<?>>> sorts_terms = Sort.sortTerms(terms);
 		//combine the partitions
-		Map<Set<Variable>,Set<Term>> relations = new HashMap<Set<Variable>,Set<Term>>();
+		Map<Set<Variable>,Set<Term<?>>> relations = new HashMap<Set<Variable>,Set<Term<?>>>();
 		for(Sort s: sorts_variables.keySet()){
 			if(!sorts_terms.containsKey(s))
 				throw new IllegalArgumentException("There is no term of sort " + s + " to substitute.");
 			relations.put(sorts_variables.get(s), sorts_terms.get(s));			
 		}
-		return new MapTools<Variable,Term>().allMaps(relations);				
+		return new MapTools<Variable,Term<?>>().allMaps(relations);				
 	}
 	
 	/**
@@ -126,10 +135,10 @@ public abstract class RelationalFormula extends LogicStructure implements Classi
 	 * @throws IllegalArgumentException if there is an unbound variable in this formula for
 	 * 		which there is no constant in "constants" with the same sort.
 	 */
-	public Set<RelationalFormula> allGroundInstances(Set<Term> constants) throws IllegalArgumentException{
-		Set<Map<Variable,Term>> maps = this.allSubstitutions(constants);
+	public Set<RelationalFormula> allGroundInstances(Set<Constant> constants) throws IllegalArgumentException{
+		Set<Map<Variable,Term<?>>> maps = this.allSubstitutions(constants);
 		Set<RelationalFormula> result = new HashSet<RelationalFormula>();
-		for(Map<Variable,Term> map: maps)
+		for(Map<Variable,Term<?>> map: maps)
 			result.add(this.substitute(map));		
 		return result;
 	}
@@ -218,13 +227,13 @@ public abstract class RelationalFormula extends LogicStructure implements Classi
 		//there are no two variables with the same name but different sort
 		for(Variable v: this.getVariables())
 			for(Variable w: this.getVariables())
-				if(v.getName().equals(w.getName()))
+				if(v.get().equals(w.get()))
 					if(!v.getSort().equals(w.getSort()))
 						return false;
 		//there are no two constants with the same name but different sort
 		for(Constant c: this.getConstants())
 			for(Constant d: this.getConstants())
-				if(c.getName().equals(d.getName()))
+				if(c.get().equals(d.get()))
 					if(!c.getSort().equals(d.getSort()))
 						return false;
 		//there are no two predicates with the same name but different arguments
@@ -234,7 +243,7 @@ public abstract class RelationalFormula extends LogicStructure implements Classi
 					if(p.getArity() != q.getArity())
 						return false;
 					for(int i = 0; i < p.getArity(); i++)
-						if(!p.getArguments().get(i).equals(q.getArguments().get(i)))
+						if(!p.getArgumentTypes().get(i).equals(q.getArgumentTypes().get(i)))
 							return false;					
 				}
 		//there are no two functors with the same name but different sort or arguments
@@ -250,7 +259,7 @@ public abstract class RelationalFormula extends LogicStructure implements Classi
 						if(f.getArity() != g.getArity())
 							return false;
 						for(int i = 0; i < f.getArity(); i++)
-							if(!f.getArguments().get(i).equals(g.getArguments().get(i)))
+							if(!f.getArgumentTypes().get(i).equals(g.getArgumentTypes().get(i)))
 								return false;					
 				}
 			}

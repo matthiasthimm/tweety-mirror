@@ -2,6 +2,9 @@ package net.sf.tweety.logics.firstorderlogic.semantics;
 
 import java.util.*;
 
+import net.sf.tweety.logics.commons.syntax.Predicate;
+import net.sf.tweety.logics.commons.syntax.Sort;
+import net.sf.tweety.logics.commons.syntax.Term;
 import net.sf.tweety.logics.firstorderlogic.syntax.*;
 import net.sf.tweety.util.*;
 
@@ -35,7 +38,7 @@ public class HerbrandBase {
 		this.atoms = new HashSet<Atom>();
 		for(Predicate p: sig.getPredicates()){
 			if(p.getArity() == 0) this.atoms.add(new Atom(p));
-			this.atoms.addAll(this.getAllInstantiations(sig, p, new ArrayList<Term>()));
+			this.atoms.addAll(this.getAllInstantiations(sig, p, new ArrayList<Term<?>>()));
 		}
 	}
 	
@@ -47,18 +50,18 @@ public class HerbrandBase {
 	 * @param arguments the currently set arguments of the atoms.
 	 * @return the complete set of instantiations of "p" relative to "sig" and "arguments".
 	 */
-	private Set<Atom> getAllInstantiations(FolSignature sig, Predicate p, List<Term> arguments){
+	private Set<Atom> getAllInstantiations(FolSignature sig, Predicate p, List<Term<?>> arguments){
 		if(p.getArity() == arguments.size()){
 			Set<Atom> atoms = new HashSet<Atom>();
 			atoms.add(new Atom(p,arguments));
 			return atoms;
 		}
-		Sort currentSort = p.getArguments().get(arguments.size());
+		Sort currentSort = p.getArgumentTypes().get(arguments.size());
 		Set<Atom> atoms = new HashSet<Atom>();
-		for(Term c: sig.getConstants()){
+		for(Term<?> c: sig.getConstants()){
 			if(!c.getSort().equals(currentSort))
 				continue;
-			List<Term> newArguments = new ArrayList<Term>(arguments);
+			List<Term<?>> newArguments = new ArrayList<Term<?>>(arguments);
 			newArguments.add(c);
 			atoms.addAll(this.getAllInstantiations(sig, p, newArguments));
 		}		

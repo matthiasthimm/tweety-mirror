@@ -5,9 +5,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import net.sf.tweety.logics.firstorderlogic.syntax.Constant;
-import net.sf.tweety.logics.firstorderlogic.syntax.Sort;
-import net.sf.tweety.logics.firstorderlogic.syntax.Variable;
+import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.logics.commons.syntax.Sort;
+import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.util.MapTools;
 
 /**
@@ -97,8 +97,8 @@ public class GroundingTools
     Map< Set< Variable >, Set< Constant >> relations =
       new HashMap< Set< Variable >, Set< Constant >>();
     for ( Sort s : sorts_variables.keySet() ) {
-      if ( !s.getConstants().isEmpty() )
-        relations.put( sorts_variables.get( s ), s.getConstants() );
+      if ( !s.getTerms(Constant.class).isEmpty() )
+        relations.put( sorts_variables.get( s ), s.getTerms(Constant.class));
     }
     return new MapTools< Variable, Constant >().allMaps( relations );
   }

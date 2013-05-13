@@ -15,7 +15,6 @@ import net.sf.tweety.preferences.events.UpdateListener;
 import net.sf.tweety.preferences.ranking.LevelingFunction;
 import net.sf.tweety.preferences.update.Update;
 import net.sf.tweety.preferences.update.UpdateStream;
-import net.sf.tweety.preferences.update.UpdateStreamReader;
 
 /**
  * This Demo-class provides a basic implementation similar to the ScoringPreferenceAggregator but dynamic aggregation instead of static

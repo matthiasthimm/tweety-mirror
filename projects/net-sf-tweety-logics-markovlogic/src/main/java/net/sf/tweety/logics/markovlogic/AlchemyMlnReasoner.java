@@ -13,6 +13,11 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import net.sf.tweety.BeliefBase;
+import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.logics.commons.syntax.Predicate;
+import net.sf.tweety.logics.commons.syntax.Sort;
+import net.sf.tweety.logics.commons.syntax.Term;
+import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.firstorderlogic.syntax.*;
 import net.sf.tweety.logics.markovlogic.syntax.MlnFormula;
 
@@ -152,12 +157,12 @@ public class AlchemyMlnReasoner extends AbstractMlnReasoner {
 		for(Sort s: signature.getSorts()){
 			out.append(s.getName().toLowerCase() + " = {");
 			boolean isFirst = true;
-			for(Constant c: s.getConstants()){
+			for(Constant c: s.getTerms(Constant.class)){
 				if(isFirst){
-					out.append(c.getName().toUpperCase());
+					out.append(c.get().toUpperCase());
 					isFirst = false;
 				}else{
-					out.append("," + c.getName().toUpperCase());
+					out.append("," + c.get().toUpperCase());
 				}
 			}
 			out.append("}\n");
@@ -168,10 +173,10 @@ public class AlchemyMlnReasoner extends AbstractMlnReasoner {
 		// write predicates
 		for(Predicate p: signature.getPredicates()){
 			out.append(p.getName().toLowerCase());
-			if(p.getArguments().size()>0)
+			if(p.getArgumentTypes().size()>0)
 				out.append("(");
 			boolean isFirst = true;
-			for(Sort s: p.getArguments()){
+			for(Sort s: p.getArgumentTypes()){
 				if(isFirst){
 					out.append(s.getName().toLowerCase());
 					isFirst = false;
@@ -179,7 +184,7 @@ public class AlchemyMlnReasoner extends AbstractMlnReasoner {
 					out.append("," + s.getName().toLowerCase());
 				}
 			}				
-			if(p.getArguments().size()>0)
+			if(p.getArgumentTypes().size()>0)
 				out.append(")\n");
 		}
 		// write query predicate

@@ -2,6 +2,7 @@
 package net.sf.tweety.logics.firstorderlogic.parser;
 import java.util.*;
 import net.sf.tweety.logics.firstorderlogic.syntax.*;
+import net.sf.tweety.logics.commons.syntax.*;
 import net.sf.tweety.util.Pair;
 import net.sf.tweety.logics.firstorderlogic.FolBeliefSet;
 

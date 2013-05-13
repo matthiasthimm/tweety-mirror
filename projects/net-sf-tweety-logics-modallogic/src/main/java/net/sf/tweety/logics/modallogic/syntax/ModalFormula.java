@@ -1,10 +1,20 @@
 package net.sf.tweety.logics.modallogic.syntax;
 
-import java.util.*;
+import java.util.Set;
 
-import net.sf.tweety.*;
+import net.sf.tweety.Signature;
 import net.sf.tweety.logics.commons.ClassicalFormula;
-import net.sf.tweety.logics.firstorderlogic.syntax.*;
+import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.logics.commons.syntax.Predicate;
+import net.sf.tweety.logics.commons.syntax.Variable;
+import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.Conjunction;
+import net.sf.tweety.logics.firstorderlogic.syntax.Disjunction;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import net.sf.tweety.logics.firstorderlogic.syntax.FunctionalTerm;
+import net.sf.tweety.logics.firstorderlogic.syntax.Functor;
+import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
+import net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula;
 import net.sf.tweety.math.probability.Probability;
 
 /**

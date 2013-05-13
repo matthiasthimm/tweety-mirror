@@ -1,12 +1,18 @@
-package net.sf.tweety.logics.firstorderlogic.syntax;
+package net.sf.tweety.logics.commons.syntax;
 
-import java.util.*;
+import java.util.List;
 
 /**
- * A predicate in first-order logic, i.e. an identifier for a relation between objects.
- * @author Matthias Thimm
+ * A general predicate which contains an identifier that describes its meaning,
+ * an argument count referred as arity and a list of sorts defining the types for 
+ * the arguments of the predicate.
+ * Sub classes might forbid some of the general features to form a predicate which fits
+ * another language. Force the arity to be zero gives an propositional predicate for
+ * example.
+ * 
+ * @author Matthias Thimm, Tim Janus
  */
-public class Predicate extends FolBasicStructure {
+public class Predicate extends TypedStructureAdapter {
 	
 	/**
 	 * Initializes a predicate of arity zero with the given name; 
@@ -33,20 +39,7 @@ public class Predicate extends FolBasicStructure {
 	public Predicate(String name, List<Sort> arguments){
 		super(name,arguments);
 	}
-	
-	/**
-	 * Appends the given sort to this predicate's
-	 * arguments and returns itself.
-	 * @param sort a sort to be added
-	 * @return the predicate itself.
-	 */
-	public Predicate addArgument(Sort sort){
-		List<Sort> arguments = this.getArguments();		
-		arguments.add(sort);
-		this.setArguments(arguments);
-		return this;
-	}
-		
+			
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolBasicStructure#hashCode()
 	 */

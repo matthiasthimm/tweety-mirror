@@ -2,6 +2,9 @@ package net.sf.tweety.logics.firstorderlogic.syntax;
 
 import java.util.*;
 
+import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.logics.commons.syntax.Variable;
+
 /**
  * This abstract class captures the common functionalities of both
  * formulas and terms.

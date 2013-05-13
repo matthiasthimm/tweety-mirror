@@ -1,6 +1,13 @@
 package net.sf.tweety.logicprogramming.asplibrary.syntax;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
+import net.sf.tweety.logics.commons.syntax.Term;
+import net.sf.tweety.logics.commons.syntax.TermAdapter;
 
 /**
  * this class models a list term that can be used for
@@ -10,7 +17,7 @@ import java.util.*;
  * @author Thomas Vengels
  *
  */
-public class ListTerm implements Term<List<Term<?>>> {
+public class ListTerm extends TermAdapter<List<Term<?>>> {
 
 	List<Term<?>> head = new LinkedList<Term<?>>();
 	List<Term<?>> tail = new LinkedList<Term<?>>();

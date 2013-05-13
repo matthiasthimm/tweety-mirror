@@ -7,14 +7,14 @@ import java.util.Set;
 
 import net.sf.tweety.Formula;
 import net.sf.tweety.action.grounding.GroundingTools;
+import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.logics.commons.syntax.Predicate;
+import net.sf.tweety.logics.commons.syntax.Sort;
+import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.firstorderlogic.lang.FolLanguageNoQuantifiersNoFunctions;
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
-import net.sf.tweety.logics.firstorderlogic.syntax.Constant;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
-import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
-import net.sf.tweety.logics.firstorderlogic.syntax.Sort;
-import net.sf.tweety.logics.firstorderlogic.syntax.Variable;
 
 /**
  * This class represents an action signature consisting of a set of fluent names
@@ -124,7 +124,7 @@ public class ActionSignature
   {
     String result = ":- signature\n";
     for ( Sort s : this.getSorts() ) {
-      result += s.getName() + " = " + s.getConstants().toString() + "\n";
+      result += s.getName() + " = " + s.getTerms(Constant.class).toString() + "\n";
     }
     for ( FolActionName p : this.getActionNames() ) {
       result += p.toString() + "\n";
@@ -238,7 +238,7 @@ public class ActionSignature
     Set< Variable > variables = new HashSet< Variable >();
     for ( FolFluentName f : getFluentNames() ) {
       Atom a = new Atom( f );
-      for ( Sort s : f.getArguments() ) {
+      for ( Sort s : f.getArgumentTypes() ) {
         Variable v = new Variable( "", s );
         a.addArgument( v );
         variables.add( v );
@@ -268,7 +268,7 @@ public class ActionSignature
     Set< Variable > variables = new HashSet< Variable >();
     for ( FolActionName f : getActionNames() ) {
       Atom a = new Atom( f );
-      for ( Sort s : f.getArguments() ) {
+      for ( Sort s : f.getArgumentTypes() ) {
         Variable v = new Variable( "", s );
         a.addArgument( v );
         variables.add( v );

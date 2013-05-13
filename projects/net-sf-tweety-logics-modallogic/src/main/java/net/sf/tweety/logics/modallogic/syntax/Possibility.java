@@ -1,5 +1,6 @@
 package net.sf.tweety.logics.modallogic.syntax;
 
+import net.sf.tweety.logics.commons.syntax.Term;
 import net.sf.tweety.logics.firstorderlogic.syntax.*;
 
 /**

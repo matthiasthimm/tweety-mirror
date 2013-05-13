@@ -12,6 +12,7 @@ package net.sf.tweety.logics.firstorderlogic.parser;
 
 import java.util.*;
 import net.sf.tweety.logics.firstorderlogic.syntax.*;
+import net.sf.tweety.logics.commons.syntax.*;
 import net.sf.tweety.util.Pair;
 
 import net.sf.tweety.logics.firstorderlogic.FolBeliefSet;
@@ -64,7 +65,7 @@ public class FolParserB
   {
     return signature.getFunctor(name);  }
 
-  private Functor getOrCreateFunctor(String name, List<Term >args, Sort targetSort, FolSignature signature)
+  private Functor getOrCreateFunctor(String name, List<Term<?>> args, Sort targetSort, FolSignature signature)
   	throws ParseException  {
     Functor reval = signature.getFunctor(name);
     if(reval == null)    {
@@ -81,18 +82,18 @@ public class FolParserB
   private Predicate getPredicate(String name, FolSignature sig)
   {
     return sig.getPredicate(name);  }
-
-  private Sort getArgumentType(FolBasicStructure fbs, int count)
+  
+  private Sort getArgumentType(TypedStructure fbs, int count)
     throws ParseException
   {
     if(fbs == null)
     {
       return Sort.THING;    }
-    if(count >= fbs.getArguments().size())
+    if(count >= fbs.getArgumentTypes().size())
     {
 	  return null;    }
 
-    return fbs.getArguments().get(count);  }
+    return fbs.getArgumentTypes().get(count);  }
 
   private Constant getOrCreateConstant(String name, Sort type, FolSignature sig)
     throws ParseException  {
@@ -281,7 +282,7 @@ Atom atom(FolSignature signature) :
   Predicate p;
   int count = 0;
   Sort type;
-  List<Term > terms = new LinkedList<Term >();}
+  List<Term<?>> terms = new LinkedList<Term<?>>();}
 {
   identifier = identifier()
   {
@@ -311,14 +312,14 @@ Atom atom(FolSignature signature) :
 	reval = new Atom(p, terms);    return reval;
   }}
 
-Term term(FolSignature signature, Sort type) :
+Term<?> term(FolSignature signature, Sort type) :
 {
   Term temp;
   String fname;
   int count = 0;
   Sort subtype;
   Functor f;
-  List<Term > terms = new LinkedList<Term >();
+  List<Term<?>> terms = new LinkedList<Term<?>>();
   Token t;}
 {
   (    
@@ -421,7 +422,7 @@ Set<Constant > constants(Sort type) :
 void declar(FolSignature signature) :
 {
   String name;
-  FolBasicStructure fbs = null;}
+  TypedStructure fbs = null;}
 {
   < TYPE > < LBRA > name = identifier()
   (
@@ -442,7 +443,7 @@ void declar(FolSignature signature) :
     */
     signature.add(fbs);  }}
 
-FolBasicStructure endPredicateDeclar(FolSignature signature, String name) :
+TypedStructure endPredicateDeclar(FolSignature signature, String name) :
 {
   String sort;
   Predicate reval = null;
@@ -469,12 +470,12 @@ FolBasicStructure endPredicateDeclar(FolSignature signature, String name) :
     reval = new Predicate(name, getSorts(signature, sorts));
     return reval;  }}
 
-FolBasicStructure endFunctorDeclar(FolSignature signature, String sortName) :
+TypedStructure endFunctorDeclar(FolSignature signature, String sortName) :
 {
   String name;
   String tempType;
   List<String >sorts = new LinkedList<String >();
-  FolBasicStructure fbs;}
+  TypedStructure fbs;}
 {
   < EQUAL > name = identifier()
   < LBRA >

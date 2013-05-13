@@ -3,6 +3,7 @@ package net.sf.tweety.logicprogramming.asplibrary.parser;
 
 import java.util.*;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.*;
+import net.sf.tweety.logics.commons.syntax.*;
 
 @SuppressWarnings("all")
 public class ELPParser implements ELPParserConstants {

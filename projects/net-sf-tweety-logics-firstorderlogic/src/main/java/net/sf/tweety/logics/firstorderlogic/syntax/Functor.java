@@ -2,12 +2,17 @@ package net.sf.tweety.logics.firstorderlogic.syntax;
 
 import java.util.*;
 
+import net.sf.tweety.logics.commons.syntax.TypedStructureAdapter;
+import net.sf.tweety.logics.commons.syntax.Sort;
+
 /**
  * A functor for first-order logic, i.e. an identifier for
  * functional terms.
+ * 
  * @author Matthias Thimm
+ * @author Tim Janus
  */
-public class Functor extends FolBasicStructure {
+public class Functor extends TypedStructureAdapter {
 	
 	/**
 	 * The sort of a functional term using this functor
@@ -51,20 +56,7 @@ public class Functor extends FolBasicStructure {
 	public Sort getTargetSort(){
 		return this.targetSort;
 	}
-	
-	/**
-	 * Appends the given sort to this functor's
-	 * arguments and returns itself.
-	 * @param sort a sort to be added
-	 * @return the functor itself.
-	 */
-	public Functor addArgument(Sort sort){
-		List<Sort> arguments = this.getArguments();		
-		arguments.add(sort);
-		this.setArguments(arguments);
-		return this;
-	}
-	
+		
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */

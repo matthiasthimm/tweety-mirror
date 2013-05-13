@@ -3,6 +3,8 @@ package net.sf.tweety.logicprogramming.asplibrary.syntax;
 import java.util.List;
 import java.util.SortedSet;
 
+import net.sf.tweety.logics.commons.syntax.Term;
+
 /**
  * This interface defines base methods every rule element of a
  * program has to provide. Rule elements are those constructs which

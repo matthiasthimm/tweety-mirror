@@ -2,6 +2,11 @@ package net.sf.tweety.logics.firstorderlogic.syntax;
 
 import java.util.*;
 
+import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.logics.commons.syntax.Predicate;
+import net.sf.tweety.logics.commons.syntax.Term;
+import net.sf.tweety.logics.commons.syntax.Variable;
+
 /**
  * This class captures the common functionalities of the special
  * formulas tautology and contradiction.
@@ -77,7 +82,7 @@ public abstract class SpecialFormula extends FolFormula{
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula#substitute(net.sf.tweety.logics.firstorderlogic.syntax.Term, net.sf.tweety.logics.firstorderlogic.syntax.Term)
 	 */
 	@Override
-	public FolFormula substitute(Term v, Term t){
+	public FolFormula substitute(Term<?> v, Term<?> t){
 		return this;
 	}
 	/* (non-Javadoc)

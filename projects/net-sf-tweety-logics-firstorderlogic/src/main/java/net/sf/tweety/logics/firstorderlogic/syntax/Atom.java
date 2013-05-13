@@ -1,6 +1,15 @@
 package net.sf.tweety.logics.firstorderlogic.syntax;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.logics.commons.syntax.Predicate;
+import net.sf.tweety.logics.commons.syntax.Term;
+import net.sf.tweety.logics.commons.syntax.Variable;
 
 /**
  * An atom in first-order logic, i.e. a predicate and a list of argument terms.
@@ -16,7 +25,7 @@ public class Atom extends FolFormula {
 	/**
 	 * The arguments of the atom
 	 */
-	private List<Term> arguments;
+	private List<Term<?>> arguments;
 	
 	/**
 	 * Creates a new atom with the given predicate and initializes
@@ -24,7 +33,7 @@ public class Atom extends FolFormula {
 	 * @param predicate the predicate of the atom.
 	 */
 	public Atom(Predicate predicate){
-		this(predicate,new ArrayList<Term>());
+		this(predicate,new ArrayList<Term<?>>());
 	}
 	
 	/**
@@ -33,10 +42,10 @@ public class Atom extends FolFormula {
 	 * @param predicate the predicate of the atom
 	 * @param arguments the arguments (terms) of the atom
 	 */
-	public Atom(Predicate predicate, List<? extends Term> arguments){
+	public Atom(Predicate predicate, List<? extends Term<?>> arguments){
 		this.predicate = predicate;
-		this.arguments = new ArrayList<Term>();
-		for(Term t: arguments)
+		this.arguments = new ArrayList<Term<?>>();
+		for(Term<?> t: arguments)
 			this.addArgument(t);		
 	}
 	
@@ -48,11 +57,11 @@ public class Atom extends FolFormula {
 	 * @throws IllegalArgumentException if the given term does not correspond
 	 *   to the expected sort or the argument list is complete.
 	 */
-	public Atom addArgument(Term term) throws IllegalArgumentException{
+	public Atom addArgument(Term<?> term) throws IllegalArgumentException{
 		if(this.arguments.size() == this.predicate.getArity())
 			throw new IllegalArgumentException("No more arguments expected.");
-		if(!this.predicate.getArguments().get(this.arguments.size()).equals(term.getSort()))
-			throw new IllegalArgumentException("The sort \"" + term.getSort() + "\" of the given term does not correspond to the expected sort \"" + this.predicate.getArguments().get(this.arguments.size()) + "\"." );
+		if(!this.predicate.getArgumentTypes().get(this.arguments.size()).equals(term.getSort()))
+			throw new IllegalArgumentException("The sort \"" + term.getSort() + "\" of the given term does not correspond to the expected sort \"" + this.predicate.getArgumentTypes().get(this.arguments.size()) + "\"." );
 		this.arguments.add(term);		
 		return this;
 	}
@@ -60,9 +69,10 @@ public class Atom extends FolFormula {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula#substitute(net.sf.tweety.logics.firstorderlogic.syntax.Term, net.sf.tweety.logics.firstorderlogic.syntax.Term)
 	 */
-	public Atom substitute(Term v, Term t) throws IllegalArgumentException{
+	@Override
+	public Atom substitute(Term<?> v, Term<?> t) throws IllegalArgumentException{
 		Atom atom = new Atom(this.predicate);
-		for(Term term: this.arguments)
+		for(Term<?> term: this.arguments)
 			atom.addArgument(term.substitute(v, t));
 		return atom;		
 	}
@@ -97,8 +107,8 @@ public class Atom extends FolFormula {
 	 */
 	public Set<Constant> getConstants(){
 		Set<Constant> constants = new HashSet<Constant>();
-		for(Term arg: arguments)
-			constants.addAll(arg.getConstants());
+		for(Term<?> arg: arguments)
+			constants.addAll(arg.getTerms(Constant.class));
 		return constants;
 	}
 	
@@ -116,8 +126,11 @@ public class Atom extends FolFormula {
 	 */
 	public Set<Functor> getFunctors(){
 		Set<Functor> functors = new HashSet<Functor>();
-		for(Term arg: this.arguments)
-			functors.addAll(arg.getFunctors());
+		for(Term<?> arg: arguments) {
+			if(arg instanceof FunctionalTerm) {
+				functors.add(((FunctionalTerm)arg).getFunctor());
+			}
+		}
 		return functors;
 	}
 	
@@ -126,8 +139,8 @@ public class Atom extends FolFormula {
 	 */
 	public Set<Variable> getVariables(){
 		Set<Variable> variables = new HashSet<Variable>();
-		for(Term arg: this.arguments)
-			variables.addAll(arg.getVariables());
+		for(Term<?> arg: this.arguments)
+			variables.addAll(arg.getTerms(Variable.class));
 		return variables;
 	}
 
@@ -136,7 +149,7 @@ public class Atom extends FolFormula {
 	 */
 	public Set<FunctionalTerm> getFunctionalTerms(){
 		Set<FunctionalTerm> terms = new HashSet<FunctionalTerm>();
-		for(Term t: this.arguments)
+		for(Term<?> t: this.arguments)
 			if(t instanceof FunctionalTerm)
 				terms.add((FunctionalTerm)t);
 		return terms;		
@@ -186,11 +199,10 @@ public class Atom extends FolFormula {
 	}
 	
 	/**
-	 * Returns the arguments of this atom.
 	 * @return the arguments of this atom.
 	 */
-	public List<Term> getArguments(){
-		return new ArrayList<Term>(this.arguments);
+	public List<Term<?>> getArguments(){
+		return Collections.unmodifiableList(this.arguments);
 	}
 	
 	/* (non-Javadoc)

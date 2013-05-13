@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.sf.tweety.Signature;
+import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.logics.commons.syntax.Term;
 
 public class ElpSignature extends Signature {
 	

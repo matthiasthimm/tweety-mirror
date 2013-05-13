@@ -8,7 +8,13 @@ import net.sf.tweety.Signature;
 import net.sf.tweety.action.grounding.GroundingRequirement;
 import net.sf.tweety.action.grounding.GroundingTools;
 import net.sf.tweety.action.signature.ActionSignature;
-import net.sf.tweety.logics.firstorderlogic.syntax.*;
+import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.logics.commons.syntax.Variable;
+import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.Disjunction;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula;
+import net.sf.tweety.logics.firstorderlogic.syntax.Tautology;
 
 /**
  * This class represents a static rule in C, which has the following form:

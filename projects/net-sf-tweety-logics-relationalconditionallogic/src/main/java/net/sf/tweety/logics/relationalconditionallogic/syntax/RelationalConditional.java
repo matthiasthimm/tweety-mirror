@@ -4,6 +4,10 @@ import java.util.*;
 
 import net.sf.tweety.*;
 import net.sf.tweety.logics.commons.ClassicalFormula;
+import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.logics.commons.syntax.Predicate;
+import net.sf.tweety.logics.commons.syntax.Term;
+import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.firstorderlogic.lang.*;
 import net.sf.tweety.logics.firstorderlogic.syntax.*;
 import net.sf.tweety.math.probability.Probability;
@@ -141,7 +145,7 @@ public class RelationalConditional extends RelationalFormula implements Rule{
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula#substitute(net.sf.tweety.logics.firstorderlogic.syntax.Term, net.sf.tweety.logics.firstorderlogic.syntax.Term)
 	 */
 	@Override
-	public RelationalFormula substitute(Term v, Term t)	throws IllegalArgumentException {
+	public RelationalFormula substitute(Term<?> v, Term<?> t)	throws IllegalArgumentException {
 		return new RelationalConditional(
 				(FolFormula)this.premise.substitute(v, t),
 				(FolFormula)this.conclusion.substitute(v, t));

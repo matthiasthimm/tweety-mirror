@@ -1,32 +1,36 @@
-package net.sf.tweety.logics.firstorderlogic.syntax;
+package net.sf.tweety.logics.commons.syntax;
 
 import java.util.*;
 
+
 /**
- * The abstract parent for predicates and functors. This class captures their common
+ * The abstract parent for predicates and functors implementing the 
+ * TypedStructure interface. This class implements their common
  * functionalities.
  * 
- * @author Matthias Thimm
- *
+ * @TODO add property change listener for name, add list observer for arguments
+ * @author Matthias Thimm, Tim Janus
  */
-public abstract class FolBasicStructure {
-	/**
-	 * The name of this structure
-	 */
+public abstract class TypedStructureAdapter implements TypedStructure {
+	
+	/** The name of this structure */
 	private String name;
 	
 	/**
 	 * This list constrains the possible arguments of this structure
 	 * to the given sorts. Therefore the arity of this structure is
-	 * the size of the list.
+	 * the size of the list if the structure isComplete().
 	 */
 	private List<Sort> arguments;
+	
+	/** the number of arguments for a complete structure */
+	private int arity;
 	
 	/**
 	 * Initializes a structure of arity zero with the given name; 
 	 * @param name the name of the structure
 	 */
-	public FolBasicStructure(String name){
+	public TypedStructureAdapter(String name){
 		this.name = name;
 		this.arguments = new ArrayList<Sort>();
 	}
@@ -36,7 +40,7 @@ public abstract class FolBasicStructure {
 	 * Every argument gets the sort Sort.THING. 
 	 * @param name the name of the structure
 	 */
-	public FolBasicStructure(String name, int arity){
+	public TypedStructureAdapter(String name, int arity){
 		this(name);
 		for(int i = 0; i < arity; i++)
 			this.arguments.add(Sort.THING);
@@ -48,44 +52,64 @@ public abstract class FolBasicStructure {
 	 * @param name the name of the structure
 	 * @param arguments the sorts of the arguments
 	 */
-	public FolBasicStructure(String name, List<Sort> arguments){
+	public TypedStructureAdapter(String name, List<Sort> arguments){
 		this(name);
 		this.arguments.addAll(arguments);
 	}
 	
-	/**
-	 * Returns the name of this structure
-	 * @return the name of this structure
-	 */
+	@Override
 	public String getName(){
-		return new String(this.name);
+		return this.name;
 	}
 	
-	/**
-	 * Returns the arguments of this structure (the sorts
-	 * of the parameters)
-	 * @return  the arguments of this structure (the sorts
-	 * of the parameters)
-	 */
-	public List<Sort> getArguments(){
-		return new ArrayList<Sort>(this.arguments);
+	@Override
+	public void setName(String name) {
+		this.name = name;
 	}
 	
-	/**
-	 * Sets the argument list of this structure
-	 * @param arguments a list of sorts as arguments
-	 */
-	protected void setArguments(List<Sort> arguments){
-		this.arguments = arguments;
-	}
-	
-	/**
-	 * Returns the arity of this structure
-	 * @return the arity of this structure
-	 */
+	@Override
 	public int getArity(){
 		return this.arguments.size();
+	}
+	
+	@Override 
+	public void setArity(int arity) {
+		this.arity = arity;
+	}
+
+	@Override
+	public List<Sort> getArgumentTypes(){
+		return Collections.unmodifiableList(this.arguments);
+	}
+	
+	@Override
+	public void addArgumentType(Sort argType) {
+		arguments.add(argType);
+	}
+	
+	@Override
+	public Sort removeArgumentType(int index) {
+		return arguments.remove(index);
+	}
+	
+	@Override
+	public boolean removeArgumentType(Sort argType) {
+		return arguments.remove(argType);
 	}	
+	
+	@Override
+	public boolean isTyped() {
+		for(Sort s : arguments) {
+			if(s != Sort.THING)
+				return false;
+		}
+		return true;
+	}
+	
+	@Override
+	public boolean isComplete() {
+		return arity == arguments.size();
+	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
@@ -126,7 +150,7 @@ public abstract class FolBasicStructure {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		FolBasicStructure other = (FolBasicStructure) obj;
+		TypedStructureAdapter other = (TypedStructureAdapter) obj;
 		if (arguments == null) {
 			if (other.arguments != null)
 				return false;

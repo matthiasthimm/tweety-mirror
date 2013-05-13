@@ -3,6 +3,7 @@ package net.sf.tweety.logics.relationalprobabilisticconditionallogic;
 import java.util.*;
 
 import net.sf.tweety.*;
+import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.firstorderlogic.syntax.*;
 import net.sf.tweety.logics.probabilisticconditionallogic.semantics.*;
 import net.sf.tweety.logics.relationalprobabilisticconditionallogic.semantics.*;

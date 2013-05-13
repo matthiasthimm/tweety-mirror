@@ -1,6 +1,12 @@
 package net.sf.tweety.logicprogramming.asplibrary.syntax;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
+import net.sf.tweety.logics.commons.syntax.Term;
+import net.sf.tweety.logics.commons.syntax.TermAdapter;
 
 /**
  * this class models a set term, which can be used
@@ -10,7 +16,7 @@ import java.util.*;
  * @author Thomas Vengels
  *
  */
-public class SetTerm implements Term<Set<Term<?>>> {
+public class SetTerm extends TermAdapter<Set<Term<?>>> {
 
 	Set<Term<?>>	terms;
 	

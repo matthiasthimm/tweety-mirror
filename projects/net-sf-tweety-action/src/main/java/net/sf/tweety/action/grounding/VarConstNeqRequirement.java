@@ -2,8 +2,8 @@ package net.sf.tweety.action.grounding;
 
 import java.util.Map;
 
-import net.sf.tweety.logics.firstorderlogic.syntax.Constant;
-import net.sf.tweety.logics.firstorderlogic.syntax.Variable;
+import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.logics.commons.syntax.Variable;
 
 /**
  * This class represents a single grounding requirement stating that a variable
@@ -91,6 +91,6 @@ public class VarConstNeqRequirement
   @Override
   public String toString()
   {
-    return variable.getName() + "<>" + constant.getName();
+    return variable.get() + "<>" + constant.get();
   }
 }

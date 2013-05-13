@@ -3,6 +3,7 @@ package net.sf.tweety.logics.firstorderlogic.parser;
 
 import java.util.*;
 import net.sf.tweety.logics.firstorderlogic.syntax.*;
+import net.sf.tweety.logics.commons.syntax.*;
 import net.sf.tweety.util.Pair;
 
 import net.sf.tweety.logics.firstorderlogic.FolBeliefSet;
@@ -71,7 +72,7 @@ public class FolParserB implements FolParserBConstants {
     return signature.getFunctor(name);
   }
 
-  private Functor getOrCreateFunctor(String name, List<Term >args, Sort targetSort, FolSignature signature)
+  private Functor getOrCreateFunctor(String name, List<Term<?>> args, Sort targetSort, FolSignature signature)
         throws ParseException
   {
     Functor reval = signature.getFunctor(name);
@@ -99,19 +100,19 @@ public class FolParserB implements FolParserBConstants {
     return sig.getPredicate(name);
   }
 
-  private Sort getArgumentType(FolBasicStructure fbs, int count)
+  private Sort getArgumentType(TypedStructure fbs, int count)
     throws ParseException
   {
     if(fbs == null)
     {
       return Sort.THING;
     }
-    if(count >= fbs.getArguments().size())
+    if(count >= fbs.getArgumentTypes().size())
     {
           return null;
     }
 
-    return fbs.getArguments().get(count);
+    return fbs.getArgumentTypes().get(count);
   }
 
   private Constant getOrCreateConstant(String name, Sort type, FolSignature sig)
@@ -282,7 +283,7 @@ public class FolParserB implements FolParserBConstants {
   Predicate p;
   int count = 0;
   Sort type;
-  List<Term > terms = new LinkedList<Term >();
+  List<Term<?>> terms = new LinkedList<Term<?>>();
     identifier = identifier();
     p = getPredicate(identifier, signature);
     type = getArgumentType(p, count++);
@@ -327,13 +328,13 @@ public class FolParserB implements FolParserBConstants {
     throw new Error("Missing return statement in function");
   }
 
-  final public Term term(FolSignature signature, Sort type) throws ParseException {
+  final public Term<?> term(FolSignature signature, Sort type) throws ParseException {
   Term temp;
   String fname;
   int count = 0;
   Sort subtype;
   Functor f;
-  List<Term > terms = new LinkedList<Term >();
+  List<Term<?>> terms = new LinkedList<Term<?>>();
   Token t;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case CONSTANT:
@@ -465,7 +466,7 @@ public class FolParserB implements FolParserBConstants {
 
   final public void declar(FolSignature signature) throws ParseException {
   String name;
-  FolBasicStructure fbs = null;
+  TypedStructure fbs = null;
     jj_consume_token(TYPE);
     jj_consume_token(LBRA);
     name = identifier();
@@ -499,7 +500,7 @@ public class FolParserB implements FolParserBConstants {
     signature.add(fbs);
   }
 
-  final public FolBasicStructure endPredicateDeclar(FolSignature signature, String name) throws ParseException {
+  final public TypedStructure endPredicateDeclar(FolSignature signature, String name) throws ParseException {
   String sort;
   Predicate reval = null;
   List<String > sorts = new LinkedList<String >();
@@ -539,11 +540,11 @@ public class FolParserB implements FolParserBConstants {
     throw new Error("Missing return statement in function");
   }
 
-  final public FolBasicStructure endFunctorDeclar(FolSignature signature, String sortName) throws ParseException {
+  final public TypedStructure endFunctorDeclar(FolSignature signature, String sortName) throws ParseException {
   String name;
   String tempType;
   List<String >sorts = new LinkedList<String >();
-  FolBasicStructure fbs;
+  TypedStructure fbs;
     jj_consume_token(EQUAL);
     name = identifier();
     jj_consume_token(LBRA);

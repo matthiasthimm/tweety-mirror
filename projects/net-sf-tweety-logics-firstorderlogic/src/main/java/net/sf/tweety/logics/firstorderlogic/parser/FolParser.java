@@ -5,6 +5,11 @@ import java.util.*;
 
 import net.sf.tweety.*;
 import net.sf.tweety.logics.commons.LogicalSymbols;
+import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.logics.commons.syntax.Predicate;
+import net.sf.tweety.logics.commons.syntax.Sort;
+import net.sf.tweety.logics.commons.syntax.Term;
+import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.firstorderlogic.*;
 import net.sf.tweety.logics.firstorderlogic.syntax.*;
 
@@ -256,8 +261,8 @@ public class FolParser extends Parser {
 	 * @throws ParserException if the list could not be parsed.
 	 */
 	@SuppressWarnings("unchecked")
-	private List<Term> parseTermlist(List<Object> l) throws ParserException{
-		List<Term> terms = new ArrayList<Term>();
+	private List<Term<?>> parseTermlist(List<Object> l) throws ParserException{
+		List<Term<?>> terms = new ArrayList<Term<?>>();
 		String current = "";
 		for(Object o: l){
 			if(o instanceof String || o instanceof List){
@@ -267,22 +272,22 @@ public class FolParser extends Parser {
 							throw new ParserException("Functor '" + current + "' has not been declared.");
 						// check correct sorts of terms
 						Functor f = this.signature.getFunctor(current);
-						List<Term> args = new ArrayList<Term>();
-						if(f.getArity() != ((List<Term>)o).size())
+						List<Term<?>> args = new ArrayList<Term<?>>();
+						if(f.getArity() != ((List<Term<?>>)o).size())
 							throw new IllegalArgumentException("Functor '" + f + "' has arity '" + f.getArity() + "'.");
 						for(int i = 0; i < f.getArity(); i++){
-							Term t = ((List<Term>)o).get(i);
+							Term<?> t = ((List<Term<?>>)o).get(i);
 							if(t instanceof Variable){
-								if(this.variables.containsKey(((Variable)t).getName())){
-									if(!this.variables.get(((Variable)t).getName()).getSort().equals(f.getArguments().get(i)))
+								if(this.variables.containsKey(((Variable)t).get())){
+									if(!this.variables.get(((Variable)t).get()).getSort().equals(f.getArgumentTypes().get(i)))
 										throw new ParserException("Variable '" + t + "' has wrong sort.");
-									args.add(this.variables.get(((Variable)t).getName()));
+									args.add(this.variables.get(((Variable)t).get()));
 								}else{
-									Variable v = new Variable(((Variable)t).getName(),f.getArguments().get(i));
+									Variable v = new Variable(((Variable)t).get(),f.getArgumentTypes().get(i));
 									args.add(v);
-									this.variables.put(v.getName(), v);
+									this.variables.put(v.get(), v);
 								}								
-							}else if(!t.getSort().equals(f.getArguments().get(i)))
+							}else if(!t.getSort().equals(f.getArgumentTypes().get(i)))
 								throw new ParserException("Term '" + t + "' has the wrong sort.");
 							else args.add(t);
 						}
@@ -300,7 +305,7 @@ public class FolParser extends Parser {
 					continue;
 				}					
 			}else if(o instanceof Term)
-				terms.add((Term)o);
+				terms.add((Term<?>)o);
 			else throw new ParserException("Unrecognized token '" + o + "'.");
 		}
 		//parse the last element
@@ -340,7 +345,7 @@ public class FolParser extends Parser {
 		FolFormula formula = (FolFormula) l.get(idx+1);
 		Variable bVar = null;
 		for(Variable v: formula.getUnboundVariables()){
-			if(v.getName().equals(var)){
+			if(v.get().equals(var)){
 				bVar = v;
 				break;
 			}
@@ -452,36 +457,36 @@ public class FolParser extends Parser {
 		}else{
 			// List l should be a list of String followed by a List<Term>
 			String s = "";
-			List<Term> terms = null;
+			List<Term<?>> terms = null;
 			for(Object o : l){
 				if(!(o instanceof String))
 					if(o instanceof List && l.lastIndexOf(o) == l.size()-1)
-						terms = (List<Term>) o;
+						terms = (List<Term<?>>) o;
 					else throw new ParserException("Unknown object " + o);
 				else s += (String) o;
 			}
 			if(this.signature.containsPredicate(s)){
 			  // check for zero-arity predicate
 			  if(terms == null) 
-			    terms = new LinkedList<Term>(); 
+			    terms = new LinkedList<Term<?>>(); 
 				// check correct sorts of terms
 				Predicate p = this.signature.getPredicate(s);
-				List<Term> args = new ArrayList<Term>();
+				List<Term<?>> args = new ArrayList<Term<?>>();
 				if(p.getArity() != terms.size())
 					throw new IllegalArgumentException("Predicate '" + p + "' has arity '" + p.getArity() + "'.");
 				for(int i = 0; i < p.getArity(); i++){
-					Term t = terms.get(i);
+					Term<?> t = terms.get(i);
 					if(t instanceof Variable){
-						if(this.variables.containsKey(((Variable)t).getName())){
-							if(!this.variables.get(((Variable)t).getName()).getSort().equals(p.getArguments().get(i)))
+						if(this.variables.containsKey(((Variable)t).get())){
+							if(!this.variables.get(((Variable)t).get()).getSort().equals(p.getArgumentTypes().get(i)))
 								throw new ParserException("Variable '" + t + "' has wrong sort.");
-							args.add(this.variables.get(((Variable)t).getName()));
+							args.add(this.variables.get(((Variable)t).get()));
 						}else{
-							Variable v = new Variable(((Variable)t).getName(),p.getArguments().get(i));
+							Variable v = new Variable(((Variable)t).get(),p.getArgumentTypes().get(i));
 							args.add(v);
-							this.variables.put(v.getName(), v);
+							this.variables.put(v.get(), v);
 						}								
-					}else if(!t.getSort().equals(p.getArguments().get(i)))
+					}else if(!t.getSort().equals(p.getArgumentTypes().get(i)))
 						throw new ParserException("Term '" + t + "' has the wrong sort.");
 					else args.add(t);
 				}

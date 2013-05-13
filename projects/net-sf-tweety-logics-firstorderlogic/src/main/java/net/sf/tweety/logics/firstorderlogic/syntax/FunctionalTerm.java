@@ -1,13 +1,19 @@
 package net.sf.tweety.logics.firstorderlogic.syntax;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import net.sf.tweety.logics.commons.syntax.Term;
+import net.sf.tweety.logics.commons.syntax.TermAdapter;
+import net.sf.tweety.util.Pair;
 
 /**
  * A functional term in first-order logic, i.e. a functor and a list
  * of argument terms.
- * @author Matthias Thimm
+ * @author Matthias Thimm, Tim Janus
  */
-public class FunctionalTerm extends Term {
+public class FunctionalTerm extends TermAdapter<Pair<Functor, List<Term<?>>>> {
 
 	/**
 	 * The functor of this atom
@@ -17,7 +23,7 @@ public class FunctionalTerm extends Term {
 	/**
 	 * The arguments of the term
 	 */
-	private List<Term> arguments;
+	private List<Term<?>> arguments;
 	
 	/**
 	 * Creates a new functional term with the given functor and the given list
@@ -25,12 +31,17 @@ public class FunctionalTerm extends Term {
 	 * @param functor the functor of this term
 	 * @param arguments the list of arguments of this functional term
 	 */
-	public FunctionalTerm(Functor functor, List<Term> arguments){
+	public FunctionalTerm(Functor functor, List<Term<?>> arguments){
 		super(functor.getTargetSort());
 		this.functor = functor;
-		this.arguments = new ArrayList<Term>();
-		for(Term t: arguments)
+		this.arguments = new ArrayList<Term<?>>();
+		for(Term<?> t: arguments)
 			this.addArgument(t);
+	}
+	
+	public FunctionalTerm(FunctionalTerm other) {
+		this.functor = other.functor;
+		this.arguments = new ArrayList<Term<?>>(other.arguments);
 	}
 	
 	/**
@@ -47,7 +58,7 @@ public class FunctionalTerm extends Term {
 	 * @param functor
 	 */
 	public FunctionalTerm(Functor functor){
-		this(functor,new ArrayList<Term>());		
+		this(functor,new ArrayList<Term<?>>());		
 	}
 	
 	/**
@@ -58,39 +69,15 @@ public class FunctionalTerm extends Term {
 	 * @throws IllegalArgumentException if the given term does not correspond
 	 *   to the expected sort or the argument list is complete.
 	 */
-	public FunctionalTerm addArgument(Term term) throws IllegalArgumentException{
+	public FunctionalTerm addArgument(Term<?> term) throws IllegalArgumentException{
 		if(this.arguments.size() == this.functor.getArity())
 			throw new IllegalArgumentException("No more arguments expected.");
-		if(!this.functor.getArguments().get(this.arguments.size()).equals(term.getSort()))
-			throw new IllegalArgumentException("The sort \"" + term.getSort() + "\" of the given term does not correspond to the expected sort \"" + this.functor.getArguments().get(this.arguments.size()) + "\"." );
+		if(!this.functor.getArgumentTypes().get(this.arguments.size()).equals(term.getSort()))
+			throw new IllegalArgumentException("The sort \"" + term.getSort() + "\" of the given term does not correspond to the expected sort \"" + this.functor.getArgumentTypes().get(this.arguments.size()) + "\"." );
 		this.arguments.add(term);		
 		return this;
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.LogicStructure#getFunctionalTerms()
-	 */
-	public Set<FunctionalTerm> getFunctionalTerms(){
-		Set<FunctionalTerm> terms = new HashSet<FunctionalTerm>();
-		terms.add(this);
-		for(Term t: this.arguments)
-			terms.addAll(t.getFunctionalTerms());
-		return terms;		
-	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.Term#substitute(net.sf.tweety.logics.firstorderlogic.syntax.Term, net.sf.tweety.logics.firstorderlogic.syntax.Term)
-	 */
-	public Term substitute(Term v, Term t) throws IllegalArgumentException{
-		if(!v.getSort().equals(t.getSort()))
-			throw new IllegalArgumentException("Cannot replace " + v + " by " + t + " because " + v +
-					" is of sort " + v.getSort() + " while " + t + " is of sort " + t.getSort() + ".");
-		if(v.equals(this)) return t;
-		FunctionalTerm term = new FunctionalTerm(this.functor);
-		for(Term s: this.arguments)
-			term.addArgument(s.substitute(v, t));
-		return term;
-	}
+
 	
 	/**
 	 * Returns the functor of this functional term
@@ -101,44 +88,12 @@ public class FunctionalTerm extends Term {
 	}
 	
 	/**
-	 * Returns the list of arguments of this functional term.
 	 * @return the list of arguments of this functional term.
 	 */
-	public List<Term> getArguments(){
-		return new ArrayList<Term>(this.arguments);
+	public List<Term<?>> getArguments(){
+		return Collections.unmodifiableList(this.arguments);
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.Term#getConstants()
-	 */
-	public Set<Constant> getConstants(){
-		Set<Constant> constants = new HashSet<Constant>();
-		for(Term arg: this.arguments)
-			constants.addAll(arg.getConstants());
-		return constants;
-	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.Term#getVariables()
-	 */
-	public Set<Variable> getVariables(){
-		Set<Variable> variables = new HashSet<Variable>();
-		for(Term arg: this.arguments)
-			variables.addAll(arg.getVariables());
-		return variables;
-	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.Term#getFunctors()
-	 */
-	public Set<Functor> getFunctors(){
-		Set<Functor> functors = new HashSet<Functor>();
-		functors.add(this.functor);
-		for(Term arg: this.arguments)
-			functors.addAll(arg.getFunctors());
-		return functors;
-	}
-	
+		
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.Term#toString()
 	 */
@@ -189,5 +144,21 @@ public class FunctionalTerm extends Term {
 		} else if (!functor.equals(other.functor))
 			return false;
 		return true;
+	}
+
+	@Override
+	public void set(Pair<Functor, List<Term<?>>> value) {
+		this.functor = value.getFirst();
+		this.arguments = value.getSecond();
+	}
+
+	@Override
+	public Pair<Functor, List<Term<?>>> get() {
+		return new Pair<Functor, List<Term<?>>>(this.functor, this.arguments);
+	}
+	
+	@Override
+	public Object clone() {
+		return new FunctionalTerm(this);
 	}
 }

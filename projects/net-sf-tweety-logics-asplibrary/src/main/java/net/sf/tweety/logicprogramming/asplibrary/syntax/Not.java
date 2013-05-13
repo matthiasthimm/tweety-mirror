@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import net.sf.tweety.logics.commons.syntax.Term;
+
 /**
  * this class models a default negated literal. in answer set
  * programming, the body of a rule is usually composed of a

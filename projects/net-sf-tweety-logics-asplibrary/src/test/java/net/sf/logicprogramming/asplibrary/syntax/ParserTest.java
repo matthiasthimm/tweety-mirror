@@ -6,9 +6,9 @@ import junit.framework.TestCase;
 import net.sf.tweety.logicprogramming.asplibrary.parser.ELPParser;
 import net.sf.tweety.logicprogramming.asplibrary.parser.ParseException;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Atom;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Constant;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.RuleElement;
+import net.sf.tweety.logics.commons.syntax.Constant;
 
 public class ParserTest extends TestCase {
 	

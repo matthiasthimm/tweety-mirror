@@ -6,29 +6,27 @@ import java.util.*;
  * This class represents a simple proposition in propositional logic. 
  * 
  * @author Matthias Thimm
- *
  */
 public class Proposition extends PropositionalFormula {
 	
 	/**
 	 * The name of the proposition
 	 */
-	private String name;
+	private PropositionalPredicate predicate;
 
 	/**
 	 * Creates a new proposition of the given name.
 	 * @param name the name of the proposition.
 	 */
 	public Proposition(String name){
-		this.name = name;
+		this.predicate = new PropositionalPredicate(name);
 	}
 	
 	/**
-	 * Returns the name of this proposition.
 	 * @return the name of this proposition.
 	 */
 	public String getName(){
-		return this.name;
+		return this.predicate.getName();
 	}
 	
 	/* (non-Javadoc)
@@ -44,7 +42,7 @@ public class Proposition extends PropositionalFormula {
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString(){
-		return this.name;
+		return this.predicate.getName();
 	}
 	
 	/* (non-Javadoc)
@@ -61,7 +59,7 @@ public class Proposition extends PropositionalFormula {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((predicate == null) ? 0 : predicate.hashCode());
 		return result;
 	}
 
@@ -77,10 +75,10 @@ public class Proposition extends PropositionalFormula {
 		if (getClass() != obj.getClass())
 			return false;
 		Proposition other = (Proposition) obj;
-		if (name == null) {
-			if (other.name != null)
+		if (predicate == null) {
+			if (other.predicate != null)
 				return false;
-		} else if (!name.equals(other.name))
+		} else if (!predicate.equals(other.predicate))
 			return false;
 		return true;
 	}

@@ -2,8 +2,8 @@ package net.sf.tweety.action.grounding;
 
 import java.util.Map;
 
-import net.sf.tweety.logics.firstorderlogic.syntax.Constant;
-import net.sf.tweety.logics.firstorderlogic.syntax.Variable;
+import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.logics.commons.syntax.Variable;
 
 /**
  * This is a common interface for grounding constraints, which have to be met by
