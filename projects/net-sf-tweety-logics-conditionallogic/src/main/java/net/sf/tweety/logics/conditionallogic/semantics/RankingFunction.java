@@ -236,4 +236,13 @@ public class RankingFunction extends Interpretation {
 		s += "]";
 		return s;
 	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if(! (other instanceof RankingFunction))
+			return false;
+		
+		RankingFunction oc = (RankingFunction)other;
+		return ranks.equals(oc.ranks);
+	}
 }
