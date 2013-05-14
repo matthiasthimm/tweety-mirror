@@ -27,5 +27,14 @@ public class PropositionalSignature extends SetSignature<Proposition> {
 	public PropositionalSignature(){
 		super();
 	}
-		
+	
+	/**
+	 * Adds the elements of another signature to the current one.
+	 * @param other a propositional signature.
+	 */
+	public void add(PropositionalSignature other) {
+		for(Proposition p : other) {
+			this.add(p);
+		}
+	}
 }
