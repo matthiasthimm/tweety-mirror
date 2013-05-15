@@ -1,10 +1,11 @@
 package net.sf.tweety.logics.relationalprobabilisticconditionallogic.syntax;
 
-import net.sf.tweety.logics.commons.ClassicalFormula;
-import net.sf.tweety.logics.commons.syntax.Term;
-import net.sf.tweety.logics.firstorderlogic.syntax.*;
-import net.sf.tweety.logics.relationalconditionallogic.syntax.*;
-import net.sf.tweety.math.probability.*;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula;
+import net.sf.tweety.logics.firstorderlogic.syntax.Tautology;
+import net.sf.tweety.logics.relationalconditionallogic.syntax.RelationalConditional;
+import net.sf.tweety.math.probability.Probability;
 
 /**
  * This class represents a relational probabilistic conditional, i.e. a structure (B|A)[p]
@@ -64,7 +65,7 @@ public class RelationalProbabilisticConditional extends RelationalConditional {
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula#substitute(net.sf.tweety.logics.firstorderlogic.syntax.Term, net.sf.tweety.logics.firstorderlogic.syntax.Term)
 	 */
 	@Override
-	public RelationalFormula substitute(Term v, Term t)	throws IllegalArgumentException {
+	public RelationalFormula substitute(Term<?> v, Term<?> t)	throws IllegalArgumentException {
 		return new RelationalProbabilisticConditional((RelationalConditional)super.substitute(v, t),this.probability);
 	}
 
@@ -80,7 +81,7 @@ public class RelationalProbabilisticConditional extends RelationalConditional {
 	 * @see net.sf.tweety.kr.ClassicalFormula#complement()
 	 */
 	@Override
-	public ClassicalFormula complement() {
+	public RelationalProbabilisticConditional complement() {
 		return new RelationalProbabilisticConditional(this,this.probability.complement());
 	}
 

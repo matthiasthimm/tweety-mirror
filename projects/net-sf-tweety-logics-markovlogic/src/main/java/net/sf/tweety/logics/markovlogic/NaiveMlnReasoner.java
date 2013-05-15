@@ -18,7 +18,7 @@ import net.sf.tweety.ParserException;
 import net.sf.tweety.logics.firstorderlogic.parser.FolParser;
 import net.sf.tweety.logics.firstorderlogic.semantics.HerbrandBase;
 import net.sf.tweety.logics.firstorderlogic.semantics.HerbrandInterpretation;
-import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 
@@ -84,7 +84,7 @@ public class NaiveMlnReasoner extends AbstractMlnReasoner {
 			boolean isFirst = true;
 			File currentFile = File.createTempFile("naive_mln",null,new File(this.tempDirectory));
 			currentFile.deleteOnExit();
-			for(Atom a: hBase.getAtoms()){
+			for(FOLAtom a: hBase.getAtoms()){
 				if(isFirst){					
 					fstream = new FileWriter(currentFile.getAbsoluteFile());
 					BufferedWriter out = new BufferedWriter(fstream);
@@ -221,13 +221,13 @@ public class NaiveMlnReasoner extends AbstractMlnReasoner {
 	 */
 	private HerbrandInterpretation parseInterpretation(String str){
 		StringTokenizer tokenizer = new StringTokenizer(str, ";");
-		Collection<Atom> atoms = new HashSet<Atom>();
+		Collection<FOLAtom> atoms = new HashSet<FOLAtom>();
 		FolParser parser = new FolParser();
 		parser.setSignature(this.getSignature());
 		while(tokenizer.hasMoreTokens()){
 			String token = tokenizer.nextToken();
 			try {
-				atoms.add( (Atom)parser.parseFormula(token));
+				atoms.add( (FOLAtom)parser.parseFormula(token));
 			} catch (ParserException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

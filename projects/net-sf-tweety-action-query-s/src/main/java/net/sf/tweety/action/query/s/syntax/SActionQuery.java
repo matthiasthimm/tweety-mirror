@@ -12,7 +12,7 @@ import net.sf.tweety.action.signature.ActionSignature;
 import net.sf.tweety.action.signature.FolAction;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Variable;
-import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.propositionallogic.syntax.Conjunction;
 import net.sf.tweety.logics.propositionallogic.syntax.Disjunction;
@@ -49,7 +49,7 @@ public class SActionQuery
   {
     if ( formula == null )
       throw new NullPointerException();
-    for ( Proposition p : formula.getPropositions() ) {
+    for ( Proposition p : formula.getAtoms() ) {
       if ( !( p instanceof QueryProposition ) )
         throw new IllegalArgumentException(
           "Invalid proposition in action query: has to be of type QueryProposition." );
@@ -96,7 +96,7 @@ public class SActionQuery
   public ActionSignature getActionSignature()
   {
     ActionSignature s = new ActionSignature();
-    for ( Proposition p : formula.getPropositions() ) {
+    for ( Proposition p : formula.getAtoms() ) {
       s.add( ( (QueryProposition) p ).getActionSignature() );
     }
     return s;
@@ -110,7 +110,7 @@ public class SActionQuery
   public Set< FolFormula > getInnerFormulas()
   {
     Set< FolFormula > result = new HashSet< FolFormula >();
-    for ( Proposition p : formula.getPropositions() ) {
+    for ( Proposition p : formula.getAtoms() ) {
       result.add( ( (QueryProposition) p ).getInnerFormula() );
     }
     return result;
@@ -125,7 +125,7 @@ public class SActionQuery
   public Set< FolAction > getInnerActions()
   {
     Set< FolAction > result = new HashSet< FolAction >();
-    for ( Proposition p : formula.getPropositions() ) {
+    for ( Proposition p : formula.getAtoms() ) {
       result.addAll( ( (QueryProposition) p ).getInnerActions() );
     }
     return result;
@@ -137,10 +137,10 @@ public class SActionQuery
    * @return all inner atoms, which occur in state formulas and actions in 
    * this action query.
    */
-  public Set< Atom > getInnerAtoms()
+  public Set< FOLAtom > getInnerAtoms()
   {
-    Set< Atom > result = new HashSet< Atom >();
-    for ( Proposition p : formula.getPropositions() ) {
+    Set< FOLAtom > result = new HashSet< FOLAtom >();
+    for ( Proposition p : formula.getAtoms() ) {
       result.addAll( ( (QueryProposition) p ).getInnerFormula().getAtoms() );
       for ( FolAction action : ( (QueryProposition) p ).getInnerActions() )
         result.addAll( action.getAtoms() );
@@ -157,7 +157,7 @@ public class SActionQuery
   public Set< Variable > getInnerVariables()
   {
     Set< Variable > variables = new HashSet< Variable >();
-    for ( Atom a : getInnerAtoms() )
+    for ( FOLAtom a : getInnerAtoms() )
       variables.addAll( a.getUnboundVariables() );
     return variables;
   }
@@ -182,7 +182,7 @@ public class SActionQuery
     Set< SActionQuery > result = new HashSet< SActionQuery >();
     Set< Variable > variables = new HashSet< Variable >();
     
-    for ( Atom a : getInnerAtoms() )
+    for ( FOLAtom a : getInnerAtoms() )
       variables.addAll( a.getUnboundVariables() );
     
     Set< Map< Variable, Constant >> substitutions =

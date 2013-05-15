@@ -10,7 +10,7 @@ import net.sf.tweety.action.grounding.GroundingTools;
 import net.sf.tweety.action.signature.ActionSignature;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Variable;
-import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
 import net.sf.tweety.logics.firstorderlogic.syntax.Disjunction;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula;
@@ -151,9 +151,9 @@ public class StaticLaw
    * @see net.sf.tweety.action.desc.c.syntax.CausalRule#getAtoms()
    */
   @Override
-  public Set< Atom > getAtoms()
+  public Set< FOLAtom > getAtoms()
   {
-    Set< Atom > atoms = new HashSet< Atom >();
+    Set< FOLAtom > atoms = new HashSet< FOLAtom >();
     atoms.addAll( headFormula.getAtoms() );
     atoms.addAll( ifFormula.getAtoms() );
     return atoms;
@@ -169,7 +169,7 @@ public class StaticLaw
     Set< CLaw > result = new HashSet< CLaw >();
     Set< Variable > variables = new HashSet< Variable >();
     
-    for ( Atom a : getAtoms() ) {
+    for ( FOLAtom a : getAtoms() ) {
       variables.addAll( a.getUnboundVariables() );
     }
     Set< Map< Variable, Constant >> substitutions =

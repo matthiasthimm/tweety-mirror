@@ -1,6 +1,7 @@
 package net.sf.tweety.logics.propositionallogic.syntax;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * This class captures the common functionalities of the special
@@ -17,20 +18,21 @@ public abstract class SpecialFormula extends PropositionalFormula {
 		return this;
 	}
 	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#getPropositions()
-	 */
 	@Override
-	public Set<Proposition> getPropositions() {
-		return new HashSet<Proposition>();
+	public Set<PropositionalPredicate> getPredicates() {
+		return new HashSet<PropositionalPredicate>();
 	}
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#toNNF()
 	 */
-  @Override
-  public PropositionalFormula toNnf() {
-    return this;
-  }
-
+	@Override
+	public PropositionalFormula toNnf() {
+		return this;
+	}
+	
+	@Override
+	public Set<Proposition> getAtoms() {
+		return new HashSet<Proposition>();
+	}
 }

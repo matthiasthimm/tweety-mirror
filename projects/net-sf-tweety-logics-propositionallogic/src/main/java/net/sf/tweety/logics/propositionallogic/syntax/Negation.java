@@ -1,6 +1,6 @@
 package net.sf.tweety.logics.propositionallogic.syntax;
 
-import java.util.*;
+import java.util.Set;
 
 import net.sf.tweety.logics.commons.LogicalSymbols;
 
@@ -47,18 +47,12 @@ public class Negation extends PropositionalFormula {
 		return false;
 	}
 	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#getPropositions()
-	 */
-	public Set<Proposition> getPropositions(){
-		return this.formula.getPropositions();
-	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString(){
-		if(this.formula instanceof AssociativeFormula || this.formula instanceof Negation)			
+		if(this.formula instanceof AssociativePropositionalFormula || this.formula instanceof Negation)			
 			return LogicalSymbols.CLASSICAL_NEGATION() + "(" + this.formula + ")";
 		return LogicalSymbols.CLASSICAL_NEGATION() + this.formula;
 	}
@@ -126,5 +120,25 @@ public class Negation extends PropositionalFormula {
 		} else if (!formula.equals(other.formula))
 			return false;
 		return true;
+	}
+
+	@Override
+	public Set<PropositionalPredicate> getPredicates() {
+		return formula.getPredicates();
+	}
+
+	@Override
+	public PropositionalFormula clone() {
+		return new Negation(formula.clone());
+	}
+
+	@Override
+	public Set<Proposition> getAtoms() {
+		return formula.getAtoms();
+	}
+
+	@Override
+	public boolean isLiteral() {
+		return (formula instanceof Proposition);
 	}
 }

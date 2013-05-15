@@ -1,9 +1,12 @@
 package net.sf.tweety.argumentation.delp.syntax;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
-import net.sf.tweety.logics.commons.syntax.Term;
-import net.sf.tweety.logics.firstorderlogic.syntax.*;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula;
 
 /**
  * This class models a strict rule in defeasible logic programming.
@@ -44,11 +47,17 @@ public class StrictRule extends DelpRule {
 	 * @see net.sf.tweety.argumentation.delp.DelpRule#substitute(net.sf.tweety.logics.firstorderlogic.syntax.Term, net.sf.tweety.logics.firstorderlogic.syntax.Term)
 	 */
 	@Override
-	public RelationalFormula substitute(Term v, Term t) throws IllegalArgumentException {
+	public RelationalFormula substitute(Term<?> v, Term<?> t) throws IllegalArgumentException {
 		FolFormula newHead = (FolFormula)((FolFormula)this.getConclusion()).substitute(v,t);
 		Set<FolFormula> newBody = new HashSet<FolFormula>();
 		for(FolFormula f: this.body)
 			newBody.add((FolFormula)f.substitute(v, t));
 		return new StrictRule(newHead,newBody);
+	}
+
+
+	@Override
+	public RelationalFormula clone() {
+		throw new UnsupportedOperationException("IMPLEMENT ME");
 	}
 }

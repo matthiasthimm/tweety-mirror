@@ -1,18 +1,18 @@
 package net.sf.tweety.logics.firstorderlogic.syntax;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
-import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.logics.commons.syntax.Term;
 import net.sf.tweety.logics.commons.syntax.Variable;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 
 /**
  * This class captures the common functionalities of the special
  * formulas tautology and contradiction.
  * @author Matthias Thimm
  */
-public abstract class SpecialFormula extends FolFormula{
+public abstract class SpecialFormula extends FolFormula {
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#containsQuantifier()
@@ -22,12 +22,22 @@ public abstract class SpecialFormula extends FolFormula{
 		return false;
 	}
 
+	@Override
+	public Set<Term<?>> getTerms() {
+		return new HashSet<Term<?>>();
+	}
+
+	@Override
+	public <C extends Term<?>> Set<C> getTerms(Class<C> cls) {
+		return new HashSet<C>();
+	}
+	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getAtoms()
 	 */
 	@Override
-	public Set<Atom> getAtoms() {
-		return new HashSet<Atom>();
+	public Set<FOLAtom> getAtoms() {
+		return new HashSet<FOLAtom>();
 	}
 
 	/* (non-Javadoc)
@@ -85,27 +95,12 @@ public abstract class SpecialFormula extends FolFormula{
 	public FolFormula substitute(Term<?> v, Term<?> t){
 		return this;
 	}
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.LogicStructure#getConstants()
-	 */
-	@Override
-	public Set<Constant> getConstants() {
-		return new HashSet<Constant>();
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.LogicStructure#getFunctionalTerms()
-	 */
-	@Override
-	public Set<FunctionalTerm> getFunctionalTerms() {
-		return new HashSet<FunctionalTerm>();
-	}
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getUnboundVariables()
 	 */
 	public Set<Variable> getUnboundVariables(){
-		return this.getVariables();
+		return this.getTerms(Variable.class);
 	}
 
 	/* (non-Javadoc)
@@ -114,14 +109,6 @@ public abstract class SpecialFormula extends FolFormula{
 	@Override
 	public Set<Functor> getFunctors() {
 		return new HashSet<Functor>();
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.LogicStructure#getVariables()
-	 */
-	@Override
-	public Set<Variable> getVariables() {
-		return new HashSet<Variable>();
 	}
 	
 	/* (non-Javadoc)

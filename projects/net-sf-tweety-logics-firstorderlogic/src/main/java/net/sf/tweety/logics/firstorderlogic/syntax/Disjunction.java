@@ -1,15 +1,15 @@
 package net.sf.tweety.logics.firstorderlogic.syntax;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
 
 import net.sf.tweety.logics.commons.LogicalSymbols;
-import net.sf.tweety.logics.commons.syntax.Term;
 
 /**
  * The classical disjunction of first-order logic.
  * @author Matthias Thimm
  */
-public class Disjunction extends AssociativeFormula{
+public class Disjunction extends AssociativeFOLFormula{
 	
 	/**
 	 * Creates a new disjunction with the given inner formulas. 
@@ -26,24 +26,6 @@ public class Disjunction extends AssociativeFormula{
 		this(new HashSet<RelationalFormula>());
 	}
 	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getDisjunctions()
-	 */
-	public Set<Disjunction> getDisjunctions(){
-		Set<Disjunction> disjuncts = super.getDisjunctions();
-		disjuncts.add(this);
-		return disjuncts;
-	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#isDnf()
-	 */
-	public boolean isDnf(){
-		for(RelationalFormula f: this)
-			if(!((FolFormula)f).isDnf() && !(f instanceof Disjunction)) return false;
-		return true;
-	}
-	
 	/**
 	 * Creates a new disjunction with the two given formulae
 	 * @param first a relational formula.
@@ -54,38 +36,17 @@ public class Disjunction extends AssociativeFormula{
 		this.add(first);
 		this.add(second);
 	}	
-
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#toString()
-	 */
-	public String toString(){
-		if(this.isEmpty())
-			return LogicalSymbols.TAUTOLOGY();
-		String s = "";
-		boolean isFirst = true;
-		for(RelationalFormula f: this){
-			if(isFirst)			
-				isFirst = false;
-			else
-				s  += LogicalSymbols.DISJUNCTION();
-			// check if parentheses are needed
-			if(f instanceof Disjunction && ((Disjunction)f).size()>1 )
-				s += LogicalSymbols.PARENTHESES_LEFT() + f.toString() + LogicalSymbols.PARENTHESES_RIGHT();
-			else s += f.toString();
-		}
-		return s;
-	}
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula#substitute(net.sf.tweety.logics.firstorderlogic.syntax.Term, net.sf.tweety.logics.firstorderlogic.syntax.Term)
+	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#isDnf()
 	 */
-	public FolFormula substitute(Term<?> v, Term<?> t) throws IllegalArgumentException{
-		Set<RelationalFormula> newFormulas = new HashSet<RelationalFormula>();
+	public boolean isDnf(){
 		for(RelationalFormula f: this)
-			newFormulas.add((RelationalFormula)f.substitute(v, t));
-		return new Disjunction(newFormulas);
+			if(!((FolFormula)f).isDnf() && !(f instanceof Disjunction)) return false;
+		return true;
 	}
 	
+		
 	 /*
    * (non-Javadoc)
    * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#toNNF()
@@ -107,7 +68,7 @@ public class Disjunction extends AssociativeFormula{
    * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#collapseAssociativeFormulas()
    */
   @Override
-  public FolFormula collapseAssociativeFormulas() {
+  public RelationalFormula collapseAssociativeFormulas() {
     if(this.isEmpty())
       return new Contradiction();
     if(this.size() == 1)
@@ -115,11 +76,36 @@ public class Disjunction extends AssociativeFormula{
     Disjunction newMe = new Disjunction();
     for(RelationalFormula f: this){
       if(! (f instanceof FolFormula)) throw new IllegalStateException("Can not collapse disjunctions containing non-first-order formulae.");
-      FolFormula newF = ((FolFormula)f).collapseAssociativeFormulas();
+      RelationalFormula newF = ((FolFormula)f).collapseAssociativeFormulas();
       if(newF instanceof Disjunction)
         newMe.addAll((Disjunction) newF);
       else newMe.add(newF);
     }
     return newMe;
   }
+	
+	@Override
+	public Disjunction clone() {
+		return new Disjunction(support.copyHelper(this));
+	}
+	
+	//-------------------------------------------------------------------------
+	//	ASSOC SUPPORT BRIDGE METHODS
+	//-------------------------------------------------------------------------
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Disjunction createEmptyFormula() {
+		return new Disjunction();
+	}
+
+	@Override
+	public String getOperatorSymbol() {
+		return LogicalSymbols.DISJUNCTION();
+	}
+
+	@Override
+	public String getEmptySymbol() {
+		return LogicalSymbols.TAUTOLOGY();
+	}
 }

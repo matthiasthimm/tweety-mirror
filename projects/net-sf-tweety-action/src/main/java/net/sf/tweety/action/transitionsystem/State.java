@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.sf.tweety.action.signature.FolFluentName;
-import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
 
 /**
  * Represents a state in an action transition system, which is a representation
@@ -14,14 +14,14 @@ import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
  */
 public class State
 {
-  private Set< Atom > fluents = new HashSet< Atom >();
+  private Set< FOLAtom > fluents = new HashSet< FOLAtom >();
   
   /**
    * Creates a new State with a set of fluents that are mapped to true.
    * 
    * @param fluents The fluents which are mapped to true by this state.
    */
-  public State( Set< Atom > fluents )
+  public State( Set< FOLAtom > fluents )
   {
     this.fluents.addAll( fluents );
   }
@@ -32,7 +32,7 @@ public class State
    * @param fluent
    * @return true iff the fluent given is mapped to true by this state.
    */
-  public boolean isMappedToTrue( Atom fluent )
+  public boolean isMappedToTrue( FOLAtom fluent )
   {
     if ( fluent.getPredicate() instanceof FolFluentName )
       return fluents.contains( fluent );
@@ -44,9 +44,9 @@ public class State
    * 
    * @return
    */
-  public Set< Atom > getPositiveFluents()
+  public Set< FOLAtom > getPositiveFluents()
   {
-    return new HashSet< Atom >( fluents );
+    return new HashSet< FOLAtom >( fluents );
   }
   
   /*

@@ -37,8 +37,8 @@ public class ClBeliefSet extends BeliefSet<Conditional> {
 		PropositionalSignature sig = new PropositionalSignature();
 		for(Formula f: this){
 			Conditional c = (Conditional) f;
-			sig.addAll(c.getPremise().iterator().next().getPropositions());
-			sig.addAll(c.getConclusion().getPropositions());
+			sig.addAll(c.getPremise().iterator().next().getAtoms());
+			sig.addAll(c.getConclusion().getAtoms());
 		}
 		return sig;
 	}

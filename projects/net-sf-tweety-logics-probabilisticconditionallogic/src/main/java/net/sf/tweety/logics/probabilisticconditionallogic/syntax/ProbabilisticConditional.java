@@ -1,5 +1,6 @@
 package net.sf.tweety.logics.probabilisticconditionallogic.syntax;
 
+import net.sf.tweety.logics.commons.syntax.interfaces.ProbabilityAware;
 import net.sf.tweety.logics.conditionallogic.syntax.*;
 import net.sf.tweety.logics.propositionallogic.syntax.*;
 import net.sf.tweety.math.probability.Probability;
@@ -11,7 +12,7 @@ import net.sf.tweety.math.probability.Probability;
  * @author Matthias Thimm
  *
  */
-public class ProbabilisticConditional extends Conditional {
+public class ProbabilisticConditional extends Conditional implements ProbabilityAware {
 
 	/**
 	 * The probability of this conditional.
@@ -115,6 +116,15 @@ public class ProbabilisticConditional extends Conditional {
 		} else if (!probability.equals(other.probability))
 			return false;
 		return true;
+	}
+
+	@Override
+	public Probability getUniformProbability() {
+		Double n = ((PropositionalFormula)this.getConclusion().combineWithAnd(this.getPremise().iterator().next())).getUniformProbability().getValue();
+		Double d = this.getPremise().iterator().next().getUniformProbability().getValue();
+		if(d == 0)
+			return new Probability(0d);
+		return new Probability(n/d);
 	}
 
 }

@@ -5,7 +5,7 @@ import java.util.Set;
 
 import net.sf.tweety.Signature;
 import net.sf.tweety.logics.commons.syntax.Constant;
-import net.sf.tweety.logics.commons.syntax.Term;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 
 public class ElpSignature extends Signature {
 	

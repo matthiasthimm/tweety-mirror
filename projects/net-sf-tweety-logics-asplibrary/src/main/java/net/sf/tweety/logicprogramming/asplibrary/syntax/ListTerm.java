@@ -6,8 +6,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.sf.tweety.logics.commons.syntax.Term;
 import net.sf.tweety.logics.commons.syntax.TermAdapter;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 
 /**
  * this class models a list term that can be used for
@@ -62,7 +62,7 @@ public class ListTerm extends TermAdapter<List<Term<?>>> {
 	}
 
 	@Override
-	public Object clone() {
+	public ListTerm clone() {
 		return new ListTerm(this);
 	}
 	

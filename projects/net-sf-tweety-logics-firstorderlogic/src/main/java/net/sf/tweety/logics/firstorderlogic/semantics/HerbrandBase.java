@@ -4,7 +4,7 @@ import java.util.*;
 
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.Sort;
-import net.sf.tweety.logics.commons.syntax.Term;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.firstorderlogic.syntax.*;
 import net.sf.tweety.util.*;
 
@@ -22,7 +22,7 @@ public class HerbrandBase {
 	/**
 	 * The atoms of this Herbrand base. 
 	 */
-	private Set<Atom> atoms;
+	private Set<FOLAtom> atoms;
 	
 	/**
 	 * Creates a new Herbrand base for the given signature.
@@ -35,9 +35,9 @@ public class HerbrandBase {
 	 */
 	public HerbrandBase(FolSignature sig) throws IllegalArgumentException{
 		if(!sig.getFunctors().isEmpty()) throw new IllegalArgumentException("The Herbrand base is defined only for signatures without functors.");
-		this.atoms = new HashSet<Atom>();
+		this.atoms = new HashSet<FOLAtom>();
 		for(Predicate p: sig.getPredicates()){
-			if(p.getArity() == 0) this.atoms.add(new Atom(p));
+			if(p.getArity() == 0) this.atoms.add(new FOLAtom(p));
 			this.atoms.addAll(this.getAllInstantiations(sig, p, new ArrayList<Term<?>>()));
 		}
 	}
@@ -50,14 +50,14 @@ public class HerbrandBase {
 	 * @param arguments the currently set arguments of the atoms.
 	 * @return the complete set of instantiations of "p" relative to "sig" and "arguments".
 	 */
-	private Set<Atom> getAllInstantiations(FolSignature sig, Predicate p, List<Term<?>> arguments){
+	private Set<FOLAtom> getAllInstantiations(FolSignature sig, Predicate p, List<Term<?>> arguments){
 		if(p.getArity() == arguments.size()){
-			Set<Atom> atoms = new HashSet<Atom>();
-			atoms.add(new Atom(p,arguments));
+			Set<FOLAtom> atoms = new HashSet<FOLAtom>();
+			atoms.add(new FOLAtom(p,arguments));
 			return atoms;
 		}
 		Sort currentSort = p.getArgumentTypes().get(arguments.size());
-		Set<Atom> atoms = new HashSet<Atom>();
+		Set<FOLAtom> atoms = new HashSet<FOLAtom>();
 		for(Term<?> c: sig.getConstants()){
 			if(!c.getSort().equals(currentSort))
 				continue;
@@ -76,8 +76,8 @@ public class HerbrandBase {
 	 */
 	public Set<HerbrandInterpretation> allHerbrandInterpretations(){
 		Set<HerbrandInterpretation> interpretations = new HashSet<HerbrandInterpretation>();
-		Set<Set<Atom>> subsets = new SetTools<Atom>().subsets(this.getAtoms());
-		for(Set<Atom> atoms: subsets)
+		Set<Set<FOLAtom>> subsets = new SetTools<FOLAtom>().subsets(this.getAtoms());
+		for(Set<FOLAtom> atoms: subsets)
 			interpretations.add(new HerbrandInterpretation(atoms));		
 		return interpretations;
 	}
@@ -86,7 +86,7 @@ public class HerbrandBase {
 	 * Returns all atoms of this Herbrand base.
 	 * @return all atoms of this Herbrand base.
 	 */
-	public Set<Atom> getAtoms(){
-		return new HashSet<Atom>(this.atoms);
+	public Set<FOLAtom> getAtoms(){
+		return new HashSet<FOLAtom>(this.atoms);
 	}
 }

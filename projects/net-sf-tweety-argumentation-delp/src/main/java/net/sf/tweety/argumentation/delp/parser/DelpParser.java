@@ -6,6 +6,8 @@ import net.sf.tweety.argumentation.delp.*;
 import net.sf.tweety.argumentation.delp.syntax.*;
 import net.sf.tweety.logics.firstorderlogic.syntax.*;
 import net.sf.tweety.logics.commons.syntax.*;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
+
 import java.io.*;
 import java.util.*;
 import java.util.regex.*;
@@ -134,7 +136,7 @@ public class DelpParser extends Parser implements DelpParserConstants {
   }
 
   static final public FolFormula Literal(DefeasibleLogicProgram delp,FolSignature signature) throws ParseException {
-        Atom atom;
+        FOLAtom atom;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case NAME:
       atom = Atom(delp,signature);
@@ -153,7 +155,7 @@ public class DelpParser extends Parser implements DelpParserConstants {
     throw new Error("Missing return statement in function");
   }
 
-  static final public Atom Atom(DefeasibleLogicProgram delp,FolSignature signature) throws ParseException {
+  static final public FOLAtom Atom(DefeasibleLogicProgram delp,FolSignature signature) throws ParseException {
         Token p;
         List<Term<?>> terms = new ArrayList<Term<?>>();
         Term<?> t;
@@ -189,7 +191,7 @@ public class DelpParser extends Parser implements DelpParserConstants {
           Predicate pred = signature.getPredicate(p.image);
           if(pred.getArity() != terms.size())
                 {if (true) throw new ParseException("Wrong arity of predicate \u005c"" + p.image + "\u005c"");}
-          {if (true) return new Atom(pred,terms);}
+          {if (true) return new FOLAtom(pred,terms);}
     throw new Error("Missing return statement in function");
   }
 

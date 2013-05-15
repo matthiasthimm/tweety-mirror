@@ -4,6 +4,7 @@ import java.util.*;
 
 import net.sf.tweety.*;
 import net.sf.tweety.logics.relationalconditionallogic.syntax.*;
+import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.firstorderlogic.syntax.*;
 
 /**
@@ -37,7 +38,7 @@ public class RclBeliefSet extends BeliefSet<RelationalConditional> {
 		FolSignature sig = new FolSignature();
 		for(Formula f: this){
 			RelationalConditional c = (RelationalConditional) f;
-			sig.addAll(c.getConstants());
+			sig.addAll(c.getTerms(Constant.class));
 			sig.addAll(c.getFunctors());
 			sig.addAll(c.getPredicates());			
 		}

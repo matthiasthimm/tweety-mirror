@@ -76,7 +76,7 @@ public class NumberTerm extends TermAdapter<Integer> {
 	}
 	
 	@Override
-	public Object clone() {
+	public NumberTerm clone() {
 		return new NumberTerm(this);
 	}
 

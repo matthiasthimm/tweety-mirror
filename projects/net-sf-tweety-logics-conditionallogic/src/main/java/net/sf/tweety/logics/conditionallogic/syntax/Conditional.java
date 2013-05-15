@@ -2,19 +2,26 @@ package net.sf.tweety.logics.conditionallogic.syntax;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 
 import net.sf.tweety.Signature;
-import net.sf.tweety.logics.commons.ClassicalFormula;
+import net.sf.tweety.logics.commons.syntax.Predicate;
+import net.sf.tweety.logics.commons.syntax.interfaces.Conjuctable;
+import net.sf.tweety.logics.commons.syntax.interfaces.Disjunctable;
+import net.sf.tweety.logics.commons.syntax.interfaces.SimpleLogicalFormula;
+import net.sf.tweety.logics.firstorderlogic.syntax.Disjunction;
+import net.sf.tweety.logics.propositionallogic.syntax.Conjunction;
+import net.sf.tweety.logics.propositionallogic.syntax.Proposition;
 import net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula;
+import net.sf.tweety.logics.propositionallogic.syntax.PropositionalPredicate;
 import net.sf.tweety.logics.propositionallogic.syntax.Tautology;
-import net.sf.tweety.math.probability.Probability;
 import net.sf.tweety.util.rules.Rule;
 
 /**
  * This class represents a basic conditional (B|A) with formulas A,B.
  * @author Matthias Thimm
  */
-public class Conditional implements ClassicalFormula, Rule {
+public class Conditional implements SimpleLogicalFormula, Rule {
 	
 	/**
 	 * The premise of this conditional. 
@@ -47,32 +54,16 @@ public class Conditional implements ClassicalFormula, Rule {
 		this.conclusion = conclusion;
 	}
 	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.util.rules.Rule#getPremise()
-	 */
+	@Override
 	public Collection<PropositionalFormula> getPremise(){
 		HashSet<PropositionalFormula> premiseSet = new HashSet<PropositionalFormula>();
 		premiseSet.add(this.premise);
 		return premiseSet;
 	}
 	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.util.rules.Rule#getConclusion()
-	 */
+	@Override
 	public PropositionalFormula getConclusion(){
 		return this.conclusion;
-	}
-	
-	/**
-	 * Returns this conditional's probability in the uniform distribution. 
-	 * @return this conditional's probability in the uniform distribution.
-	 */
-	public Probability getUniformProbability(){
-		Double n = ((PropositionalFormula)this.conclusion.combineWithAnd(this.premise)).getUniformProbability().getValue();
-		Double d = this.premise.getUniformProbability().getValue();
-		if(d == 0)
-			return new Probability(0d);
-		return new Probability(n/d);
 	}
 		
 	/**
@@ -101,14 +92,14 @@ public class Conditional implements ClassicalFormula, Rule {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.kr.ClassicalFormula#combineWithAnd(net.sf.tweety.kr.Formula)
 	 */
-	public Conditional combineWithAnd(ClassicalFormula f){		
+	public Conjunction combineWithAnd(Conjuctable f){		
 		throw new UnsupportedOperationException("Conditionals cannot be combined by 'AND'");		
 	}
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.kr.ClassicalFormula#combineWithOr(net.sf.tweety.kr.ClassicalFormula)
 	 */
-	public Conditional combineWithOr(ClassicalFormula f){
+	public Disjunction combineWithOr(Disjunctable f){
 		throw new UnsupportedOperationException("Conditionals cannot be combined by 'OR'");
 	}
 	
@@ -155,6 +146,32 @@ public class Conditional implements ClassicalFormula, Rule {
 		} else if (!premise.equals(other.premise))
 			return false;
 		return true;
+	}
+
+	@Override
+	public Set<Proposition> getAtoms() {
+		Set<Proposition> reval = new HashSet<Proposition>();
+		reval.addAll(premise.getAtoms());
+		reval.addAll(conclusion.getAtoms());
+		return reval;
+	}
+
+	@Override
+	public Set<? extends Predicate> getPredicates() {
+		Set<PropositionalPredicate> reval = new HashSet<PropositionalPredicate>();
+		reval.addAll(premise.getPredicates());
+		reval.addAll(conclusion.getPredicates());
+		return reval;
+	}
+
+	@Override
+	public Conditional clone() {
+		return new Conditional(premise.clone(), conclusion.clone());
+	}
+
+	@Override
+	public boolean isLiteral() {
+		return false;
 	}
 	
 }

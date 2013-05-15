@@ -1,7 +1,7 @@
 package net.sf.tweety.logics.modallogic.syntax;
 
-import net.sf.tweety.logics.commons.syntax.Term;
-import net.sf.tweety.logics.firstorderlogic.syntax.*;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
+import net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula;
 
 /**
  * This class models the possibility modality.
@@ -21,7 +21,7 @@ public class Possibility extends ModalFormula {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula#substitute(net.sf.tweety.logics.firstorderlogic.syntax.Term, net.sf.tweety.logics.firstorderlogic.syntax.Term)
 	 */
-	public RelationalFormula substitute(Term v, Term t) throws IllegalArgumentException{
+	public RelationalFormula substitute(Term<?> v, Term<?> t) throws IllegalArgumentException{
 		return new Possibility(this.getFormula().substitute(v, t));
 	}
 
@@ -30,5 +30,10 @@ public class Possibility extends ModalFormula {
 	 */
 	public String toString(){
 		return "<>("+this.getFormula()+")";
+	}
+
+	@Override
+	public RelationalFormula clone() {
+		return new Possibility(this.getFormula().clone());
 	}
 }

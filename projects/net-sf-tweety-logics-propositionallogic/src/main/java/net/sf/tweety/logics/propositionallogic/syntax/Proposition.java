@@ -1,13 +1,20 @@
 package net.sf.tweety.logics.propositionallogic.syntax;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import net.sf.tweety.logics.commons.syntax.interfaces.Atom;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 
 /**
  * This class represents a simple proposition in propositional logic. 
  * 
  * @author Matthias Thimm
+ * @author Tim Janus
  */
-public class Proposition extends PropositionalFormula {
+public class Proposition extends PropositionalFormula implements Atom {
 	
 	/**
 	 * The name of the proposition
@@ -22,6 +29,10 @@ public class Proposition extends PropositionalFormula {
 		this.predicate = new PropositionalPredicate(name);
 	}
 	
+	public Proposition(Proposition other) {
+		this.predicate = new PropositionalPredicate(other.getName());
+	}
+	
 	/**
 	 * @return the name of this proposition.
 	 */
@@ -29,32 +40,26 @@ public class Proposition extends PropositionalFormula {
 		return this.predicate.getName();
 	}
 	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#getPropositions()
-	 */
-	public Set<Proposition> getPropositions(){
-		Set<Proposition> propositions = new HashSet<Proposition>();
-		propositions.add(this);
-		return propositions;
+	@Override
+	public PropositionalPredicate getPredicate() {
+		return this.predicate;
 	}
 	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
+	@Override
+	public Set<PropositionalPredicate> getPredicates() {
+		Set<PropositionalPredicate> reval = new HashSet<PropositionalPredicate>();
+		reval.add(predicate);
+		return reval;
+	}
+	
 	public String toString(){
 		return this.predicate.getName();
 	}
 	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#collapseAssociativeFormulas()
-	 */
 	public PropositionalFormula collapseAssociativeFormulas(){
 		return this;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -62,10 +67,7 @@ public class Proposition extends PropositionalFormula {
 		result = prime * result + ((predicate == null) ? 0 : predicate.hashCode());
 		return result;
 	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -83,12 +85,41 @@ public class Proposition extends PropositionalFormula {
 		return true;
 	}
 	
-  /* (non-Javadoc)
-   * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#toNNF()
-   */
 	@Override
 	public PropositionalFormula toNnf() {
-	  return this;
+		return this;
+	}
+
+	@Override
+	public Proposition clone() {
+		return new Proposition(this);
+	}
+
+	@Override
+	public void addArgument(Term<?> arg) {
+		throw new UnsupportedOperationException("addArgument not supported by Propositional-Logic");
+	}
+
+	@Override
+	public List<? extends Term<?>> getArguments() {
+		return new ArrayList<Term<?>>();
+	}
+
+	@Override
+	public boolean isComplete() {
+		return true;
+	}
+
+	@Override
+	public Set<Proposition> getAtoms() {
+		Set<Proposition> reval = new HashSet<Proposition>();
+		reval.add(this);
+		return reval;
+	}
+
+	@Override
+	public boolean isLiteral() {
+		return true;
 	}
 	
 }

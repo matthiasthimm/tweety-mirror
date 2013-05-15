@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import net.sf.tweety.logics.commons.syntax.Term;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 
 /**
  * this class represents an aggregate function. aggregates

@@ -16,9 +16,17 @@ import net.sf.tweety.BeliefBase;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.Sort;
-import net.sf.tweety.logics.commons.syntax.Term;
 import net.sf.tweety.logics.commons.syntax.Variable;
-import net.sf.tweety.logics.firstorderlogic.syntax.*;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
+import net.sf.tweety.logics.firstorderlogic.syntax.Conjunction;
+import net.sf.tweety.logics.firstorderlogic.syntax.Disjunction;
+import net.sf.tweety.logics.firstorderlogic.syntax.ExistsQuantifiedFormula;
+import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
+import net.sf.tweety.logics.firstorderlogic.syntax.ForallQuantifiedFormula;
+import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
+import net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula;
 import net.sf.tweety.logics.markovlogic.syntax.MlnFormula;
 
 /**
@@ -208,7 +216,7 @@ public class AlchemyMlnReasoner extends AbstractMlnReasoner {
 	 * @param formula some FOL formula
 	 * @return the string in Alchemy syntax representing the given formula.
 	 */
-	private String alchemyStringForFormula(FolFormula formula){
+	private String alchemyStringForFormula(RelationalFormula formula){
 		if(formula instanceof Conjunction){
 			String result = "";
 			boolean isFirst = true;
@@ -266,13 +274,13 @@ public class AlchemyMlnReasoner extends AbstractMlnReasoner {
 			}
 			return result + " (" + this.alchemyStringForFormula(((ExistsQuantifiedFormula)formula).getFormula()) + ")";
 		}
-		if(formula instanceof Atom){
-			Atom a = (Atom) formula;
+		if(formula instanceof FOLAtom){
+			FOLAtom a = (FOLAtom) formula;
 			String result = a.getPredicate().getName().toLowerCase();
 			if(a.getArguments().size()>0)
 				result += "(";
 			boolean isFirst = true;
-			for(Term t: a.getArguments()){
+			for(Term<?> t: a.getArguments()){
 				if(isFirst){
 					result += this.alchemyStringForTerm(t);
 					isFirst = false;
@@ -292,7 +300,7 @@ public class AlchemyMlnReasoner extends AbstractMlnReasoner {
 	 * @param tern some FOL tern
 	 * @return the string in Alchemy syntax representing the given term.
 	 */
-	private String alchemyStringForTerm(Term t){
+	private String alchemyStringForTerm(Term<?> t){
 		if(t instanceof Constant)
 			return t.toString().toUpperCase();
 		if(t instanceof Variable)

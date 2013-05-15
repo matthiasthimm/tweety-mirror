@@ -3,6 +3,7 @@ package net.sf.tweety.logics.conditionallogic.semantics;
 import java.util.*;
 
 import net.sf.tweety.*;
+import net.sf.tweety.logics.commons.syntax.interfaces.SimpleLogicalFormula;
 import net.sf.tweety.logics.conditionallogic.*;
 import net.sf.tweety.logics.conditionallogic.syntax.*;
 import net.sf.tweety.logics.propositionallogic.semantics.*;
@@ -194,7 +195,8 @@ public class RankingFunction extends Interpretation {
 	 * @return "true" if the given possible world verifies the given conditional. 
 	 */
 	public static boolean verifies(PossibleWorld w, Conditional c){
-		return w.satisfies(c.getPremise().iterator().next().combineWithAnd(c.getConclusion()));
+		SimpleLogicalFormula formula = c.getPremise().iterator().next().combineWithAnd(c.getConclusion());
+		return w.satisfies(formula);
 	}
 	
 	/**
@@ -205,7 +207,8 @@ public class RankingFunction extends Interpretation {
 	 * @return "true" if the given possible world falsifies the given conditional. 
 	 */
 	public static boolean falsifies(PossibleWorld w, Conditional c){
-		return w.satisfies(c.getPremise().iterator().next().combineWithAnd(c.getConclusion().complement()));
+		SimpleLogicalFormula formula = c.getPremise().iterator().next().combineWithAnd(c.getConclusion().complement());
+		return w.satisfies(formula);
 	}
 	
 	/**

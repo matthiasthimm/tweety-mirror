@@ -1,16 +1,23 @@
 package net.sf.tweety.argumentation.delp.syntax;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
-import net.sf.tweety.*;
-import net.sf.tweety.logics.firstorderlogic.syntax.*;
-import net.sf.tweety.util.rules.*;
-import net.sf.tweety.logics.commons.*;
-import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.Formula;
 import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.logics.commons.syntax.Term;
 import net.sf.tweety.logics.commons.syntax.Variable;
+import net.sf.tweety.logics.commons.syntax.interfaces.Conjuctable;
+import net.sf.tweety.logics.commons.syntax.interfaces.Disjunctable;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
+import net.sf.tweety.logics.firstorderlogic.syntax.Conjunction;
+import net.sf.tweety.logics.firstorderlogic.syntax.Disjunction;
+import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import net.sf.tweety.logics.firstorderlogic.syntax.Functor;
+import net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula;
 import net.sf.tweety.math.probability.Probability;
+import net.sf.tweety.util.rules.Rule;
 
 /**
  * This method is the superclass for both a strict rule and a defeasible rule in defeasible logic programming
@@ -91,12 +98,12 @@ public abstract class DelpRule extends RelationalFormula implements Rule{
 	 * @see net.sf.tweety.ClassicalFormula#combineWithAnd(net.sf.tweety.ClassicalFormula)
 	 */
 	@Override
-	public ClassicalFormula combineWithAnd(ClassicalFormula f) {
+	public Conjunction combineWithAnd(Conjuctable f) {
 		throw new UnsupportedOperationException("Combination using AND not permitted for rules.");
 	}
 
 	@Override
-	public ClassicalFormula combineWithOr(ClassicalFormula f) {
+	public Disjunction combineWithOr(Disjunctable f) {
 		throw new UnsupportedOperationException("Combination using OR not permitted for rules.");
 	}
 
@@ -104,7 +111,7 @@ public abstract class DelpRule extends RelationalFormula implements Rule{
 	 * @see net.sf.tweety.ClassicalFormula#complement()
 	 */
 	@Override
-	public ClassicalFormula complement() {
+	public RelationalFormula complement() {
 		throw new UnsupportedOperationException("Complement not permitted for rules.");
 	}
 
@@ -124,27 +131,62 @@ public abstract class DelpRule extends RelationalFormula implements Rule{
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula#getAtoms()
 	 */
 	@Override
-	public Set<Atom> getAtoms() {
-		Set<Atom> atoms = new HashSet<Atom>();
+	public Set<FOLAtom> getAtoms() {
+		Set<FOLAtom> atoms = new HashSet<FOLAtom>();
 		atoms.addAll(this.head.getAtoms());
 		for(FolFormula f: this.body)
 			atoms.addAll(f.getAtoms());
 		return atoms;
 	}
 
+	@Override
+	public boolean isLiteral() {
+		return false;
+	}
+
+	@Override
+	public Set<Term<?>> getTerms() {
+		Set<Term<?>> reval = new HashSet<Term<?>>();
+		reval.addAll(head.getTerms());
+		for(FolFormula b : body) {
+			reval.addAll(b.getTerms());
+		}
+		return reval;
+	}
+
+	@Override
+	public <C extends Term<?>> Set<C> getTerms(Class<C> cls) {
+		Set<C> reval = new HashSet<C>();
+		reval.addAll(head.getTerms(cls));
+		for(FolFormula b : body) {
+			reval.addAll(b.getTerms(cls));
+		}
+		return reval;
+	}
+
+	@Override
+	public Set<Variable> getQuantifierVariables() {
+		Set<Variable> reval = new HashSet<Variable>();
+		reval.addAll(head.getQuantifierVariables());
+		for(FolFormula b : body) {
+			reval.addAll(b.getQuantifierVariables());
+		}
+		return reval;
+	}
+	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula#containsQuantifier()
 	 */
 	@Override
 	public boolean containsQuantifier() {
-		return false;
+		return !getQuantifierVariables().isEmpty();
 	}
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula#substitute(net.sf.tweety.logics.firstorderlogic.syntax.Term, net.sf.tweety.logics.firstorderlogic.syntax.Term)
 	 */
 	@Override
-	public abstract RelationalFormula substitute(Term v, Term t) throws IllegalArgumentException;
+	public abstract RelationalFormula substitute(Term<?> v, Term<?> t) throws IllegalArgumentException;
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula#getUnboundVariables()
@@ -199,19 +241,7 @@ public abstract class DelpRule extends RelationalFormula implements Rule{
 	public boolean isWellBound(Set<Variable> boundVariables) {
 		return true;
 	}
-
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.LogicStructure#getConstants()
-	 */
-	@Override
-	public Set<Constant> getConstants() {
-		Set<Constant> constants = new HashSet<Constant>();
-		constants.addAll(this.head.getConstants());
-		for(FolFormula f: this.body)
-			constants.addAll(f.getConstants());
-		return constants;
-	}
-
+	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.LogicStructure#getFunctors()
 	 */
@@ -225,32 +255,9 @@ public abstract class DelpRule extends RelationalFormula implements Rule{
 	}
 
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.LogicStructure#getVariables()
-	 */
-	@Override
-	public Set<Variable> getVariables() {
-		Set<Variable> vars = new HashSet<Variable>();
-		vars.addAll(this.head.getVariables());
-		for(FolFormula f: this.body)
-			vars.addAll(f.getVariables());
-		return vars;
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.LogicStructure#getFunctionalTerms()
-	 */
-	@Override
-	public Set<FunctionalTerm> getFunctionalTerms() {
-		Set<FunctionalTerm> terms = new HashSet<FunctionalTerm>();
-		terms.addAll(this.head.getFunctionalTerms());
-		for(FolFormula f: this.body)
-			terms.addAll(f.getFunctionalTerms());
-		return terms;
-	}
-
-	/* (non-Javadoc)
 	 * @see net.sf.tweety.ClassicalFormula#getUniformProbability()
 	 */
+	@Override
 	public Probability getUniformProbability(){
 		throw new UnsupportedOperationException("IMPLEMENT ME");
 	}

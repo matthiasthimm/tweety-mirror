@@ -1,6 +1,6 @@
 package net.sf.tweety.logicprogramming.asplibrary.syntax;
 
-import net.sf.tweety.logics.commons.syntax.Term;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 
 /**
  * This interface defines common functionality for an ELP literal.

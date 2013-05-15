@@ -48,7 +48,7 @@ public class Constant extends StringTerm {
 	}
 	
 	@Override
-	public Object clone() {
+	public Constant clone() {
 		return new Constant(this);
 	}
 }

@@ -40,21 +40,22 @@ public class Predicate extends TypedStructureAdapter {
 		super(name,arguments);
 	}
 			
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolBasicStructure#hashCode()
-	 */
+	@Override
 	public int hashCode(){
 		return super.hashCode()+7;
 	}
 	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolBasicStructure#equals(java.lang.Object)
-	 */
+	@Override
 	public boolean equals(Object obj){
 		if (this == obj)
 			return true;		
 		if (getClass() != obj.getClass())
 			return false;		
 		return super.equals(obj);
+	}
+	
+	@Override
+	public Predicate clone() {
+		return new Predicate(this.getName(), copyArgumentTypes());
 	}
 }

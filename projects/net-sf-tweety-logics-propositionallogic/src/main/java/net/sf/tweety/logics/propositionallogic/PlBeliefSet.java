@@ -72,7 +72,7 @@ public class PlBeliefSet extends BeliefSet<PropositionalFormula> {
 	public Signature getSignature() {
 		PropositionalSignature signature = new PropositionalSignature();
 		for(Formula f: this)
-			signature.addAll(((PropositionalFormula)f).getPropositions());
+			signature.addAll(((PropositionalFormula)f).getAtoms());
 		return signature;
 	}
 

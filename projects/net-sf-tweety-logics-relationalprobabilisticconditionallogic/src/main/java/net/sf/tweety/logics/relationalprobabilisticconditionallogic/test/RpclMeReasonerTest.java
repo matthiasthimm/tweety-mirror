@@ -16,9 +16,9 @@ public class RpclMeReasonerTest {
 		Constant c1 = new Constant("c1");		
 		Constant c2 = new Constant("c2");
 		net.sf.tweety.logics.commons.syntax.Variable x = new net.sf.tweety.logics.commons.syntax.Variable("X");
-		net.sf.tweety.logics.firstorderlogic.syntax.Atom atomA = new net.sf.tweety.logics.firstorderlogic.syntax.Atom(a);
+		net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom atomA = new net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom(a);
 		atomA.addArgument(x);
-		net.sf.tweety.logics.firstorderlogic.syntax.Atom atomB = new net.sf.tweety.logics.firstorderlogic.syntax.Atom(b);
+		net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom atomB = new net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom(b);
 		atomB.addArgument(x);
 		RelationalProbabilisticConditional pc = new RelationalProbabilisticConditional(atomA,atomB,new Probability(0.3));
 		
@@ -36,9 +36,9 @@ public class RpclMeReasonerTest {
 		
 		System.out.println(reasoner.getMeDistribution());
 		
-		net.sf.tweety.logics.firstorderlogic.syntax.Atom atomAC = new net.sf.tweety.logics.firstorderlogic.syntax.Atom(a);
+		net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom atomAC = new net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom(a);
 		atomAC.addArgument(c1);
-		net.sf.tweety.logics.firstorderlogic.syntax.Atom atomBC = new net.sf.tweety.logics.firstorderlogic.syntax.Atom(b);
+		net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom atomBC = new net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom(b);
 		atomBC.addArgument(c1);
 		
 		System.out.println(reasoner.query(new RelationalConditional(atomAC,atomBC)));

@@ -7,6 +7,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import net.sf.tweety.logics.commons.syntax.interfaces.LogicStructure;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
+
 /**
  * A sort of first-order logic. i.e. a set of constant objects and a set of variables that represent
  * constants of this sort.
@@ -111,16 +114,11 @@ public class Sort implements LogicStructure {
 		return this.name;
 	}
 	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
+	@Override
 	public String toString(){
 		return this.name;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -129,9 +127,6 @@ public class Sort implements LogicStructure {
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -176,7 +171,7 @@ public class Sort implements LogicStructure {
 	}
 	
 	@Override
-	public Object clone() {
+	public Sort clone() {
 		return new Sort(this);
 	}
 }

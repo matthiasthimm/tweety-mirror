@@ -31,4 +31,9 @@ public class Contradiction extends SpecialFormula{
 	public int hashCode() {
 		return 31;
 	}
+
+	@Override
+	public Contradiction clone() {
+		return new Contradiction();
+	}
 }

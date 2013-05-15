@@ -22,6 +22,6 @@ public class FolLanguageNoFunctions extends FolLanguage {
 	 */
 	public boolean isRepresentable(Formula formula){
 		if(!super.isRepresentable(formula)) return false;
-		return !((FolFormula)formula).containsFunctionalTerms();		
+		return ((FolFormula)formula).getTerms(FunctionalTerm.class).isEmpty();		
 	}	
 }

@@ -2,14 +2,15 @@ package net.sf.tweety.logics.markovlogic.syntax;
 
 import java.util.Set;
 
-import net.sf.tweety.logics.commons.*;
-import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.logics.commons.syntax.Term;
 import net.sf.tweety.logics.commons.syntax.Variable;
-import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.commons.syntax.interfaces.Conjuctable;
+import net.sf.tweety.logics.commons.syntax.interfaces.Disjunctable;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
+import net.sf.tweety.logics.firstorderlogic.syntax.Conjunction;
+import net.sf.tweety.logics.firstorderlogic.syntax.Disjunction;
+import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
-import net.sf.tweety.logics.firstorderlogic.syntax.FunctionalTerm;
 import net.sf.tweety.logics.firstorderlogic.syntax.Functor;
 import net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula;
 import net.sf.tweety.math.probability.Probability;
@@ -18,6 +19,7 @@ import net.sf.tweety.math.probability.Probability;
  * Instances of this class represent first-order formulas with a weight.
  * 
  * @author Matthias Thimm
+ * @author Tim Janus
  */
 public class MlnFormula extends RelationalFormula {
 
@@ -60,7 +62,7 @@ public class MlnFormula extends RelationalFormula {
 	 * @see net.sf.tweety.ClassicalFormula#combineWithAnd(net.sf.tweety.ClassicalFormula)
 	 */
 	@Override
-	public ClassicalFormula combineWithAnd(ClassicalFormula f) {
+	public Conjunction combineWithAnd(Conjuctable f) {
 		throw new UnsupportedOperationException("Combination with AND not supported for MLN formulas.");
 	}
 
@@ -68,7 +70,7 @@ public class MlnFormula extends RelationalFormula {
 	 * @see net.sf.tweety.ClassicalFormula#combineWithOr(net.sf.tweety.ClassicalFormula)
 	 */
 	@Override
-	public ClassicalFormula combineWithOr(ClassicalFormula f) {
+	public Disjunction combineWithOr(Disjunctable f) {
 		throw new UnsupportedOperationException("Combination with OR not supported for MLN formulas.");
 	}
 
@@ -76,7 +78,7 @@ public class MlnFormula extends RelationalFormula {
 	 * @see net.sf.tweety.ClassicalFormula#complement()
 	 */
 	@Override
-	public ClassicalFormula complement() {
+	public RelationalFormula complement() {
 		throw new UnsupportedOperationException("Complementing not supported for MLN formulas.");
 	}
 
@@ -84,7 +86,7 @@ public class MlnFormula extends RelationalFormula {
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula#getPredicates()
 	 */
 	@Override
-	public Set<Predicate> getPredicates() {
+	public Set<? extends Predicate> getPredicates() {
 		return this.formula.getPredicates();
 	}
 
@@ -92,7 +94,7 @@ public class MlnFormula extends RelationalFormula {
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula#getAtoms()
 	 */
 	@Override
-	public Set<Atom> getAtoms() {
+	public Set<FOLAtom> getAtoms() {
 		return this.formula.getAtoms();
 	}
 
@@ -108,7 +110,7 @@ public class MlnFormula extends RelationalFormula {
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula#substitute(net.sf.tweety.logics.firstorderlogic.syntax.Term, net.sf.tweety.logics.firstorderlogic.syntax.Term)
 	 */
 	@Override
-	public RelationalFormula substitute(Term v, Term t)	throws IllegalArgumentException {
+	public RelationalFormula substitute(Term<?> v, Term<?> t)	throws IllegalArgumentException {
 		return new MlnFormula((FolFormula)this.formula.substitute(v, t),this.weight);
 	}
 
@@ -160,13 +162,6 @@ public class MlnFormula extends RelationalFormula {
 		return "<" + this.formula + ", " + this.weight + ">";
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.LogicStructure#getConstants()
-	 */
-	@Override
-	public Set<Constant> getConstants() {
-		return this.formula.getConstants();
-	}
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.LogicStructure#getFunctors()
@@ -179,18 +174,7 @@ public class MlnFormula extends RelationalFormula {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.LogicStructure#getVariables()
 	 */
-	@Override
-	public Set<Variable> getVariables() {
-		return this.formula.getVariables();
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.LogicStructure#getFunctionalTerms()
-	 */
-	@Override
-	public Set<FunctionalTerm> getFunctionalTerms() {
-		return this.formula.getFunctionalTerms();
-	}
+	
 	
 	/** Returns the inner formula.
 	 * @return the inner formula.
@@ -219,5 +203,30 @@ public class MlnFormula extends RelationalFormula {
 	@Override
 	public Probability getUniformProbability() {
 		return this.formula.getUniformProbability();
+	}
+
+	@Override
+	public boolean isLiteral() {
+		return this.formula.isLiteral();
+	}
+
+	@Override
+	public Set<Term<?>> getTerms() {
+		return this.formula.getTerms();
+	}
+
+	@Override
+	public <C extends Term<?>> Set<C> getTerms(Class<C> cls) {
+		return this.formula.getTerms(cls);
+	}
+
+	@Override
+	public Set<Variable> getQuantifierVariables() {
+		return this.formula.getQuantifierVariables();
+	}
+
+	@Override
+	public RelationalFormula clone() {
+		return new MlnFormula(this.formula.clone(), this.weight);
 	}
 }

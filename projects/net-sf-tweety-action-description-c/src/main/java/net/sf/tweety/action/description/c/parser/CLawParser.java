@@ -18,8 +18,8 @@ import net.sf.tweety.action.grounding.parser.GroundingRequirementsParser;
 import net.sf.tweety.action.signature.ActionSignature;
 import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.firstorderlogic.parser.FolParser;
-import net.sf.tweety.logics.firstorderlogic.syntax.AssociativeFormula;
-import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.AssociativeFOLFormula;
+import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
 import net.sf.tweety.logics.firstorderlogic.syntax.Conjunction;
 import net.sf.tweety.logics.firstorderlogic.syntax.Contradiction;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
@@ -225,10 +225,10 @@ public class CLawParser
     if(!wrongKey.isEmpty())
       throw new ParserException("Unexpected keyword(s) '"+wrongKey.toString()+"' in formula '"+s+"' due to wrong order or multiple use of keywords.");
     formula = parseFolFormula( headString );
-    if(formula instanceof AssociativeFormula)
+    if(formula instanceof AssociativeFOLFormula)
       throw new ParserException("Inertial expression contains illegal argument.");
     if(formula instanceof Negation)
-      if(!((((Negation)formula).getFormula()) instanceof Atom))
+      if(!((((Negation)formula).getFormula()) instanceof FOLAtom))
         throw new ParserException( "Inertial expression contains illegal argument." );
     Set<GroundingRequirement> requirements = null;
     requirements = new GroundingRequirementsParser().parseRequirements( reqString, formula.getUnboundVariables() );

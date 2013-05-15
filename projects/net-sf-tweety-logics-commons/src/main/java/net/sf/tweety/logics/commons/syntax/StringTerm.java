@@ -86,6 +86,4 @@ public abstract class StringTerm extends TermAdapter<String> {
 			return false;
 		return true;
 	}
-	
-	public abstract Object clone();
 }

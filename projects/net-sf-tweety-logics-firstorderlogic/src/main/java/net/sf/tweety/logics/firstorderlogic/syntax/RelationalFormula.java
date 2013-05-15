@@ -6,13 +6,15 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import net.sf.tweety.Signature;
-import net.sf.tweety.logics.commons.ClassicalFormula;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.Sort;
-import net.sf.tweety.logics.commons.syntax.Term;
 import net.sf.tweety.logics.commons.syntax.Variable;
+import net.sf.tweety.logics.commons.syntax.interfaces.ClassicalFormula;
+import net.sf.tweety.logics.commons.syntax.interfaces.Conjuctable;
+import net.sf.tweety.logics.commons.syntax.interfaces.Disjunctable;
+import net.sf.tweety.logics.commons.syntax.interfaces.QuantifiedFormula;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.math.probability.Probability;
 import net.sf.tweety.util.MapTools;
 
@@ -20,27 +22,26 @@ import net.sf.tweety.util.MapTools;
 /**
  * This interface models a relational formula, i.e. a formula that is build
  * on a first-order signature.
+ * 
  * @author Matthias Thimm
+ * @author Tim Janus
  */
-public abstract class RelationalFormula extends LogicStructure implements ClassicalFormula {
+public abstract class RelationalFormula implements ClassicalFormula, QuantifiedFormula {
+	
+	@Override
+	public RelationalFormula getFormula() {
+		return this;
+	}
 	
 	/**
-	 * Returns all predicates that appear in this formula.
-	 * @return all predicates that appear in this formula.
-	 */
-	public abstract Set<Predicate> getPredicates();
-	
-	/**
-	 * Returns all atoms that appear in this formula.
 	 * @return all atoms that appear in this formula.
 	 */
-	public abstract Set<Atom> getAtoms();
+	public abstract Set<FOLAtom> getAtoms();
 	
 	/**
-	 * Checks whether this formula contains any quantification.
-	 * @return "true" if this formula contains a quantification.
+	 * @return all functor that appear in this formula.
 	 */
-	public abstract boolean containsQuantifier();
+	public abstract Set<Functor> getFunctors();
 	
 	/**
 	 * Substitutes all occurrences of term "v" in this formula
@@ -59,8 +60,8 @@ public abstract class RelationalFormula extends LogicStructure implements Classi
 		
 	/**
 	 * Substitutes all occurrences of term "v" in this formula
-	 * by term "t" and at the same time replaces all occurrendes of term "t"
-	 * by term "v" and eventuelly returns the new formula.
+	 * by term "t" and at the same time replaces all occurrences of term "t"
+	 * by term "v" and eventually returns the new formula.
 	 * NOTE: if "v" is a variable and bound to a quantifier then "v" is not substituted
 	 * 		in that quantifiers inner formula.
 	 * @param v a term.
@@ -153,29 +154,6 @@ public abstract class RelationalFormula extends LogicStructure implements Classi
 		return this.complement().getUniformProbability().doubleValue() / this.getUniformProbability().doubleValue();
 	}
 	
-	/**
-	 * Gets all unbound variables in this formula.
-	 * @return the set of unbound variables of this formula.
-	 */
-	public abstract Set<Variable> getUnboundVariables();
-	
-	/**
-	 * Checks whether this formula is closed, i.e. whether every variables
-	 * occurring in the formula is bound by a quantifier. 
-	 * @return "true" if this formula is closed, "false" otherwise.
-	 */
-	public abstract boolean isClosed();
-	
-	/**
-	 * Checks whether this formula is closed, i.e. whether every variables
-	 * occurring in the formula is bound by a quantifier. Every variable in
-	 * "boundVariables" is already assumed to be bound.
-	 * @param boundVariables the variables assumed to be bound.
-	 * @return "true" if this formula is closed wrt. "boundVariables", "false" otherwise.
-	 */
-	public abstract boolean isClosed(Set<Variable> boundVariables);
-	
-	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.ClassicalFormula#getUniformProbability()
 	 */
@@ -186,28 +164,11 @@ public abstract class RelationalFormula extends LogicStructure implements Classi
 	 * no variable in this formula.
 	 * @return "true" if this formula is ground.
 	 */
+	@Override
 	public boolean isGround(){
-		return this.getVariables().isEmpty();
+		return this.getTerms(Variable.class).isEmpty();
 	}
 
-	/**
-	 * Checks whether this formula is well-bound, i.e. whether no variable
-	 * bound by a quantifier is again bound by another quantifier within the
-	 * first quantifier's range.
-	 * @return "true" if this formula is well-bound, "false" otherwise.
-	 */
-	public abstract boolean isWellBound();
-	
-	/**
-	 * Checks whether this formula is well-bound, i.e. whether no variable
-	 * bound by a quantifier is again bound by another quantifier within the
-	 * first quantifier range. Every variable in "boundVariables" is assumed
-	 * to be bound already.
-	 * @param boundVariables the variables assumed to be bound.
-	 * @return "true" if this formula is well-bound, "false" otherwise.
-	 */
-	public abstract boolean isWellBound(Set<Variable> boundVariables);
-	
 	/**
 	 * Tests whether this formula is well-formed, i.e. whether<br>
 	 * - there are no two variables with the same name but different sort<br>
@@ -223,16 +184,17 @@ public abstract class RelationalFormula extends LogicStructure implements Classi
 	 * - every functor has arity greater zero (otherwise it should be modeled by a constant
 	 * @return "true" if this formula is well-formed
 	 */
+	@Override
 	public boolean isWellFormed(){
 		//there are no two variables with the same name but different sort
-		for(Variable v: this.getVariables())
-			for(Variable w: this.getVariables())
+		for(Variable v: this.getTerms(Variable.class))
+			for(Variable w: this.getTerms(Variable.class))
 				if(v.get().equals(w.get()))
 					if(!v.getSort().equals(w.getSort()))
 						return false;
 		//there are no two constants with the same name but different sort
-		for(Constant c: this.getConstants())
-			for(Constant d: this.getConstants())
+		for(Constant c: this.getTerms(Constant.class))
+			for(Constant d: this.getTerms(Constant.class))
 				if(c.get().equals(d.get()))
 					if(!c.getSort().equals(d.getSort()))
 						return false;
@@ -264,11 +226,11 @@ public abstract class RelationalFormula extends LogicStructure implements Classi
 				}
 			}
 		//every atom is complete, i.e. has a complete list of arguments
-		for(Atom a: this.getAtoms())
+		for(FOLAtom a: this.getAtoms())
 			if(!a.isComplete())
 				return false;
 		//every functional term is complete, i.e. has a complete list of arguments
-		for(FunctionalTerm t: this.getFunctionalTerms())
+		for(FunctionalTerm t: this.getTerms(FunctionalTerm.class))
 			if(!t.isComplete())
 				return false;
 		//no variable bound by a quantifier is again bound by another quantifier within the first quantifier's range.
@@ -277,26 +239,37 @@ public abstract class RelationalFormula extends LogicStructure implements Classi
 	}
 
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.LogicStructure#containsFunctionalTerms()
-	 */
-	public boolean containsFunctionalTerms(){
-		return !this.getFunctionalTerms().isEmpty();
-	}
-
-	/* (non-Javadoc)
 	 * @see net.sf.tweety.kr.Formula#getSignature()
 	 */
-	public Signature getSignature(){
+	@Override
+	public FolSignature getSignature(){
 		FolSignature sig = new FolSignature();
-		sig.addAll(this.getConstants());
+		sig.addAll(this.getTerms(Constant.class));
 		sig.addAll(this.getFunctors());
 		sig.addAll(this.getPredicates());
 		return sig;
 	}
 	
+	@Override
+	public <C extends Term<?>> boolean containsTermsOfType(Class<C> cls) {
+		return !getTerms(cls).isEmpty();
+	}
+	
+	@Override
+	public abstract RelationalFormula complement();
+	
+	@Override
+	public abstract Disjunction combineWithOr(Disjunctable formula);
+	
+	@Override
+	public abstract Conjunction combineWithAnd(Conjuctable formula);
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	public abstract String toString();	
+	
+	@Override
+	public abstract RelationalFormula clone();
 	
 }

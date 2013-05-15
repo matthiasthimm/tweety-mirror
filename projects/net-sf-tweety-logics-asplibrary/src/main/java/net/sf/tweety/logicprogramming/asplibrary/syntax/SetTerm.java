@@ -5,8 +5,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import net.sf.tweety.logics.commons.syntax.Term;
 import net.sf.tweety.logics.commons.syntax.TermAdapter;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 
 /**
  * this class models a set term, which can be used
@@ -43,7 +43,7 @@ public class SetTerm extends TermAdapter<Set<Term<?>>> {
 	}
 	
 	@Override
-	public Object clone() {
+	public SetTerm clone() {
 		return new SetTerm(this);
 	}
 

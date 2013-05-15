@@ -8,7 +8,7 @@ import net.sf.tweety.action.CausalLaw;
 import net.sf.tweety.action.grounding.GroundingRequirement;
 import net.sf.tweety.action.signature.ActionSignature;
 import net.sf.tweety.action.signature.FolFluentName;
-import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
 import net.sf.tweety.logics.firstorderlogic.syntax.Conjunction;
 import net.sf.tweety.logics.firstorderlogic.syntax.Contradiction;
 import net.sf.tweety.logics.firstorderlogic.syntax.Disjunction;
@@ -64,7 +64,7 @@ public abstract class CLaw
    * 
    * @return the set of propositions in all formulas in this law.
    */
-  public abstract Set< Atom > getAtoms();
+  public abstract Set< FOLAtom > getAtoms();
   
   /**
    * Returns the set of formulas contained in this causal law, e.g. in a static
@@ -152,7 +152,7 @@ public abstract class CLaw
       throw new IllegalArgumentException(
         "The formula given has an illegal form" );
     }
-    this.headFormula = headFormula.collapseAssociativeFormulas();
+    this.headFormula = (FolFormula) headFormula.collapseAssociativeFormulas();
   }
   
   /**
@@ -170,7 +170,7 @@ public abstract class CLaw
       throw new IllegalArgumentException(
         "The formula given has an illegal form" );
     }
-    this.ifFormula = ifFormula.collapseAssociativeFormulas();
+    this.ifFormula = (FolFormula) ifFormula.collapseAssociativeFormulas();
   }
   
   public void addGroundingRequirement( GroundingRequirement c )
@@ -200,7 +200,7 @@ public abstract class CLaw
   
   public boolean isGround()
   {
-    for ( Atom a : getAtoms() )
+    for ( FOLAtom a : getAtoms() )
       if ( !a.isGround() )
         return false;
     return true;
@@ -228,8 +228,8 @@ public abstract class CLaw
       return true;
     if ( pl instanceof Negation )
       pl = ( (Negation) pl ).getFormula();
-    if ( pl instanceof Atom )
-      return ( (Atom) pl ).getPredicate() instanceof FolFluentName;
+    if ( pl instanceof FOLAtom )
+      return ( (FOLAtom) pl ).getPredicate() instanceof FolFluentName;
     return false;
   }
   

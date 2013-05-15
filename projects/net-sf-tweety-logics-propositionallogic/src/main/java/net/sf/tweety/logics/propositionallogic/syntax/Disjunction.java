@@ -1,6 +1,8 @@
 package net.sf.tweety.logics.propositionallogic.syntax;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import net.sf.tweety.logics.commons.LogicalSymbols;
 
@@ -8,8 +10,9 @@ import net.sf.tweety.logics.commons.LogicalSymbols;
  * This class represents a disjunction in propositional logic.
  * 
  * @author Matthias Thimm
+ * @author Tim Janus
  */
-public class Disjunction extends AssociativeFormula {
+public class Disjunction extends AssociativePropositionalFormula {
 	
 	/**
 	 * Creates a new disjunction with the given inner formulas. 
@@ -54,24 +57,6 @@ public class Disjunction extends AssociativeFormula {
 		this.add(first);
 		this.add(second);
 	}
-	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString(){
-		if(this.isEmpty())
-			return LogicalSymbols.TAUTOLOGY();
-		String s = "";
-		boolean isFirst = true;
-		for(PropositionalFormula f: this){
-			if(isFirst)			
-				isFirst = false;
-			else
-				s  += LogicalSymbols.DISJUNCTION();
-			s += f.toString();
-		}
-		return s;
-	}
 	 
   /* (non-Javadoc)
    * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#toNNF()
@@ -83,5 +68,32 @@ public class Disjunction extends AssociativeFormula {
       d.add( p.toNnf() );
     }
     return d;
+	}
+
+	@Override
+	public PropositionalFormula clone() {
+		return new Disjunction(support.copyHelper(this));
+	}
+
+	@Override
+	public Set<Proposition> getAtoms() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Disjunction createEmptyFormula() {
+		return new Disjunction();
+	}
+
+	@Override
+	public String getOperatorSymbol() {
+		return LogicalSymbols.DISJUNCTION();
+	}
+
+	@Override
+	public String getEmptySymbol() {
+		return LogicalSymbols.TAUTOLOGY();
 	}
 }

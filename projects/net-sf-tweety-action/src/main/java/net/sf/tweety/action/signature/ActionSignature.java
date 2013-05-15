@@ -12,7 +12,7 @@ import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.Sort;
 import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.firstorderlogic.lang.FolLanguageNoQuantifiersNoFunctions;
-import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 
@@ -232,12 +232,12 @@ public class ActionSignature
    * 
    * @return the set of all possible grounded fluent atoms.
    */
-  public Set< Atom > getAllGroundedFluentAtoms()
+  public Set< FOLAtom > getAllGroundedFluentAtoms()
   {
-    Set< Atom > atoms = new HashSet< Atom >();
+    Set< FOLAtom > atoms = new HashSet< FOLAtom >();
     Set< Variable > variables = new HashSet< Variable >();
     for ( FolFluentName f : getFluentNames() ) {
-      Atom a = new Atom( f );
+      FOLAtom a = new FOLAtom( f );
       for ( Sort s : f.getArgumentTypes() ) {
         Variable v = new Variable( "", s );
         a.addArgument( v );
@@ -247,10 +247,10 @@ public class ActionSignature
     }
     Set< Map< Variable, Constant >> substitutions =
       GroundingTools.getAllSubstitutions( variables );
-    Set< Atom > result = new HashSet< Atom >();
+    Set< FOLAtom > result = new HashSet< FOLAtom >();
     for ( Map< Variable, Constant > substitution : substitutions ) {
-      for ( Atom a : atoms ) {
-        result.add( (Atom) a.substitute( substitution ) );
+      for ( FOLAtom a : atoms ) {
+        result.add( (FOLAtom) a.substitute( substitution ) );
       }
     }
     return result;
@@ -262,12 +262,12 @@ public class ActionSignature
    * 
    * @return the set of all possible grounded action atoms.
    */
-  public Set< Atom > getAllGroundedActionNameAtoms()
+  public Set< FOLAtom > getAllGroundedActionNameAtoms()
   {
-    Set< Atom > atoms = new HashSet< Atom >();
+    Set< FOLAtom > atoms = new HashSet< FOLAtom >();
     Set< Variable > variables = new HashSet< Variable >();
     for ( FolActionName f : getActionNames() ) {
-      Atom a = new Atom( f );
+      FOLAtom a = new FOLAtom( f );
       for ( Sort s : f.getArgumentTypes() ) {
         Variable v = new Variable( "", s );
         a.addArgument( v );
@@ -277,10 +277,10 @@ public class ActionSignature
     }
     Set< Map< Variable, Constant >> substitutions =
       GroundingTools.getAllSubstitutions( variables );
-    Set< Atom > result = new HashSet< Atom >();
+    Set< FOLAtom > result = new HashSet< FOLAtom >();
     for ( Map< Variable, Constant > substitution : substitutions ) {
-      for ( Atom a : atoms ) {
-        result.add( (Atom) a.substitute( substitution ) );
+      for ( FOLAtom a : atoms ) {
+        result.add( (FOLAtom) a.substitute( substitution ) );
       }
     }
     return result;

@@ -6,7 +6,7 @@ import java.util.Set;
 import net.sf.tweety.BeliefBase;
 import net.sf.tweety.logics.firstorderlogic.semantics.HerbrandBase;
 import net.sf.tweety.logics.firstorderlogic.semantics.HerbrandInterpretation;
-import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 import net.sf.tweety.util.RandomSubsetIterator;
@@ -54,7 +54,7 @@ public class SimpleSamplingMlnReasoner extends AbstractMlnReasoner{
 		// The Herbrand base of the signature
 		HerbrandBase hBase = new HerbrandBase(this.getSignature());
 		// for sampling
-		Iterator<Set<Atom>> it = new RandomSubsetIterator<Atom>(hBase.getAtoms(),false);		
+		Iterator<Set<FOLAtom>> it = new RandomSubsetIterator<FOLAtom>(hBase.getAtoms(),false);		
 		double previousProb = 0;
 		double currentProb = 0;
 		int consecutiveTests = 0;

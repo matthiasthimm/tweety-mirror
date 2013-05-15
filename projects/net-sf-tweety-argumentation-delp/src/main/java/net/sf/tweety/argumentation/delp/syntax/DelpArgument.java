@@ -82,7 +82,7 @@ public class DelpArgument implements Formula{
 		Set<FolFormula> attackOpportunities = new HashSet<FolFormula>();
 		Iterator<FolFormula> l_it = literals.iterator();
 		while(l_it.hasNext())
-			attackOpportunities.add(l_it.next().complement());
+			attackOpportunities.add((FolFormula) l_it.next().complement());
 		return attackOpportunities;
 	}
 

@@ -9,8 +9,9 @@ import net.sf.tweety.logics.commons.LogicalSymbols;
  * This class represents a conjunction in propositional logic.
  * 
  * @author Matthias Thimm
+ * @author Tim Janus
  */
-public class Conjunction extends AssociativeFormula {
+public class Conjunction extends AssociativePropositionalFormula {
 		
 	/**
 	 * Creates a new conjunction with the given inner formulas. 
@@ -56,26 +57,6 @@ public class Conjunction extends AssociativeFormula {
 		return newMe;
 	}
 		
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString(){
-		if(this.isEmpty())
-			return LogicalSymbols.CONTRADICTION();
-		String s = "";
-		boolean isFirst = true;
-		for(PropositionalFormula f: this){
-			if(isFirst)			
-				isFirst = false;
-			else
-				s  += LogicalSymbols.CONJUNCTION();
-			// check if parentheses are needed
-			if(f instanceof Disjunction && ((Disjunction)f).size()>1 )
-				s += LogicalSymbols.PARENTHESES_LEFT() + f.toString() + LogicalSymbols.PARENTHESES_RIGHT();
-			else s += f.toString();
-		}
-		return s;
-	}
 	
   /* (non-Javadoc)
    * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#toNNF()
@@ -87,6 +68,28 @@ public class Conjunction extends AssociativeFormula {
       c.add( p.toNnf() );
     }
     return c;
+	}
+
+	@Override
+	public Conjunction clone() {
+		return new Conjunction(support.copyHelper(this));
+	}
+
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Conjunction createEmptyFormula() {
+		return new Conjunction();
+	}
+
+	@Override
+	public String getOperatorSymbol() {
+		return LogicalSymbols.CONJUNCTION();
+	}
+
+	@Override
+	public String getEmptySymbol() {
+		return LogicalSymbols.CONTRADICTION();
 	}
 
 }

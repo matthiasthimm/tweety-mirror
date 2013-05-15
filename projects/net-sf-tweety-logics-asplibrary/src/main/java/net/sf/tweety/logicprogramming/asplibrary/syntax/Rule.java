@@ -12,8 +12,8 @@ import net.sf.tweety.Formula;
 import net.sf.tweety.Signature;
 import net.sf.tweety.logicprogramming.asplibrary.parser.ELPParser;
 import net.sf.tweety.logics.commons.syntax.Constant;
-import net.sf.tweety.logics.commons.syntax.Term;
 import net.sf.tweety.logics.commons.syntax.Variable;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 
 
 /**

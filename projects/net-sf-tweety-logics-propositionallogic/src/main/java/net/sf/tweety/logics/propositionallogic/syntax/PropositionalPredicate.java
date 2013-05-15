@@ -35,4 +35,9 @@ public class PropositionalPredicate extends Predicate {
 		throw new PropositionalException(LanguageExceptionReason.LER_ILLEGAL_PREDICATE,
 				"The predicates must not have any arguments.");
 	}
+	
+	@Override
+	public PropositionalPredicate clone() {
+		return new PropositionalPredicate(this.getName());
+	}
 }

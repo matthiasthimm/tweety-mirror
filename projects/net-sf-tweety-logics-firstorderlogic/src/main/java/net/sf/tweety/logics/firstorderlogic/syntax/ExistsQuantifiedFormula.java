@@ -3,13 +3,13 @@ package net.sf.tweety.logics.firstorderlogic.syntax;
 import java.util.*;
 
 import net.sf.tweety.logics.commons.LogicalSymbols;
-import net.sf.tweety.logics.commons.syntax.Term;
 import net.sf.tweety.logics.commons.syntax.Variable;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 
-public class ExistsQuantifiedFormula extends QuantifiedFormula{
+public class ExistsQuantifiedFormula extends QuantifiedFormula {
 	
 	/**
-	 * Creates a new for-all-quantified formula with the given formula and variables.
+	 * Creates a new exists-quantified formula with the given formula and variables.
 	 * @param folFormula the formula this for-all-quantified formula ranges over.
 	 * @param variables the variables of this for-all-quantified formula.
 	 */
@@ -18,7 +18,7 @@ public class ExistsQuantifiedFormula extends QuantifiedFormula{
 	}
 	
 	/**
-	 * Creates a new for-all-quantified formula with the given formula and variable.
+	 * Creates a new exists-quantified formula with the given formula and variable.
 	 * @param folFormula the formula this for-all-quantified formula ranges over.
 	 * @param variables the variable of this for-all-quantified formula.
 	 */
@@ -26,10 +26,14 @@ public class ExistsQuantifiedFormula extends QuantifiedFormula{
 		super(folFormula,variable);
 	}	
 	
+	public ExistsQuantifiedFormula(ExistsQuantifiedFormula other) {
+		super(other.getFormula(), other.getQuantifierVariables());
+	}
+	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula#substitute(net.sf.tweety.logics.firstorderlogic.syntax.Term, net.sf.tweety.logics.firstorderlogic.syntax.Term)
 	 */
-	public RelationalFormula substitute(Term<?> v, Term<?> t) throws IllegalArgumentException{
+	public ExistsQuantifiedFormula substitute(Term<?> v, Term<?> t) throws IllegalArgumentException{
 		if(this.getQuantifierVariables().contains(v))
 			return new ExistsQuantifiedFormula(this.getFormula(),this.getQuantifierVariables());
 		return new ExistsQuantifiedFormula(this.getFormula().substitute(v, t),this.getQuantifierVariables());
@@ -65,5 +69,10 @@ public class ExistsQuantifiedFormula extends QuantifiedFormula{
 			s += "," + it.next();
 		s += ":" + this.getFormula();
 		return s;
+	}
+
+	@Override
+	public ExistsQuantifiedFormula clone() {
+		return new ExistsQuantifiedFormula(this);
 	}
 }

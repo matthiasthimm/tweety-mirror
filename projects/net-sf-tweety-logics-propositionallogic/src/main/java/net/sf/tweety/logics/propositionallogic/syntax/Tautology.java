@@ -32,4 +32,9 @@ public class Tautology extends SpecialFormula {
 	public int hashCode() {
 		return 13;
 	}
+
+	@Override
+	public Tautology clone() {
+		return new Tautology();
+	}
 }

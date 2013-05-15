@@ -1,8 +1,10 @@
 package net.sf.tweety.beliefdynamics;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
 
-import net.sf.tweety.logics.commons.ClassicalFormula;
+import net.sf.tweety.logics.commons.syntax.interfaces.ClassicalFormula;
+import net.sf.tweety.logics.commons.syntax.interfaces.Disjunctable;
 
 /**
  * This class implements the Levi identity for multiple revision, ie. an revision that is composed of the
@@ -45,9 +47,12 @@ public class LeviMultipleBaseRevisionOperator<T extends ClassicalFormula> extend
 		// the complement of a set of formulas is the disjunction of the negated formulas
 		T formula = null;
 		for(T f: formulas)
-			if(formula == null)
+			if(formula == null) {
 				formula = (T) f.complement();
-			else formula = (T) formula.combineWithOr(f.complement());
+			} else { 
+				formula = (T) f.complement();
+				formula = (T) formula.combineWithOr((Disjunctable)formula);
+			}
 		return this.expansion.expand(this.contraction.contract(base, formula), formulas);
 	}
 

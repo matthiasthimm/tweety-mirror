@@ -1,10 +1,16 @@
 package net.sf.tweety.logics.firstorderlogic.syntax;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
-import net.sf.tweety.logics.commons.ClassicalFormula;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Variable;
+import net.sf.tweety.logics.commons.syntax.interfaces.Conjuctable;
+import net.sf.tweety.logics.commons.syntax.interfaces.Disjunctable;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.firstorderlogic.semantics.HerbrandBase;
 import net.sf.tweety.logics.firstorderlogic.semantics.HerbrandInterpretation;
 import net.sf.tweety.math.probability.Probability;
@@ -20,22 +26,21 @@ import net.sf.tweety.util.SetTools;
  *  <li>A first-order formula is the actual first-order formula in the classical sense.</li>
  * </ul>
  * @author Matthias Thimm
-  */
-public abstract class FolFormula extends RelationalFormula{	
+ * @author Tim Janus
+ */
+public abstract class FolFormula extends RelationalFormula {	
 	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.kr.ClassicalFormula#combineWithAnd(net.sf.tweety.kr.Formula)
-	 */
-	public FolFormula combineWithAnd(ClassicalFormula f){
+
+	@Override
+	public Conjunction combineWithAnd(Conjuctable f){
 		if(!(f instanceof FolFormula))
 			throw new IllegalArgumentException("The given formula " + f + " is not a first-order formula.");
 		return new Conjunction(this,(FolFormula)f);
 	}
 	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.kr.ClassicalFormula#combineWithOr(net.sf.tweety.kr.ClassicalFormula)
-	 */
-	public FolFormula combineWithOr(ClassicalFormula f){
+
+	@Override
+	public Disjunction combineWithOr(Disjunctable f){
 		if(!(f instanceof FolFormula))
 			throw new IllegalArgumentException("The given formula " + f + " is not a first-order formula.");
 		return new Disjunction(this,(FolFormula)f);
@@ -44,10 +49,15 @@ public abstract class FolFormula extends RelationalFormula{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.kr.ClassicalFormula#complement()
 	 */
-	public FolFormula complement(){
+	public RelationalFormula complement(){
 		if(this instanceof Negation) return ((Negation)this).getFormula();
 		return new Negation(this);
 	}	
+	
+	@Override
+	public Set<Variable> getQuantifierVariables() {
+		return new HashSet<Variable>();
+	}
 	
 	/**
 	 * Makes a disjunctive normal form of this formula.
@@ -67,7 +77,7 @@ public abstract class FolFormula extends RelationalFormula{
           dnf.add( ((FolFormula)f).toDnf() );
         else throw new IllegalStateException("Can not convert disjunctions containing non-first-order formulae to NNF.");
       }
-      return dnf.collapseAssociativeFormulas();
+      return (FolFormula)dnf.collapseAssociativeFormulas();
     }
     
     /* DNF( P_1 && P_2 && ... && P_k) is calculated as follows:
@@ -89,7 +99,7 @@ public abstract class FolFormula extends RelationalFormula{
       Set<Set<RelationalFormula>> disjunctions = new HashSet<Set<RelationalFormula>>();
       for(RelationalFormula f : c) {
         if(! (f instanceof FolFormula)) throw new IllegalStateException("Can not convert conjunctions containing non-first-order formulae to NNF.");
-        FolFormula fdnf = ((FolFormula)f).toDnf();
+        RelationalFormula fdnf = ((FolFormula)f).toDnf();
         Set<RelationalFormula> elems = new HashSet<RelationalFormula>();
         if(fdnf instanceof Disjunction) {
           elems.addAll( (Disjunction)fdnf );
@@ -105,7 +115,7 @@ public abstract class FolFormula extends RelationalFormula{
       for(Set<RelationalFormula> elems : permutations) {
         dnf.add( new Conjunction( elems ) );
       }
-      return dnf.collapseAssociativeFormulas();
+      return (FolFormula)dnf.collapseAssociativeFormulas();
     }
     return nnf;
 	}
@@ -116,31 +126,13 @@ public abstract class FolFormula extends RelationalFormula{
 	 */
 	public abstract FolFormula toNnf();
 	 
-  /**
-   * This method collapses all associative operations appearing
-   * in this term, e.g. every a||(b||c) becomes a||b||c.
-   * @return the collapsed formula.
-   */
-  public abstract FolFormula collapseAssociativeFormulas();
-  
-	
 	/**
-	 * Returns all quantified formulas appearing in this formula.
-	 * @return the set of all quantified formulas appearing in this formula.
-	 */
-	public abstract Set<QuantifiedFormula> getQuantifiedFormulas();
-	
-	/**
-	 * Returns all disjunctions appearing in this formula.
-	 * @return the set of all disjunctions appearing in this formula.
-	 */
-	public abstract Set<Disjunction> getDisjunctions();
-	
-	/**
-	 * Returns all conjunctions appearing in this formula.
-	 * @return the set of all conjunctions appearing in this formula.
-	 */
-	public abstract Set<Conjunction> getConjunctions();
+     * This method collapses all associative operations appearing
+     * in this term, e.g. every a||(b||c) becomes a||b||c.
+     * @return the collapsed formula.
+     */
+	public abstract RelationalFormula collapseAssociativeFormulas();
+
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula#getUniformProbability()
@@ -171,10 +163,7 @@ public abstract class FolFormula extends RelationalFormula{
 	 */
 	public abstract boolean isDnf();
 	
-	/**
-	 * Checks whether this formula is a literal, i.e.
-	 * whether it is an atom or a negated atom.
-	 * @return "true" iff this formula is a literal.
-	 */
-	public abstract boolean isLiteral();
+	public abstract FolFormula substitute(Term<?> v, Term<?> t) throws IllegalArgumentException;
+	
+	public abstract FolFormula clone();
 }

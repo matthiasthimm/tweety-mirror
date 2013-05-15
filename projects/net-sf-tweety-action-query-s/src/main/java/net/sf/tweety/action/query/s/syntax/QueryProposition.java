@@ -3,10 +3,10 @@ package net.sf.tweety.action.query.s.syntax;
 import java.util.Map;
 import java.util.Set;
 
-import net.sf.tweety.action.signature.FolAction;
 import net.sf.tweety.action.signature.ActionSignature;
-import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.action.signature.FolAction;
 import net.sf.tweety.logics.commons.syntax.Variable;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.propositionallogic.syntax.Proposition;
 
@@ -76,7 +76,7 @@ public abstract class QueryProposition
    * @param map a map from variables to constants.
    * @return a new query proposition.
    */
-  public abstract QueryProposition substitute( Map< Variable, Constant > map );
+  public abstract QueryProposition substitute( Map<? extends Term<?>, ? extends Term<?> > map );
   
   /*
    * (non-Javadoc)

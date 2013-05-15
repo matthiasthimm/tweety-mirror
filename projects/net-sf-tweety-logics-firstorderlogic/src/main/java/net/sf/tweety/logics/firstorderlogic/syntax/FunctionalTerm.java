@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import net.sf.tweety.logics.commons.syntax.Term;
 import net.sf.tweety.logics.commons.syntax.TermAdapter;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.util.Pair;
 
 /**
@@ -158,7 +158,7 @@ public class FunctionalTerm extends TermAdapter<Pair<Functor, List<Term<?>>>> {
 	}
 	
 	@Override
-	public Object clone() {
+	public FunctionalTerm clone() {
 		return new FunctionalTerm(this);
 	}
 }

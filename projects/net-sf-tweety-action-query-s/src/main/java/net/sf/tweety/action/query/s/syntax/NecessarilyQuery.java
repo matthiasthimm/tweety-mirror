@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import net.sf.tweety.action.signature.FolAction;
 import net.sf.tweety.action.signature.ActionSignature;
-import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.action.signature.FolAction;
 import net.sf.tweety.logics.commons.syntax.Variable;
-import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
+import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 
 /**
@@ -109,7 +109,7 @@ public class NecessarilyQuery
    * .Map)
    */
   @Override
-  public QueryProposition substitute( Map< Variable, Constant > map )
+  public QueryProposition substitute( Map<? extends Term<?>, ? extends Term<?>> map )
   {
     List< FolAction > newActions = new LinkedList< FolAction >();
     for ( FolAction a : actions ) {
@@ -138,7 +138,7 @@ public class NecessarilyQuery
   {
     Set< Variable > result = formula.getUnboundVariables();
     for ( FolAction fa : actions ) {
-      for ( Atom a : fa.getAtoms() ) {
+      for ( FOLAtom a : fa.getAtoms() ) {
         result.addAll( a.getUnboundVariables() );
       }
     }

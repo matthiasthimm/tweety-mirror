@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import net.sf.tweety.BeliefSet;
 import net.sf.tweety.Signature;
+import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 import net.sf.tweety.logics.markovlogic.syntax.MlnFormula;
 
@@ -41,7 +42,7 @@ public class MarkovLogicNetwork extends BeliefSet<MlnFormula> implements Seriali
 		FolSignature sig = new FolSignature();
 		for(MlnFormula formula: this){
 			sig.addAll(formula.getPredicates());
-			sig.addAll(formula.getConstants());
+			sig.addAll(formula.getTerms(Constant.class));
 			sig.addAll(formula.getFunctors());
 		}
 		return sig;

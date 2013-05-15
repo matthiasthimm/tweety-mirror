@@ -53,7 +53,7 @@ public class Variable extends StringTerm {
 	}
 	
 	@Override
-	public Object clone() {
+	public Variable clone() {
 		return new Variable(this);
 	}
 }

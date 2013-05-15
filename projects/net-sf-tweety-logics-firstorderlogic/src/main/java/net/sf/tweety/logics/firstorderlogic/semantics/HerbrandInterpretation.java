@@ -5,8 +5,8 @@ import java.util.*;
 import net.sf.tweety.*;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.logics.commons.syntax.Term;
 import net.sf.tweety.logics.commons.syntax.Variable;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.firstorderlogic.*;
 import net.sf.tweety.logics.firstorderlogic.syntax.*;
 import net.sf.tweety.util.*;
@@ -20,13 +20,13 @@ import net.sf.tweety.util.*;
  *   function symbols.
  * @author Matthias Thimm
  */
-public class HerbrandInterpretation extends InterpretationSet<Atom> {
+public class HerbrandInterpretation extends InterpretationSet<FOLAtom> {
 	
 	/**
 	 * Creates a new empty Herbrand interpretation
 	 */
 	public HerbrandInterpretation(){
-		this(new HashSet<Atom>());
+		this(new HashSet<FOLAtom>());
 	}
 	
 	/**
@@ -34,7 +34,7 @@ public class HerbrandInterpretation extends InterpretationSet<Atom> {
 	 * set of atoms
 	 * @param atoms the set of true atoms in this Herbrand interpretation.
 	 */
-	public HerbrandInterpretation(Collection<? extends Atom> atoms){
+	public HerbrandInterpretation(Collection<? extends FOLAtom> atoms){
 		super(atoms);
 	}
 	
@@ -55,7 +55,7 @@ public class HerbrandInterpretation extends InterpretationSet<Atom> {
 		if(f instanceof Contradiction){
 			return false;
 		}			
-		if(f instanceof Atom){
+		if(f instanceof FOLAtom){
 			return this.contains(f);
 		}					
 		if(f instanceof Disjunction){
@@ -127,12 +127,12 @@ public class HerbrandInterpretation extends InterpretationSet<Atom> {
 		Set<Constant> constants = new HashSet<Constant>();
 		Set<Predicate> predicates1 = new HashSet<Predicate>();
 		Set<Predicate> predicates2 = new HashSet<Predicate>();
-		for(Atom a: this){
-			constants.addAll(a.getConstants());
+		for(FOLAtom a: this){
+			constants.addAll(a.getTerms(Constant.class));
 			predicates1.add(a.getPredicate());
 		}
-		for(Atom a: other){
-			constants.addAll(a.getConstants());
+		for(FOLAtom a: other){
+			constants.addAll(a.getTerms(Constant.class));
 			predicates2.add(a.getPredicate());
 		}
 		if(!predicates1.equals(predicates2))
@@ -205,10 +205,10 @@ public class HerbrandInterpretation extends InterpretationSet<Atom> {
 	 * @return a Herbrand interpretation
 	 */
 	public HerbrandInterpretation exchange(Term<?> t1, Term<?> t2){
-		Set<Atom> atoms = new HashSet<Atom>();
+		Set<FOLAtom> atoms = new HashSet<FOLAtom>();
 		Constant tempConstant = new Constant("__TEMP__");
 		for(Formula f: this){
-			Atom a = ((Atom) f).substitute(t1, tempConstant);
+			FOLAtom a = ((FOLAtom) f).substitute(t1, tempConstant);
 			a = a.substitute(t2, t1);
 			a = a.substitute(tempConstant, t2);
 			atoms.add(a);

@@ -3,6 +3,8 @@ package net.sf.tweety.logics.commons.syntax;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
+
 /**
  * Abstract base class implementing the substitute(), getSort(), getTerms(), and
  * containsTermsOfType() methods in a way it is useful for terms.
@@ -105,6 +107,5 @@ public abstract class TermAdapter<T> implements Term<T>{
 		return true;
 	}
 	
-	@Override
-	public abstract Object clone();
+	public abstract TermAdapter<?> clone();
 }

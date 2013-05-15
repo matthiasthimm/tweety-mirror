@@ -4,7 +4,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.sf.tweety.Signature;
-import net.sf.tweety.logics.commons.ClassicalFormula;
+import net.sf.tweety.logics.commons.syntax.interfaces.ClassicalFormula;
+import net.sf.tweety.logics.commons.syntax.interfaces.Conjuctable;
+import net.sf.tweety.logics.commons.syntax.interfaces.Disjunctable;
 import net.sf.tweety.logics.propositionallogic.semantics.PossibleWorld;
 import net.sf.tweety.math.probability.Probability;
 import net.sf.tweety.util.SetTools;
@@ -13,32 +15,27 @@ import net.sf.tweety.util.SetTools;
  * This class represents the common ancestor for propositional formulae.
  * 
  * @author Matthias Thimm
+ * @author Tim Janus
  */
 public abstract class PropositionalFormula implements ClassicalFormula {
 
+	@Override
 	public Signature getSignature() {
 		return new PropositionalSignature();
 	}
+
+	@Override
+	public abstract Set<Proposition> getAtoms();
 	
-	/**
-	 * Returns the set of propositions that appear in this formula.
-	 * @return the set of propositions that appear in this formula.
-	 */
-	public abstract Set<Proposition> getPropositions();
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.kr.ClassicalFormula#combineWithAnd(net.sf.tweety.kr.ClassicalFormula)
-	 */
-	public ClassicalFormula combineWithAnd(ClassicalFormula f){
+	@Override
+	public Conjunction combineWithAnd(Conjuctable f){
 		if(!(f instanceof PropositionalFormula))
 			throw new IllegalArgumentException("The given formula " + f + " is not a propositional formula.");
 		return new Conjunction(this,(PropositionalFormula)f);
 	}
 	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.kr.ClassicalFormula#combineWithOr(net.sf.tweety.kr.ClassicalFormula)
-	 */
-	public ClassicalFormula combineWithOr(ClassicalFormula f){
+	@Override
+	public Disjunction combineWithOr(Disjunctable f){
 		if(!(f instanceof PropositionalFormula))
 			throw new IllegalArgumentException("The given formula " + f + " is not a propositional formula.");
 		return new Disjunction(this,(PropositionalFormula)f);
@@ -50,6 +47,9 @@ public abstract class PropositionalFormula implements ClassicalFormula {
 	 * @return the collapsed formula.
 	 */
 	public abstract PropositionalFormula collapseAssociativeFormulas();
+	
+	@Override
+	public abstract Set<PropositionalPredicate> getPredicates();
 	
 	/**
 	 * Returns this formula's probability in the uniform distribution. 
@@ -127,9 +127,7 @@ public abstract class PropositionalFormula implements ClassicalFormula {
     return nnf;
   }
   
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.kr.ClassicalFormula#complement()
-	 */
+	@Override
 	public ClassicalFormula complement(){
 		if(this instanceof Negation)
 			return ((Negation)this).getFormula();
@@ -137,8 +135,16 @@ public abstract class PropositionalFormula implements ClassicalFormula {
 	}
 
 	@Override
+	public boolean isLiteral() {
+		return false;
+	}
+	
+	@Override
 	public abstract boolean equals(Object other);
 	
 	@Override
 	public abstract int hashCode();
+	
+	@Override
+	public abstract PropositionalFormula clone();
 }

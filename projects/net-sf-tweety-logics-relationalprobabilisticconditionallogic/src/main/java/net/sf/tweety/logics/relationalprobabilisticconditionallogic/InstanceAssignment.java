@@ -1,11 +1,14 @@
 package net.sf.tweety.logics.relationalprobabilisticconditionallogic;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.logics.firstorderlogic.syntax.*;
-import net.sf.tweety.util.*;
+import net.sf.tweety.util.MapTools;
 
 
 /**

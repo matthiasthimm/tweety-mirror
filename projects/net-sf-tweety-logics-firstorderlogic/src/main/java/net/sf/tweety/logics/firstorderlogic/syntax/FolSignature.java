@@ -8,7 +8,7 @@ import net.sf.tweety.Signature;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.Sort;
-import net.sf.tweety.logics.commons.syntax.Term;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 
 /**
  * This class captures the signature of a specific
@@ -90,7 +90,7 @@ public class FolSignature extends Signature{
 			return;
 		}
 		if(obj instanceof FolFormula){
-			this.addAll(((FolFormula)obj).getConstants());
+			this.addAll(((FolFormula)obj).getTerms(Constant.class));
 			this.addAll(((FolFormula)obj).getPredicates());
 			this.addAll(((FolFormula)obj).getFunctors());
 			return;
@@ -118,7 +118,7 @@ public class FolSignature extends Signature{
 	 * @return "true" if the given formula is representable, "false" otherwise.
 	 */
 	public boolean isRepresentable(FolFormula folFormula){
-		if(!this.constants.containsAll(folFormula.getConstants())) return false;
+		if(!this.constants.containsAll(folFormula.getTerms(Constant.class))) return false;
 		if(!this.predicates.containsAll(folFormula.getPredicates())) return false;
 		if(!this.functors.containsAll(folFormula.getFunctors())) return false;
 		return true;

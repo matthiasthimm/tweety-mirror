@@ -1,17 +1,25 @@
 package net.sf.tweety.logics.relationalconditionallogic.syntax;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
-import net.sf.tweety.*;
-import net.sf.tweety.logics.commons.ClassicalFormula;
-import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.Signature;
 import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.logics.commons.syntax.Term;
 import net.sf.tweety.logics.commons.syntax.Variable;
-import net.sf.tweety.logics.firstorderlogic.lang.*;
-import net.sf.tweety.logics.firstorderlogic.syntax.*;
+import net.sf.tweety.logics.commons.syntax.interfaces.Conjuctable;
+import net.sf.tweety.logics.commons.syntax.interfaces.Disjunctable;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
+import net.sf.tweety.logics.firstorderlogic.lang.FolLanguageNoQuantifiersNoFunctions;
+import net.sf.tweety.logics.firstorderlogic.syntax.Conjunction;
+import net.sf.tweety.logics.firstorderlogic.syntax.Disjunction;
+import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import net.sf.tweety.logics.firstorderlogic.syntax.Functor;
+import net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula;
+import net.sf.tweety.logics.firstorderlogic.syntax.Tautology;
 import net.sf.tweety.math.probability.Probability;
-import net.sf.tweety.util.rules.*;
+import net.sf.tweety.util.rules.Rule;
 
 
 /**
@@ -21,8 +29,9 @@ import net.sf.tweety.util.rules.*;
  * quantifiers and without functions (@see net.sf.tweety.logics.firstorderlogic.lang.FolLanguageNoQuantifiersNoFunctions)
  * 
  * @author Matthias Thimm
+ * @todo dont use relation formula cause it is a Quantified formula that not support or and etc.
  */
-public class RelationalConditional extends RelationalFormula implements Rule{
+public class RelationalConditional extends RelationalFormula implements Rule {
 
 	/**
 	 * The premise of the conditional.
@@ -59,20 +68,14 @@ public class RelationalConditional extends RelationalFormula implements Rule{
 		this(new Tautology(),conclusion);
 	}
 	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula#containsQuantifier()
-	 */
 	@Override
 	public boolean containsQuantifier() {
 		return this.premise.containsQuantifier() || this.conclusion.containsQuantifier();
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula#getAtoms()
-	 */
 	@Override
-	public Set<Atom> getAtoms() {
-		Set<Atom> result = new HashSet<Atom>();
+	public Set<FOLAtom> getAtoms() {
+		Set<FOLAtom> result = new HashSet<FOLAtom>();
 		result.addAll(this.premise.getAtoms());
 		result.addAll(this.conclusion.getAtoms());
 		return result;
@@ -159,47 +162,12 @@ public class RelationalConditional extends RelationalFormula implements Rule{
 		return "(" + this.conclusion + "|" + this.premise + ")";
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.LogicStructure#getConstants()
-	 */
-	@Override
-	public Set<Constant> getConstants() {
-		Set<Constant> result = new HashSet<Constant>();
-		result.addAll(this.premise.getConstants());
-		result.addAll(this.conclusion.getConstants());
-		return result;
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.LogicStructure#getFunctionalTerms()
-	 */
-	@Override
-	public Set<FunctionalTerm> getFunctionalTerms() {
-		Set<FunctionalTerm> result = new HashSet<FunctionalTerm>();
-		result.addAll(this.premise.getFunctionalTerms());
-		result.addAll(this.conclusion.getFunctionalTerms());
-		return result;
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.LogicStructure#getFunctors()
-	 */
+	
 	@Override
 	public Set<Functor> getFunctors() {
 		Set<Functor> result = new HashSet<Functor>();
 		result.addAll(this.premise.getFunctors());
 		result.addAll(this.conclusion.getFunctors());
-		return result;
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.LogicStructure#getVariables()
-	 */
-	@Override
-	public Set<Variable> getVariables() {
-		Set<Variable> result = new HashSet<Variable>();
-		result.addAll(this.premise.getVariables());
-		result.addAll(this.conclusion.getVariables());
 		return result;
 	}
 
@@ -225,7 +193,7 @@ public class RelationalConditional extends RelationalFormula implements Rule{
 	 * @see net.sf.tweety.kr.ClassicalFormula#combineWithAnd(net.sf.tweety.kr.ClassicalFormula)
 	 */
 	@Override
-	public ClassicalFormula combineWithAnd(ClassicalFormula f) {
+	public Conjunction combineWithAnd(Conjuctable f) {
 		throw new UnsupportedOperationException("Conditionals cannot be combined by 'AND'");
 	}
 
@@ -233,19 +201,15 @@ public class RelationalConditional extends RelationalFormula implements Rule{
 	 * @see net.sf.tweety.kr.ClassicalFormula#combineWithOr(net.sf.tweety.kr.ClassicalFormula)
 	 */
 	@Override
-	public ClassicalFormula combineWithOr(ClassicalFormula f) {
+	public Disjunction combineWithOr(Disjunctable f) {
 		throw new UnsupportedOperationException("Conditionals cannot be combined by 'OR'");
 	}
 
 	@Override
-	public ClassicalFormula complement() {
-		// TODO Auto-generated method stub
-		return null;
+	public RelationalFormula complement() {
+		throw new UnsupportedOperationException("Conditionals cannot be combined by 'OR'");
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -256,9 +220,6 @@ public class RelationalConditional extends RelationalFormula implements Rule{
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -287,6 +248,40 @@ public class RelationalConditional extends RelationalFormula implements Rule{
 	@Override
 	public Probability getUniformProbability() {
 		throw new UnsupportedOperationException("IMPLEMENT ME");
+	}
+
+	@Override
+	public boolean isLiteral() {
+		return false;
+	}
+
+	@Override
+	public Set<Term<?>> getTerms() {
+		Set<Term<?>> reval = new HashSet<Term<?>>();
+		reval.addAll(premise.getTerms());
+		reval.addAll(conclusion.getTerms());
+		return reval;
+	}
+
+	@Override
+	public <C extends Term<?>> Set<C> getTerms(Class<C> cls) {
+		Set<C> reval = new HashSet<C>();
+		reval.addAll(premise.getTerms(cls));
+		reval.addAll(conclusion.getTerms(cls));
+		return reval;
+	}
+
+	@Override
+	public Set<Variable> getQuantifierVariables() {
+		Set<Variable> reval = new HashSet<Variable>();
+		reval.addAll(premise.getQuantifierVariables());
+		reval.addAll(conclusion.getQuantifierVariables());
+		return reval;
+	}
+
+	@Override
+	public RelationalConditional clone() {
+		return new RelationalConditional(premise.clone(), conclusion.clone());
 	}
 
 }

@@ -4,6 +4,8 @@ package net.sf.tweety.logics.firstorderlogic.parser;
 import java.util.*;
 import net.sf.tweety.logics.firstorderlogic.syntax.*;
 import net.sf.tweety.logics.commons.syntax.*;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
+import net.sf.tweety.logics.commons.syntax.interfaces.TypedStructure;
 import net.sf.tweety.util.Pair;
 
 import net.sf.tweety.logics.firstorderlogic.FolBeliefSet;
@@ -276,10 +278,10 @@ public class FolParserB implements FolParserBConstants {
     throw new Error("Missing return statement in function");
   }
 
-  final public Atom atom(FolSignature signature) throws ParseException {
+  final public FOLAtom atom(FolSignature signature) throws ParseException {
   String identifier;
   Term t;
-  Atom reval;
+  FOLAtom reval;
   Predicate p;
   int count = 0;
   Sort type;
@@ -323,7 +325,7 @@ public class FolParserB implements FolParserBConstants {
       p = new Predicate(identifier, terms.size());
       signature.add(p);
         }
-        reval = new Atom(p, terms);
+        reval = new FOLAtom(p, terms);
     {if (true) return reval;}
     throw new Error("Missing return statement in function");
   }

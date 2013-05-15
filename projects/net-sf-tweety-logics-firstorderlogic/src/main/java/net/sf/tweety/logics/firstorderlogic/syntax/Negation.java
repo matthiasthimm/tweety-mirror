@@ -1,12 +1,11 @@
 package net.sf.tweety.logics.firstorderlogic.syntax;
 
-import java.util.*;
+import java.util.Set;
 
 import net.sf.tweety.logics.commons.LogicalSymbols;
-import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.logics.commons.syntax.Term;
 import net.sf.tweety.logics.commons.syntax.Variable;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 
 /**
  * The classical negation of first-order logic.
@@ -17,8 +16,6 @@ public class Negation extends FolFormula{
 	private FolFormula folFormula;
 	
 	public Negation(RelationalFormula formula){
-		if(!(formula instanceof FolFormula))
-			throw new IllegalArgumentException("Formula must be first-order formula.");
 		if(!formula.isWellFormed())
 			throw new IllegalArgumentException("FolFormula not well-formed.");		
 		this.folFormula = (FolFormula)formula;		
@@ -29,16 +26,9 @@ public class Negation extends FolFormula{
 	}
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getConstants()
-	 */
-	public Set<Constant> getConstants(){
-		return this.folFormula.getConstants();
-	}
-	
-	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getPredicates()
 	 */
-	public Set<Predicate> getPredicates(){
+	public Set<? extends Predicate> getPredicates(){
 		return this.folFormula.getPredicates();
 	}
 	
@@ -50,24 +40,10 @@ public class Negation extends FolFormula{
 	}
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getVariables()
-	 */
-	public Set<Variable> getVariables(){
-		return this.folFormula.getVariables();
-	}
-	
-	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getAtoms()
 	 */
-	public Set<Atom> getAtoms(){
+	public Set<FOLAtom> getAtoms(){
 		return this.folFormula.getAtoms();
-	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.LogicStructure#getFunctionalTerms()
-	 */
-	public Set<FunctionalTerm> getFunctionalTerms(){
-		return this.folFormula.getFunctionalTerms();
 	}
 	
 	/* (non-Javadoc)
@@ -87,7 +63,7 @@ public class Negation extends FolFormula{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula#substitute(net.sf.tweety.logics.firstorderlogic.syntax.Term, net.sf.tweety.logics.firstorderlogic.syntax.Term)
 	 */
-	public RelationalFormula substitute(Term<?> v, Term<?> t) throws IllegalArgumentException{
+	public Negation substitute(Term<?> v, Term<?> t) throws IllegalArgumentException {
 		return new Negation(this.folFormula.substitute(v, t));
 	}
 	
@@ -102,7 +78,7 @@ public class Negation extends FolFormula{
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getUnboundVariables()
 	 */
 	public Set<Variable> getUnboundVariables(){
-		return this.getVariables();
+		return this.getTerms(Variable.class);
 	}
 	
 	/* (non-Javadoc)
@@ -122,8 +98,9 @@ public class Negation extends FolFormula{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#isLiteral()
 	 */
+	@Override
 	public boolean isLiteral(){
-		return (this.folFormula instanceof Atom);
+		return (this.folFormula instanceof FOLAtom);
 	}
 	
 	/* (non-Javadoc)
@@ -164,32 +141,13 @@ public class Negation extends FolFormula{
 		return true;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getConjunctions()
-	 */
-	public Set<Conjunction> getConjunctions() {
-		return this.folFormula.getConjunctions();
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getDisjunctions()
-	 */
-	public Set<Disjunction> getDisjunctions() {
-		return this.folFormula.getDisjunctions();
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getQuantifiedFormulas()
-	 */
-	public Set<QuantifiedFormula> getQuantifiedFormulas() {
-		return this.folFormula.getQuantifiedFormulas();
-	}
+	
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#isDnf()
 	 */
 	public boolean isDnf() {
-		return (this.folFormula instanceof Atom);
+		return (this.folFormula instanceof FOLAtom);
 	}
 	
 	/*
@@ -250,5 +208,20 @@ public class Negation extends FolFormula{
 	@Override
 	public FolFormula collapseAssociativeFormulas() {
 	  return new Negation( folFormula.collapseAssociativeFormulas() );
+	}
+
+	@Override
+	public Set<Term<?>> getTerms() {
+		return folFormula.getTerms();
+	}
+
+	@Override
+	public <C extends Term<?>> Set<C> getTerms(Class<C> cls) {
+		return folFormula.getTerms(cls);
+	}
+
+	@Override
+	public Negation clone() {
+		return new Negation(this);
 	}
 }

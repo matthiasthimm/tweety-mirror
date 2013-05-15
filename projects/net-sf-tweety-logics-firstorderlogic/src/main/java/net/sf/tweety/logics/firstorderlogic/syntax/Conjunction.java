@@ -1,16 +1,17 @@
 package net.sf.tweety.logics.firstorderlogic.syntax;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
 
 import net.sf.tweety.logics.commons.LogicalSymbols;
-import net.sf.tweety.logics.commons.syntax.Term;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 
 /**
  * The classical conjunction of first-order logic.
  * @author Matthias Thimm
  */
-public class Conjunction extends AssociativeFormula {
-
+public class Conjunction extends AssociativeFOLFormula {
+	
 	/**
 	 * Creates a new conjunction with the given inner formulas. 
 	 * @param formulas a collection of formulas.
@@ -38,50 +39,18 @@ public class Conjunction extends AssociativeFormula {
 	}	
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#toString()
-	 */
-	public String toString(){
-		if(this.isEmpty())
-			return LogicalSymbols.CONTRADICTION();
-		String s = "";
-		boolean isFirst = true;
-		for(RelationalFormula f: this){
-			if(isFirst)			
-				isFirst = false;
-			else
-				s  += LogicalSymbols.CONJUNCTION();
-			// check if parentheses are needed
-			if(f instanceof Disjunction && ((Disjunction)f).size()>1 )
-				s += LogicalSymbols.PARENTHESES_LEFT() + f.toString() + LogicalSymbols.PARENTHESES_RIGHT();
-			else s += f.toString();
-		}
-		return s;
-	}
-		
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getConjunctions()
-	 */	
-	public Set<Conjunction> getConjunctions(){
-		Set<Conjunction> conjuncts = super.getConjunctions();
-		conjuncts.add(this);
-		return conjuncts;
-	}
-	
-	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#isDnf()
 	 */
 	public boolean isDnf(){
-		return this.getDisjunctions().isEmpty() && this.getQuantifiedFormulas().isEmpty();
+		return this.getFormulas(Disjunction.class).isEmpty() && 
+				this.getFormulas(ForallQuantifiedFormula.class).isEmpty() &&
+				this.getFormulas(ExistsQuantifiedFormula.class).isEmpty();
 	}
 	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula#substitute(net.sf.tweety.logics.firstorderlogic.syntax.Term, net.sf.tweety.logics.firstorderlogic.syntax.Term)
-	 */
-	public FolFormula substitute(Term<?> v, Term<?> t) throws IllegalArgumentException{
-		Set<RelationalFormula> newFormulas = new HashSet<RelationalFormula>();
-		for(RelationalFormula f: this)
-			newFormulas.add((FolFormula)f.substitute(v, t));
-		return new Conjunction(newFormulas);
+
+	@Override
+	public Conjunction substitute(Term<?> v, Term<?> t) throws IllegalArgumentException{
+		return (Conjunction)super.substitute(v, t);
 	}
 	
 	/*
@@ -105,7 +74,7 @@ public class Conjunction extends AssociativeFormula {
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#collapseAssociativeFormulas()
 	 */
 	@Override
-	public FolFormula collapseAssociativeFormulas() {
+	public RelationalFormula collapseAssociativeFormulas() {
     if(this.isEmpty())
       return new Tautology();
     if(this.size() == 1)
@@ -113,11 +82,36 @@ public class Conjunction extends AssociativeFormula {
     Conjunction newMe = new Conjunction();
     for(RelationalFormula f: this){
       if(! (f instanceof FolFormula)) throw new IllegalStateException("Can not collapse conjunctions containing non-first-order formulae.");
-      FolFormula newF = ((FolFormula)f).collapseAssociativeFormulas();
+      RelationalFormula newF = ((FolFormula)f).collapseAssociativeFormulas();
       if(newF instanceof Conjunction)
         newMe.addAll((Conjunction) newF);
       else newMe.add(newF);
     }
     return newMe;
   }
+
+	@Override
+	public Conjunction clone() {
+		return new Conjunction(support.copyHelper(this));
+	}
+
+	//-------------------------------------------------------------------------
+	//	ASSOC SUPPORT BRIDGE METHODS
+	//-------------------------------------------------------------------------
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Conjunction createEmptyFormula() {
+		return new Conjunction();
+	}
+
+	@Override
+	public String getOperatorSymbol() {
+		return LogicalSymbols.CONJUNCTION();
+	}
+
+	@Override
+	public String getEmptySymbol() {
+		return LogicalSymbols.CONTRADICTION();
+	}
 }

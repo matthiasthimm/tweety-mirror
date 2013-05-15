@@ -301,7 +301,7 @@ public class DefeasibleLogicProgram extends BeliefSet<DelpRule>{
 		FolSignature signature = new FolSignature();
 		for(DelpRule rule: this){
 			signature.addAll(rule.getPredicates());
-			signature.addAll(rule.getConstants());
+			signature.addAll(rule.getTerms(Constant.class));
 		}
 		return signature;
 	}

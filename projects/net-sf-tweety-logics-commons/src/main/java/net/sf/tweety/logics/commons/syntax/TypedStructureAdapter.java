@@ -2,6 +2,8 @@ package net.sf.tweety.logics.commons.syntax;
 
 import java.util.*;
 
+import net.sf.tweety.logics.commons.syntax.interfaces.TypedStructure;
+
 
 /**
  * The abstract parent for predicates and functors implementing the 
@@ -111,24 +113,19 @@ public abstract class TypedStructureAdapter implements TypedStructure {
 		return arity == arguments.size();
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
+	@Override
 	public String toString(){
 		String s = this.name;
-		/*Iterator<Sort> it = this.arguments.iterator();
+		Iterator<Sort> it = this.arguments.iterator();
 		if(!it.hasNext())
 			return s;
 		s += "(" + it.next();
 		while(it.hasNext())
 			s += "," + it.next();
-		s += ")";*/		
+		s += ")";		
 		return s;
 	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -139,9 +136,6 @@ public abstract class TypedStructureAdapter implements TypedStructure {
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -163,4 +157,14 @@ public abstract class TypedStructureAdapter implements TypedStructure {
 			return false;
 		return true;
 	}
+	
+	protected List<Sort> copyArgumentTypes() {
+		List<Sort> argumentTypes = new LinkedList<Sort>();
+		for(Sort sort : this.getArgumentTypes()) {
+			argumentTypes.add(sort.clone());
+		}
+		return argumentTypes;
+	}
+	
+	public abstract TypedStructure clone();
 }

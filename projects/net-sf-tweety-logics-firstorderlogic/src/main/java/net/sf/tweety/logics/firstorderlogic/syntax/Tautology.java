@@ -39,4 +39,9 @@ public class Tautology extends SpecialFormula {
 			return false;		
 		return true;
 	}
+
+	@Override
+	public Tautology clone() {
+		return new Tautology();
+	}
 }

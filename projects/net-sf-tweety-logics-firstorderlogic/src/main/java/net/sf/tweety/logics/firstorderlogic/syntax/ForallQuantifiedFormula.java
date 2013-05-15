@@ -3,8 +3,8 @@ package net.sf.tweety.logics.firstorderlogic.syntax;
 import java.util.*;
 
 import net.sf.tweety.logics.commons.LogicalSymbols;
-import net.sf.tweety.logics.commons.syntax.Term;
 import net.sf.tweety.logics.commons.syntax.Variable;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 
 /**
  * For-All quantified formula.
@@ -30,10 +30,14 @@ public class ForallQuantifiedFormula extends QuantifiedFormula{
 		super(folFormula,variable);
 	} 
 	
+	public ForallQuantifiedFormula(ForallQuantifiedFormula other) {
+		super(other.getFormula(), other.getQuantifierVariables());
+	}
+	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula#substitute(net.sf.tweety.logics.firstorderlogic.syntax.Term, net.sf.tweety.logics.firstorderlogic.syntax.Term)
 	 */
-	public RelationalFormula substitute(Term<?> v, Term<?> t) throws IllegalArgumentException{
+	public ForallQuantifiedFormula substitute(Term<?> v, Term<?> t) throws IllegalArgumentException{
 		if(this.getQuantifierVariables().contains(v))
 			return new ForallQuantifiedFormula(this.getFormula(),this.getQuantifierVariables());
 		return new ForallQuantifiedFormula(this.getFormula().substitute(v, t),this.getQuantifierVariables());
@@ -70,5 +74,10 @@ public class ForallQuantifiedFormula extends QuantifiedFormula{
 			s += "," + it.next();
 		s += ":" + this.getFormula();
 		return s;
+	}
+
+	@Override
+	public ForallQuantifiedFormula clone() {
+		return new ForallQuantifiedFormula(this);
 	}
 }

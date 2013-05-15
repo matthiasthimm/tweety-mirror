@@ -4,7 +4,7 @@ import java.util.*;
 
 import net.sf.tweety.*;
 import net.sf.tweety.logics.commons.syntax.Constant;
-import net.sf.tweety.logics.commons.syntax.Term;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.firstorderlogic.syntax.*;
 import net.sf.tweety.logics.relationalprobabilisticconditionallogic.syntax.*;
 
@@ -47,7 +47,7 @@ public class RpclBeliefSet extends BeliefSet<RelationalProbabilisticConditional>
 			throw new IllegalArgumentException("Signature must be super-signature of this set's signature.");
 		Set<Set<Constant>> result = new HashSet<Set<Constant>>();
 		Stack<Constant> allconstants = new Stack<Constant>();
-		for(Term t: signature.getConstants())
+		for(Term<?> t: signature.getConstants())
 			allconstants.add((Constant)t);
 		while(!allconstants.isEmpty()){
 			Constant c = allconstants.pop();
@@ -97,7 +97,7 @@ public class RpclBeliefSet extends BeliefSet<RelationalProbabilisticConditional>
 		// Each constant not appearing in he conditionals belongs to the same equivalence class
 		Set<Constant> appearingConstants = new HashSet<Constant>();
 		for(RelationalProbabilisticConditional c: this)
-			appearingConstants.addAll(c.getConstants());
+			appearingConstants.addAll(c.getTerms(Constant.class));
 		if(!appearingConstants.contains(a) && !appearingConstants.contains(b))
 			return true;
 		if(!appearingConstants.contains(a) || !appearingConstants.contains(b))
@@ -114,7 +114,7 @@ public class RpclBeliefSet extends BeliefSet<RelationalProbabilisticConditional>
 	 * @param b a term.
 	 * @return a belief set with "a" and "b" exchanged.
 	 */
-	public RpclBeliefSet exchange(Term a, Term b){
+	public RpclBeliefSet exchange(Term<?> a, Term<?> b){
 		RpclBeliefSet bs = new RpclBeliefSet();
 		for(RelationalProbabilisticConditional r: this)
 			bs.add((RelationalProbabilisticConditional)r.exchange(a, b));
@@ -128,7 +128,7 @@ public class RpclBeliefSet extends BeliefSet<RelationalProbabilisticConditional>
 	public Signature getSignature() {
 		FolSignature sig = new FolSignature();
 		for(RelationalProbabilisticConditional c: this){
-			sig.addAll(c.getConstants());
+			sig.addAll(c.getTerms(Constant.class));
 			sig.addAll(c.getFunctors());
 			sig.addAll(c.getPredicates());			
 		}

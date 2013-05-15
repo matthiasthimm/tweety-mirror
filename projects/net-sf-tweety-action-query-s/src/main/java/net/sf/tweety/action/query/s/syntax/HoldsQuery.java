@@ -5,8 +5,8 @@ import java.util.Map;
 import java.util.Set;
 
 import net.sf.tweety.action.signature.FolAction;
-import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Variable;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 
 /**
@@ -41,7 +41,7 @@ public class HoldsQuery
    * .Map)
    */
   @Override
-  public QueryProposition substitute( Map< Variable, Constant > map )
+  public QueryProposition substitute( Map< ? extends Term<?>, ? extends Term<?>> map )
   {
     return new HoldsQuery( (FolFormula) formula.substitute( map ) );
   }

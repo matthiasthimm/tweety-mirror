@@ -15,7 +15,7 @@ import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.firstorderlogic.FolBeliefSet;
 import net.sf.tweety.logics.firstorderlogic.semantics.HerbrandInterpretation;
-import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
 import net.sf.tweety.logics.firstorderlogic.syntax.Conjunction;
 import net.sf.tweety.logics.firstorderlogic.syntax.Contradiction;
 import net.sf.tweety.logics.firstorderlogic.syntax.Disjunction;
@@ -170,11 +170,11 @@ public class ReferenceWorld extends Interpretation implements Map<Predicate,Inst
 			result = this.spanNumber;
 		else if(f instanceof Contradiction)
 			result = 0;
-		else if(f instanceof Atom){
-			Atom a = (Atom) f;
+		else if(f instanceof FOLAtom){
+			FOLAtom a = (FOLAtom) f;
 			result = (a.getPredicate().equals(p) && constants.contains(a.getArguments().get(0)) && positive)?(1):(0);
 		}else if(f instanceof Negation){
-			result = this.getNumberOfOccurences(((Negation)f).getFormula(), p, constants, !positive);
+			result = this.getNumberOfOccurences((FolFormula) ((Negation)f).getFormula(), p, constants, !positive);
 		}else if(f instanceof Conjunction){
 			result = 0;
 			for(RelationalFormula g: (Conjunction)f ){
@@ -202,7 +202,7 @@ public class ReferenceWorld extends Interpretation implements Map<Predicate,Inst
 			InstanceAssignment ia = new InstanceAssignment(p);
 			for(Set<Constant> c: constants){
 				Integer value = 0;				
-				for(Atom a: i)
+				for(FOLAtom a: i)
 					if(a.getPredicate().equals(p))
 						if(c.contains(a.getArguments().get(0)))
 							value++;				

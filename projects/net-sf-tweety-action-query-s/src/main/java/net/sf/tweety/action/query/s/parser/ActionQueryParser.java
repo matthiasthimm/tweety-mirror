@@ -28,7 +28,7 @@ import net.sf.tweety.action.signature.FolActionName;
 import net.sf.tweety.logics.commons.LogicalSymbols;
 import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.firstorderlogic.parser.FolParser;
-import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.propositionallogic.syntax.Conjunction;
 import net.sf.tweety.logics.propositionallogic.syntax.Contradiction;
@@ -255,7 +255,7 @@ public class ActionQueryParser
   private FolAction parseAction(List<Object> l) throws ParserException, IOException {
     if(l.get(0) instanceof String) {
       //Parse a list of action names into an action
-      Set<Atom> actionNames = new HashSet<Atom>();
+      Set<FOLAtom> actionNames = new HashSet<FOLAtom>();
       String tmp = "";
       for(Object o: l){
         if((o instanceof String) && ((String)o).equals(",") ){
@@ -268,12 +268,12 @@ public class ActionQueryParser
     } else throw new ParserException("Unexpected token in action string.");
   }
 
-  private Atom parseActionName(String s) throws ParserException, IOException {
+  private FOLAtom parseActionName(String s) throws ParserException, IOException {
     FolParser p = new FolParser();
     p.setSignature( signature );
     FolFormula f = (FolFormula) p.parseFormula( s );
-    if(! (f instanceof Atom)) throw new ParserException("Illegal type of action name.");
-    Atom a = (Atom) f;
+    if(! (f instanceof FOLAtom)) throw new ParserException("Illegal type of action name.");
+    FOLAtom a = (FOLAtom) f;
     if(!(a.getPredicate() instanceof FolActionName) ) throw new ParserException("Illegal signature of action name.");
     return a;
   }
@@ -297,7 +297,7 @@ public class ActionQueryParser
     
     PropositionalFormula disjunction = parseDisjunction( stack );
     Set<Variable> variables = new HashSet<Variable>();
-    for(Proposition p : disjunction.getPropositions()) {
+    for(Proposition p : disjunction.getAtoms()) {
       QueryProposition qp = (QueryProposition) p;
       variables.addAll( qp.getVariables() );
     }

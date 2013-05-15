@@ -20,11 +20,11 @@ import net.sf.tweety.action.transitionsystem.State;
 import net.sf.tweety.action.transitionsystem.Transition;
 import net.sf.tweety.action.transitionsystem.TransitionSystem;
 import net.sf.tweety.logicprogramming.asplibrary.solver.AspInterface;
-import net.sf.tweety.logics.firstorderlogic.syntax.AssociativeFormula;
-import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.AssociativeFOLFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Conjunction;
 import net.sf.tweety.logics.firstorderlogic.syntax.Contradiction;
 import net.sf.tweety.logics.firstorderlogic.syntax.Disjunction;
+import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
 import net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula;
@@ -325,14 +325,14 @@ public class SActionQuerySatisfactionTester
   {
     Set< FolFormula > result = new HashSet< FolFormula >();
     result.add( formula );
-    if ( formula instanceof AssociativeFormula ) {
-      for ( RelationalFormula rel : (AssociativeFormula) formula ) {
+    if ( formula instanceof AssociativeFOLFormula ) {
+      for ( RelationalFormula rel : (AssociativeFOLFormula) formula ) {
         result.addAll( getStateParts( (FolFormula) rel ) );
       }
     }
     else if ( formula instanceof Negation ) {
       Negation neg = (Negation) formula;
-      FolFormula f = neg.getFormula();
+      FolFormula f = (FolFormula) neg.getFormula();
       result.addAll( getStateParts( f ) );
     }
     return result;
@@ -350,8 +350,8 @@ public class SActionQuerySatisfactionTester
   {
     Set< PropositionalFormula > result = new HashSet< PropositionalFormula >();
     result.add( formula );
-    if ( formula instanceof net.sf.tweety.logics.propositionallogic.syntax.AssociativeFormula ) {
-      for ( PropositionalFormula f : (net.sf.tweety.logics.propositionallogic.syntax.AssociativeFormula) formula ) {
+    if ( formula instanceof net.sf.tweety.logics.propositionallogic.syntax.AssociativePropositionalFormula ) {
+      for ( PropositionalFormula f : (net.sf.tweety.logics.propositionallogic.syntax.AssociativePropositionalFormula) formula ) {
         result.addAll( getQueryParts( f ) );
       }
     }
@@ -374,7 +374,7 @@ public class SActionQuerySatisfactionTester
   private Set< QueryProposition > getQueryPropositions( SActionQuery query )
   {
     Set< QueryProposition > result = new HashSet< QueryProposition >();
-    for ( Proposition p : query.getFormula().getPropositions() ) {
+    for ( Proposition p : query.getFormula().getAtoms() ) {
       QueryProposition qprop = (QueryProposition) p;
       result.add( qprop );
       if ( qprop instanceof NecessarilyQuery ) {
@@ -407,7 +407,7 @@ public class SActionQuerySatisfactionTester
       String statename = "s" + Integer.toString( statecounter );
       statemap.put( s, statename );
       statefacts += "state(" + statename + ").\n";
-      for ( Atom a : s.getPositiveFluents() ) {
+      for ( FOLAtom a : s.getPositiveFluents() ) {
         fluentfacts += removeIllegalCharacters( a.toString() );
         fluentfacts += "(" + statename + ").\n";
       }

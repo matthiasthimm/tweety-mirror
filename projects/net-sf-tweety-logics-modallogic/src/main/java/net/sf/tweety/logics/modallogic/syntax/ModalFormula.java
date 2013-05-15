@@ -2,16 +2,16 @@ package net.sf.tweety.logics.modallogic.syntax;
 
 import java.util.Set;
 
-import net.sf.tweety.Signature;
-import net.sf.tweety.logics.commons.ClassicalFormula;
-import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.Variable;
-import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.commons.syntax.interfaces.Conjuctable;
+import net.sf.tweety.logics.commons.syntax.interfaces.Disjunctable;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.firstorderlogic.syntax.Conjunction;
 import net.sf.tweety.logics.firstorderlogic.syntax.Disjunction;
+import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
-import net.sf.tweety.logics.firstorderlogic.syntax.FunctionalTerm;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 import net.sf.tweety.logics.firstorderlogic.syntax.Functor;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
 import net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula;
@@ -40,7 +40,7 @@ public abstract class ModalFormula extends RelationalFormula {
 	 * @see net.sf.tweety.kr.Formula#getSignature()
 	 */
 	@Override
-	public Signature getSignature() {
+	public FolSignature getSignature() {
 		return this.formula.getSignature();
 	}
 	
@@ -61,16 +61,9 @@ public abstract class ModalFormula extends RelationalFormula {
 	}
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getConstants()
-	 */
-	public Set<Constant> getConstants(){
-		return this.formula.getConstants();
-	}
-	
-	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getPredicates()
 	 */
-	public Set<Predicate> getPredicates(){
+	public Set<? extends Predicate> getPredicates(){
 		return this.formula.getPredicates();
 	}
 	
@@ -82,24 +75,10 @@ public abstract class ModalFormula extends RelationalFormula {
 	}
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getVariables()
-	 */
-	public Set<Variable> getVariables(){
-		return this.formula.getVariables();
-	}
-	
-	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getAtoms()
 	 */
-	public Set<Atom> getAtoms(){
+	public Set<FOLAtom> getAtoms(){
 		return this.formula.getAtoms();
-	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.LogicStructure#getFunctionalTerms()
-	 */
-	public Set<FunctionalTerm> getFunctionalTerms(){
-		return this.formula.getFunctionalTerms();
 	}
 	
 	/* (non-Javadoc)
@@ -127,48 +106,64 @@ public abstract class ModalFormula extends RelationalFormula {
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getUnboundVariables()
 	 */
 	public Set<Variable> getUnboundVariables(){
-		return this.getVariables();
+		return this.getTerms(Variable.class);
 	}
 	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#isWellBound()
-	 */
+	@Override
 	public boolean isWellBound(){
 		return this.formula.isWellBound();
 	}
 	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#isWellBound(java.util.Set)
-	 */
+	@Override
 	public boolean isWellBound(Set<Variable> boundVariables){
 		return this.formula.isWellBound(boundVariables);
 	}
 	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.kr.ClassicalFormula#combineWithAnd(net.sf.tweety.kr.Formula)
-	 */
-	public RelationalFormula combineWithAnd(ClassicalFormula f){
+	@Override
+	public Conjunction combineWithAnd(Conjuctable f){
 		if(!(f instanceof ModalFormula))
 			throw new IllegalArgumentException("The given formula " + f + " is not a modal formula.");
 		return new Conjunction(this,(ModalFormula)f);
 	}
 	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.kr.ClassicalFormula#combineWithOr(net.sf.tweety.kr.ClassicalFormula)
-	 */
-	public RelationalFormula combineWithOr(ClassicalFormula f){
+	@Override
+	public Disjunction combineWithOr(Disjunctable f){
 		if(!(f instanceof ModalFormula))
 			throw new IllegalArgumentException("The given formula " + f + " is not a modal formula.");
 		return new Disjunction(this,(ModalFormula)f);
 	}
 	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.kr.ClassicalFormula#complement()
-	 */
+	@Override
 	public RelationalFormula complement(){		
 		return new Negation(this);
 	}
 
+	@Override
+	public boolean isLiteral() {
+		return formula.isLiteral();
+	}
+
+	@Override
+	public Set<Term<?>> getTerms() {
+		return formula.getTerms();
+	}
+
+	@Override
+	public <C extends Term<?>> Set<C> getTerms(Class<C> cls) {
+		return formula.getTerms(cls);
+	}
+
+	@Override
+	public Set<Variable> getQuantifierVariables() {
+		return formula.getQuantifierVariables();
+	}
+
+	@Override
+	public RelationalFormula substitute(Term<?> v, Term<?> t)
+			throws IllegalArgumentException {
+		return formula.substitute(v, t);
+	}
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */

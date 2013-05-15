@@ -132,7 +132,7 @@ public class RelationalRankingFunction extends Interpretation {
 			else minNegative = minNegative > rankPremiseAndNotConclusion ? rankPremiseAndNotConclusion : minNegative;
 		}
 		if(minPositive < minNegative) return true;		
-		Set<RelationalConditional> antiPrototypes = this.getPrototypes(new RelationalConditional(rc.getPremise().iterator().next(), rc.getConclusion().complement()));
+		Set<RelationalConditional> antiPrototypes = this.getPrototypes(new RelationalConditional(rc.getPremise().iterator().next(), (FolFormula)rc.getConclusion().complement()));
 		for(RelationalConditional prot: prototypes){
 			for(RelationalConditional anti: antiPrototypes){
 				int rankPremiseAndConclusion = this.rank(anti.getConclusion().combineWithAnd(anti.getPremise().iterator().next()));

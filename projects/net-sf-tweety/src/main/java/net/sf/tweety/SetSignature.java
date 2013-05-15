@@ -9,7 +9,7 @@ import java.util.*;
  *
  * @param T The type of formulas in this signature.
  */
-public class SetSignature<T extends Formula> extends Signature implements Collection<T> {
+public class SetSignature<T> extends Signature implements Collection<T> {
 
 	private Set<T> formulas;
 	

@@ -40,4 +40,9 @@ public class Contradiction extends SpecialFormula{
 			return false;		
 		return true;
 	}
+
+	@Override
+	public Contradiction clone() {
+		return new Contradiction();
+	}
 }

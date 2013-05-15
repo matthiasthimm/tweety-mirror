@@ -5,7 +5,7 @@ import java.util.PriorityQueue;
 import java.util.Set;
 
 import net.sf.tweety.BeliefBase;
-import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 import net.sf.tweety.logics.firstorderlogic.semantics.*;
@@ -102,10 +102,10 @@ public class ApproximateNaiveMlnReasoner extends AbstractMlnReasoner{
 		// The Herbrand base of the signature
 		HerbrandBase hBase = new HerbrandBase(this.getSignature());
 		// The iterator for Herbrand interpretations
-		Iterator<Set<Atom>> it;
+		Iterator<Set<FOLAtom>> it;
 		if(this.maxNumberOfSelectedInterpretations == -1 || Math.pow(2, hBase.getAtoms().size()) <= this.maxNumberOfSelectedInterpretations )
-			it = new SubsetIterator<Atom>(hBase.getAtoms());
-		else it = new RandomSubsetIterator<Atom>(hBase.getAtoms(),false);
+			it = new SubsetIterator<FOLAtom>(hBase.getAtoms());
+		else it = new RandomSubsetIterator<FOLAtom>(hBase.getAtoms(),false);
 		long count = 0;
 		HerbrandInterpretation hInt;
 		WeightedHerbrandInterpretation whInt;

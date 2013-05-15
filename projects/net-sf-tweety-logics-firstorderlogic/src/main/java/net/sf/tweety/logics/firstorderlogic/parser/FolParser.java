@@ -8,8 +8,8 @@ import net.sf.tweety.logics.commons.LogicalSymbols;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.Sort;
-import net.sf.tweety.logics.commons.syntax.Term;
 import net.sf.tweety.logics.commons.syntax.Variable;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.firstorderlogic.*;
 import net.sf.tweety.logics.firstorderlogic.syntax.*;
 
@@ -450,7 +450,7 @@ public class FolParser extends Parser {
 				  Predicate p = this.signature.getPredicate( s );
 				  if(p.getArity() > 0)
 				    throw new IllegalArgumentException("Predicate '" + p + "' has arity '" + p.getArity() + "'.");
-				  return new Atom(p);
+				  return new FOLAtom(p);
 				}
 			}
 			throw new ParserException("Unknown object " + o);
@@ -490,7 +490,7 @@ public class FolParser extends Parser {
 						throw new ParserException("Term '" + t + "' has the wrong sort.");
 					else args.add(t);
 				}
-				return new Atom(p,args);
+				return new FOLAtom(p,args);
 			}
 			throw new ParserException("Predicate '" + s + "' has not been declared.");
 		}		

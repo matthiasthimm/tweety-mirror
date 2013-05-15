@@ -109,7 +109,7 @@ public class DynamicLaw
       throw new IllegalArgumentException(
         "The formula given has an illegal form" );
     }
-    this.afterFormula = afterFormula.collapseAssociativeFormulas();
+    this.afterFormula = (FolFormula) afterFormula.collapseAssociativeFormulas();
   }
   
   /**
@@ -180,9 +180,9 @@ public class DynamicLaw
    * @see net.sf.tweety.action.desc.c.syntax.CausalRule#getAtoms()
    */
   @Override
-  public Set< Atom > getAtoms()
+  public Set< FOLAtom > getAtoms()
   {
-    Set< Atom > result = new HashSet< Atom >();
+    Set< FOLAtom > result = new HashSet< FOLAtom >();
     result.addAll( headFormula.getAtoms() );
     result.addAll( ifFormula.getAtoms() );
     result.addAll( afterFormula.getAtoms() );
@@ -214,7 +214,7 @@ public class DynamicLaw
     else {
       ifClauses.add( ifDNF );
     }
-    FolFormula afterDNF = afterFormula.toDnf().collapseAssociativeFormulas();
+    FolFormula afterDNF = (FolFormula) afterFormula.toDnf().collapseAssociativeFormulas();
     if ( afterDNF instanceof Disjunction ) {
       Disjunction conjClause = (Disjunction) afterDNF;
       for ( RelationalFormula p : conjClause ) {
@@ -244,7 +244,7 @@ public class DynamicLaw
     Set< CLaw > result = new HashSet< CLaw >();
     Set< Variable > variables = new HashSet< Variable >();
     
-    for ( Atom a : getAtoms() ) {
+    for ( FOLAtom a : getAtoms() ) {
       variables.addAll( a.getUnboundVariables() );
     }
     Set< Map< Variable, Constant >> substitutions =

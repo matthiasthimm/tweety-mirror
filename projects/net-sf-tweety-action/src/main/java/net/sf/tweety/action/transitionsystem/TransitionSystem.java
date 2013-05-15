@@ -7,7 +7,7 @@ import java.util.Set;
 
 import net.sf.tweety.action.signature.ActionSignature;
 import net.sf.tweety.action.signature.FolFluentName;
-import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
 import net.sf.tweety.util.Pair;
 
 /**
@@ -71,7 +71,7 @@ public class TransitionSystem
    *          state.
    * @return the new state which maps the given fluents to true.
    */
-  public State addState( Set< Atom > fluents )
+  public State addState( Set< FOLAtom > fluents )
   {
     State newState = getState( fluents );
     if ( newState == null ) {
@@ -99,7 +99,7 @@ public class TransitionSystem
    * @return the state that maps the given fluents to true, if it exists,
    *         otherwise null.
    */
-  public State getState( Set< Atom > fluents )
+  public State getState( Set< FOLAtom > fluents )
   {
     for ( State s : states ) {
       if ( s.getPositiveFluents().equals( fluents ) ) {
@@ -146,7 +146,7 @@ public class TransitionSystem
    * @param state a state
    * @return true, iff the fluent is mapped to true by the given state.
    */
-  public boolean getValue( Atom fluent, State state )
+  public boolean getValue( FOLAtom fluent, State state )
   {
     if ( !( fluent.getPredicate() instanceof FolFluentName ) )
       throw new IllegalArgumentException( "The atom '" + fluent +
@@ -174,7 +174,7 @@ public class TransitionSystem
       result += "  " + i + " [label=\"";
       i++;
       boolean first = true;
-      for ( Atom a : signature.getAllGroundedFluentAtoms() ) {
+      for ( FOLAtom a : signature.getAllGroundedFluentAtoms() ) {
         if ( !first )
           result += ",\\n";
         first = false;

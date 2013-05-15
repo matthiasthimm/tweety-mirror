@@ -19,8 +19,8 @@ public class ClassicalEntailment extends EntailmentRelation<PropositionalFormula
 	public boolean entails(Collection<PropositionalFormula> formulas, PropositionalFormula formula) {
 		PropositionalSignature signature = new PropositionalSignature();
 		for(PropositionalFormula f: formulas)
-			signature.addAll(f.getPropositions());
-		signature.addAll(formula.getPropositions());
+			signature.addAll(f.getAtoms());
+		signature.addAll(formula.getAtoms());
 		Set<PossibleWorld> possibleWorlds = PossibleWorld.getAllPossibleWorlds(signature);
 		for(PossibleWorld w: possibleWorlds)
 			if(w.satisfies(formulas))

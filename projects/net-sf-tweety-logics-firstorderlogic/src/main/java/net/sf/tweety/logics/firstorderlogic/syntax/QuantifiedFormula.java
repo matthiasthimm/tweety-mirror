@@ -1,17 +1,19 @@
 package net.sf.tweety.logics.firstorderlogic.syntax;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
-import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.Variable;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 
 /**
  * The common parent of exists and forall quantified formulas, which contains common
  * functionalities.
+ * 
  * @author Matthias Thimm
  */
-public abstract class QuantifiedFormula extends FolFormula{
+public abstract class QuantifiedFormula extends FolFormula {
 	
 	/**
 	 * The folFormula this quantified folFormula ranges over. 
@@ -92,16 +94,9 @@ public abstract class QuantifiedFormula extends FolFormula{
 	}
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getConstants()
-	 */
-	public Set<Constant> getConstants(){
-		return this.folFormula.getConstants();
-	}
-	
-	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getPredicates()
 	 */
-	public Set<Predicate> getPredicates(){
+	public Set<? extends Predicate> getPredicates(){
 		return this.folFormula.getPredicates();
 	}
 	
@@ -115,7 +110,7 @@ public abstract class QuantifiedFormula extends FolFormula{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getAtoms()
 	 */
-	public Set<Atom> getAtoms(){
+	public Set<FOLAtom> getAtoms(){
 		return this.folFormula.getAtoms();
 	}
 	
@@ -123,25 +118,8 @@ public abstract class QuantifiedFormula extends FolFormula{
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getUnboundVariables()
 	 */
 	public Set<Variable> getUnboundVariables(){
-		Set<Variable> variables = this.getVariables();
+		Set<Variable> variables = this.getTerms(Variable.class);
 		variables.removeAll(this.quantifier_variables);
-		return variables;
-	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getFunctionalTerms()
-	 */
-	public Set<FunctionalTerm> getFunctionalTerms(){
-		return this.folFormula.getFunctionalTerms();
-	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getVariables()
-	 */
-	public Set<Variable> getVariables(){
-		Set<Variable> variables = new HashSet<Variable>();
-		variables.addAll(this.quantifier_variables);
-		variables.addAll(folFormula.getVariables());
 		return variables;
 	}
 	
@@ -166,23 +144,13 @@ public abstract class QuantifiedFormula extends FolFormula{
 	 */
 	public Set<QuantifiedFormula> getQuantifiedFormulas(){
 		Set<QuantifiedFormula> qf = new HashSet<QuantifiedFormula>();
-		qf.addAll(this.folFormula.getQuantifiedFormulas());
+		if(this.folFormula instanceof AssociativeFOLFormula) {
+			AssociativeFOLFormula af = ((AssociativeFOLFormula) this.folFormula);
+			qf.addAll(af.getFormulas(ForallQuantifiedFormula.class));
+			qf.addAll(af.getFormulas(ExistsQuantifiedFormula.class));
+		}
 		qf.add(this);
 		return qf;
-	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getDisjunctions()
-	 */
-	public Set<Disjunction> getDisjunctions(){
-		return this.folFormula.getDisjunctions();
-	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getConjunctions()
-	 */
-	public Set<Conjunction> getConjunctions(){
-		return this.folFormula.getConjunctions();
 	}
 	
 	/* (non-Javadoc)
@@ -197,6 +165,16 @@ public abstract class QuantifiedFormula extends FolFormula{
 	 */
 	public boolean isLiteral(){
 		return false;
+	}
+	
+	@Override
+	public Set<Term<?>> getTerms() {
+		return folFormula.getTerms();
+	}
+
+	@Override
+	public <C extends Term<?>> Set<C> getTerms(Class<C> cls) {
+		return folFormula.getTerms(cls);
 	}
 	
 	/* (non-Javadoc)
