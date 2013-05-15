@@ -78,6 +78,11 @@ public abstract class AssociativePropositionalFormula extends PropositionalFormu
 	}
 	
 	@Override
+	public String toString() {
+		return support.toString();
+	}
+	
+	@Override
 	public Signature createEmptySignature() {
 		return new PropositionalSignature();
 	}
