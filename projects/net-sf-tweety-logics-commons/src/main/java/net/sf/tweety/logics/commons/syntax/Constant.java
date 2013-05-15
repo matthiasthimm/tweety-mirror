@@ -2,8 +2,7 @@ package net.sf.tweety.logics.commons.syntax;
 
 /**
  * A Constant represents an constant object in the world of
- * a logical language. It is implemented as a specialized StringTerm 
- * which only allows name with have a lower-case character as first letter.
+ * a logical language. It is implemented as a specialized StringTerm.
  * 
  * @author Tim Janus
  */
@@ -39,10 +38,6 @@ public class Constant extends StringTerm {
 	public void set(String value) {
 		if(value == null || value.length() == 0)
 			throw new IllegalArgumentException();
-		
-		if( !(value.charAt(0) > 96 && value.charAt(0) <= 122))
-			throw new IllegalArgumentException("Constant names start with a lower-case character. " +
-					"'" + value + "'");
 		
 		this.value = value;
 	}
