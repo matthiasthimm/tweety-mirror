@@ -78,14 +78,17 @@ public class LevelingFunction<T> extends Functions<T> {
 			if (po.contains(tempRel)) {
 				tempVarF = intVar.get(tempRel.getFirst());
 				tempVarS = intVar.get(tempRel.getSecond());
-				switch (tempRel.getThird()) {
-				case LESS:
+//				switch (tempRel.getThird()) {
+				if (tempRel.getThird().equals(Relation.LESS)){
+//				case Relation.LESS:
 					opt.add(new Inequation(tempVarF, tempVarS, Inequation.LESS));
-				case LESS_EQUAL:
+				} else if(tempRel.getThird().equals(Relation.LESS_EQUAL)){
+//				case LESS_EQUAL:
 					opt.add(new Inequation(tempVarF, tempVarS,
 							Inequation.LESS_EQUAL));
-				default:
-					continue;
+//				default:
+				}else{
+				continue;
 				}
 			} else {
 				continue;
@@ -193,7 +196,7 @@ public class LevelingFunction<T> extends Functions<T> {
 				}
 			}
 		}
-		
+		this.clear();
 		this.putAll(lf);
 	}
 
@@ -219,6 +222,7 @@ public class LevelingFunction<T> extends Functions<T> {
 		} else {
 			lf.put(element, this.get(element)-1);
 		}
+		this.clear();
 		this.putAll(lf);
 	}
 

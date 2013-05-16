@@ -365,21 +365,22 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	/* (non-Javadoc)
 	 * @see java.util.Set#retainAll(java.util.Collection)
 	 */
+	// TODO check überarbeiten
 	@Override
 	public boolean retainAll(Collection<?> c) {
 		Iterator<?> it = c.iterator();
-		Set<Triple<T,T,Relation>> tempRel = this.relations;
+		Set<Triple<T,T,Relation>> tempRel = new HashSet<Triple<T,T,Relation>>();
 		while(it.hasNext()){
 			Object e = it.next();
 			for(Triple<T, T, Relation> a : relations){
-				if(a.equals(e)){
+				if(a.toString().equals(e.toString())){
 					tempRel.add(a);
 				}
 			}
 		}	
-		if (tempRel.equals(relations)){
-			return false;
-		}
+//		if (tempRel.equals(relations)){
+//			return false;
+//		}
 		relations = tempRel;
 		return true;
 	}
@@ -390,15 +391,16 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	 */
 	@Override
 	public boolean addAll(Collection<? extends Triple<T, T, Relation>> c) {
+		boolean changed = false;
 		Set<Triple<T,T,Relation>> tempRel = this.relations;
 		for(Triple<T,T,Relation> t : c){
-			tempRel.add(t);
+			if(!tempRel.contains(t)){
+				tempRel.add(t);
+				changed = true;
+				}
 		}
-		if(!this.relations.equals(tempRel)){
-			this.relations = tempRel;
-			return true;
-		}
-		return false;
+		
+		return changed;
 	}
 
 	@Override
