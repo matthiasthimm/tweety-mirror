@@ -14,6 +14,10 @@ import java.util.List;
  */
 public class Predicate extends TypedStructureAdapter {
 	
+	public Predicate() {
+		super();
+	}
+	
 	/**
 	 * Initializes a predicate of arity zero with the given name; 
 	 * @param name the name of the predicate

@@ -1,9 +1,9 @@
 package net.sf.tweety.logicprogramming.asplibrary.syntax;
 
-import java.util.List;
+import java.util.Set;
 import java.util.SortedSet;
-import java.util.TreeSet;
 
+import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 
 /**
@@ -25,16 +25,16 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Term;
  * @author Thomas Vengels
  *
  */
-public class Not implements RuleElement {
+public class Not extends ELPElementAdapter implements ELPElement {
 
-	Literal		lit;
+	ELPLiteral		lit;
 
-	public Not(Literal inner) {
+	public Not(ELPLiteral inner) {
 		this.lit = inner;		
 	}
 	
 	public Not(Not other) {
-		this.lit = (Literal)other.lit.clone();
+		this.lit = (ELPLiteral)other.lit.clone();
 	}
 
 	@Override
@@ -58,24 +58,50 @@ public class Not implements RuleElement {
 	}
 	
 	@Override
-	public Object clone() {
+	public Not clone() {
 		return new Not(this);
 	}
 
 	@Override
-	public RuleElement invert() {
-		return new Not((Literal)lit.invert());
+	public Set<ELPAtom> getAtoms() {
+		return lit.getAtoms();
 	}
 
 	@Override
-	public List<Term<?>> getTerms() {
+	public Set<ELPPredicate> getPredicates() {
+		return lit.getPredicates();
+	}
+
+	@Override
+	public Class<? extends Predicate> getPredicateCls() {
+		return ELPPredicate.class;
+	}
+
+	@Override
+	public ElpSignature getSignature() {
+		return lit.getSignature();
+	}
+
+	@Override
+	public Set<Term<?>> getTerms() {
 		return lit.getTerms();
 	}
 
 	@Override
-	public SortedSet<Literal> getLiterals() {
-		SortedSet<Literal> reval = new TreeSet<Literal>();
-		reval.add(lit);
-		return reval;
+	public Not substitute(Term<?> v, Term<?> t)
+			throws IllegalArgumentException {
+		return new Not(lit.substitute(v,t));
 	}
+
+	@Override
+	public SortedSet<ELPLiteral> getLiterals() {
+		return lit.getLiterals();
+	}
+
+	/*
+	@Override
+	public Not complement() {
+		return new Not((Literal)lit.invert());
+	}
+	*/
 }

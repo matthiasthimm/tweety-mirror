@@ -20,6 +20,11 @@ import net.sf.tweety.util.SetTools;
 public abstract class PropositionalFormula implements ClassicalFormula {
 
 	@Override
+	public Class<PropositionalPredicate> getPredicateCls() {
+		return PropositionalPredicate.class;
+	}
+	
+	@Override
 	public Signature getSignature() {
 		return new PropositionalSignature();
 	}

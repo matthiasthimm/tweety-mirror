@@ -23,8 +23,14 @@ public interface SimpleLogicalFormula extends Formula {
 	 */
 	Set<? extends Predicate> getPredicates();
 	
+	/**
+	 * @return The class description of the predicate used by this formula.
+	 */
+	Class<? extends Predicate> getPredicateCls();
+	
 	/** @return true if the formula represents a literal in the language or false otherwise */
 	boolean isLiteral();
 	
+	/** Creates a deep copy of this formula */
 	SimpleLogicalFormula clone();
 }

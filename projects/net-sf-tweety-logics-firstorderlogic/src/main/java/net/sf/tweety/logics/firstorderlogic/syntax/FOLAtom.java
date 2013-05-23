@@ -25,7 +25,12 @@ public class FOLAtom extends FolFormula implements Atom {
 	/**
 	 * The arguments of the atom
 	 */
-	private List<Term<?>> arguments;
+	private List<Term<?>> arguments = new ArrayList<Term<?>>();
+	
+	/** Default-Ctor: Creates new empty FOL-Atom */
+	public FOLAtom() {
+		
+	}
 	
 	/**
 	 * Creates a new atom with the given predicate and initializes
@@ -44,14 +49,12 @@ public class FOLAtom extends FolFormula implements Atom {
 	 */
 	public FOLAtom(Predicate predicate, List<? extends Term<?>> arguments){
 		this.predicate = predicate;
-		this.arguments = new ArrayList<Term<?>>();
 		for(Term<?> t: arguments)
 			this.addArgument(t);		
 	}
 	
 	public FOLAtom(FOLAtom other) {
 		this.predicate = other.predicate;
-		this.arguments = new ArrayList<Term<?>>();
 		for(Term<?> term : other.getArguments()) {
 			this.arguments.add(term.clone());
 		}
@@ -293,5 +296,17 @@ public class FOLAtom extends FolFormula implements Atom {
 	@Override
 	public FOLAtom clone() {
 		return new FOLAtom(this);
+	}
+
+	@Override
+	public RETURN_SET_PREDICATE setPredicate(Predicate newer) {
+		Predicate old = this.predicate;
+		this.predicate = newer;
+		return AtomImpl.implSetPredicate(old, this.predicate, arguments);
+	}
+
+	@Override
+	public String getName() {
+		return getPredicate().getName();
 	}
 }

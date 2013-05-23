@@ -17,8 +17,8 @@ public class Clingo extends SolverBase {
 	}
 	
 	
-	private List<Literal> parseAnswerSet(String s) {
-		List<Literal> ret = null;
+	private List<ELPLiteral> parseAnswerSet(String s) {
+		List<ELPLiteral> ret = null;
 		try {
 			ELPParser ep = new ELPParser( new StringReader( s ));
 			ret = ep.clasp_answerset();
@@ -107,7 +107,7 @@ public class Clingo extends SolverBase {
 				prevIsAnswer = true;
 			} else if (prevIsAnswer) {
 				prevIsAnswer = false;
-				List<Literal> lits = parseAnswerSet(s);
+				List<ELPLiteral> lits = parseAnswerSet(s);
 				if (lits != null)
 					asl.add( new AnswerSet(lits,0,0));
 			}

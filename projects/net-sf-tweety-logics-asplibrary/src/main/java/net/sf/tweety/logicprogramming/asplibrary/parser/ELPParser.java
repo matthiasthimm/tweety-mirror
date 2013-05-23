@@ -50,8 +50,8 @@ public class ELPParser implements ELPParserConstants {
     throw new Error("Missing return statement in function");
   }
 
-  final public RuleElement atom() throws ParseException {
-        Atom ret = null;
+  final public ELPElement atom() throws ParseException {
+        ELPAtom ret = null;
         Token pred = null;
         List<Term<?> > terms = null;
         SymbolicSet symset = null;
@@ -82,7 +82,7 @@ public class ELPParser implements ELPParserConstants {
       ;
     }
           if (symset == null)
-                {if (true) return Atom.instantiate(pred.image, terms);}
+                {if (true) return ELPAtom.instantiate(pred.image, terms);}
           else
                 {if (true) return new Aggregate(pred.image,symset);}
     throw new Error("Missing return statement in function");
@@ -90,7 +90,7 @@ public class ELPParser implements ELPParserConstants {
 
   final public SymbolicSet symbolicSet() throws ParseException {
         Set<String >  vars = new HashSet<String >();
-        List<Literal > lits = null;
+        List<ELPLiteral > lits = null;
         Token v0 = null;
     v0 = jj_consume_token(VAR);
                      vars.add(v0.image);
@@ -236,8 +236,8 @@ public class ELPParser implements ELPParserConstants {
 
   final public Rule rule() throws ParseException {
   Rule r;
-  List<Literal> head = new LinkedList<Literal >();
-  List<RuleElement > body = new LinkedList<RuleElement >();
+  List<ELPLiteral> head = new LinkedList<ELPLiteral >();
+  List<ELPElement > body = new LinkedList<ELPElement >();
         boolean wc = false;
     head = literalListHead();
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -306,8 +306,8 @@ public class ELPParser implements ELPParserConstants {
     throw new Error("Missing return statement in function");
   }
 
-  final public List<Literal> literalList() throws ParseException {
-        List<Literal>   lits = null;
+  final public List<ELPLiteral> literalList() throws ParseException {
+        List<ELPLiteral>   lits = null;
         Object l = null;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case NOT:
@@ -328,18 +328,18 @@ public class ELPParser implements ELPParserConstants {
       jj_la1[13] = jj_gen;
       ;
     }
-                LinkedList<Literal > ret = new LinkedList<Literal >();
+                LinkedList<ELPLiteral > ret = new LinkedList<ELPLiteral >();
                 if (l != null)
-                        ret.add((Literal)l);
+                        ret.add((ELPLiteral)l);
                 if (lits != null)
                         ret.addAll(lits);
                 {if (true) return ret;}
     throw new Error("Missing return statement in function");
   }
 
-  final public List<RuleElement > literalListBody() throws ParseException {
-        List<RuleElement >      lits = new LinkedList<RuleElement>();
-        RuleElement l = null;
+  final public List<ELPElement > literalListBody() throws ParseException {
+        List<ELPElement >      lits = new LinkedList<ELPElement>();
+        ELPElement l = null;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case NOT:
     case SYMBOL:
@@ -369,8 +369,8 @@ public class ELPParser implements ELPParserConstants {
     throw new Error("Missing return statement in function");
   }
 
-  final public List<Literal> literalListHead() throws ParseException {
-        List<Literal>   lits = null;
+  final public List<ELPLiteral> literalListHead() throws ParseException {
+        List<ELPLiteral>   lits = null;
         Object l = null;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case NOT:
@@ -403,16 +403,16 @@ public class ELPParser implements ELPParserConstants {
       jj_la1[18] = jj_gen;
       ;
     }
-                LinkedList<Literal > ret = new LinkedList<Literal >();
+                LinkedList<ELPLiteral > ret = new LinkedList<ELPLiteral >();
                 if (l != null)
-                        ret.add((Literal)l);
+                        ret.add((ELPLiteral)l);
                 if (lits != null)
                         ret.addAll(lits);
                 {if (true) return ret;}
     throw new Error("Missing return statement in function");
   }
 
-  final public RuleElement LiteralExpr() throws ParseException {
+  final public ELPElement LiteralExpr() throws ParseException {
         Object l0 = null, l1 = null, l2 = null;
         String op01 = null, op12 = null;
         Term t0 = null, t1 = null;
@@ -508,7 +508,7 @@ public class ELPParser implements ELPParserConstants {
                 if ((l0 != null) && (l1 == null) && (l2 == null))
                 {
                         if (dbgOut) System.out.println("unary");
-                        {if (true) return (RuleElement)l0;}
+                        {if (true) return (ELPElement)l0;}
                 }
                 else if ((l0 != null) && (l1 != null) && (l2 == null))
                 {
@@ -560,8 +560,8 @@ public class ELPParser implements ELPParserConstants {
         boolean dneg = false;
         boolean tneg = false;
         Object reval = null;
-        Literal l = null;
-        Literal r = null;
+        ELPLiteral l = null;
+        ELPLiteral r = null;
         String set_leftop = null;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case NOT:
@@ -582,7 +582,7 @@ public class ELPParser implements ELPParserConstants {
       ;
     }
     reval = atom();
-                        Atom a0 = (Atom)reval;
+                        ELPAtom a0 = (ELPAtom)reval;
                         if (dneg && tneg)
                                 {if (true) return new Not( new Neg(a0) );}
                         else if (dneg && !tneg)
@@ -595,8 +595,8 @@ public class ELPParser implements ELPParserConstants {
     throw new Error("Missing return statement in function");
   }
 
-  final public List<Literal > dlv_answerset() throws ParseException {
-        List<Literal > ret = null;
+  final public List<ELPLiteral > dlv_answerset() throws ParseException {
+        List<ELPLiteral > ret = null;
     jj_consume_token(CURLBRA);
     ret = literalList();
     jj_consume_token(CURRBRA);
@@ -604,8 +604,8 @@ public class ELPParser implements ELPParserConstants {
     throw new Error("Missing return statement in function");
   }
 
-  final public List<Literal > clasp_answerset() throws ParseException {
-        List<Literal >  ret = new LinkedList<Literal >();
+  final public List<ELPLiteral > clasp_answerset() throws ParseException {
+        List<ELPLiteral >  ret = new LinkedList<ELPLiteral >();
         Object l = null;
     label_5:
     while (true) {
@@ -621,7 +621,7 @@ public class ELPParser implements ELPParserConstants {
       }
       l = literal();
                   System.out.println(l);
-                        ret.add((Literal)l);
+                        ret.add((ELPLiteral)l);
     }
                 {if (true) return ret;}
     throw new Error("Missing return statement in function");

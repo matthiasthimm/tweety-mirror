@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Literal;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.ELPLiteral;
 
 /**
  * this class represents a collection of answer sets and
@@ -33,7 +33,7 @@ public class AnswerSetList extends ArrayList<AnswerSet> {
 		}
 	}
 
-	public Set<Literal> getFactsByName(String name) {
+	public Set<ELPLiteral> getFactsByName(String name) {
 		return getFactsByName(name, POLICY_SKEPTICAL);
 	}
 
@@ -43,8 +43,8 @@ public class AnswerSetList extends ArrayList<AnswerSet> {
 	 * @param policy	The used policy might be skeptical or credolous.
 	 * @return			A set of literals which are also in the answerset.
 	 */
-	public Set<Literal> getFactsByName(String name, int policy) {
-		Set<Literal> reval = new HashSet<Literal>();
+	public Set<ELPLiteral> getFactsByName(String name, int policy) {
+		Set<ELPLiteral> reval = new HashSet<ELPLiteral>();
 		boolean first = true;
 		for(AnswerSet as : this) {
 			if(first == false && policy == POLICY_SKEPTICAL) {
@@ -63,7 +63,7 @@ public class AnswerSetList extends ArrayList<AnswerSet> {
 	 * @param q
 	 * @return
 	 */
-	public boolean	holdsOne( Literal q ) {
+	public boolean	holdsOne( ELPLiteral q ) {
 		return false;
 	}
 	
@@ -73,7 +73,7 @@ public class AnswerSetList extends ArrayList<AnswerSet> {
 	 * @param q
 	 * @return
 	 */
-	public boolean	holdsAll( Literal q ) {
+	public boolean	holdsAll( ELPLiteral q ) {
 		return false;
 	}
 	

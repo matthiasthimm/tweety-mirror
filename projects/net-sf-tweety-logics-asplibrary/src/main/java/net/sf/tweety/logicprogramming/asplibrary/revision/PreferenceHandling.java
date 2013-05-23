@@ -13,8 +13,8 @@ import net.sf.tweety.beliefdynamics.CredibilityRevisionIterative;
 import net.sf.tweety.logicprogramming.asplibrary.solver.DLV;
 import net.sf.tweety.logicprogramming.asplibrary.solver.Solver;
 import net.sf.tweety.logicprogramming.asplibrary.solver.SolverException;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Atom;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Literal;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.ELPAtom;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.ELPLiteral;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Neg;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
@@ -123,7 +123,7 @@ public class PreferenceHandling extends CredibilityRevisionIterative<Rule> {
 		Set<Rule> toRemoveCollection = new HashSet<Rule>();
 		for(Pair<Rule, Rule> conflict : conflicts) {
 			for(AnswerSet as : asDefault) {
-				Set<Literal> literals = new HashSet<Literal>();
+				Set<ELPLiteral> literals = new HashSet<ELPLiteral>();
 				literals.addAll(conflict.getSecond().getLiterals());
 				literals.removeAll(conflict.getSecond().getHead());
 				
@@ -161,9 +161,9 @@ public class PreferenceHandling extends CredibilityRevisionIterative<Rule> {
 				continue;
 			
 			// Create negated head of rule 1.
-			Literal head1 = r1.getHead().get(0);
-			Literal negHead1 = null;
-			if(head1 instanceof Atom) {
+			ELPLiteral head1 = r1.getHead().iterator().next();
+			ELPLiteral negHead1 = null;
+			if(head1 instanceof ELPAtom) {
 				negHead1 = new Neg(head1.getAtom());
 			} else if(head1 instanceof Neg) {
 				negHead1 = head1.getAtom();
@@ -177,7 +177,7 @@ public class PreferenceHandling extends CredibilityRevisionIterative<Rule> {
 				Rule r2 = p2it.next();
 				if(r2.isConstraint())
 					continue;
-				if(r2.getHead().get(0).equals(negHead1)) {
+				if(r2.getHead().iterator().next().equals(negHead1)) {
 					reval.add(new Pair<Rule, Rule>(r1, r2));
 				}
 			}

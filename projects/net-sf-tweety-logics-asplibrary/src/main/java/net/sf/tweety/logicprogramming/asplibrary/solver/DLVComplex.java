@@ -5,7 +5,7 @@ import java.io.StringReader;
 import java.util.List;
 
 import net.sf.tweety.logicprogramming.asplibrary.parser.ELPParser;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Literal;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.ELPLiteral;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSet;
 import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSetList;
@@ -72,7 +72,7 @@ public class DLVComplex extends SolverBase {
 			return ret;
 		
 		// process results
-		List<Literal> lastAS = null;
+		List<ELPLiteral> lastAS = null;
 		for (String s : result) {
 			if (s.length() <= 0)
 				continue;
@@ -112,12 +112,12 @@ public class DLVComplex extends SolverBase {
 	}
 
 	
-	protected List<Literal> parseAnswerSet(String s) {
-		List<Literal> ret = null;
+	protected List<ELPLiteral> parseAnswerSet(String s) {
+		List<ELPLiteral> ret = null;
 		
 		try {
 			ELPParser ep = new ELPParser( new StringReader( s ));
-			List<Literal> lits = ep.dlv_answerset();
+			List<ELPLiteral> lits = ep.dlv_answerset();
 			ret = lits;
 		} catch (Exception e) {
 			System.err.println("dlvcomplex::parseAnswerSet error");

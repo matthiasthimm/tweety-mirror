@@ -91,5 +91,6 @@
   		net-sf-tweety-argumentation-structuredargumentationframeworks
   	</module>
   	<module>../deploy</module>
+  	<module>net-sf-tweety-logics-translate-folprop</module>
   </modules>
 </project>

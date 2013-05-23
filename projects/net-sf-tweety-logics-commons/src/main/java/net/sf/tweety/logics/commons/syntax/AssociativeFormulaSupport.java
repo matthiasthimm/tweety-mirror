@@ -95,8 +95,8 @@ public class AssociativeFormulaSupport<T extends SimpleLogicalFormula>
 		this.bridge = other.bridge;
 		for(T formula :  other.formulas) {
 			@SuppressWarnings("unchecked")
-			T castFormula = (T)formula.clone();
-			formulas.add(castFormula);
+			T castformula = (T) formula.clone();
+			formulas.add(castformula);
 		}
 	}
 	
@@ -179,6 +179,22 @@ public class AssociativeFormulaSupport<T extends SimpleLogicalFormula>
 			else s += f.toString();
 		}
 		return s;
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if(other instanceof AssociativeFormulaSupport<?>) {
+			AssociativeFormulaSupport<?> cast = 
+					(AssociativeFormulaSupport<?>) other;
+			return cast.formulas.equals(this.formulas);
+		} else if (other instanceof Set<?>) {
+			return this.formulas.equals(other);
+		}
+		return false;
+	}
+	
+	public int hashCode() {
+		return formulas.hashCode();
 	}
 	
 	@Override
@@ -308,6 +324,12 @@ public class AssociativeFormulaSupport<T extends SimpleLogicalFormula>
 	@Override
 	public <C> C[] toArray(C[] a) {
 		return this.formulas.toArray(a);
+	}
+
+	@Override
+	public Class<? extends Predicate> getPredicateCls() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	//-------------------------------------------------------------------------

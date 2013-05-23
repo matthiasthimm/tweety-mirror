@@ -23,10 +23,15 @@ public abstract class TypedStructureAdapter implements TypedStructure {
 	 * to the given sorts. Therefore the arity of this structure is
 	 * the size of the list if the structure isComplete().
 	 */
-	private List<Sort> arguments;
+	private List<Sort> arguments = new ArrayList<Sort>();
 	
 	/** the number of arguments for a complete structure */
 	private int arity;
+	
+	/** Default-Ctor: Creating empty typed structure */
+	public TypedStructureAdapter() {
+		
+	}
 	
 	/**
 	 * Initializes a structure of arity zero with the given name; 
@@ -34,7 +39,6 @@ public abstract class TypedStructureAdapter implements TypedStructure {
 	 */
 	public TypedStructureAdapter(String name){
 		this.name = name;
-		this.arguments = new ArrayList<Sort>();
 	}
 	
 	/**

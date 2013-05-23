@@ -1,7 +1,7 @@
 package net.sf.tweety.logicprogramming.asplibrary.syntax;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -12,11 +12,13 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Term;
  * are functions like sum, times, count over a symbolic set,
  * a set of literals and local variables.
  * 
- * @author Thomas Vengels
+ * @todo use an enum for relations instead a string
+ * @todo implement complement()
+ * 
  * @author Tim Janus
- *
+ * @author Thomas Vengels
  */
-public class Aggregate implements RuleElement {
+public class Aggregate extends ELPElementAdapter implements ELPElement {
 
 	protected SymbolicSet	symSet = null;
 	protected Term<?> leftGuard = null, rightGuard = null;
@@ -89,24 +91,8 @@ public class Aggregate implements RuleElement {
 
 	@Override
 	/** @todo implement correctly */
-	public SortedSet<Literal> getLiterals() {
-		return new TreeSet<Literal>();
-	}
-
-	@Override
-	/** @todo implement correctly */
-	public RuleElement invert() {
-		return null;
-	}
-
-	@Override
-	public List<Term<?>> getTerms() {
-		List<Term<?>> reval = new LinkedList<Term<?>>();
-		if(leftGuard != null)
-			reval.add(leftGuard);
-		if(rightGuard != null)
-			reval.add(rightGuard);
-		return reval;
+	public SortedSet<ELPLiteral> getLiterals() {
+		return new TreeSet<ELPLiteral>();
 	}
 
 	@Override
@@ -115,7 +101,48 @@ public class Aggregate implements RuleElement {
 	}
 	
 	@Override
-	public Object clone() {
+	public Aggregate clone() {
 		return new Aggregate(this);
+	}
+
+	@Override
+	public Set<ELPPredicate> getPredicates() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Set<Term<?>> getTerms() {
+		Set<Term<?>> reval = new HashSet<Term<?>>();
+		if(leftGuard != null)
+			reval.add(leftGuard);
+		if(rightGuard != null)
+			reval.add(rightGuard);
+		return reval;
+	}
+
+	@Override
+	public Set<ELPAtom> getAtoms() {
+		return new HashSet<ELPAtom>();
+	}
+
+	@Override
+	public Aggregate substitute(Term<?> t, Term<?> v) {
+		Aggregate reval = new Aggregate(this);
+		if(t.equals(leftGuard)) {
+			reval.leftGuard = v;
+		}
+		if(t.equals(rightGuard)) {
+			reval.rightGuard = v;
+		}
+		return reval;
+	}
+
+	@Override
+	public ElpSignature getSignature() {
+		ElpSignature reval = new ElpSignature();
+		reval.add(leftGuard);
+		reval.add(rightGuard);
+		return reval;
 	}
 }

@@ -1,5 +1,7 @@
 package net.sf.tweety.logicprogramming.asplibrary.syntax;
 
+import net.sf.tweety.logics.commons.syntax.interfaces.Atom;
+import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 
 /**
@@ -9,19 +11,25 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Term;
  * @author Tim Janus
  * 
  */
-public interface Literal extends RuleElement {
+public interface ELPLiteral extends ELPElement, Atom, Invertable, Comparable<ELPLiteral> {
 
 	/**
 	 * Creates a copy of the literal and adds the
 	 * given term as argument to the end of the argument
 	 * list.
 	 * @param term	the new argument.
-	 * @return A copy of the literal containing the given term new argument.
+	 * @return A copy of the literal containing the given term as new argument.
 	 */
-	Literal addTerm(Term<?> term);
+	ELPLiteral addTerm(Term<?> term);
 	
 	/**
 	 * @return The atom representing the literal.
 	 */
-	Atom getAtom();
+	ELPAtom getAtom();
+	
+	@Override
+	ELPLiteral complement();
+	
+	@Override
+	ELPLiteral substitute(Term<?> v, Term<?> t) throws IllegalArgumentException;
 }

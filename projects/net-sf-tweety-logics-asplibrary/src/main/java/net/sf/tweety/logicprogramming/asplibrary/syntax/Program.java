@@ -15,6 +15,7 @@ import java.util.TreeSet;
 import net.sf.tweety.BeliefSet;
 import net.sf.tweety.Signature;
 import net.sf.tweety.logicprogramming.asplibrary.parser.ELPParser;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 
 /**
  * this class models an disjunctiv logical program, which is
@@ -78,6 +79,14 @@ public class Program extends BeliefSet<Rule>{
 		}
 	}
 	
+	public Program substitute(Term<?> v, Term<?> t) {
+		Program reval = new Program();
+		for(Rule r : this) {
+			reval.add(r.substitute(v, t));
+		}
+		return reval;
+	}
+	
 	/**
 	 * Adds another programs content to the content of this program.
 	 * @param other	Reference to the other program.
@@ -137,18 +146,18 @@ public class Program extends BeliefSet<Rule>{
 	private void calcSignature() {
 		signature = new ElpSignature();
 		for(Rule r : this) {
-			List<RuleElement> literals = new LinkedList<RuleElement>();
+			List<ELPElement> literals = new LinkedList<ELPElement>();
 			literals.addAll(r.getBody());
 			literals.addAll(r.getHead());
 			
-			for(RuleElement l : literals) {
+			for(ELPElement l : literals) {
 				signature.add(l);
 			}
 		}
 	}
 	
 	/**
-	 * Checks if the program is an extendend programs, that means the heads of the
+	 * Checks if the program is an extended programs, that means the heads of the
 	 * literals have not more than one literal.
 	 * @return	True if the program is an extended program, false otherwise.
 	 */
@@ -180,8 +189,6 @@ public class Program extends BeliefSet<Rule>{
 		Iterator<Rule> rIter = iterator();
 		while (rIter.hasNext()) {
 			Rule r = rIter.next();
-			if (r.isComment())
-				continue;
 			sb.append(r.toString()+"\n");
 		}
 		
@@ -200,7 +207,7 @@ public class Program extends BeliefSet<Rule>{
 		for(Rule origRule : p) {
 			Rule defRule = new Rule();
 			if(!origRule.isConstraint()) {
-				Literal head = origRule.getHead().get(0);
+				ELPLiteral head = origRule.getHead().iterator().next();
 				Neg neg = new Neg(head.getAtom());
 				defRule.addBody(origRule.getBody());
 				Not defaultificationLit = null;
@@ -228,15 +235,15 @@ public class Program extends BeliefSet<Rule>{
 	 * @param fact	atom representing the fact.
 	 * @return
 	 */
-	public boolean add(Atom fact) {
+	public boolean add(ELPAtom fact) {
 		Rule r = new Rule();
 		r.addHead(fact);
 		return add(r);
 	}
 	
-	public boolean add(Literal head, RuleElement... bodyElements) {
+	public boolean add(ELPLiteral head, ELPElement... bodyElements) {
 		Rule r = new Rule(head);
-		for(RuleElement a : bodyElements) {
+		for(ELPElement a : bodyElements) {
 			r.addBody(a);
 		}
 		return add(r);

@@ -12,7 +12,7 @@ import net.sf.tweety.logicprogramming.asplibrary.parser.ELPParser;
 import net.sf.tweety.logicprogramming.asplibrary.parser.ParseException;
 import net.sf.tweety.logicprogramming.asplibrary.revision.CredibilityRevision;
 import net.sf.tweety.logicprogramming.asplibrary.solver.DLVComplex;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Atom;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.ELPAtom;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Neg;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
@@ -92,9 +92,9 @@ public class RevisionCredibilityTest {
 			assertEquals(1, asl.size());
 			AnswerSet as = asl.get(0);
 			assertEquals(2, as.size());
-			assertEquals(true, as.contains(new Atom("b")));
+			assertEquals(true, as.contains(new ELPAtom("b")));
 			assertEquals(true, as.contains(new Neg("a")));
-			assertEquals(false, as.contains(new Atom("a")));
+			assertEquals(false, as.contains(new ELPAtom("a")));
 		}
 	}
 	
@@ -118,14 +118,14 @@ public class RevisionCredibilityTest {
 			
 			for(AnswerSet as : asl) {
 				assertEquals(3, as.size());
-				assertEquals(true, as.contains(new Atom("b")));
-				assertEquals(true, as.contains(new Atom("c")));
+				assertEquals(true, as.contains(new ELPAtom("b")));
+				assertEquals(true, as.contains(new ELPAtom("c")));
 			}
 			
-			if(asl.get(0).contains(new Atom("a"))) {
+			if(asl.get(0).contains(new ELPAtom("a"))) {
 				assertEquals(true, asl.get(1).contains(new Neg("a")));
 			} else {
-				assertEquals(true, asl.get(1).contains(new Atom("a")));
+				assertEquals(true, asl.get(1).contains(new ELPAtom("a")));
 			}
 		}
 	}

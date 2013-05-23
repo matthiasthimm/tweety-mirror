@@ -9,10 +9,11 @@ import java.util.Set;
  * 
  * @author Tim Janus
  */
-public interface AssociativeFormula<T extends SimpleLogicalFormula> extends SimpleLogicalFormula, Collection<T> {
+public interface AssociativeFormula<T extends SimpleLogicalFormula> 
+	extends SimpleLogicalFormula, Collection<T> {
 	
 	/** @return all the formulas saved as childs in the associative formula */
-	Set<? extends SimpleLogicalFormula> getFormulas();
+	Set<T> getFormulas();
 	
 	/**
 	 * Process the formulas of type C that are children of this associative

@@ -14,7 +14,9 @@ public class LanguageException extends RuntimeException {
 		LER_ILLEGAL_PREDICATE("Tried to generate an illegal predicate."),
 		LER_TERM_TYPE_NOT_SUPPORTED("Tried to instantiate an unsupported term."),
 		LER_RULES_NOT_SUPPORTED("Rules are not supported by the language."),
-		LER_DISJUNCTIONS_NOT_SUPPORTED("Disjunctions are not supported by the language.");
+		LER_DISJUNCTIONS_NOT_SUPPORTED("Disjunctions are not supported by the language."),
+		LER_INSTANTIATION("Dynamic instantiation did not work."),
+		LER_ILLEGAL_ACCESSS("Illegal access.");
 		
 		private final String name;
 		
@@ -26,6 +28,10 @@ public class LanguageException extends RuntimeException {
 		public String toString() {
 			return name;
 		}
+	}
+	
+	public LanguageException() {
+		super("Language used incorrectly");
 	}
 	
 	public LanguageException(String language, LanguageExceptionReason reason, String furtherInformation) {

@@ -3,7 +3,7 @@ package net.sf.logicprogramming.asplibrary.syntax;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Atom;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.ELPAtom;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Neg;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Not;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
@@ -31,8 +31,8 @@ public class DefaultificationTest extends TestCase {
     public void testSimpleDefaultifcation() {
     	Program p = new Program();
     	Rule onlyRule = new Rule();
-    	onlyRule.addHead(new Atom("x"));
-    	onlyRule.addBody(new Atom("y"));
+    	onlyRule.addHead(new ELPAtom("x"));
+    	onlyRule.addBody(new ELPAtom("y"));
     	p.add(onlyRule);
     	
     	Program dp = Program.defaultification(p);
@@ -41,12 +41,12 @@ public class DefaultificationTest extends TestCase {
     	
     	assertTrue(dr.getHead().equals(onlyRule.getHead()));
     	assertTrue(dr.getBody().contains(onlyRule.getBody().get(0)));
-    	Not defNot = new Not(new Neg(dr.getHead().get(0).getAtom()));
+    	Not defNot = new Not(new Neg(dr.getHead().iterator().next().getAtom()));
     	assertTrue(dr.getBody().contains(defNot));
     	
     	p = new Program();
     	onlyRule = new Rule();
-    	onlyRule.addHead(new Neg(new Atom("x")));
+    	onlyRule.addHead(new Neg(new ELPAtom("x")));
     	
     	p.add(onlyRule);
     	dp = Program.defaultification(p);
@@ -54,14 +54,14 @@ public class DefaultificationTest extends TestCase {
     	dr = dp.iterator().next();
     	
     	assertTrue(dr.getHead().equals(onlyRule.getHead()));
-    	defNot = new Not(dr.getHead().get(0).getAtom());
+    	defNot = new Not(dr.getHead().iterator().next().getAtom());
     	assertTrue(dr.getBody().contains(defNot));
     }
     
     public void testDefaultificationOfAlreadyDefaulticated() {
     	Program p = new Program();
     	Rule r = new Rule();
-    	Atom a = new Atom("x");
+    	ELPAtom a = new ELPAtom("x");
     	r.addHead(a);
     	Not defLit = new Not(new Neg(a));
     	r.addBody(defLit);

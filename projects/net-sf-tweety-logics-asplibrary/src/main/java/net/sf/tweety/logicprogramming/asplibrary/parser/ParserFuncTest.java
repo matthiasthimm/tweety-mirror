@@ -3,11 +3,11 @@ package net.sf.tweety.logicprogramming.asplibrary.parser;
 import java.io.StringReader;
 import java.util.List;
 
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Atom;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.ELPAtom;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Neg;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Not;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.RuleElement;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.ELPElement;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
 
 /**
@@ -25,17 +25,17 @@ public class ParserFuncTest {
 		
 		System.out.println("Analyse der Parser-Ausgabe: " + rule);
 		for(Rule r : p) {
-			Atom head = r.getHead().get(0).getAtom();
+			ELPAtom head = r.getHead().iterator().next().getAtom();
 			Output(head);
 			System.out.println();
 			System.out.println("Body:");
-			for(RuleElement l : r.getBody()) {
+			for(ELPElement l : r.getBody()) {
 				System.out.println(l);
 			}
 		}
 	}
 	
-	public static void Output(RuleElement atom) {
+	public static void Output(ELPElement atom) {
 		
 		System.out.println("Literal: " + atom);
 		System.out.println("Is StrictNegated: " + (atom instanceof Neg));

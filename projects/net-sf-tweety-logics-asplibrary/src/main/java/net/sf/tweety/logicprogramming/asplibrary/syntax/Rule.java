@@ -7,9 +7,9 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
-import net.sf.tweety.Formula;
-import net.sf.tweety.Signature;
 import net.sf.tweety.logicprogramming.asplibrary.parser.ELPParser;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Variable;
@@ -20,40 +20,58 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Term;
  * This class models a rule for a disjunctive logic program.
  * A rule is a collection of literals and more sophisticated rule elements
  * like Aggregate or Arithmetic. It uses separate lists for the
- * head and the body. It also implements the Comperable interface to allow
+ * head and the body. It also implements the Comparable interface to allow
  * the ordering in collections.
  * 
  * @author Tim Janus
  * @author Thomas Vengels
  *
  */
-public class Rule implements Comparable<Rule>, Formula {
+public class Rule extends ELPElementAdapter implements Comparable<Rule>, ELPElement, net.sf.tweety.util.rules.Rule {
 
-	List<Literal>	head = new LinkedList<Literal>();
-	List<RuleElement>	body = new LinkedList<RuleElement>();
+	ELPHead head = new ELPHead();
+	List<ELPElement>	body = new LinkedList<ELPElement>();
 	
+	/** Default-Ctor: Creates an empty rule without any head literals or body elements */
 	public Rule() {}
 	
+	/** Copy-Ctor: Makes a deep copy of the given rule */
 	public Rule(Rule other) {
-		for(Literal headLits : other.head) {
-			this.head.add((Literal)headLits.clone());
+		for(ELPLiteral headLits : other.head) {
+			this.head.add((ELPLiteral)headLits.clone());
 		}
 		
-		for(RuleElement bodyElement : other.body) {
-			this.body.add((RuleElement)bodyElement.clone());
+		for(ELPElement bodyElement : other.body) {
+			this.body.add((ELPElement)bodyElement.clone());
 		}
 	}
 	
-	public Rule(Literal head) {
+	/** 
+	 * Ctor: Create a rule with the given head, cause there are no
+	 * body elements the created rule is a fact.
+	 * 
+	 * @param head	The head of the rule as ELPHead
+	 */
+	public Rule(ELPHead head) {
+		this.head = head;
+	}
+	
+	/**
+	 * Ctor: Create a rule with the given head, cause there are no
+	 * body elements the created rule is a fact.
+	 * 
+	 * @param head	The head of the rule as ELPLiteral
+	 */
+	public Rule(ELPLiteral head) {
 		this.head.add(head);
 	}
 	
-	public Rule(Literal head, List<RuleElement> litsBody) {
+	public Rule(ELPLiteral head, List<ELPElement> litsBody) {
 		this.head.add(head);
 		this.body.addAll(litsBody);
 	}
 	
-	public Rule(List<Literal> litsHead, List<RuleElement> litsBody) {
+	public Rule(List<ELPLiteral> litsHead, List<ELPElement> litsBody) {
 		this.head.addAll(litsHead);
 		this.body.addAll(litsBody);
 	}
@@ -71,43 +89,44 @@ public class Rule implements Comparable<Rule>, Formula {
 		}
 	}
 	
-	public List<Literal> getHead() {
-		return Collections.unmodifiableList(this.head);
+	public ELPHead getHead() {
+		return this.head;
 	}
 	
-	public List<RuleElement> getBody() {
+	public List<ELPElement> getBody() {
 		return Collections.unmodifiableList(this.body); 
 	}
 	
-	public List<RuleElement> getProgramElements() {
-		List<RuleElement> reval = new LinkedList<RuleElement>();
+	public List<ELPElement> getProgramElements() {
+		List<ELPElement> reval = new LinkedList<ELPElement>();
 		reval.addAll(head);
 		reval.addAll(body);
 		return reval;
 	}
 	
-	public Set<Literal> getLiterals() {
-		Set<Literal> literals = new HashSet<Literal>();
+	@Override
+	public SortedSet<ELPLiteral> getLiterals() {
+		SortedSet<ELPLiteral> literals = new TreeSet<ELPLiteral>();
 		literals.addAll(head);
-		for(RuleElement pe : body) {
+		for(ELPElement pe : body) {
 			literals.addAll(pe.getLiterals());
 		}
 		return literals;
 	}
 	
-	public void	addHead(Literal l) {
+	public void	addHead(ELPLiteral l) {
 		this.head.add(l);
 	}
 	
-	public void	addBody(RuleElement l) {
+	public void	addBody(ELPElement l) {
 		this.body.add(l);
 	}
 	
-	public void	addHead(Collection<? extends Literal> l) {
+	public void	addHead(Collection<? extends ELPLiteral> l) {
 		this.head.addAll(l);
 	}
 	
-	public void	addBody(Collection<? extends RuleElement> l) {
+	public void	addBody(Collection<? extends ELPElement> l) {
 		this.body.addAll(l);
 	}
 	
@@ -127,10 +146,6 @@ public class Rule implements Comparable<Rule>, Formula {
 		return false;
 	}
 	
-	public boolean		isComment() {
-		return false;
-	}
-	
 	/**
 	 * Proofs if the given rule is safe for use in a solver.
 	 * To get a felling when a rule is safe read the following text
@@ -146,18 +161,18 @@ public class Rule implements Comparable<Rule>, Formula {
 	 */
 	public boolean isSafe() {
 		Set<Term<?>> variables = new HashSet<Term<?>>();
-		Set<Literal> allLit = getLiterals();
+		Set<ELPLiteral> allLit = getLiterals();
 		
 		// TODO: only depth of one... the entire asp-library has major desing issues... best solution: Redesign core interfaces
 		// TOTALLY HACKED WILL NOT WORK FOR EVERYTHING:...
-		for(Literal l : allLit) {
+		for(ELPLiteral l : allLit) {
 			if(!l.isGround()) {
 				for(Term<?> t : l.getAtom().getTerms()) {
 					if(t instanceof Variable) {
 						variables.add((Variable)t);
-					} else if(t instanceof Atom) {
-						if(!((Atom)t).isGround()) {
-							for(Term<?> t2 : ((Atom)t).getTerms()) {
+					} else if(t instanceof ELPAtom) {
+						if(!((ELPAtom)t).isGround()) {
+							for(Term<?> t2 : ((ELPAtom)t).getTerms()) {
 								if(t2 instanceof Variable) {
 									variables.add((Variable)t2);
 								} else if(t2 instanceof Constant) {
@@ -178,8 +193,8 @@ public class Rule implements Comparable<Rule>, Formula {
 		
 		for(Term<?> x : variables) {
 			boolean safe = false;
-			for(Literal l : allLit) {
-				if(	l instanceof Neg || l instanceof Atom ) {
+			for(ELPLiteral l : allLit) {
+				if(	l instanceof Neg || l instanceof ELPAtom ) {
 					for(Term<?> t : l.getAtom().getTerms()) {
 						if(t.equals(x)) {
 							safe = true;
@@ -199,9 +214,7 @@ public class Rule implements Comparable<Rule>, Formula {
 	public String	toString() {
 		String ret = "";
 		if (head.size() > 0) {
-			ret += head.get(0);
-			for (int i=1; i<head.size(); ++i)
-				ret += " || " + head.get(i);			
+			ret += head.toString();	
 		}
 		if (body.size() > 0) {
 			ret += ":- " + body.get(0);
@@ -240,11 +253,9 @@ public class Rule implements Comparable<Rule>, Formula {
 		}
 		
 		// then order alphabetically starting by the head.
-		for(int i=0; i<getHead().size() && i<arg0.getHead().size(); ++i) {
-			comp = getHead().get(i).toString().compareTo(arg0.getHead().get(i).toString());
-			if(comp != 0)
-				return comp;
-		}
+		comp = getHead().toString().compareTo(arg0.getHead().toString());
+		if(comp != 0)
+			return comp;
 		
 		// if the head is the same use the body.
 		for(int i=0; i<getBody().size() && i<arg0.getBody().size(); ++i) {
@@ -257,13 +268,68 @@ public class Rule implements Comparable<Rule>, Formula {
 	}
 	
 	@Override
-	public Object clone() {
+	public Rule clone() {
 		return new Rule(this);
 	}
 
 	@Override
-	public Signature getSignature() {
-		// TODO Auto-generated method stub
-		return null;
+	public ElpSignature getSignature() {
+		ElpSignature reval = new ElpSignature();
+		reval.addSignature(head.getSignature());
+		for(ELPElement bodyElement : body) {
+			reval.addSignature(bodyElement.getSignature());
+		}
+		return reval;
+	}
+
+	@Override
+	public Collection<ELPElement> getPremise() {
+		return Collections.unmodifiableList(body);
+	}
+
+	@Override
+	public ELPHead getConclusion() {
+		return head;
+	}
+
+	@Override
+	public Rule substitute(Term<?> v, Term<?> t)
+			throws IllegalArgumentException {
+		Rule reval = new Rule();
+		reval.head = head.substitute(v, t);
+		for(ELPElement bodyElement : body) {
+			reval.body.add(bodyElement.substitute(v,t));
+		}
+		return reval;
+	}
+
+	@Override
+	public Set<ELPAtom> getAtoms() {
+		Set<ELPAtom> reval = new HashSet<ELPAtom>();
+		reval.addAll(head.getAtoms());
+		for(ELPElement bodyElement : body) {
+			reval.addAll(bodyElement.getAtoms());
+		}
+		return reval;
+	}
+
+	@Override
+	public Set<ELPPredicate> getPredicates() {
+		Set<ELPPredicate> reval = new HashSet<ELPPredicate>();
+		reval.addAll(head.getPredicates());
+		for(ELPElement bodyElement : body) {
+			reval.addAll(bodyElement.getPredicates());
+		}
+		return reval;
+	}
+
+	@Override
+	public Set<Term<?>> getTerms() {
+		Set<Term<?>> reval = new HashSet<Term<?>>();
+		reval.addAll(head.getTerms());
+		for(ELPElement bodyElement : body) {
+			reval.addAll(bodyElement.getTerms());
+		}
+		return reval;
 	}
 }

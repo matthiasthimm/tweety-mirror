@@ -9,7 +9,7 @@ public class AnswerSet extends BeliefSet {
 	public final int level;
 	public final int weight;	
 	
-	public AnswerSet(Collection<Literal> lits, int level, int weight) {
+	public AnswerSet(Collection<ELPLiteral> lits, int level, int weight) {
 
 		super(lits);
 		this.level = level;

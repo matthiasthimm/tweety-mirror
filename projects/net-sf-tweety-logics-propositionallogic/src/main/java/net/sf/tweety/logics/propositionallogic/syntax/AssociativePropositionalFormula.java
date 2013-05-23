@@ -62,7 +62,7 @@ public abstract class AssociativePropositionalFormula extends PropositionalFormu
 	}
 	
 	@Override
-	public Set<? extends SimpleLogicalFormula> getFormulas() {
+	public Set<PropositionalFormula> getFormulas() {
 		return support.getFormulas();
 	}
 

@@ -29,6 +29,11 @@ import net.sf.tweety.util.MapTools;
 public abstract class RelationalFormula implements ClassicalFormula, QuantifiedFormula {
 	
 	@Override
+	public Class<Predicate> getPredicateCls() {
+		return Predicate.class;
+	}
+	
+	@Override
 	public RelationalFormula getFormula() {
 		return this;
 	}

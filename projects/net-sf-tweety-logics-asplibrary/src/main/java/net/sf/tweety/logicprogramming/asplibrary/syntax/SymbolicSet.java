@@ -11,18 +11,18 @@ import java.util.*;
 public class SymbolicSet {
 	
 	protected Set<String> vars;
-	protected Collection<Literal> lits;
+	protected Collection<ELPLiteral> lits;
 	
-	public SymbolicSet(Set<String> variables, Collection<Literal> literals ) {
+	public SymbolicSet(Set<String> variables, Collection<ELPLiteral> literals ) {
 		this.vars = variables;
 		this.lits = literals;
 	}
 	
 	public SymbolicSet(SymbolicSet other) {
 		this.vars = new HashSet<String>(other.vars);
-		this.lits = new HashSet<Literal>();
-		for(Literal l : other.lits) {
-			lits.add((Literal)l.clone());
+		this.lits = new HashSet<ELPLiteral>();
+		for(ELPLiteral l : other.lits) {
+			lits.add((ELPLiteral)l.clone());
 		}
 	}
 	
@@ -46,7 +46,7 @@ public class SymbolicSet {
 		
 		ret += ":";
 		
-		Iterator<Literal> lIter = lits.iterator();
+		Iterator<ELPLiteral> lIter = lits.iterator();
 		
 		if (lIter.hasNext()) {
 			ret += lIter.next();

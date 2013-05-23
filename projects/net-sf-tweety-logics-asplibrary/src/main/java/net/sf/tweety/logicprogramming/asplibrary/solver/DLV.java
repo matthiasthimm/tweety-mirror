@@ -32,7 +32,7 @@ public class DLV extends SolverBase {
 		AnswerSetList ret = new AnswerSetList();
 				
 		// process results
-		List<Literal> lastAS = null;
+		List<ELPLiteral> lastAS = null;
 		for (String s : ai.getOutput()) {
 			if (s.length() <= 0)
 				continue;
@@ -92,8 +92,8 @@ public class DLV extends SolverBase {
 		return parseResults();
 	}
 	
-	protected List<Literal> parseAnswerSet(String s) {
-		List<Literal> ret = null;
+	protected List<ELPLiteral> parseAnswerSet(String s) {
+		List<ELPLiteral> ret = null;
 		try {
 			ELPParser ep = new ELPParser( new StringReader( s ));
 			ret = ep.dlv_answerset();

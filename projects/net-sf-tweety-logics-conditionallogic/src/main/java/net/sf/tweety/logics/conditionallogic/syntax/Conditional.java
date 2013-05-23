@@ -173,5 +173,10 @@ public class Conditional implements SimpleLogicalFormula, Rule {
 	public boolean isLiteral() {
 		return false;
 	}
+
+	@Override
+	public Class<? extends Predicate> getPredicateCls() {
+		return PropositionalPredicate.class;
+	}
 	
 }

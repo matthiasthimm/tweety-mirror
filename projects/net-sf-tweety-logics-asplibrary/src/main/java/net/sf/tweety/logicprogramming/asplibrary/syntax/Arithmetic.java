@@ -1,7 +1,7 @@
 package net.sf.tweety.logicprogramming.asplibrary.syntax;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -11,12 +11,13 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Term;
  * this class extends an ordinary atom to be used as
  * an arithmetic expression.
  * 
- * @todo implmeent invert
+ * @todo implement complement()
  * @todo use an enum for operators instead string
+ * 
  * @author Thomas Vengels
  * @author Tim Janus
  */
-public class Arithmetic implements RuleElement {
+public class Arithmetic extends ELPElementAdapter implements ELPElement {
 	
 	private String operator;
 	private Term<?> arg1, arg2, result;
@@ -67,19 +68,13 @@ public class Arithmetic implements RuleElement {
 	}
 
 	@Override
-	public SortedSet<Literal> getLiterals() {
-		return new TreeSet<Literal>();
+	public SortedSet<ELPLiteral> getLiterals() {
+		return new TreeSet<ELPLiteral>();
 	}
 
 	@Override
-	public RuleElement invert() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Term<?>> getTerms() {
-		List<Term<?>> reval = new LinkedList<Term<?>>();
+	public Set<Term<?>> getTerms() {
+		Set<Term<?>> reval = new HashSet<Term<?>>();
 		reval.add(arg1);
 		reval.add(arg2);
 		reval.add(result);
@@ -92,7 +87,39 @@ public class Arithmetic implements RuleElement {
 	}
 	
 	@Override
-	public Object clone() {
+	public Arithmetic clone() {
 		return new Arithmetic(this);
+	}
+
+	@Override
+	public Set<ELPPredicate> getPredicates() {
+		return new HashSet<ELPPredicate>();
+	}
+
+	@Override
+	public Set<ELPAtom> getAtoms() {
+		return new HashSet<ELPAtom>();
+	}
+
+	@Override
+	public Arithmetic substitute(Term<?> t, Term<?> v) {
+		Arithmetic reval = new Arithmetic(this);
+		if(t.equals(arg1))
+			reval.arg1 = v;
+		if(t.equals(arg2))
+			reval.arg2 = v;
+		if(t.equals(result)) 
+			reval.result = v;
+		return reval;
+	}
+
+	@Override
+	public ElpSignature getSignature() {
+		ElpSignature reval = new ElpSignature();
+		reval.add(arg1);
+		reval.add(arg2);
+		if(result != null)
+			reval.add(result);
+		return reval;
 	}
 }

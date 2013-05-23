@@ -7,41 +7,41 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Literal;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.ELPLiteral;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Neg;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
 
 public class BeliefSet {
 
-	public Map<String, Set<Literal>>	literals = new HashMap<String, Set<Literal>>();
+	public Map<String, Set<ELPLiteral>>	literals = new HashMap<String, Set<ELPLiteral>>();
 	
 	public BeliefSet() {}
 	
 	public BeliefSet(BeliefSet other) {
 		for(String key : other.literals.keySet()) {
-			Set<Literal> set = new HashSet<Literal>();
+			Set<ELPLiteral> set = new HashSet<ELPLiteral>();
 			this.literals.put(key, set);
 			
-			for(Literal l : other.literals.get(key)) {
-				set.add((Literal)l.clone());
+			for(ELPLiteral l : other.literals.get(key)) {
+				set.add((ELPLiteral)l.clone());
 			}
 		}
 	}
 	
-	public BeliefSet(Collection<Literal> lits) {
-		literals = new HashMap<String,Set<Literal>>();
-		for (Literal l : lits)
+	public BeliefSet(Collection<ELPLiteral> lits) {
+		literals = new HashMap<String,Set<ELPLiteral>>();
+		for (ELPLiteral l : lits)
 			add(l);
 	}
 	
 	
-	public void add(Literal l) {
+	public void add(ELPLiteral l) {
 		String functor = l.getAtom().getName();
 		
-		Set<Literal> sl = literals.get(functor);
+		Set<ELPLiteral> sl = literals.get(functor);
 		if (sl == null) {
-			sl = new HashSet<Literal>();
+			sl = new HashSet<ELPLiteral>();
 			literals.put(functor, sl);
 		}
 		
@@ -49,8 +49,8 @@ public class BeliefSet {
 	}
 	
 	/** @return all literals in the belief set */
-	public Set<Literal> getLiterals() {
-		Set<Literal> reval = new HashSet<Literal>();
+	public Set<ELPLiteral> getLiterals() {
+		Set<ELPLiteral> reval = new HashSet<ELPLiteral>();
 		for(String key : literals.keySet()) {
 			reval.addAll(literals.get(key));
 		}
@@ -71,11 +71,11 @@ public class BeliefSet {
 		}
 	}
 	
-	public Set<Literal> getLiteralsBySymbol(String functor) {
-		Set<Literal> ret = literals.get(functor);
+	public Set<ELPLiteral> getLiteralsBySymbol(String functor) {
+		Set<ELPLiteral> ret = literals.get(functor);
 		
 		if (ret == null)
-			return Collections.<Literal>emptySet();
+			return Collections.<ELPLiteral>emptySet();
 		else
 			return ret;
 	}
@@ -83,7 +83,7 @@ public class BeliefSet {
 	
 	public int	size() {
 		int ret = 0;
-		for (Set<Literal> s : literals.values()) {
+		for (Set<ELPLiteral> s : literals.values()) {
 			ret += s.size();
 		}
 		
@@ -96,8 +96,8 @@ public class BeliefSet {
 		String ret = "";
 		boolean first = true;
 		
-		for (Set<Literal> s : literals.values()) {
-			for (Literal l : s) {
+		for (Set<ELPLiteral> s : literals.values()) {
+			for (ELPLiteral l : s) {
 				if (!first)
 					ret+=", ";
 				ret += l;
@@ -112,8 +112,8 @@ public class BeliefSet {
 		Program p = new Program();
 		
 		for (String pred : literals.keySet() ) {
-			Collection<Literal> lits = literals.get(pred);
-			for (Literal l : lits) {
+			Collection<ELPLiteral> lits = literals.get(pred);
+			for (ELPLiteral l : lits) {
 				Rule r = new Rule();
 				r.addHead(l);
 				p.add(r);
@@ -133,7 +133,7 @@ public class BeliefSet {
 	 * @param literals set of new literals
 	 * @return literals matching symbol being replaced
 	 */
-	public Set<Literal> replace(String functor, Set<Literal> literals) {
+	public Set<ELPLiteral> replace(String functor, Set<ELPLiteral> literals) {
 		if (literals == null) {
 			return this.literals.remove(functor);
 		} else {
@@ -141,11 +141,11 @@ public class BeliefSet {
 		}
 	}
 	
-	public void pos_replace(String functor, Set<Literal> literals) {
+	public void pos_replace(String functor, Set<ELPLiteral> literals) {
 		this.literals.remove(functor);
 		
-		Set<Literal> sl = new HashSet<Literal>();
-		for (Literal l : literals) {
+		Set<ELPLiteral> sl = new HashSet<ELPLiteral>();
+		for (ELPLiteral l : literals) {
 			if (!( l instanceof Neg) )
 				sl.add(l);
 		}
@@ -153,17 +153,17 @@ public class BeliefSet {
 		this.literals.put(functor, sl);
 	}
 
-	public boolean contains(Literal lit) {
-		Set<Literal> set = literals.get(lit.getAtom().getPredicate().getName());
+	public boolean contains(ELPLiteral lit) {
+		Set<ELPLiteral> set = literals.get(lit.getAtom().getPredicate().getName());
 		return set != null ? set.contains(lit) : false;
 	}
 	
-	public boolean containsAll(Collection<Literal> lits) {
+	public boolean containsAll(Collection<ELPLiteral> lits) {
 		if(lits == null)
 			throw new NullPointerException();
 		
-		for(Literal l : lits) {
-			Set<Literal> getted = literals.get(l.getAtom().getName());
+		for(ELPLiteral l : lits) {
+			Set<ELPLiteral> getted = literals.get(l.getAtom().getName());
 			if(getted == null || !getted.contains(l))
 				return false;
 		}
@@ -171,10 +171,10 @@ public class BeliefSet {
 		return true;
 	}
 	
-	public boolean holds(Collection<Literal> posLits, Collection<Literal> negLits) {
+	public boolean holds(Collection<ELPLiteral> posLits, Collection<ELPLiteral> negLits) {
 		if (posLits != null) {
-			for(Literal l : posLits) {
-				Set<Literal> lits = literals.get(l.getAtom().getName());
+			for(ELPLiteral l : posLits) {
+				Set<ELPLiteral> lits = literals.get(l.getAtom().getName());
 				if (lits == null)
 					return false;
 				
@@ -184,8 +184,8 @@ public class BeliefSet {
 		}
 		
 		if (negLits != null) {
-			for(Literal l : negLits) {
-				Set<Literal> lits = literals.get(l.getAtom().getName());
+			for(ELPLiteral l : negLits) {
+				Set<ELPLiteral> lits = literals.get(l.getAtom().getName());
 				// @Thomas: Close world assumption??? I dont get it.
 				if ((lits != null) && (lits.contains(l)))
 					return false;

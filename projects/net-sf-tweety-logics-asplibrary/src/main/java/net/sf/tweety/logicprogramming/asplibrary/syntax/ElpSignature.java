@@ -9,12 +9,12 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 
 public class ElpSignature extends Signature {
 	
-	private Set<Predicate> predicates;
+	private Set<ELPPredicate> predicates;
 	
 	private Set<Constant> constants;
 	
 	public ElpSignature() {
-		predicates = new HashSet<Predicate>();
+		predicates = new HashSet<ELPPredicate>();
 		constants = new HashSet<Constant>();
 	}
 	
@@ -24,8 +24,8 @@ public class ElpSignature extends Signature {
 			obj = ((Neg)obj).getAtom();
 		}
 		
-		if(obj instanceof Atom) {
-			Atom a = (Atom)obj;
+		if(obj instanceof ELPAtom) {
+			ELPAtom a = (ELPAtom)obj;
 			predicates.add(a.getPredicate());
 			
 			for(Term<?> t : a.getTerms()) {

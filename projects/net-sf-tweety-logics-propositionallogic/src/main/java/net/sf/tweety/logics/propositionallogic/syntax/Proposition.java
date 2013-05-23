@@ -2,9 +2,11 @@ package net.sf.tweety.logics.propositionallogic.syntax;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.interfaces.Atom;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 
@@ -120,6 +122,13 @@ public class Proposition extends PropositionalFormula implements Atom {
 	@Override
 	public boolean isLiteral() {
 		return true;
+	}
+
+	@Override
+	public RETURN_SET_PREDICATE setPredicate(Predicate predicate) {
+		Predicate old = this.predicate;
+		this.predicate = (PropositionalPredicate)predicate;
+		return AtomImpl.implSetPredicate(old, this.predicate, new LinkedList<Term<?>>());
 	}
 	
 }

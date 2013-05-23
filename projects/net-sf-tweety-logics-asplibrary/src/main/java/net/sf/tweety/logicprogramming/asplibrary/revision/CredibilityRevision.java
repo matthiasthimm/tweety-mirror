@@ -13,13 +13,13 @@ import net.sf.tweety.beliefdynamics.CredibilityRevisionNonIterative;
 import net.sf.tweety.logicprogramming.asplibrary.solver.Solver;
 import net.sf.tweety.logicprogramming.asplibrary.solver.SolverException;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Arithmetic;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Atom;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Literal;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.ELPAtom;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.ELPLiteral;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Neg;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Not;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.RuleElement;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.ELPElement;
 import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSet;
 import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSetList;
 import net.sf.tweety.logics.commons.syntax.Constant;
@@ -79,9 +79,9 @@ public class CredibilityRevision extends CredibilityRevisionNonIterative<Rule> {
 			
 			// gather indicies of rule which are rejected:
 			List<Integer> indicies = new LinkedList<Integer>();
-			Set<Literal> literals = as.getLiteralsBySymbol("p__rej");
-			for(Literal l : literals) {
-				Atom atom = (Atom)l;
+			Set<ELPLiteral> literals = as.getLiteralsBySymbol("p__rej");
+			for(ELPLiteral l : literals) {
+				ELPAtom atom = (ELPAtom)l;
 				NumberTerm nt = (NumberTerm)atom.getTerm(1);
 				indicies.add(nt.get());
 			}
@@ -112,7 +112,7 @@ public class CredibilityRevision extends CredibilityRevisionNonIterative<Rule> {
 	private AnswersetProcessing processing = new DefaultBehavior();
 	
 	/** a map used during the creation of the credibility logic program */
-	private Map<Literal, String> literalMap = new HashMap<Literal, String>();
+	private Map<ELPLiteral, String> literalMap = new HashMap<ELPLiteral, String>();
 	
 	/** a prefix used to mark constants which represent the id of negative literals. */
 	private String negConstantPrefix = "nc__";
@@ -239,76 +239,76 @@ public class CredibilityRevision extends CredibilityRevisionNonIterative<Rule> {
 			Variable cred = new Variable("Cred");
 			NumberTerm indexTerm = new NumberTerm(ruleIndex);
 			
-			Literal originalHead = r.getHead().get(0);
-			List<RuleElement> originalBody = new LinkedList<RuleElement>();
-			for(RuleElement pe : r.getBody()) {
-				RuleElement newBodyElement = (RuleElement)pe.clone();
+			ELPLiteral originalHead = r.getHead().iterator().next();
+			List<ELPElement> originalBody = new LinkedList<ELPElement>();
+			for(ELPElement pe : r.getBody()) {
+				ELPElement newBodyElement = (ELPElement)pe.clone();
 				originalBody.add(newBodyElement);
 			}
 			
 			String id = translateLiteral(originalHead);
 			Constant headId = new Constant(id);
-			Literal tHead = new Atom(pcp+"lit", headId);
+			ELPLiteral tHead = new ELPAtom(pcp+"lit", headId);
 			
-			String negId = translateLiteral((Literal)originalHead.invert());
+			String negId = translateLiteral((ELPLiteral)originalHead.complement());
 			Constant negHeadId = new Constant(negId);
-			Literal tHeadNeg = new Atom(pcp+"lit", negHeadId);
+			ELPLiteral tHeadNeg = new ELPAtom(pcp+"lit", negHeadId);
 			
 			Variable credLow = new Variable("CredLow");
 			Variable credHigh = new Variable("CredHigh");
-			List<RuleElement> newBody = new LinkedList<RuleElement>();
+			List<ELPElement> newBody = new LinkedList<ELPElement>();
 			
 			// add H(u) :- B, minr(j, Cred), not exLowerMinr(j, Cred).
 			newBody.addAll(originalBody);
-			newBody.add(new Atom(pcp+"minr", indexTerm, cred));
-			newBody.add(new Not(new Atom(pcp+"exLowerMinr", indexTerm, cred)));
+			newBody.add(new ELPAtom(pcp+"minr", indexTerm, cred));
+			newBody.add(new Not(new ELPAtom(pcp+"exLowerMinr", indexTerm, cred)));
 			reval.add(new Rule(tHead.addTerm(cred), newBody));
 			
 			// add exLowerMin(j, Cred) :- minr(j, Cred), minr(j, CredLower), Prec(CredLower, Cred).
-			newBody = new LinkedList<RuleElement>();
-			newBody.add(new Atom(pcp+"minr", indexTerm, cred));
-			newBody.add(new Atom(pcp+"minr", indexTerm, credLow));
+			newBody = new LinkedList<ELPElement>();
+			newBody.add(new ELPAtom(pcp+"minr", indexTerm, cred));
+			newBody.add(new ELPAtom(pcp+"minr", indexTerm, credLow));
 			newBody.add(new Arithmetic("<", credLow, cred));
-			reval.add(new Rule(new Atom(pcp+"exLowerMinr", indexTerm, cred), newBody));
+			reval.add(new Rule(new ELPAtom(pcp+"exLowerMinr", indexTerm, cred), newBody));
 			
 			// add H :- H(u), not rej(name).
-			newBody = new LinkedList<RuleElement>();
+			newBody = new LinkedList<ELPElement>();
 			newBody.add(tHead.addTerm(cred));
-			newBody.add(new Not(new Atom(pcp+"rej", headId, indexTerm, cred)));
+			newBody.add(new Not(new ELPAtom(pcp+"rej", headId, indexTerm, cred)));
 			reval.add(new Rule(originalHead, newBody));
 			
 			
 			// add minr(index, programCredibility) :- .
-			reval.add(new Atom(pcp+"minr", indexTerm, new NumberTerm(programCredibility)));
+			reval.add(new ELPAtom(pcp+"minr", indexTerm, new NumberTerm(programCredibility)));
 			
 			// add minr(index, Cred) :- B(r), L(name, Cred), not exHigherL(Cred).
-			for(RuleElement re : originalBody) {
-				if(re instanceof Literal) {
-					String bodyLitId = translateLiteral((Literal)re);
-					Atom translated = new Atom(pcp + "lit", new Constant(bodyLitId));
-					newBody = new LinkedList<RuleElement>();
+			for(ELPElement re : originalBody) {
+				if(re instanceof ELPLiteral) {
+					String bodyLitId = translateLiteral((ELPLiteral)re);
+					ELPAtom translated = new ELPAtom(pcp + "lit", new Constant(bodyLitId));
+					newBody = new LinkedList<ELPElement>();
 					newBody.addAll(originalBody);
 					newBody.add(translated.addTerm(cred));
-					newBody.add(new Not(new Atom(pcp+"exHigher", headId, indexTerm, cred)));
-					reval.add(new Rule(new Atom(pcp+"minr", indexTerm, cred), newBody));
+					newBody.add(new Not(new ELPAtom(pcp+"exHigher", headId, indexTerm, cred)));
+					reval.add(new Rule(new ELPAtom(pcp+"minr", indexTerm, cred), newBody));
 				}
 			}
 			
 			
 			// add exHigher(name, index, Cred) :- lit(name, Cred), lit(name, CredHigh), Prec(Cred, CredHigh).
-			newBody = new LinkedList<RuleElement>();
+			newBody = new LinkedList<ELPElement>();
 			newBody.add(tHead.addTerm(cred));
 			newBody.add(tHead.addTerm(credHigh));
 			newBody.add(new Arithmetic("<", cred, credHigh));
-			reval.add(new Rule( new Atom(pcp+"exHigher", headId, indexTerm, cred), newBody));
+			reval.add(new Rule( new ELPAtom(pcp+"exHigher", headId, indexTerm, cred), newBody));
 			
 			// add rej(name, index, Cred) :- lit(name, Cred), -lit(name, CredHigh), Preceq(Cred, CredHigh).
-			newBody = new LinkedList<RuleElement>();
+			newBody = new LinkedList<ELPElement>();
 			newBody.add(tHead.addTerm(cred));
 			newBody.add(tHeadNeg.addTerm(credHigh));
 			newBody.add(new Arithmetic("<=", cred, credHigh));
-			newBody.add(originalHead.invert());
-			reval.add(new Rule( new Atom(pcp+"rej", headId, indexTerm, cred), newBody));
+			newBody.add(originalHead.complement());
+			reval.add(new Rule( new ELPAtom(pcp+"rej", headId, indexTerm, cred), newBody));
 			
 			++ruleIndex;
 		}
@@ -322,7 +322,7 @@ public class CredibilityRevision extends CredibilityRevisionNonIterative<Rule> {
 	 * @param lit	The unprioritzed version of the literal.
 	 * @return	A pair containing the string id representing the prioritzed literal and the prioritzed literal.
 	 */
-	private String translateLiteral(Literal lit) {
+	private String translateLiteral(ELPLiteral lit) {
 		if(literalMap.containsKey(lit)) {
 			return literalMap.get(lit);
 		}
@@ -330,11 +330,11 @@ public class CredibilityRevision extends CredibilityRevisionNonIterative<Rule> {
 		String litId = lit.toString();
 		litId = litId.replaceAll(" ", "").replaceAll("-", "").replaceAll(",", "_");
 		
-		if (lit instanceof Atom) {
+		if (lit instanceof ELPAtom) {
 			litId = constantPrefix + litId;
 		} else if (lit instanceof Neg) {
 			litId = negConstantPrefix + litId;
-		} else if(! (lit instanceof Atom)){
+		} else if(! (lit instanceof ELPAtom)){
 			throw new IllegalArgumentException("Parameter 'lit' has to be an Atom or a Neg.");
 		}
 		literalMap.put(lit, litId);
@@ -343,17 +343,17 @@ public class CredibilityRevision extends CredibilityRevisionNonIterative<Rule> {
 	
 	public static void main(String [] args) {
 		Program p1 = new Program();
-		p1.add(new Atom("b"));
+		p1.add(new ELPAtom("b"));
 		
 		Program p2 = new Program();
 		Rule r = new Rule();
-		r.addHead(new Neg(new Atom("a")));
+		r.addHead(new Neg(new ELPAtom("a")));
 		p2.add(new Rule(new Neg("a")));
 		
 		Program p3 = new Program();
 		r = new Rule();
-		r.addHead(new Atom("a"));
-		r.addBody(new Atom("b"));
+		r.addHead(new ELPAtom("a"));
+		r.addBody(new ELPAtom("b"));
 		p3.add(r);
 		
 		List<Program> programs = new LinkedList<Program>();
@@ -367,12 +367,12 @@ public class CredibilityRevision extends CredibilityRevisionNonIterative<Rule> {
 		System.out.println(cp);
 		
 		p1 = new Program();
-		p1.add(new Atom("b"));
-		p1.add(new Atom("c"));
+		p1.add(new ELPAtom("b"));
+		p1.add(new ELPAtom("c"));
 		
 		p2 = new Program();
-		p2.add(new Neg("a"), new Atom("b"));
-		p2.add(new Atom("a"), new Atom("c"));
+		p2.add(new Neg("a"), new ELPAtom("b"));
+		p2.add(new ELPAtom("a"), new ELPAtom("c"));
 		
 		programs.clear();
 		programs.add(p1);
