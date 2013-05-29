@@ -16,7 +16,7 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Term;
  * @author Matthias Thimm
  * @author Tim Janus
  */
-public class Proposition extends PropositionalFormula implements Atom {
+public class Proposition extends PropositionalFormula implements Atom, Comparable<Proposition> {
 	
 	/**
 	 * The name of the proposition
@@ -129,6 +129,11 @@ public class Proposition extends PropositionalFormula implements Atom {
 		Predicate old = this.predicate;
 		this.predicate = (PropositionalPredicate)predicate;
 		return AtomImpl.implSetPredicate(old, this.predicate, new LinkedList<Term<?>>());
+	}
+	
+	@Override
+	public int compareTo(Proposition o) {
+		return predicate.compareTo(o.predicate);
 	}
 	
 }

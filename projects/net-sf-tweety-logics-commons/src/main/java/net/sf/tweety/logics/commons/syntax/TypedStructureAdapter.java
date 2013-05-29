@@ -1,5 +1,6 @@
 package net.sf.tweety.logics.commons.syntax;
 
+import java.text.Collator;
 import java.util.*;
 
 import net.sf.tweety.logics.commons.syntax.interfaces.TypedStructure;
@@ -13,7 +14,7 @@ import net.sf.tweety.logics.commons.syntax.interfaces.TypedStructure;
  * @TODO add property change listener for name, add list observer for arguments
  * @author Matthias Thimm, Tim Janus
  */
-public abstract class TypedStructureAdapter implements TypedStructure {
+public abstract class TypedStructureAdapter implements TypedStructure, Comparable<TypedStructureAdapter> {
 	
 	/** The name of this structure */
 	private String name;
@@ -171,4 +172,9 @@ public abstract class TypedStructureAdapter implements TypedStructure {
 	}
 	
 	public abstract TypedStructure clone();
+	
+	@Override
+	public int compareTo(TypedStructureAdapter o) {
+		return Collator.getInstance().compare(name, o.name);
+	}
 }
