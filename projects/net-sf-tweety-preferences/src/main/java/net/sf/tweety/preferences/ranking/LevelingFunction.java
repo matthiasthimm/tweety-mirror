@@ -22,8 +22,7 @@ import net.sf.tweety.util.Triple;
  * This class is meant to provide leveling functions to given preference orders
  * and vice versa.
  * 
- * TODO exception handling for invalid preference orders (total preorder) TOOD
- * neue Ordnung RankingFunction (rank(o) = |Elemente echt größer o|)
+ * TODO exception handling for invalid preference orders (total preorder)
  * 
  * @author Bastian Wolf
  * @param <T>
@@ -196,8 +195,6 @@ public class LevelingFunction<T> extends Functions<T> {
 				}
 			}
 		}
-		this.clear();
-		this.putAll(lf);
 	}
 
 	/**
@@ -222,8 +219,6 @@ public class LevelingFunction<T> extends Functions<T> {
 		} else {
 			lf.put(element, this.get(element)-1);
 		}
-		this.clear();
-		this.putAll(lf);
 	}
 
 }

@@ -17,7 +17,8 @@ public class UpdatePrinter<T> implements UpdateListener<T> {
 	public void eventOccurred(UpdateEvent<T> e) {
 
 	System.out.println("Updated aggregation result: "+ e.getResult());
-		
+	System.out.println(e.getResult().getLevelingFunction());
+	System.out.println(e.getResult().getLevelingFunction().getLevelingFunction());	
 	}
 
 }

@@ -35,7 +35,7 @@ public interface DynamicPreferenceAggregator<T>{
 	 * 
 	 * Empty initialization, update() if stream is not empty
 	 */
-	public PreferenceOrder<T> update(Update<T> update);
+	public PreferenceOrder<T> update(Update<T> update, List<PreferenceOrder<T>> input);
 
 	
 	/**

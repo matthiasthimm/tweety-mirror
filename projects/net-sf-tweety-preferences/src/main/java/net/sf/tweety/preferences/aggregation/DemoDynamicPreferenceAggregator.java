@@ -120,35 +120,47 @@ public class DemoDynamicPreferenceAggregator<T> implements
 	}
 	
 	
-	@Override
+	
 	/**
 	 * The update-method for dynamically changing the input for preference aggregation
 	 * @param update the update element containing the changes to be applied
 	 */
-	public PreferenceOrder<T> update(Update<T> update) {
+	public PreferenceOrder<T> update(Update<T> update, List<PreferenceOrder<T>> input) {
 		
 		// get the list-index of the po to be changed 
-		int i = input.indexOf(update.getObj1());
-		Operation op = update.getObj2();
-		T element = update.getObj4();
+		PreferenceOrder<T> po = update.getPreferenceOrder();
+		int i = -1;
+		
+		for (PreferenceOrder<T> in : input){
+			if(po.compareEqualityWith(in)){
+				i = input.indexOf(po);
+				break;
+			}
+		}
+		
+		Operation op = update.getOperation();
+		T element = update.getElement();
 		
 		if(input.get(i).getDomainElements().contains(element)) {
-			int amount = update.getObj3();
+			int amount = update.getAmount();
 			if(op == Operation.WEAKEN) {
 				while(amount > 0){
-					input.get(i).weakenElement(element);
+					po.weakenElement(element);
+					input.set(i, po);
 					amount--;
 				}
 			} else if(op == Operation.STRENGTHEN) {
 				while(amount > 0) {
-					input.get(i).strengthenElement(element);
+					
+					po.strengthenElement(element);
+					input.set(i, po);
 					amount--;
 				}
 			}			
 		}
 		
 		// aggregate the updated preference orders into a new result
-		PreferenceOrder<T> result = aggregate(this.input);
+		PreferenceOrder<T> result = aggregate(input);
 		
 		// firing a new event for every update to every listener using this result
 		UpdateEvent<T> event = new UpdateEvent<T>(this, result);
@@ -164,11 +176,14 @@ public class DemoDynamicPreferenceAggregator<T> implements
 	 * @param stream the input stream with the Update-elements
 	 * @return the newly aggregated preference order after all updates are applied
 	 */
-	public PreferenceOrder<T> update(UpdateStream<T> stream){
+	public PreferenceOrder<T> update(UpdateStream<T> stream, List<PreferenceOrder<T>> input){
 		PreferenceOrder<T> temp = new PreferenceOrder<T>();
+		
 		while(!(stream.isEmpty())){
-			temp = this.update(stream.next());
+			Update<T> up = stream.next();
+			temp = update(up, input);
 		}
+		
 		return temp;
 	}
 	
