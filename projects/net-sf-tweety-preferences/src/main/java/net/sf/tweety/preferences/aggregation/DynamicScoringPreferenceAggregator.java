@@ -23,7 +23,7 @@ import net.sf.tweety.preferences.update.UpdateStream;
  * @param <T>
  */
 
-public class DemoDynamicPreferenceAggregator<T> implements
+public abstract class DynamicScoringPreferenceAggregator<T> implements
 		DynamicPreferenceAggregator<T> {	
 	
 	/**
@@ -31,14 +31,13 @@ public class DemoDynamicPreferenceAggregator<T> implements
 	 */
 	private WeightVector v;
 	
-	
 	/**
-	 * 
+	 * The input list of preference orders
 	 */
 	private List<PreferenceOrder<T>> input;
 	
 	/**
-	 * 
+	 * The list containing the update listeners 
 	 */
 	private ArrayList<UpdateListener<T>> _listeners;
 	
@@ -48,7 +47,7 @@ public class DemoDynamicPreferenceAggregator<T> implements
 	 * @param v
 	 *            the weight vector
 	 */
-	public DemoDynamicPreferenceAggregator(WeightVector v) {
+	public DynamicScoringPreferenceAggregator(WeightVector v) {
 		this._listeners = new ArrayList<UpdateListener<T>>();
 		this.v = v;
 	}
