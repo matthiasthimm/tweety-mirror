@@ -62,6 +62,7 @@ public abstract class TypedStructureAdapter implements TypedStructure, Comparabl
 	public TypedStructureAdapter(String name, List<Sort> arguments){
 		this(name);
 		this.arguments.addAll(arguments);
+		this.arity = arguments.size();
 	}
 	
 	@Override

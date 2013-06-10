@@ -4,8 +4,9 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.List;
 
-import net.sf.tweety.logicprogramming.asplibrary.parser.ELPParser;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.ELPLiteral;
+import net.sf.tweety.logicprogramming.asplibrary.parser.ASPParser;
+import net.sf.tweety.logicprogramming.asplibrary.parser.ASTAnswerSet;
+import net.sf.tweety.logicprogramming.asplibrary.parser.InstantiateVisitor;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSet;
 import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSetList;
@@ -72,7 +73,7 @@ public class DLVComplex extends SolverBase {
 			return ret;
 		
 		// process results
-		List<ELPLiteral> lastAS = null;
+		AnswerSet lastAS = null;
 		for (String s : result) {
 			if (s.length() <= 0)
 				continue;
@@ -112,13 +113,14 @@ public class DLVComplex extends SolverBase {
 	}
 
 	
-	protected List<ELPLiteral> parseAnswerSet(String s) {
-		List<ELPLiteral> ret = null;
+	protected AnswerSet parseAnswerSet(String s) {
+		AnswerSet ret = null;
 		
 		try {
-			ELPParser ep = new ELPParser( new StringReader( s ));
-			List<ELPLiteral> lits = ep.dlv_answerset();
-			ret = lits;
+			ASPParser parser = new ASPParser( new StringReader( s ));
+			ASTAnswerSet node = parser.AnswerSet();
+			InstantiateVisitor visitor = new InstantiateVisitor();
+			ret = visitor.visit(node, null);
 		} catch (Exception e) {
 			System.err.println("dlvcomplex::parseAnswerSet error");
 			System.err.println(e);
@@ -126,12 +128,5 @@ public class DLVComplex extends SolverBase {
 		}
 		
 		return ret;
-	}
-
-	@Override
-	public AnswerSetList computeModels(List<String> files, int maxModels) throws SolverException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
+	}	
 }

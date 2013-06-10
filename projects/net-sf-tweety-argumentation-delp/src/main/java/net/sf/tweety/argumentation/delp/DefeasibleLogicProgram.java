@@ -160,7 +160,7 @@ public class DefeasibleLogicProgram extends BeliefSet<DelpRule>{
 				rules.add((StrictRule)rule);
 		Iterator<DefeasibleRule> r_it = srules.iterator();
 		while(r_it.hasNext()){
-			Rule rule = r_it.next();			
+			Rule<FolFormula, FolFormula> rule = r_it.next();			
 			Set<FolFormula> premise = new HashSet<FolFormula>();
 			for(Formula f: rule.getPremise())
 				premise.add((FolFormula)f);

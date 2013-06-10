@@ -1,6 +1,7 @@
 package net.sf.tweety.logics.firstorderlogic.lang;
 
 import net.sf.tweety.*;
+import net.sf.tweety.logics.commons.syntax.FunctionalTerm;
 import net.sf.tweety.logics.firstorderlogic.syntax.*;
 
 /**

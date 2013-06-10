@@ -1,11 +1,12 @@
 package net.sf.tweety.logicprogramming.asplibrary.solver;
 
 import java.io.StringReader;
-import java.util.*;
 
-import net.sf.tweety.logicprogramming.asplibrary.parser.ELPParser;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.*;
-import net.sf.tweety.logicprogramming.asplibrary.util.*;
+import net.sf.tweety.logicprogramming.asplibrary.parser.ASPParser;
+import net.sf.tweety.logicprogramming.asplibrary.parser.ASTAnswerSetList;
+import net.sf.tweety.logicprogramming.asplibrary.parser.InstantiateVisitor;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
+import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSetList;
 
 /**
  * wrapper class for the dlv answer set solver command line
@@ -28,53 +29,6 @@ public class DLV extends SolverBase {
 		
 	}
 	
-	protected AnswerSetList parseResults() throws SolverException {
-		AnswerSetList ret = new AnswerSetList();
-				
-		// process results
-		List<ELPLiteral> lastAS = null;
-		for (String s : ai.getOutput()) {
-			if (s.length() <= 0)
-				continue;
-		
-			// answer sets starts with a '{'
-			if (s.charAt(0) == '{') {
-				if (lastAS != null) {
-					ret.add( new AnswerSet(lastAS,0,0));
-				}
-				lastAS = parseAnswerSet(s);
-			}
-			// answer set with weak constraints
-			else if (s.startsWith("Best model")) {
-				
-				if (lastAS != null) {
-					ret.add( new AnswerSet(lastAS,0,0));
-				}
-				
-				s = s.substring(11);
-				lastAS = parseAnswerSet(s);
-			}
-			// Cost of best model
-			else if (s.startsWith("Cost")) {
-				s = s.substring(25, s.length()-2 );
-				String[] wl = s.split(":");
-				int weight = Integer.parseInt(wl[0]);
-				int level = Integer.parseInt(wl[1]);
-				ret.add(new AnswerSet(lastAS,weight,level));
-				lastAS = null;
-			}
-			// error
-			else {
-				
-			}
-		}
-		
-		if (lastAS != null)
-			ret.add( new AnswerSet(lastAS,0,0));
-		
-		return ret;
-	}
-	
 	protected AnswerSetList runDLV(Program p, int nModels, String otherOptions) throws SolverException {
 	
 		checkSolver(path2dlv);
@@ -89,14 +43,22 @@ public class DLV extends SolverBase {
 		}
 		
 		checkErrors();	
-		return parseResults();
+		String parseable = "";
+		for(String str : ai.getOutput()) {
+			if(str.trim().startsWith("{")) {
+				parseable += str;
+			}
+		}
+		return parseAnswerSets(parseable);
 	}
 	
-	protected List<ELPLiteral> parseAnswerSet(String s) {
-		List<ELPLiteral> ret = null;
+	protected AnswerSetList parseAnswerSets(String s) {
+		AnswerSetList ret = null;
 		try {
-			ELPParser ep = new ELPParser( new StringReader( s ));
-			ret = ep.dlv_answerset();
+			ASPParser parser = new ASPParser( new StringReader( s ));
+			ASTAnswerSetList node = parser.AnswerSetList();
+			InstantiateVisitor visitor = new InstantiateVisitor();
+			ret = (AnswerSetList)node.jjtAccept(visitor, null);
 		} catch (Exception e) {
 			System.err.println("dlv::parseAnswerSet error");
 			e.printStackTrace();
@@ -119,12 +81,6 @@ public class DLV extends SolverBase {
 			e.printStackTrace();
 		}
 		checkErrors();	
-		return parseResults();
-	}
-
-	@Override
-	public AnswerSetList computeModels(List<String> files, int maxModels) throws SolverException {
-		// TODO Auto-generated method stub
-		return null;
+		return parseAnswerSets(s);
 	}
 }

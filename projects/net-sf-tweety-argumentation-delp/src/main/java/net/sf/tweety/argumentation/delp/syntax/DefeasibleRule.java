@@ -64,5 +64,4 @@ public class DefeasibleRule extends DelpRule {
 	public RelationalFormula clone() {
 		throw new UnsupportedOperationException("IMPLEMENT ME");
 	}
-
 }

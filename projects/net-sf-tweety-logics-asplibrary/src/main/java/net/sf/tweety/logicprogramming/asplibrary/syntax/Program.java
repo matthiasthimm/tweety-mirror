@@ -1,34 +1,28 @@
 package net.sf.tweety.logicprogramming.asplibrary.syntax;
 
-import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.Reader;
-import java.io.StringReader;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.Map;
 
-import net.sf.tweety.BeliefSet;
-import net.sf.tweety.Signature;
-import net.sf.tweety.logicprogramming.asplibrary.parser.ELPParser;
+import net.sf.tweety.logics.commons.syntax.interfaces.LogicProgram;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
+import net.sf.tweety.util.rules.RuleSet;
 
 /**
- * this class models an disjunctiv logical program, which is
+ * this class models an disjunctive logical program, which is
  * a collection of rules. The rules are ordered alphabetically 
  * 
  * @author Tim Janus
  * @author Thomas Vengels
  *
  */
-public class Program extends BeliefSet<Rule>{
+public class Program extends RuleSet<Rule> implements LogicProgram<DLPHead, DLPElement, Rule>{
 	
+	/** kill warning */
+	private static final long serialVersionUID = -5078398905222624805L;
 	/** The signature of the logic program */
-	private ElpSignature signature;
+	private DLPSignature signature;
 	
 	/** Default Ctor: Does nothing */
 	public Program() {}
@@ -38,11 +32,6 @@ public class Program extends BeliefSet<Rule>{
 		// TODO: COpy signature
 		//this.signature = new ElpSignature(other.signature);
 		this.addAll(other); 
-	}
-	
-	@Override
-	protected Set<Rule> instantiateSet() {
-		return new TreeSet<Rule>();
 	}
 	
 	//Differs from contains in that it does a deep comparision of the rules rather than a reference-based one
@@ -64,6 +53,7 @@ public class Program extends BeliefSet<Rule>{
 	}
 	
 	public void add(String expr) {
+		/*
 		try {
 			expr = expr.trim();
 			if(expr.charAt(expr.length() -1) != '.')
@@ -77,14 +67,7 @@ public class Program extends BeliefSet<Rule>{
 			System.err.println(e);
 			System.err.println("Input: " + expr);
 		}
-	}
-	
-	public Program substitute(Term<?> v, Term<?> t) {
-		Program reval = new Program();
-		for(Rule r : this) {
-			reval.add(r.substitute(v, t));
-		}
-		return reval;
+		*/
 	}
 	
 	/**
@@ -92,7 +75,7 @@ public class Program extends BeliefSet<Rule>{
 	 * @param other	Reference to the other program.
 	 */
 	public void add(Program other) {
-		addAll(other);
+		this.addAll(other);
 	}
 	
 	@Override
@@ -109,53 +92,6 @@ public class Program extends BeliefSet<Rule>{
 		return sb.toString();
 	}
 	
-	public static Program loadFrom(String file) {
-		try {
-			return loadFrom(new FileReader( file ));
-		} catch (FileNotFoundException e) {
-			System.err.println("Error cant find file: " + file);
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
-	public static Program loadFrom(Reader stream) {
-		Program ret = null;
-		
-		try {
-			ELPParser ep = new ELPParser( stream );
-			List<Rule> lr = ep.program();
-			ret = new Program();
-			for(Rule r: lr)
-				ret.add(r);
-			ret.calcSignature();
-		} catch (Exception e) {
-			System.err.println("Error while loading program: " + e.getMessage());
-			e.printStackTrace();
-		}
-		
-		return ret;
-	}
-	
-	public Signature getSignature() {
-		if(signature == null)
-			calcSignature();
-		return signature;
-	}
-	
-	private void calcSignature() {
-		signature = new ElpSignature();
-		for(Rule r : this) {
-			List<ELPElement> literals = new LinkedList<ELPElement>();
-			literals.addAll(r.getBody());
-			literals.addAll(r.getHead());
-			
-			for(ELPElement l : literals) {
-				signature.add(l);
-			}
-		}
-	}
-	
 	/**
 	 * Checks if the program is an extended programs, that means the heads of the
 	 * literals have not more than one literal.
@@ -167,20 +103,6 @@ public class Program extends BeliefSet<Rule>{
 				return false;
 		}
 		return true;
-	}
-	
-	public void saveTo(String filename) {
-		try {
-			BufferedWriter w = new BufferedWriter(new FileWriter(filename));
-			for (Rule r : this) {
-				w.write(r.toString());
-				w.newLine();
-			}
-			w.flush();
-			w.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 	
 	public String toStringFlat() {
@@ -207,50 +129,91 @@ public class Program extends BeliefSet<Rule>{
 		for(Rule origRule : p) {
 			Rule defRule = new Rule();
 			if(!origRule.isConstraint()) {
-				ELPLiteral head = origRule.getHead().iterator().next();
-				Neg neg = new Neg(head.getAtom());
-				defRule.addBody(origRule.getBody());
-				Not defaultificationLit = null;
-				if(head instanceof Neg) {
-					defRule.addHead(neg);
-					defaultificationLit = new Not(head.getAtom());
+				DLPLiteral head = origRule.head.iterator().next();
+				DLPNeg neg = new DLPNeg(head.getAtom());
+				defRule.addPremises(origRule.body);
+				DLPNot defaultificationLit = null;
+				if(head instanceof DLPNeg) {
+					defRule.head.add(neg);
+					defaultificationLit = new DLPNot(head.getAtom());
 				} else {
-					defRule.addHead(head);
-					defaultificationLit = new Not(neg);
+					defRule.head.add(head);
+					defaultificationLit = new DLPNot(neg);
 				}
 				
-				if(defaultificationLit != null && !defRule.getBody().contains(defaultificationLit)) {
-					defRule.addBody(defaultificationLit);
+				if(defaultificationLit != null && !defRule.body.contains(defaultificationLit)) {
+					defRule.addPremise(defaultificationLit);
 				}
 			} else {
-				defRule.addBody(origRule.getBody());
+				defRule.addPremises(origRule.body);
 			}
 			reval.add(defRule);
 		}
 		return reval;
 	}
 	
-	/**
-	 * Adds the given atom as fact to the logical program.
-	 * @param fact	atom representing the fact.
-	 * @return
-	 */
-	public boolean add(ELPAtom fact) {
-		Rule r = new Rule();
-		r.addHead(fact);
-		return add(r);
-	}
-	
-	public boolean add(ELPLiteral head, ELPElement... bodyElements) {
-		Rule r = new Rule(head);
-		for(ELPElement a : bodyElements) {
-			r.addBody(a);
-		}
-		return add(r);
+	public void addFact(DLPLiteral fact) {
+		this.add(new Rule(fact));
 	}
 	
 	@Override
-	public Object clone() {
+	public DLPSignature getSignature() {
+		if(signature == null)
+			calcSignature();
+		return signature;
+	}
+	
+	private void calcSignature() {
+		signature = new DLPSignature();
+		for(Rule r : this) {
+			List<DLPElement> literals = new LinkedList<DLPElement>();
+			literals.addAll(r.getPremise());
+			literals.addAll(r.getConclusion());
+			
+			for(DLPElement l : literals) {
+				signature.add(l);
+			}
+		}
+	}
+	
+	@Override
+	public Program clone() {
 		return new Program(this);
+	}
+
+	@Override
+	public void addFact(DLPHead fact) {
+		this.add(new Rule(fact));
+		
+	}
+	
+	@Override
+	public Program substitute(Term<?> v, Term<?> t) {
+		Program reval = new Program();
+		for(Rule r : this) {
+			reval.add(r.substitute(v, t));
+		}
+		return reval;
+	}
+
+	@Override
+	public Program substitute(
+			Map<? extends Term<?>, ? extends Term<?>> map)
+			throws IllegalArgumentException {
+		Program reval = this;
+		for(Term<?> t : map.keySet()) {
+			reval = reval.substitute(t, map.get(t));
+		}
+		return reval;
+	}
+
+	@Override
+	public Program exchange(Term<?> v, Term<?> t)
+			throws IllegalArgumentException {
+		Program reval = new Program();
+		for(Rule r : this) {
+			reval.add((Rule)r.exchange(v, t));
+		}
+		return reval;
 	}
 }

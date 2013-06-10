@@ -2,9 +2,12 @@ package net.sf.tweety.logicprogramming.asplibrary.solver;
 
 import java.io.File;
 import java.util.Iterator;
+import java.util.List;
+
+import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSetList;
 
 /**
- * Base class for solver has generic error handling code.
+ * Base class for solver adds generic error handling code.
  * @author Tim Janus
  */
 public abstract class SolverBase implements Solver {
@@ -52,5 +55,11 @@ public abstract class SolverBase implements Solver {
 			}
 			
 		}
+	}
+	
+	@Override
+	public AnswerSetList computeModels(List<String> files, int maxModels) throws SolverException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

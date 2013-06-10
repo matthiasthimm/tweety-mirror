@@ -1,6 +1,5 @@
 package net.sf.tweety.logicprogramming.asplibrary.syntax;
 
-import java.io.StringReader;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -10,7 +9,6 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import net.sf.tweety.logicprogramming.asplibrary.parser.ELPParser;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
@@ -27,22 +25,22 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Term;
  * @author Thomas Vengels
  *
  */
-public class Rule extends ELPElementAdapter implements Comparable<Rule>, ELPElement, net.sf.tweety.util.rules.Rule {
+public class Rule extends DLPElementAdapter implements Comparable<Rule>, DLPElement, net.sf.tweety.util.rules.Rule<DLPHead, DLPElement> {
 
-	ELPHead head = new ELPHead();
-	List<ELPElement>	body = new LinkedList<ELPElement>();
+	DLPHead head = new DLPHead();
+	List<DLPElement>	body = new LinkedList<DLPElement>();
 	
 	/** Default-Ctor: Creates an empty rule without any head literals or body elements */
 	public Rule() {}
 	
 	/** Copy-Ctor: Makes a deep copy of the given rule */
 	public Rule(Rule other) {
-		for(ELPLiteral headLits : other.head) {
-			this.head.add((ELPLiteral)headLits.clone());
+		for(DLPLiteral headLits : other.head) {
+			this.head.add((DLPLiteral)headLits.clone());
 		}
 		
-		for(ELPElement bodyElement : other.body) {
-			this.body.add((ELPElement)bodyElement.clone());
+		for(DLPElement bodyElement : other.body) {
+			this.body.add((DLPElement)bodyElement.clone());
 		}
 	}
 	
@@ -52,7 +50,7 @@ public class Rule extends ELPElementAdapter implements Comparable<Rule>, ELPElem
 	 * 
 	 * @param head	The head of the rule as ELPHead
 	 */
-	public Rule(ELPHead head) {
+	public Rule(DLPHead head) {
 		this.head = head;
 	}
 	
@@ -62,21 +60,27 @@ public class Rule extends ELPElementAdapter implements Comparable<Rule>, ELPElem
 	 * 
 	 * @param head	The head of the rule as ELPLiteral
 	 */
-	public Rule(ELPLiteral head) {
+	public Rule(DLPLiteral head) {
 		this.head.add(head);
 	}
 	
-	public Rule(ELPLiteral head, List<ELPElement> litsBody) {
+	public Rule(DLPLiteral head, DLPLiteral body) {
+		this.head.add(head);
+		this.body.add(body);
+	}
+	
+	public Rule(DLPLiteral head, List<DLPElement> litsBody) {
 		this.head.add(head);
 		this.body.addAll(litsBody);
 	}
 	
-	public Rule(List<ELPLiteral> litsHead, List<ELPElement> litsBody) {
+	public Rule(List<DLPLiteral> litsHead, List<DLPElement> litsBody) {
 		this.head.addAll(litsHead);
 		this.body.addAll(litsBody);
 	}
 	
 	public Rule(String ruleexpr) {
+		/*
 		try {
 			ELPParser ep = new ELPParser( new StringReader( ruleexpr ));
 			Rule r = ep.rule();
@@ -87,63 +91,27 @@ public class Rule extends ELPElementAdapter implements Comparable<Rule>, ELPElem
 			System.err.println(e);
 			System.err.println("Input: " + ruleexpr);
 		}
-	}
-	
-	public ELPHead getHead() {
-		return this.head;
-	}
-	
-	public List<ELPElement> getBody() {
-		return Collections.unmodifiableList(this.body); 
-	}
-	
-	public List<ELPElement> getProgramElements() {
-		List<ELPElement> reval = new LinkedList<ELPElement>();
-		reval.addAll(head);
-		reval.addAll(body);
-		return reval;
+		*/
 	}
 	
 	@Override
-	public SortedSet<ELPLiteral> getLiterals() {
-		SortedSet<ELPLiteral> literals = new TreeSet<ELPLiteral>();
+	public SortedSet<DLPLiteral> getLiterals() {
+		SortedSet<DLPLiteral> literals = new TreeSet<DLPLiteral>();
 		literals.addAll(head);
-		for(ELPElement pe : body) {
+		for(DLPElement pe : body) {
 			literals.addAll(pe.getLiterals());
 		}
 		return literals;
 	}
 	
-	public void	addHead(ELPLiteral l) {
-		this.head.add(l);
-	}
-	
-	public void	addBody(ELPElement l) {
-		this.body.add(l);
-	}
-	
-	public void	addHead(Collection<? extends ELPLiteral> l) {
-		this.head.addAll(l);
-	}
-	
-	public void	addBody(Collection<? extends ELPElement> l) {
-		this.body.addAll(l);
-	}
-	
+	@Override
 	public	boolean		isFact() {
-		return body.size() == 0 && head.size() == 1;
+		return body.isEmpty() && head.size() >= 1;
 	}
 	
-	public	boolean 	isChoice() {
-		return false;
-	}
-	
+	@Override
 	public	boolean		isConstraint() {
 		return head.size() == 0;
-	}
-	
-	public boolean		isWeakConstraint() {
-		return false;
 	}
 	
 	/**
@@ -161,18 +129,18 @@ public class Rule extends ELPElementAdapter implements Comparable<Rule>, ELPElem
 	 */
 	public boolean isSafe() {
 		Set<Term<?>> variables = new HashSet<Term<?>>();
-		Set<ELPLiteral> allLit = getLiterals();
+		Set<DLPLiteral> allLit = getLiterals();
 		
 		// TODO: only depth of one... the entire asp-library has major desing issues... best solution: Redesign core interfaces
 		// TOTALLY HACKED WILL NOT WORK FOR EVERYTHING:...
-		for(ELPLiteral l : allLit) {
+		for(DLPLiteral l : allLit) {
 			if(!l.isGround()) {
 				for(Term<?> t : l.getAtom().getTerms()) {
 					if(t instanceof Variable) {
 						variables.add((Variable)t);
-					} else if(t instanceof ELPAtom) {
-						if(!((ELPAtom)t).isGround()) {
-							for(Term<?> t2 : ((ELPAtom)t).getTerms()) {
+					} else if(t instanceof DLPAtom) {
+						if(!((DLPAtom)t).isGround()) {
+							for(Term<?> t2 : ((DLPAtom)t).getTerms()) {
 								if(t2 instanceof Variable) {
 									variables.add((Variable)t2);
 								} else if(t2 instanceof Constant) {
@@ -193,8 +161,8 @@ public class Rule extends ELPElementAdapter implements Comparable<Rule>, ELPElem
 		
 		for(Term<?> x : variables) {
 			boolean safe = false;
-			for(ELPLiteral l : allLit) {
-				if(	l instanceof Neg || l instanceof ELPAtom ) {
+			for(DLPLiteral l : allLit) {
+				if(	l instanceof DLPNeg || l instanceof DLPAtom ) {
 					for(Term<?> t : l.getAtom().getTerms()) {
 						if(t.equals(x)) {
 							safe = true;
@@ -246,20 +214,20 @@ public class Rule extends ELPElementAdapter implements Comparable<Rule>, ELPElem
 		int comp = 0;
 		
 		// facts first:
-		if(getBody().size() == 0 && arg0.getBody().size() != 0) {
+		if(getPremise().size() == 0 && arg0.getPremise().size() != 0) {
 			return -1;
-		} else if(getBody().size() != 0 && arg0.getBody().size() == 0) {
+		} else if(getPremise().size() != 0 && arg0.getPremise().size() == 0) {
 			return 1;
 		}
 		
 		// then order alphabetically starting by the head.
-		comp = getHead().toString().compareTo(arg0.getHead().toString());
+		comp = getConclusion().toString().compareTo(arg0.getConclusion().toString());
 		if(comp != 0)
 			return comp;
 		
 		// if the head is the same use the body.
-		for(int i=0; i<getBody().size() && i<arg0.getBody().size(); ++i) {
-			comp = getBody().get(i).toString().compareTo(arg0.getBody().get(i).toString());
+		for(int i=0; i<body.size() && i<arg0.body.size(); ++i) {
+			comp = body.get(i).toString().compareTo(arg0.body.get(i).toString());
 			if(comp != 0)
 				return comp;
 		}
@@ -273,22 +241,22 @@ public class Rule extends ELPElementAdapter implements Comparable<Rule>, ELPElem
 	}
 
 	@Override
-	public ElpSignature getSignature() {
-		ElpSignature reval = new ElpSignature();
+	public DLPSignature getSignature() {
+		DLPSignature reval = new DLPSignature();
 		reval.addSignature(head.getSignature());
-		for(ELPElement bodyElement : body) {
+		for(DLPElement bodyElement : body) {
 			reval.addSignature(bodyElement.getSignature());
 		}
 		return reval;
 	}
 
 	@Override
-	public Collection<ELPElement> getPremise() {
+	public Collection<DLPElement> getPremise() {
 		return Collections.unmodifiableList(body);
 	}
 
 	@Override
-	public ELPHead getConclusion() {
+	public DLPHead getConclusion() {
 		return head;
 	}
 
@@ -297,27 +265,27 @@ public class Rule extends ELPElementAdapter implements Comparable<Rule>, ELPElem
 			throws IllegalArgumentException {
 		Rule reval = new Rule();
 		reval.head = head.substitute(v, t);
-		for(ELPElement bodyElement : body) {
+		for(DLPElement bodyElement : body) {
 			reval.body.add(bodyElement.substitute(v,t));
 		}
 		return reval;
 	}
 
 	@Override
-	public Set<ELPAtom> getAtoms() {
-		Set<ELPAtom> reval = new HashSet<ELPAtom>();
+	public Set<DLPAtom> getAtoms() {
+		Set<DLPAtom> reval = new HashSet<DLPAtom>();
 		reval.addAll(head.getAtoms());
-		for(ELPElement bodyElement : body) {
+		for(DLPElement bodyElement : body) {
 			reval.addAll(bodyElement.getAtoms());
 		}
 		return reval;
 	}
 
 	@Override
-	public Set<ELPPredicate> getPredicates() {
-		Set<ELPPredicate> reval = new HashSet<ELPPredicate>();
+	public Set<DLPPredicate> getPredicates() {
+		Set<DLPPredicate> reval = new HashSet<DLPPredicate>();
 		reval.addAll(head.getPredicates());
-		for(ELPElement bodyElement : body) {
+		for(DLPElement bodyElement : body) {
 			reval.addAll(bodyElement.getPredicates());
 		}
 		return reval;
@@ -327,9 +295,33 @@ public class Rule extends ELPElementAdapter implements Comparable<Rule>, ELPElem
 	public Set<Term<?>> getTerms() {
 		Set<Term<?>> reval = new HashSet<Term<?>>();
 		reval.addAll(head.getTerms());
-		for(ELPElement bodyElement : body) {
+		for(DLPElement bodyElement : body) {
 			reval.addAll(bodyElement.getTerms());
 		}
 		return reval;
+	}
+
+	@Override
+	public void setConclusion(DLPHead conclusion) {
+		if(conclusion==null) {
+			this.head.clear();
+		} else {
+			this.head = conclusion;
+		}
+	}
+	
+	public void setConclusion(DLPLiteral literal) {
+		this.head.clear();
+		this.head.add(literal);
+	}
+
+	@Override
+	public void addPremise(DLPElement premise) {
+		this.body.add(premise);
+	}
+
+	@Override
+	public void addPremises(Collection<? extends DLPElement> premises) {
+		this.body.addAll(premises);
 	}
 }

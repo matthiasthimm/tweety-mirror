@@ -10,16 +10,12 @@ package net.sf.tweety.logics.commons.syntax;
  */
 public class NumberTerm extends TermAdapter<Integer> {
 
-	/** the number saved in the logical term */
-	private int number;
-	
 	/**
 	 * Ctor: Creates a new NumberTerm, the sort "Thing" is used.
 	 * @param	number	the value of the number term
 	 */
 	public NumberTerm(int number) {
-		super(Sort.THING);
-		this.number = number;
+		super(number, Sort.THING);
 	}
 	
 	/**
@@ -29,8 +25,7 @@ public class NumberTerm extends TermAdapter<Integer> {
 	 * @param sort		The sort representing the type of the number term
 	 */
 	public NumberTerm(int number, Sort sort) {
-		super(sort);
-		this.number = number;
+		super(number, sort);
 	}
 	
 	/**
@@ -56,23 +51,7 @@ public class NumberTerm extends TermAdapter<Integer> {
 	 * @param other	The NumberTerm that is the source for the copy.
 	 */
 	public NumberTerm(NumberTerm other) {
-		super(other.getSort());
-		this.number = other.number;
-	}
-	
-	@Override
-	public Integer get() {
-		return number;
-	}
-	
-	@Override
-	public void set(Integer value) {
-		this.number = value;
-	}
-
-	@Override
-	public String toString() {
-		return String.valueOf(number);
+		super(other.value, other.getSort());
 	}
 	
 	@Override

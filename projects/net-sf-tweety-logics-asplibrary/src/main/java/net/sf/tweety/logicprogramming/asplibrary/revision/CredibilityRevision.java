@@ -12,14 +12,14 @@ import java.util.Set;
 import net.sf.tweety.beliefdynamics.CredibilityRevisionNonIterative;
 import net.sf.tweety.logicprogramming.asplibrary.solver.Solver;
 import net.sf.tweety.logicprogramming.asplibrary.solver.SolverException;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Arithmetic;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.ELPAtom;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.ELPLiteral;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Neg;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Not;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPAtom;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPElement;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPLiteral;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPNeg;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPNot;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.Comparative;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.ELPElement;
 import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSet;
 import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSetList;
 import net.sf.tweety.logics.commons.syntax.Constant;
@@ -79,9 +79,9 @@ public class CredibilityRevision extends CredibilityRevisionNonIterative<Rule> {
 			
 			// gather indicies of rule which are rejected:
 			List<Integer> indicies = new LinkedList<Integer>();
-			Set<ELPLiteral> literals = as.getLiteralsBySymbol("p__rej");
-			for(ELPLiteral l : literals) {
-				ELPAtom atom = (ELPAtom)l;
+			Set<DLPLiteral> literals = as.getLiteralsWithName("p__rej");
+			for(DLPLiteral l : literals) {
+				DLPAtom atom = (DLPAtom)l;
 				NumberTerm nt = (NumberTerm)atom.getTerm(1);
 				indicies.add(nt.get());
 			}
@@ -112,7 +112,7 @@ public class CredibilityRevision extends CredibilityRevisionNonIterative<Rule> {
 	private AnswersetProcessing processing = new DefaultBehavior();
 	
 	/** a map used during the creation of the credibility logic program */
-	private Map<ELPLiteral, String> literalMap = new HashMap<ELPLiteral, String>();
+	private Map<DLPLiteral, String> literalMap = new HashMap<DLPLiteral, String>();
 	
 	/** a prefix used to mark constants which represent the id of negative literals. */
 	private String negConstantPrefix = "nc__";
@@ -189,19 +189,25 @@ public class CredibilityRevision extends CredibilityRevisionNonIterative<Rule> {
 			return null;
 		}
 		
-		// project the answer set to the standard alphabet
+		projectAnswerSet();
+		
+		return processing.process(orderedList, lastAnswersets);
+	}
+
+	/**
+	 * Projects the answer set of the credibility program to the original alphabet
+	 */
+	private void projectAnswerSet() {
 		lastProjectedAnswersets = (AnswerSetList)lastAnswersets.clone();
 		for(AnswerSet as : lastProjectedAnswersets) {
-			Set<String> toRemove = new HashSet<String>();
-			for(String functor : as.getFunctors()) {
-				if(functor.startsWith(predCredibilityPrefix)) {
-					toRemove.add(functor);
+			Set<DLPLiteral> toRemove = new HashSet<DLPLiteral>();
+			for(DLPLiteral literal : as) {
+				if(literal.getName().startsWith(predCredibilityPrefix)) {
+					toRemove.add(literal);
 				}
 			}	
 			as.removeAll(toRemove);
 		}
-		
-		return processing.process(orderedList, lastAnswersets);
 	}
 
 	/**
@@ -239,76 +245,76 @@ public class CredibilityRevision extends CredibilityRevisionNonIterative<Rule> {
 			Variable cred = new Variable("Cred");
 			NumberTerm indexTerm = new NumberTerm(ruleIndex);
 			
-			ELPLiteral originalHead = r.getHead().iterator().next();
-			List<ELPElement> originalBody = new LinkedList<ELPElement>();
-			for(ELPElement pe : r.getBody()) {
-				ELPElement newBodyElement = (ELPElement)pe.clone();
+			DLPLiteral originalHead = r.getConclusion().iterator().next();
+			List<DLPElement> originalBody = new LinkedList<DLPElement>();
+			for(DLPElement pe : r.getPremise()) {
+				DLPElement newBodyElement = (DLPElement)pe.clone();
 				originalBody.add(newBodyElement);
 			}
 			
 			String id = translateLiteral(originalHead);
 			Constant headId = new Constant(id);
-			ELPLiteral tHead = new ELPAtom(pcp+"lit", headId);
+			DLPLiteral tHead = new DLPAtom(pcp+"lit", headId);
 			
-			String negId = translateLiteral((ELPLiteral)originalHead.complement());
+			String negId = translateLiteral((DLPLiteral)originalHead.complement());
 			Constant negHeadId = new Constant(negId);
-			ELPLiteral tHeadNeg = new ELPAtom(pcp+"lit", negHeadId);
+			DLPLiteral tHeadNeg = new DLPAtom(pcp+"lit", negHeadId);
 			
 			Variable credLow = new Variable("CredLow");
 			Variable credHigh = new Variable("CredHigh");
-			List<ELPElement> newBody = new LinkedList<ELPElement>();
+			List<DLPElement> newBody = new LinkedList<DLPElement>();
 			
 			// add H(u) :- B, minr(j, Cred), not exLowerMinr(j, Cred).
 			newBody.addAll(originalBody);
-			newBody.add(new ELPAtom(pcp+"minr", indexTerm, cred));
-			newBody.add(new Not(new ELPAtom(pcp+"exLowerMinr", indexTerm, cred)));
-			reval.add(new Rule(tHead.addTerm(cred), newBody));
+			newBody.add(new DLPAtom(pcp+"minr", indexTerm, cred));
+			newBody.add(new DLPNot(new DLPAtom(pcp+"exLowerMinr", indexTerm, cred)));
+			reval.add(new Rule(tHead.cloneWithAddedTerm(cred), newBody));
 			
 			// add exLowerMin(j, Cred) :- minr(j, Cred), minr(j, CredLower), Prec(CredLower, Cred).
-			newBody = new LinkedList<ELPElement>();
-			newBody.add(new ELPAtom(pcp+"minr", indexTerm, cred));
-			newBody.add(new ELPAtom(pcp+"minr", indexTerm, credLow));
-			newBody.add(new Arithmetic("<", credLow, cred));
-			reval.add(new Rule(new ELPAtom(pcp+"exLowerMinr", indexTerm, cred), newBody));
+			newBody = new LinkedList<DLPElement>();
+			newBody.add(new DLPAtom(pcp+"minr", indexTerm, cred));
+			newBody.add(new DLPAtom(pcp+"minr", indexTerm, credLow));
+			newBody.add(new Comparative("<", credLow, cred));
+			reval.add(new Rule(new DLPAtom(pcp+"exLowerMinr", indexTerm, cred), newBody));
 			
 			// add H :- H(u), not rej(name).
-			newBody = new LinkedList<ELPElement>();
-			newBody.add(tHead.addTerm(cred));
-			newBody.add(new Not(new ELPAtom(pcp+"rej", headId, indexTerm, cred)));
+			newBody = new LinkedList<DLPElement>();
+			newBody.add(tHead.cloneWithAddedTerm(cred));
+			newBody.add(new DLPNot(new DLPAtom(pcp+"rej", headId, indexTerm, cred)));
 			reval.add(new Rule(originalHead, newBody));
 			
 			
 			// add minr(index, programCredibility) :- .
-			reval.add(new ELPAtom(pcp+"minr", indexTerm, new NumberTerm(programCredibility)));
+			reval.addFact(new DLPAtom(pcp+"minr", indexTerm, new NumberTerm(programCredibility)));
 			
 			// add minr(index, Cred) :- B(r), L(name, Cred), not exHigherL(Cred).
-			for(ELPElement re : originalBody) {
-				if(re instanceof ELPLiteral) {
-					String bodyLitId = translateLiteral((ELPLiteral)re);
-					ELPAtom translated = new ELPAtom(pcp + "lit", new Constant(bodyLitId));
-					newBody = new LinkedList<ELPElement>();
+			for(DLPElement re : originalBody) {
+				if(re instanceof DLPLiteral) {
+					String bodyLitId = translateLiteral((DLPLiteral)re);
+					DLPAtom translated = new DLPAtom(pcp + "lit", new Constant(bodyLitId));
+					newBody = new LinkedList<DLPElement>();
 					newBody.addAll(originalBody);
-					newBody.add(translated.addTerm(cred));
-					newBody.add(new Not(new ELPAtom(pcp+"exHigher", headId, indexTerm, cred)));
-					reval.add(new Rule(new ELPAtom(pcp+"minr", indexTerm, cred), newBody));
+					newBody.add(translated.cloneWithAddedTerm(cred));
+					newBody.add(new DLPNot(new DLPAtom(pcp+"exHigher", headId, indexTerm, cred)));
+					reval.add(new Rule(new DLPAtom(pcp+"minr", indexTerm, cred), newBody));
 				}
 			}
 			
 			
 			// add exHigher(name, index, Cred) :- lit(name, Cred), lit(name, CredHigh), Prec(Cred, CredHigh).
-			newBody = new LinkedList<ELPElement>();
-			newBody.add(tHead.addTerm(cred));
-			newBody.add(tHead.addTerm(credHigh));
-			newBody.add(new Arithmetic("<", cred, credHigh));
-			reval.add(new Rule( new ELPAtom(pcp+"exHigher", headId, indexTerm, cred), newBody));
+			newBody = new LinkedList<DLPElement>();
+			newBody.add(tHead.cloneWithAddedTerm(cred));
+			newBody.add(tHead.cloneWithAddedTerm(credHigh));
+			newBody.add(new Comparative("<", cred, credHigh));
+			reval.add(new Rule( new DLPAtom(pcp+"exHigher", headId, indexTerm, cred), newBody));
 			
 			// add rej(name, index, Cred) :- lit(name, Cred), -lit(name, CredHigh), Preceq(Cred, CredHigh).
-			newBody = new LinkedList<ELPElement>();
-			newBody.add(tHead.addTerm(cred));
-			newBody.add(tHeadNeg.addTerm(credHigh));
-			newBody.add(new Arithmetic("<=", cred, credHigh));
+			newBody = new LinkedList<DLPElement>();
+			newBody.add(tHead.cloneWithAddedTerm(cred));
+			newBody.add(tHeadNeg.cloneWithAddedTerm(credHigh));
+			newBody.add(new Comparative("<=", cred, credHigh));
 			newBody.add(originalHead.complement());
-			reval.add(new Rule( new ELPAtom(pcp+"rej", headId, indexTerm, cred), newBody));
+			reval.add(new Rule( new DLPAtom(pcp+"rej", headId, indexTerm, cred), newBody));
 			
 			++ruleIndex;
 		}
@@ -322,7 +328,7 @@ public class CredibilityRevision extends CredibilityRevisionNonIterative<Rule> {
 	 * @param lit	The unprioritzed version of the literal.
 	 * @return	A pair containing the string id representing the prioritzed literal and the prioritzed literal.
 	 */
-	private String translateLiteral(ELPLiteral lit) {
+	private String translateLiteral(DLPLiteral lit) {
 		if(literalMap.containsKey(lit)) {
 			return literalMap.get(lit);
 		}
@@ -330,11 +336,11 @@ public class CredibilityRevision extends CredibilityRevisionNonIterative<Rule> {
 		String litId = lit.toString();
 		litId = litId.replaceAll(" ", "").replaceAll("-", "").replaceAll(",", "_");
 		
-		if (lit instanceof ELPAtom) {
+		if (lit instanceof DLPAtom) {
 			litId = constantPrefix + litId;
-		} else if (lit instanceof Neg) {
+		} else if (lit instanceof DLPNeg) {
 			litId = negConstantPrefix + litId;
-		} else if(! (lit instanceof ELPAtom)){
+		} else if(! (lit instanceof DLPAtom)){
 			throw new IllegalArgumentException("Parameter 'lit' has to be an Atom or a Neg.");
 		}
 		literalMap.put(lit, litId);
@@ -343,17 +349,17 @@ public class CredibilityRevision extends CredibilityRevisionNonIterative<Rule> {
 	
 	public static void main(String [] args) {
 		Program p1 = new Program();
-		p1.add(new ELPAtom("b"));
+		p1.addFact(new DLPAtom("b"));
 		
 		Program p2 = new Program();
 		Rule r = new Rule();
-		r.addHead(new Neg(new ELPAtom("a")));
-		p2.add(new Rule(new Neg("a")));
+		r.setConclusion(new DLPNeg(new DLPAtom("a")));
+		p2.add(new Rule(new DLPNeg("a")));
 		
 		Program p3 = new Program();
 		r = new Rule();
-		r.addHead(new ELPAtom("a"));
-		r.addBody(new ELPAtom("b"));
+		r.setConclusion(new DLPAtom("a"));
+		r.addPremise(new DLPAtom("b"));
 		p3.add(r);
 		
 		List<Program> programs = new LinkedList<Program>();
@@ -367,12 +373,12 @@ public class CredibilityRevision extends CredibilityRevisionNonIterative<Rule> {
 		System.out.println(cp);
 		
 		p1 = new Program();
-		p1.add(new ELPAtom("b"));
-		p1.add(new ELPAtom("c"));
+		p1.addFact(new DLPAtom("b"));
+		p1.addFact(new DLPAtom("c"));
 		
 		p2 = new Program();
-		p2.add(new Neg("a"), new ELPAtom("b"));
-		p2.add(new ELPAtom("a"), new ELPAtom("c"));
+		p2.add(new Rule(new DLPNeg("a"), new DLPAtom("b")));
+		p2.add(new Rule(new DLPAtom("a"), new DLPAtom("c")));
 		
 		programs.clear();
 		programs.add(p1);

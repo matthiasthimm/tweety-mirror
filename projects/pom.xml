@@ -92,5 +92,8 @@
   	</module>
   	<module>../deploy</module>
   	<module>net-sf-tweety-logics-translate-folprop</module>
+  	<module>
+  		net-sf-tweety-logicprogramming-nestedlogicprograms/nlp
+  	</module>
   </modules>
 </project>

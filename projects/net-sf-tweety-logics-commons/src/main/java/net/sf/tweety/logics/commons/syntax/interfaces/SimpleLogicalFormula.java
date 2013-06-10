@@ -31,6 +31,10 @@ public interface SimpleLogicalFormula extends Formula {
 	/** @return true if the formula represents a literal in the language or false otherwise */
 	boolean isLiteral();
 	
+	int hashCode();
+	
+	boolean equals(Object other);
+	
 	/** Creates a deep copy of this formula */
 	SimpleLogicalFormula clone();
 }

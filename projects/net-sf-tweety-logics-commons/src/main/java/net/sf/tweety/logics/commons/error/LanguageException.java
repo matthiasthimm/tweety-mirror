@@ -15,6 +15,9 @@ public class LanguageException extends RuntimeException {
 		LER_TERM_TYPE_NOT_SUPPORTED("Tried to instantiate an unsupported term."),
 		LER_RULES_NOT_SUPPORTED("Rules are not supported by the language."),
 		LER_DISJUNCTIONS_NOT_SUPPORTED("Disjunctions are not supported by the language."),
+		LER_CONJUNCTIONS_NOT_SUPPORTED("Conjunctions are not supported by the language."),
+		LER_ASSOCIATIVE_NOT_SUPPORTED("Associative formuals are not supported by the language."),
+		LER_QUANTIFICATION_NOT_SUPPORTED("Quantified formulas are not supported by the language."),
 		LER_INSTANTIATION("Dynamic instantiation did not work."),
 		LER_ILLEGAL_ACCESSS("Illegal access.");
 		
@@ -32,6 +35,10 @@ public class LanguageException extends RuntimeException {
 	
 	public LanguageException() {
 		super("Language used incorrectly");
+	}
+	
+	public LanguageException(String language, LanguageExceptionReason reason) {
+		this(language, reason, "");
 	}
 	
 	public LanguageException(String language, LanguageExceptionReason reason, String furtherInformation) {

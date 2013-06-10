@@ -9,19 +9,32 @@ import net.sf.tweety.*;
  * premise (a set of formulas) and some conclusion (a single formula).
  * 
  * @author Matthias Thimm
+ * @author Tim Janus
  */
-public interface Rule {
+public interface Rule<C extends Formula, P extends Formula> {
 
+	public boolean isFact();
+	
+	public boolean isConstraint();
+	
+	public void setConclusion(C conclusion);
+	
+	public void addPremise(P premise);
+	
+	public void addPremises(Collection<? extends P> premises);
+	
+	public Signature getSignature();
+	
 	/**
 	 * Returns the premise of this rule.
 	 * @return the premise of this rule.
 	 */
-	public Collection<? extends Formula> getPremise();
+	public Collection<? extends P> getPremise();
 	
 	/**
 	 * Returns the conclusion of this rule.
 	 * @return the conclusion of this rule.
 	 */
-	public Formula getConclusion();
+	public C getConclusion();
 		
 }

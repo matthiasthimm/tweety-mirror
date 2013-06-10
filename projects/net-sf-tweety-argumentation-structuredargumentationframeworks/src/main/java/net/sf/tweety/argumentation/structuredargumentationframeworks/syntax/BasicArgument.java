@@ -1,10 +1,13 @@
 package net.sf.tweety.argumentation.structuredargumentationframeworks.syntax;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
-import net.sf.tweety.argumentation.dung.syntax.*;
-import net.sf.tweety.logics.propositionallogic.syntax.*;
-import net.sf.tweety.util.rules.*;
+import net.sf.tweety.argumentation.dung.syntax.Argument;
+import net.sf.tweety.logics.propositionallogic.syntax.Proposition;
+import net.sf.tweety.logics.propositionallogic.syntax.PropositionalSignature;
+import net.sf.tweety.util.rules.Rule;
 
 /**
  * This class models a basic argument in structured argumentation frameworks, i.e.
@@ -12,9 +15,10 @@ import net.sf.tweety.util.rules.*;
  * the claim is not in the support.
  * 
  * @author Matthias Thimm
+ * @author Tim Janus
  *
  */
-public class BasicArgument extends Argument implements Rule{
+public class BasicArgument extends Argument implements Rule<Proposition, Proposition> {
 
 	/**
 	 * The claim of this basic argument. 
@@ -82,6 +86,31 @@ public class BasicArgument extends Argument implements Rule{
 		for(Proposition p: this.support)
 			sig.add(p);
 		return sig;
+	}
+
+	@Override
+	public boolean isFact() {
+		return support.isEmpty();
+	}
+
+	@Override
+	public boolean isConstraint() {
+		return false;
+	}
+
+	@Override
+	public void setConclusion(Proposition conclusion) {
+		this.claim = conclusion;
+	}
+
+	@Override
+	public void addPremise(Proposition premise) {
+		this.support.add(premise);
+	}
+
+	@Override
+	public void addPremises(Collection<? extends Proposition> premises) {
+		this.support.addAll(premises);
 	}
 
 }

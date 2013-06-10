@@ -18,12 +18,33 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Term;
  * @author Tim Janus
  * @author Thomas Vengels
  */
-public class Aggregate extends ELPElementAdapter implements ELPElement {
+public class Aggregate extends DLPElementAdapter implements DLPElement {
 
 	protected SymbolicSet	symSet = null;
 	protected Term<?> leftGuard = null, rightGuard = null;
-	protected String leftRel = null, rightRel = null;
+	protected String leftOp = null, rightOp = null;
 	protected String functor;
+	
+	public Aggregate(Term<?> leftGuard, 
+			String leftOp, String functor, SymbolicSet ss) {
+		this(leftGuard, leftOp, functor, ss, null, null);
+	}
+	
+	public Aggregate(String functor, SymbolicSet ss,
+			String rightOp, Term<?> rightGuard) {
+		this(null, null, functor, ss, rightOp, rightGuard);
+	}
+	
+	public Aggregate(Term<?> leftGuard, 
+			String leftOp, String functor, SymbolicSet ss,
+			String rightOp, Term<?> rightGuard) {
+		this.functor = functor;
+		this.leftOp = leftOp;
+		this.leftGuard = leftGuard;
+		this.rightOp = rightOp;
+		this.rightGuard = rightGuard;
+		this.symSet = ss;
+	}
 	
 	public Aggregate(String functor, SymbolicSet symSet) {
 		this.functor = (functor);
@@ -50,26 +71,30 @@ public class Aggregate extends ELPElementAdapter implements ELPElement {
 		return leftGuard;
 	}
 	
-	public String getLeftRel() {
-		return leftRel;
+	public String getLeftOperator() {
+		return leftOp;
 	}
 	
 	public Term<?> getRightGuard() {
 		return rightGuard;
 	}
 	
-	public String getRightRel() {
-		return rightRel;
+	public String getRightOperator() {
+		return rightOp;
 	}
 	
 	public void setLeftGuard(Term<?> guard, String rel) {
 		this.leftGuard = guard;
-		this.leftRel = rel;
+		this.leftOp = rel;
 	}
 	
 	public void setRightGuard(Term<?> guard, String rel) {
 		this.rightGuard = guard;
-		this.rightRel = rel;
+		this.rightOp = rel;
+	}
+	
+	public String getFunctor() {
+		return this.functor;
 	}
 	
 	public SymbolicSet getSymbolicSet() {
@@ -80,19 +105,19 @@ public class Aggregate extends ELPElementAdapter implements ELPElement {
 	public String toString() {
 		String ret = "";
 		if (this.leftGuard != null) {
-			ret += this.leftGuard + " " + this.leftRel + " ";
+			ret += this.leftGuard + " " + this.leftOp + " ";
 		}
 		ret += functor + this.symSet;
 		if (this.rightGuard != null) {
-			ret += " " + this.rightRel + " " + this.rightGuard;
+			ret += " " + this.rightOp + " " + this.rightGuard;
 		}
 		return ret;
 	}
 
 	@Override
 	/** @todo implement correctly */
-	public SortedSet<ELPLiteral> getLiterals() {
-		return new TreeSet<ELPLiteral>();
+	public SortedSet<DLPLiteral> getLiterals() {
+		return new TreeSet<DLPLiteral>();
 	}
 
 	@Override
@@ -106,7 +131,7 @@ public class Aggregate extends ELPElementAdapter implements ELPElement {
 	}
 
 	@Override
-	public Set<ELPPredicate> getPredicates() {
+	public Set<DLPPredicate> getPredicates() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -122,8 +147,8 @@ public class Aggregate extends ELPElementAdapter implements ELPElement {
 	}
 
 	@Override
-	public Set<ELPAtom> getAtoms() {
-		return new HashSet<ELPAtom>();
+	public Set<DLPAtom> getAtoms() {
+		return new HashSet<DLPAtom>();
 	}
 
 	@Override
@@ -139,10 +164,37 @@ public class Aggregate extends ELPElementAdapter implements ELPElement {
 	}
 
 	@Override
-	public ElpSignature getSignature() {
-		ElpSignature reval = new ElpSignature();
+	public DLPSignature getSignature() {
+		DLPSignature reval = new DLPSignature();
 		reval.add(leftGuard);
 		reval.add(rightGuard);
 		return reval;
+	}
+	
+	@Override
+	public int hashCode() {
+		int sum = symSet.hashCode() + functor.hashCode();
+		sum += leftGuard != null ? leftGuard.hashCode() : 0;
+		sum += leftOp != null ? leftOp.hashCode() : 0;
+		sum += rightGuard != null ? rightGuard.hashCode() : 0;
+		sum += rightOp != null ? rightOp.hashCode() : 0;
+		return sum * 13;
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if(!(other instanceof Aggregate)) {
+			return false;
+		}
+		Aggregate o = (Aggregate)other;
+		if(!functor.equals(o.functor) ||
+			!symSet.equals(o.symSet)) {
+			return false;
+		}
+		
+		return leftGuard == null ? o.leftGuard == null : leftGuard.equals(o.leftGuard) &&
+				rightGuard == null ? o.rightGuard == null : rightGuard.equals(o.rightGuard) &&
+				leftOp == null ? o.leftOp == null : leftOp.equals(o.leftOp) &&
+				rightOp == null ? o.rightOp == null : rightOp.equals(o.rightOp);
 	}
 }

@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.sf.tweety.Signature;
+import net.sf.tweety.logics.commons.syntax.Functor;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Conjuctable;
@@ -15,7 +16,6 @@ import net.sf.tweety.logics.firstorderlogic.syntax.Conjunction;
 import net.sf.tweety.logics.firstorderlogic.syntax.Disjunction;
 import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
-import net.sf.tweety.logics.firstorderlogic.syntax.Functor;
 import net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Tautology;
 import net.sf.tweety.math.probability.Probability;
@@ -31,7 +31,7 @@ import net.sf.tweety.util.rules.Rule;
  * @author Matthias Thimm
  * @todo dont use relation formula cause it is a Quantified formula that not support or and etc.
  */
-public class RelationalConditional extends RelationalFormula implements Rule {
+public class RelationalConditional extends RelationalFormula implements Rule<FolFormula, FolFormula>  {
 
 	/**
 	 * The premise of the conditional.
@@ -282,6 +282,32 @@ public class RelationalConditional extends RelationalFormula implements Rule {
 	@Override
 	public RelationalConditional clone() {
 		return new RelationalConditional(premise.clone(), conclusion.clone());
+	}
+
+	@Override
+	public boolean isConstraint() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setConclusion(FolFormula conclusion) {
+		if(conclusion == null) {
+			throw new IllegalArgumentException();
+		}
+		this.conclusion = conclusion;
+	}
+
+	@Override
+	public void addPremise(FolFormula premise) {
+		this.premise = this.premise.combineWithAnd(premise);
+	}
+
+	@Override
+	public void addPremises(Collection<? extends FolFormula> premises) {
+		for(FolFormula f : premises) {
+			this.premise = this.premise.combineWithAnd(f);
+		}
 	}
 
 }

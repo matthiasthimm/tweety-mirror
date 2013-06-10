@@ -10,12 +10,15 @@ import java.util.List;
 import java.util.Set;
 
 import net.sf.tweety.beliefdynamics.CredibilityRevisionIterative;
+import net.sf.tweety.logicprogramming.asplibrary.parser.ASPParser;
+import net.sf.tweety.logicprogramming.asplibrary.parser.InstantiateVisitor;
+import net.sf.tweety.logicprogramming.asplibrary.parser.ParseException;
 import net.sf.tweety.logicprogramming.asplibrary.solver.DLV;
 import net.sf.tweety.logicprogramming.asplibrary.solver.Solver;
 import net.sf.tweety.logicprogramming.asplibrary.solver.SolverException;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.ELPAtom;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.ELPLiteral;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Neg;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPAtom;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPLiteral;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPNeg;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
 import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSet;
@@ -123,12 +126,12 @@ public class PreferenceHandling extends CredibilityRevisionIterative<Rule> {
 		Set<Rule> toRemoveCollection = new HashSet<Rule>();
 		for(Pair<Rule, Rule> conflict : conflicts) {
 			for(AnswerSet as : asDefault) {
-				Set<ELPLiteral> literals = new HashSet<ELPLiteral>();
+				Set<DLPLiteral> literals = new HashSet<DLPLiteral>();
 				literals.addAll(conflict.getSecond().getLiterals());
-				literals.removeAll(conflict.getSecond().getHead());
+				literals.removeAll(conflict.getSecond().getConclusion());
 				
 				if(	as.containsAll(literals) &&
-					!as.containsAll(conflict.getSecond().getHead())) {
+					!as.containsAll(conflict.getSecond().getConclusion())) {
 					toRemoveCollection.add(conflict.getFirst());
 				}
 			}
@@ -161,11 +164,11 @@ public class PreferenceHandling extends CredibilityRevisionIterative<Rule> {
 				continue;
 			
 			// Create negated head of rule 1.
-			ELPLiteral head1 = r1.getHead().iterator().next();
-			ELPLiteral negHead1 = null;
-			if(head1 instanceof ELPAtom) {
-				negHead1 = new Neg(head1.getAtom());
-			} else if(head1 instanceof Neg) {
+			DLPLiteral head1 = r1.getConclusion().iterator().next();
+			DLPLiteral negHead1 = null;
+			if(head1 instanceof DLPAtom) {
+				negHead1 = new DLPNeg(head1.getAtom());
+			} else if(head1 instanceof DLPNeg) {
 				negHead1 = head1.getAtom();
 			} else {
 				throw new RuntimeException("Head Atom must be normal or strict negated.");
@@ -177,7 +180,7 @@ public class PreferenceHandling extends CredibilityRevisionIterative<Rule> {
 				Rule r2 = p2it.next();
 				if(r2.isConstraint())
 					continue;
-				if(r2.getHead().iterator().next().equals(negHead1)) {
+				if(r2.getConclusion().iterator().next().equals(negHead1)) {
 					reval.add(new Pair<Rule, Rule>(r1, r2));
 				}
 			}
@@ -189,7 +192,7 @@ public class PreferenceHandling extends CredibilityRevisionIterative<Rule> {
 	/*
 	 * Temporary functional test method.
 	 */
-	public static void main(String [] args) throws SolverException {
+	public static void main(String [] args) throws SolverException, ParseException {
 		// Example from Mirja diplom thesis.
 		String program1 = "a.\nb:-not c.";
 		String program2 = "-a:-not b.";
@@ -198,8 +201,11 @@ public class PreferenceHandling extends CredibilityRevisionIterative<Rule> {
 		
 		DLV clingo = new DLV("/home/janus/workspace/angerona/software/test/src/main/tools/solver/asp/dlv/dlv.bin");
 		
-		Program p1 = Program.loadFrom(new StringReader(program1));
-		Program p2 = Program.loadFrom(new StringReader(program2));
+		InstantiateVisitor visitor = new InstantiateVisitor();
+		ASPParser parser = new ASPParser(new StringReader(program1));
+		Program p1 = visitor.visit(parser.Program(), null);
+		parser.ReInit(new StringReader(program2));
+		Program p2 = visitor.visit(parser.Program(), null);
 		
 		System.out.println("P1:");
 		System.out.println(p1.toString()+"\n" + clingo.computeModels(p1, 5) + "\n");

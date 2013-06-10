@@ -20,8 +20,9 @@ import net.sf.tweety.util.rules.Rule;
 /**
  * This class represents a basic conditional (B|A) with formulas A,B.
  * @author Matthias Thimm
+ * @author Tim Janus
  */
-public class Conditional implements SimpleLogicalFormula, Rule {
+public class Conditional implements SimpleLogicalFormula, Rule<PropositionalFormula, PropositionalFormula> {
 	
 	/**
 	 * The premise of this conditional. 
@@ -178,5 +179,28 @@ public class Conditional implements SimpleLogicalFormula, Rule {
 	public Class<? extends Predicate> getPredicateCls() {
 		return PropositionalPredicate.class;
 	}
-	
+
+	@Override
+	public boolean isConstraint() {
+		return false;
+	}
+
+	@Override
+	public void setConclusion(PropositionalFormula conclusion) {
+		if(conclusion == null)
+			throw new IllegalArgumentException();
+		this.conclusion = conclusion;
+	}
+
+	@Override
+	public void addPremise(PropositionalFormula premise) {
+		this.premise = premise.combineWithAnd(premise);
+	}
+
+	@Override
+	public void addPremises(Collection<? extends PropositionalFormula> premises) {
+		for(PropositionalFormula pf : premises) {
+			this.premise = premise.combineWithAnd(pf);
+		}
+	}
 }

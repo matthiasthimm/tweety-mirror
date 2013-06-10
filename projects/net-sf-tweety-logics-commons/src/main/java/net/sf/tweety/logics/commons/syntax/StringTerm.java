@@ -18,8 +18,7 @@ public abstract class StringTerm extends TermAdapter<String> {
 	 * @param value	The value for the string term.
 	 */
 	public StringTerm(String value) {
-		super();
-		set(value);
+		super(value);
 	}
 	
 	/**
@@ -28,8 +27,7 @@ public abstract class StringTerm extends TermAdapter<String> {
 	 * @param sort	The sort representing the type of the StringTerm.
 	 */
 	public StringTerm(String value, Sort sort) {
-		super(sort);
-		set(value);
+		super(value, sort);
 	}
 	
 	/** 
@@ -37,8 +35,7 @@ public abstract class StringTerm extends TermAdapter<String> {
 	 * @param other	The StringTerm that acts as source for the copy
 	 */
 	public StringTerm(StringTerm other) {
-		super(other.getSort());
-		set(other.get());
+		super(other.value, other.getSort());
 	}
 	
 	@Override
@@ -52,38 +49,5 @@ public abstract class StringTerm extends TermAdapter<String> {
 	@Override
 	public String toString(){
 		return this.value;
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + ((value == null) ? 0 : value.hashCode());
-		return result;
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		StringTerm other = (StringTerm) obj;
-		if (value == null) {
-			if (other.value != null)
-				return false;
-		} else if (!value.equals(other.get()))
-			return false;
-		if(!other.getSort().equals(this.getSort()))
-			return false;
-		return true;
 	}
 }

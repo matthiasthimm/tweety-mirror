@@ -10,8 +10,9 @@ import net.sf.tweety.*;
  * 
  * @param <T extends Rule> the specific rule class
  * @author Matthias Thimm
+ * @author Tim Janus
  */
-public class RuleSet<T extends Rule> extends HashSet<T>{
+public class RuleSet<T extends Rule<?,?>> extends HashSet<T>{
 
 	private static final long serialVersionUID = 1L;
 	
@@ -38,7 +39,7 @@ public class RuleSet<T extends Rule> extends HashSet<T>{
 	public Set<T> getRulesWithConclusion(Formula f){
 		Set<T> rules = new HashSet<T>();
 		for(T rule: this)
-			if(((Rule)rule).getConclusion().equals(f))
+			if(((Rule<?,?>)rule).getConclusion().equals(f))
 				rules.add(rule);		
 		return rules;
 	}
@@ -50,7 +51,7 @@ public class RuleSet<T extends Rule> extends HashSet<T>{
 	public Set<Formula> getConclusions(){
 		Set<Formula> conclusions = new HashSet<Formula>();
 		for(T rule: this)
-			conclusions.add(((Rule)rule).getConclusion());
+			conclusions.add(((Rule<?,?>)rule).getConclusion());
 		return conclusions;
 	}
 	
@@ -61,8 +62,7 @@ public class RuleSet<T extends Rule> extends HashSet<T>{
 	public Set<Formula> getPremises(){
 		Set<Formula> premises = new HashSet<Formula>();
 		for(T rule: this)
-			premises.addAll(((Rule)rule).getPremise());
+			premises.addAll(((Rule<?,?>)rule).getPremise());
 		return premises;		
 	}
-
 }

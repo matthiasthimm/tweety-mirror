@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.Formula;
+import net.sf.tweety.logics.commons.syntax.Functor;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Conjuctable;
@@ -14,7 +14,6 @@ import net.sf.tweety.logics.firstorderlogic.syntax.Conjunction;
 import net.sf.tweety.logics.firstorderlogic.syntax.Disjunction;
 import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
-import net.sf.tweety.logics.firstorderlogic.syntax.Functor;
 import net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula;
 import net.sf.tweety.math.probability.Probability;
 import net.sf.tweety.util.rules.Rule;
@@ -24,9 +23,10 @@ import net.sf.tweety.util.rules.Rule;
  * and captures their common attributes and methods.
  *
  * @author Matthias Thimm
+ * @author Tim Janus
  *
  */
-public abstract class DelpRule extends RelationalFormula implements Rule{
+public abstract class DelpRule extends RelationalFormula implements Rule<FolFormula, FolFormula>{
 	
 	/**
 	 * The head of the rule (this must be a literal).
@@ -82,7 +82,7 @@ public abstract class DelpRule extends RelationalFormula implements Rule{
 	 * @see net.sf.tweety.util.rules.Rule#getPremise()
 	 */
 	@Override
-	public Collection<? extends Formula> getPremise() {
+	public Collection<? extends FolFormula> getPremise() {
 		return this.body;
 	}
 
@@ -90,7 +90,7 @@ public abstract class DelpRule extends RelationalFormula implements Rule{
 	 * @see net.sf.tweety.util.rules.Rule#getConclusion()
 	 */
 	@Override
-	public Formula getConclusion() {
+	public FolFormula getConclusion() {
 		return this.head;
 	}
 
@@ -172,6 +172,38 @@ public abstract class DelpRule extends RelationalFormula implements Rule{
 			reval.addAll(b.getQuantifierVariables());
 		}
 		return reval;
+	}
+	
+	@Override
+	public boolean isFact() {
+		return body.isEmpty();
+	}
+
+	@Override
+	public boolean isConstraint() {
+		return false;
+	}
+
+	@Override
+	public void setConclusion(FolFormula conclusion) {
+		if(!conclusion.isLiteral()) {
+			throw new IllegalArgumentException("Heads of DeLP rules need to consist of a single literal.");
+		}
+		head = conclusion;
+	}
+
+	@Override
+	public void addPremise(FolFormula premise) {
+		if(!premise.isLiteral()) {
+			throw new IllegalArgumentException("Body elements of DeLP rules need to consist of a single literal.");
+		}
+		body.add(premise);
+	}
+
+	@Override
+	public void addPremises(Collection<? extends FolFormula> premises) {
+		for(FolFormula premise : premises) 
+			addPremise(premise);
 	}
 	
 	/* (non-Javadoc)

@@ -3,6 +3,7 @@ package net.sf.tweety.logics.firstorderlogic.syntax;
 import java.util.Set;
 
 import net.sf.tweety.logics.commons.LogicalSymbols;
+import net.sf.tweety.logics.commons.syntax.Functor;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;

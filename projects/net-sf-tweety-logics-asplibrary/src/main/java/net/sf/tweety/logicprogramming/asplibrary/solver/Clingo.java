@@ -1,11 +1,14 @@
 package net.sf.tweety.logicprogramming.asplibrary.solver;
 
-import net.sf.tweety.logicprogramming.asplibrary.parser.ELPParser;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.*;
-import net.sf.tweety.logicprogramming.asplibrary.util.*;
-
 import java.io.StringReader;
-import java.util.*;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
+import net.sf.tweety.logicprogramming.asplibrary.parser.ASPParser;
+import net.sf.tweety.logicprogramming.asplibrary.parser.InstantiateVisitor;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
+import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSetList;
 
 
 public class Clingo extends SolverBase {
@@ -17,16 +20,17 @@ public class Clingo extends SolverBase {
 	}
 	
 	
-	private List<ELPLiteral> parseAnswerSet(String s) {
-		List<ELPLiteral> ret = null;
+	private AnswerSetList parseAnswerSets(String s) {		
+		// use parser:
 		try {
-			ELPParser ep = new ELPParser( new StringReader( s ));
-			ret = ep.clasp_answerset();
+			ASPParser ep = new ASPParser( new StringReader( s ));
+			InstantiateVisitor visitior = new InstantiateVisitor();
+			return visitior.visit(ep.AnswerSetList(), null);
 		} catch (Exception e) {
 			System.err.println("clingo: error parsing answer set!");
 			e.printStackTrace();
+			return null;
 		}
-		return ret;
 	}
 
 	@Override
@@ -99,19 +103,14 @@ public class Clingo extends SolverBase {
 	
 	protected AnswerSetList buildASL(List<String> output) {
 		// process output and return answer set
-		AnswerSetList asl = new AnswerSetList();
-		boolean prevIsAnswer = false;
-		for (String s : output) {
-			//System.out.println(s);
-			if (s.startsWith("Answer:")) {
-				prevIsAnswer = true;
-			} else if (prevIsAnswer) {
-				prevIsAnswer = false;
-				List<ELPLiteral> lits = parseAnswerSet(s);
-				if (lits != null)
-					asl.add( new AnswerSet(lits,0,0));
-			}
+		// First convert in dlv format:
+		String toParse = "";
+		for(String line : output) {
+			String as = line.replace('.', ',');
+			as = "{" + as + "}";
+			as = as.replace(",}", "}");
+			toParse += as;
 		}
-		return asl;
+		return parseAnswerSets(toParse);
 	}
 }

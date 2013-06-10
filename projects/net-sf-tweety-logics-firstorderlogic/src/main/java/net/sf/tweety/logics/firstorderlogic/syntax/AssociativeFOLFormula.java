@@ -9,6 +9,7 @@ import java.util.Set;
 import net.sf.tweety.Signature;
 import net.sf.tweety.logics.commons.syntax.AssociativeFormulaSupport;
 import net.sf.tweety.logics.commons.syntax.AssociativeFormulaSupport.AssociativeSupportBridge;
+import net.sf.tweety.logics.commons.syntax.Functor;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.commons.syntax.interfaces.AssociativeFormula;

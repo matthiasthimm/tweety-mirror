@@ -17,29 +17,17 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Term;
  *
  */
 public class SetTerm extends TermAdapter<Set<Term<?>>> {
-
-	Set<Term<?>>	terms;
+	
+	public SetTerm() {
+		super(new HashSet<Term<?>>());
+	}
 	
 	public SetTerm(SetTerm other) {
-		this.terms = new HashSet<Term<?>>();
-		for(Term<?> t : other.terms) {
-			terms.add((Term<?>)t.clone());
-		}
+		super(new HashSet<Term<?>>(other.value));
 	}
 	
 	public SetTerm(Collection<Term<?>> terms) {
-		this.terms = new HashSet<Term<?>>(terms);
-	}
-	
-	
-	@Override
-	public void set(Set<Term<?>> value) {
-		terms = value;
-	}
-
-	@Override
-	public Set<Term<?>> get() {
-		return terms;
+		super(new HashSet<Term<?>>(terms));
 	}
 	
 	@Override
@@ -50,7 +38,7 @@ public class SetTerm extends TermAdapter<Set<Term<?>>> {
 	@Override
 	public String toString() {
 		String ret = "{";
-		Iterator<Term<?>> iter = this.terms.iterator();
+		Iterator<Term<?>> iter = value.iterator();
 		if (iter.hasNext())
 			ret += iter.next();
 		while (iter.hasNext())
@@ -67,8 +55,8 @@ public class SetTerm extends TermAdapter<Set<Term<?>>> {
 			// both sets must be same size, and
 			// every element from here should be
 			// in there.
-			for (Term<?> t : this.terms)
-				if (!os.terms.contains(t))
+			for (Term<?> t : value)
+				if (!os.value.contains(t))
 					return false;
 			
 			return true;

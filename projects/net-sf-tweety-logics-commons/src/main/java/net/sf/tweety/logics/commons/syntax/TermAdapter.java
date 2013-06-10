@@ -17,23 +17,25 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Term;
  */
 public abstract class TermAdapter<T> implements Term<T>{
 
+	protected T value;
+	
 	/** the type of the term */
 	private Sort sort;
 	
 	/**
 	 * Default-Ctor: Creates an TermAdapter with the Sort "Thing"
 	 */
-	public TermAdapter() {
-		this.sort = Sort.THING;
-		sort.add(this);
+	public TermAdapter(T value) {
+		this(value, Sort.THING);
 	}
 	
 	/**
 	 * Ctor: Creates a TermAdapter with the given Sort
 	 * @param sort	The Sort (Type) of the TermAdapter instance
 	 */
-	public TermAdapter(Sort sort) {
+	public TermAdapter(T value, Sort sort) {
 		this.sort = sort;
+		set(value);
 		sort.add(this);
 	}
 	
@@ -75,21 +77,17 @@ public abstract class TermAdapter<T> implements Term<T>{
 		return sort;
 	}
 
-	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((sort == null) ? 0 : sort.hashCode());
+		if(get() != null) {
+			result += get().hashCode();
+		}
 		return result;
 	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -104,8 +102,23 @@ public abstract class TermAdapter<T> implements Term<T>{
 				return false;
 		} else if (!sort.equals(other.getSort()))
 			return false;
-		return true;
+		return get().equals(other.get());
 	}
 	
 	public abstract TermAdapter<?> clone();
+
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
+	
+	@Override
+	public void set(T value) {
+		this.value = value;
+	}
+
+	@Override
+	public T get() {
+		return this.value;
+	}
 }

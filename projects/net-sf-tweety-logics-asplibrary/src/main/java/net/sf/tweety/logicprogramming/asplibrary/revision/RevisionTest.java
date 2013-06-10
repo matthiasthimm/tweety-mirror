@@ -15,9 +15,11 @@ import net.sf.tweety.beliefdynamics.gui.RevisionCompareModel;
 import net.sf.tweety.beliefdynamics.gui.RevisionComparePresenter;
 import net.sf.tweety.beliefdynamics.gui.RevisionComparePresenter.FileHandler;
 import net.sf.tweety.beliefdynamics.gui.RevisionCompareView;
-import net.sf.tweety.logicprogramming.asplibrary.parser.ELPParser;
+import net.sf.tweety.logicprogramming.asplibrary.parser.ASPParser;
+import net.sf.tweety.logicprogramming.asplibrary.parser.InstantiateVisitor;
 import net.sf.tweety.logicprogramming.asplibrary.parser.ParseException;
 import net.sf.tweety.logicprogramming.asplibrary.solver.DLVComplex;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 
 /**
  * Uses the RevisionCompareView in a JFrame to compare the different revision methods in ASP.
@@ -39,8 +41,9 @@ public class RevisionTest {
 				if(file == null)
 					return null;
 				try {
-					ELPParser parser = new ELPParser(new FileInputStream(file));
-					return parser.program();
+					ASPParser parser = new ASPParser(new FileInputStream(file));
+					InstantiateVisitor visitor = new InstantiateVisitor();
+					return (Program)parser.Program().jjtAccept(visitor, null);
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				} catch (ParseException e) {

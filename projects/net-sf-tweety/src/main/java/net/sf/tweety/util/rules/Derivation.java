@@ -1,9 +1,15 @@
 package net.sf.tweety.util.rules;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.Stack;
 
-import net.sf.tweety.*;
-import net.sf.tweety.util.*;
+import net.sf.tweety.Formula;
+import net.sf.tweety.util.Triple;
 
 /**
  * This class models a derivation, i.e. a minimal (with respect to set
@@ -15,7 +21,7 @@ import net.sf.tweety.util.*;
  * 
  * @author Matthias Thimm
  */
-public class Derivation<T extends Rule> extends ArrayList<T>{
+public class Derivation<T extends Rule<?,?>> extends ArrayList<T>{
 
 	private static final long serialVersionUID = 1L;
 	
@@ -44,7 +50,7 @@ public class Derivation<T extends Rule> extends ArrayList<T>{
 	 * @param rules a set of rules
 	 * @return the set of all possible derivations
 	 */
-	public static <S extends Rule> Set<Derivation<S>> allDerivations(Collection<? extends S> rules){
+	public static <S extends Rule<?,?>> Set<Derivation<S>> allDerivations(Collection<? extends S> rules){
 		RuleSet<S> theRules = new RuleSet<S>(rules);
 		Set<Derivation<S>> allDerivations = new HashSet<Derivation<S>>();
 		for(Formula f: theRules.getConclusions())
@@ -58,7 +64,7 @@ public class Derivation<T extends Rule> extends ArrayList<T>{
 	 * @param rules a set of rules
 	 * @return the set of all possible derivations with the given conclusion
 	 */
-	public static <S extends Rule> Set<Derivation<S>> allDerivations(Collection<? extends S> rules, Formula conclusion){
+	public static <S extends Rule<?,?>> Set<Derivation<S>> allDerivations(Collection<? extends S> rules, Formula conclusion){
 		RuleSet<S> theRules = new RuleSet<S>(rules);
 		// each element (A,B,C) of this stack describes a (partial) derivation with
 		// A - being the current derivation (a list of rules

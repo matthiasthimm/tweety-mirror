@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.logicprogramming.asplibrary.syntax.ELPLiteral;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPLiteral;
 
 /**
  * this class represents a collection of answer sets and
@@ -12,7 +12,6 @@ import net.sf.tweety.logicprogramming.asplibrary.syntax.ELPLiteral;
  * 
  * @author Thomas Vengels
  * @author Tim Janus
- *
  */
 public class AnswerSetList extends ArrayList<AnswerSet> {
 	
@@ -33,7 +32,7 @@ public class AnswerSetList extends ArrayList<AnswerSet> {
 		}
 	}
 
-	public Set<ELPLiteral> getFactsByName(String name) {
+	public Set<DLPLiteral> getFactsByName(String name) {
 		return getFactsByName(name, POLICY_SKEPTICAL);
 	}
 
@@ -43,14 +42,14 @@ public class AnswerSetList extends ArrayList<AnswerSet> {
 	 * @param policy	The used policy might be skeptical or credolous.
 	 * @return			A set of literals which are also in the answerset.
 	 */
-	public Set<ELPLiteral> getFactsByName(String name, int policy) {
-		Set<ELPLiteral> reval = new HashSet<ELPLiteral>();
+	public Set<DLPLiteral> getFactsByName(String name, int policy) {
+		Set<DLPLiteral> reval = new HashSet<DLPLiteral>();
 		boolean first = true;
 		for(AnswerSet as : this) {
 			if(first == false && policy == POLICY_SKEPTICAL) {
-				reval.retainAll(as.getLiteralsBySymbol(name));
+				reval.retainAll(as.getLiteralsWithName(name));
 			} else {
-				reval.addAll(as.getLiteralsBySymbol(name));
+				reval.addAll(as.getLiteralsWithName(name));
 			}
 			first = false;
 		}
@@ -63,7 +62,7 @@ public class AnswerSetList extends ArrayList<AnswerSet> {
 	 * @param q
 	 * @return
 	 */
-	public boolean	holdsOne( ELPLiteral q ) {
+	public boolean	holdsOne( DLPLiteral q ) {
 		return false;
 	}
 	
@@ -73,7 +72,7 @@ public class AnswerSetList extends ArrayList<AnswerSet> {
 	 * @param q
 	 * @return
 	 */
-	public boolean	holdsAll( ELPLiteral q ) {
+	public boolean	holdsAll( DLPLiteral q ) {
 		return false;
 	}
 	
