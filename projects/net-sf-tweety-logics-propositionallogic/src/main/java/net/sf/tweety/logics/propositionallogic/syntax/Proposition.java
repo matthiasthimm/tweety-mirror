@@ -23,6 +23,9 @@ public class Proposition extends PropositionalFormula implements Atom, Comparabl
 	 */
 	private PropositionalPredicate predicate;
 
+	/** Default-Ctor for dynamic instantiation */
+	public Proposition() {}
+	
 	/**
 	 * Creates a new proposition of the given name.
 	 * @param name the name of the proposition.
@@ -39,7 +42,7 @@ public class Proposition extends PropositionalFormula implements Atom, Comparabl
 	 * @return the name of this proposition.
 	 */
 	public String getName(){
-		return this.predicate.getName();
+		return this.predicate != null ? this.predicate.getName() : "";
 	}
 	
 	@Override
@@ -55,7 +58,7 @@ public class Proposition extends PropositionalFormula implements Atom, Comparabl
 	}
 	
 	public String toString(){
-		return this.predicate.getName();
+		return getName();
 	}
 	
 	public PropositionalFormula collapseAssociativeFormulas(){

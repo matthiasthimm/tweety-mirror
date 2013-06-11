@@ -1,6 +1,7 @@
 package net.sf.tweety.logics.firstorderlogic.syntax;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -41,6 +42,10 @@ public class FOLAtom extends FolFormula implements Atom {
 	 */
 	public FOLAtom(Predicate predicate){
 		this(predicate,new ArrayList<Term<?>>());
+	}
+	
+	public FOLAtom(Predicate predicate, Term<?>... terms) {
+		this(predicate, Arrays.asList(terms));
 	}
 	
 	/**

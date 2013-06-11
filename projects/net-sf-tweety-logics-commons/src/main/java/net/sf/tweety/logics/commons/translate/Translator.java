@@ -10,25 +10,58 @@ import net.sf.tweety.logics.commons.syntax.interfaces.AssociativeFormula;
 import net.sf.tweety.logics.commons.syntax.interfaces.Atom;
 import net.sf.tweety.logics.commons.syntax.interfaces.SimpleLogicalFormula;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
+import net.sf.tweety.util.Pair;
+import net.sf.tweety.util.rules.Rule;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Provides methods for translation between different logic languages
+ * Allows translation between different logic languages, sub classes
+ * have to implement the translation between complex formulas but this
+ * base class provides methods to translate, predicates, Atoms,
+ * Associative formulas and Rules.
+ * 
+ * To translate more complex formulas subclasses shall override the
+ * translateUsingMap() method. It is recommended to call the super 
+ * method when overriding to have the correct translate behavior for
+ * basic constructs like Atoms, Predicate etc.
+ * 
+ * The sub class also have to implement the createTranslateMap() method. The map
+ * maps a source class to a pair of a target class and an implementation which
+ * shall be used for translation. Although sub classes shall provide an easy
+ * user-interface with different overloads of methods like: toLang1() and toLang2()
+ * the translate map is necessary to support nested formulas like a disjunction
+ * of conjunction of several disjunction etc.
+ * 
+ * @remark The implementations used unchecked generic casts. It is important
+ * 			that the subclasses create consistent translation maps, otherwise
+ * 			there might be a ClassCastException which is not thrown by this
+ * 			code although it is caused by the inconsistent translation
+ * 			map.
+ * 
+ * Also see net.sf.tweety.logics.translate.folprop for a short example
+ * implementation.
  * 
  * @author Tim Janus
  */
-public class Translator {
+public abstract class Translator {
 	
 	/** reference to the logback logger instance */
 	private static Logger LOG = LoggerFactory.getLogger(Translator.class);
 
-	Map<Class<?>, Class<?>>	translateMap;
+	public static final int TT_PREDICATE 	= -1;
+	public static final int TT_ATOM 		= -2;
+	public static final int TT_ASSOC		= -3;
+	public static final int TT_RULE			= -4;
 	
-	public Translator(Map<Class<?>, Class<?>> map) {
-		this.translateMap = map;
+	Map<Class<?>, Pair<Integer, Class<?>>>	translateMap;
+	
+	public Translator() {
+		translateMap = createTranslateMap();
 	}
+	
+	protected abstract Map<Class<?>, Pair<Integer, Class<?>>> createTranslateMap();
 	
 	/**
 	 * Translates the given source predicate into an instance of the given predicate
@@ -58,11 +91,11 @@ public class Translator {
 	 * @return				The translated atom
 	 * @throws LanguageException
 	 */
-	public <T extends Atom> T translateAtom(Atom source, Class<T> atomCls) 
+	public Atom translateAtom(Atom source, Class<?> atomCls) 
 			throws LanguageException {
 		if(source == null)
 			throw new IllegalArgumentException("Argument 'source' must not be null.");
-		T dest = createInstance(atomCls);
+		Atom dest = (Atom) createInstance(atomCls);
 		Predicate dstPredicate = translatePredicate(source.getPredicate(), dest.getPredicateCls());
 		
 		dest.setPredicate(dstPredicate);
@@ -73,45 +106,49 @@ public class Translator {
 	}
 	
 	
-	public SimpleLogicalFormula translateFormula(SimpleLogicalFormula source) {
-		if(source instanceof Atom) {
-			@SuppressWarnings("unchecked")
-			Class<? extends Atom> cls = (Class<? extends Atom>) translateMap.get(Atom.class);
-			return translateAtom((Atom)source, cls);
-		} else if(source instanceof AssociativeFormula<?>) {
-			AssociativeFormula<?> srcA = (AssociativeFormula<?>) source;
-			@SuppressWarnings("unchecked")
-			Class<? extends AssociativeFormula<SimpleLogicalFormula>> cls = (Class<? extends AssociativeFormula<SimpleLogicalFormula>>) translateMap.get(srcA.getClass());
-			return null;
-			//return translateAssociative(srcA, cls);
+	public <A extends AssociativeFormula<? extends SimpleLogicalFormula>> 
+		AssociativeFormula<?> translateAssociative(A source, Class<?> assocCls) {
+		@SuppressWarnings("unchecked")
+		AssociativeFormula<? super SimpleLogicalFormula> dest = (AssociativeFormula<? super SimpleLogicalFormula>) createInstance(assocCls);
+		for(SimpleLogicalFormula slf : source) {
+			SimpleLogicalFormula translated = translateUsingMap(slf);
+			dest.add(translated);
+		}
+		return dest;
+	}
+	
+	public SimpleLogicalFormula translateUsingMap(SimpleLogicalFormula source) {
+		Pair<Integer, Class<?>> translateInfo = translateMap.get(source.getClass());
+		if(translateInfo != null) {
+			switch(translateInfo.getFirst()) {
+			case TT_ATOM:
+				return translateAtom((Atom)source, translateInfo.getSecond());
+				
+			case TT_ASSOC:
+				return translateAssociative((AssociativeFormula<?>)source, translateInfo.getSecond());
+				
+			case TT_RULE:
+				@SuppressWarnings("unchecked")
+				Rule<? extends SimpleLogicalFormula, ? extends SimpleLogicalFormula> rule 
+					= (Rule<? extends SimpleLogicalFormula, ? extends SimpleLogicalFormula>) source;
+				return (SimpleLogicalFormula) translateRule(rule, translateInfo.getSecond());
+			}
+		} else {
+			// todo: error handling
 		}
 		return null;
 	}
 	
-	/*
-	public AssociativeFormula<?> translateAssociative(AssociativeFormula<?> source) {
-		if(source == null)
-			throw new IllegalArgumentException("Argument 'source' must not be null.");
+	public Rule<?,?> translateRule(Rule<? extends SimpleLogicalFormula, ? extends SimpleLogicalFormula> source, Class<?> ruleCls) {
+		@SuppressWarnings("unchecked")
+		Rule<SimpleLogicalFormula, SimpleLogicalFormula> dest = (Rule<SimpleLogicalFormula, SimpleLogicalFormula>) createInstance(ruleCls);
 		
-		Class<? extends AssociativeFormula<SimpleLogicalFormula>> assocCls = (Class<? extends AssociativeFormula<SimpleLogicalFormula>>) translateMap.get(source.getClass());
+		SimpleLogicalFormula tCon = translateUsingMap(source.getConclusion());
+		dest.setConclusion(tCon);
 		
-		return translateAssociative(source, assocCls);
-	}
-	
-	public <C extends AssociativeFormula<SimpleLogicalFormula>> C translateAssociative (
-			AssociativeFormula<?> source, Class<C> clsAssoc) {
-		if(source == null)
-			throw new IllegalArgumentException("Argument 'source' must not be null.");
-		
-		C dest = createInstance(clsAssoc);
-		for(SimpleLogicalFormula srcF : source.getFormulas()) {
-			SimpleLogicalFormula t = translateFormula(srcF);
-			dest.add(t);
-		}
 		
 		return dest;
 	}
-	*/
 	
 	protected static <T> T createInstance(Class<T> cls) throws LanguageException {
 		T reval = null;

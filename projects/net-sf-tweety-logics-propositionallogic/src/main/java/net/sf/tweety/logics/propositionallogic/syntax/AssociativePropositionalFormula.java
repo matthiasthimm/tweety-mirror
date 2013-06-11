@@ -2,6 +2,8 @@ package net.sf.tweety.logics.propositionallogic.syntax;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.Set;
 
 import net.sf.tweety.Signature;
@@ -191,6 +193,56 @@ public abstract class AssociativePropositionalFormula extends PropositionalFormu
 	@SuppressWarnings("unchecked")
 	public Object[] toArray(Object[] a){
 		return this.support.toArray(a);
+	}
+	
+	@Override
+	public void add(int index, PropositionalFormula element) {
+		this.support.add(index, element);
+	}
+
+	@Override
+	public boolean addAll(int index, Collection<? extends PropositionalFormula> c) {
+		return this.support.addAll(index, c);
+	}
+
+	@Override
+	public PropositionalFormula get(int index) {
+		return this.support.get(index);
+	}
+
+	@Override
+	public int indexOf(Object o) {
+		return this.support.indexOf(o);
+	}
+
+	@Override
+	public int lastIndexOf(Object o) {
+		return this.support.lastIndexOf(o);
+	}
+
+	@Override
+	public ListIterator<PropositionalFormula> listIterator() {
+		return this.support.listIterator();
+	}
+
+	@Override
+	public ListIterator<PropositionalFormula> listIterator(int index) {
+		return this.support.listIterator(index);
+	}
+
+	@Override
+	public PropositionalFormula remove(int index) {
+		return this.support.remove(index);
+	}
+
+	@Override
+	public PropositionalFormula set(int index, PropositionalFormula element) {
+		return this.support.set(index, element);
+	}
+
+	@Override
+	public List<PropositionalFormula> subList(int fromIndex, int toIndex) {
+		return this.support.subList(fromIndex, toIndex);
 	}
 
 }

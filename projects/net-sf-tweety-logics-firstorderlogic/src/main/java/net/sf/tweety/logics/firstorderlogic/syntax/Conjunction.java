@@ -114,4 +114,6 @@ public class Conjunction extends AssociativeFOLFormula {
 	public String getEmptySymbol() {
 		return LogicalSymbols.CONTRADICTION();
 	}
+
+
 }

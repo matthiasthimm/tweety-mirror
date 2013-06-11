@@ -11,7 +11,7 @@ import net.sf.tweety.*;
  * @author Matthias Thimm
  * @author Tim Janus
  */
-public interface Rule<C extends Formula, P extends Formula> {
+public interface Rule<C extends Formula, P extends Formula> extends Formula {
 
 	public boolean isFact();
 	

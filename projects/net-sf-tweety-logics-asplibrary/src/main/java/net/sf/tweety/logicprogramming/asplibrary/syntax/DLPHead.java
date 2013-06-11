@@ -3,6 +3,8 @@ package net.sf.tweety.logicprogramming.asplibrary.syntax;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -130,6 +132,15 @@ public class DLPHead extends DLPElementAdapter
 	}
 	
 	@Override
+	public SortedSet<DLPLiteral> getLiterals() {
+		SortedSet<DLPLiteral> reval = new TreeSet<DLPLiteral>();
+		for(DLPElement element : this) {
+			reval.addAll(element.getLiterals());
+		}
+		return reval;
+	}
+	
+	@Override
 	public boolean equals(Object other) {
 		if(other instanceof AssociativeFormula<?>) {
 			AssociativeFormula<?> cast = (AssociativeFormula<?>)other;
@@ -223,11 +234,52 @@ public class DLPHead extends DLPElementAdapter
 	}
 
 	@Override
-	public SortedSet<DLPLiteral> getLiterals() {
-		SortedSet<DLPLiteral> reval = new TreeSet<DLPLiteral>();
-		for(DLPElement element : this) {
-			reval.addAll(element.getLiterals());
-		}
-		return reval;
+	public void add(int index, DLPLiteral element) {
+		assocSupport.add(index, element);
+	}
+
+	@Override
+	public boolean addAll(int index, Collection<? extends DLPLiteral> c) {
+		return assocSupport.addAll(index, c);
+	}
+
+	@Override
+	public DLPLiteral get(int index) {
+		return assocSupport.get(index);
+	}
+
+	@Override
+	public int indexOf(Object o) {
+		return assocSupport.indexOf(o);
+	}
+
+	@Override
+	public int lastIndexOf(Object o) {
+		return assocSupport.lastIndexOf(o);
+	}
+
+	@Override
+	public ListIterator<DLPLiteral> listIterator() {
+		return assocSupport.listIterator();
+	}
+
+	@Override
+	public ListIterator<DLPLiteral> listIterator(int index) {
+		return assocSupport.listIterator(index);
+	}
+
+	@Override
+	public DLPLiteral remove(int index) {
+		return assocSupport.remove(index);
+	}
+
+	@Override
+	public DLPLiteral set(int index, DLPLiteral element) {
+		return assocSupport.set(index, element);
+	}
+
+	@Override
+	public List<DLPLiteral> subList(int fromIndex, int toIndex) {
+		return assocSupport.subList(fromIndex, toIndex);
 	}
 }

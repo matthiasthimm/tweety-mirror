@@ -13,6 +13,11 @@ import net.sf.tweety.logics.propositionallogic.error.PropositionalException;
  */
 public class PropositionalPredicate extends Predicate {
 	
+	/** Default-Ctor for dynamic instantiation */
+	public PropositionalPredicate() {
+		this("");
+	}
+	
 	/**
 	 * Ctor: Creates a new propositional predicate with the given
 	 * name.

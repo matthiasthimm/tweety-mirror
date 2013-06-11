@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Set;
 
 import net.sf.tweety.Signature;
@@ -72,7 +74,7 @@ public class AssociativeFormulaSupport<T extends SimpleLogicalFormula>
 	private AssociativeSupportBridge bridge;
 	
 	/** the set of formulas */
-	private Set<T> formulas = new HashSet<T>();
+	private List<T> formulas = new LinkedList<T>();
 	
 	//-------------------------------------------------------------------------
 	//	CTOR and COPY HELPER
@@ -121,7 +123,7 @@ public class AssociativeFormulaSupport<T extends SimpleLogicalFormula>
 	
 	@Override
 	public Set<T> getFormulas() {
-		return formulas;
+		return new HashSet<T>(formulas);
 	}
 
 	@Override
@@ -187,8 +189,11 @@ public class AssociativeFormulaSupport<T extends SimpleLogicalFormula>
 			AssociativeFormulaSupport<?> cast = 
 					(AssociativeFormulaSupport<?>) other;
 			return cast.formulas.equals(this.formulas);
-		} else if (other instanceof Set<?>) {
+		} else if (other instanceof List<?>) {
 			return this.formulas.equals(other);
+		} else if (other instanceof Set<?>) {
+			List<?> temp = new LinkedList<Object>((Set<?>) other);
+			return this.formulas.equals(temp);
 		}
 		return false;
 	}
@@ -330,6 +335,56 @@ public class AssociativeFormulaSupport<T extends SimpleLogicalFormula>
 	public Class<? extends Predicate> getPredicateCls() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void add(int index, T element) {
+		this.formulas.add(index, element);
+	}
+
+	@Override
+	public boolean addAll(int index, Collection<? extends T> c) {
+		return this.formulas.addAll(index, c);
+	}
+
+	@Override
+	public T get(int index) {
+		return this.formulas.get(index);
+	}
+
+	@Override
+	public int indexOf(Object o) {
+		return this.formulas.indexOf(o);
+	}
+
+	@Override
+	public int lastIndexOf(Object o) {
+		return this.formulas.lastIndexOf(o);
+	}
+
+	@Override
+	public ListIterator<T> listIterator() {
+		return this.formulas.listIterator();
+	}
+
+	@Override
+	public ListIterator<T> listIterator(int index) {
+		return this.formulas.listIterator(index);
+	}
+
+	@Override
+	public T remove(int index) {
+		return this.remove(index);
+	}
+
+	@Override
+	public T set(int index, T element) {
+		return this.set(index, element);
+	}
+
+	@Override
+	public List<T> subList(int fromIndex, int toIndex) {
+		return this.subList(fromIndex, toIndex);
 	}
 	
 	//-------------------------------------------------------------------------

@@ -39,7 +39,7 @@ public class DefaultificationTest extends TestCase {
     	assertTrue(dp.size() == p.size());
     	Rule dr = dp.iterator().next();
     	
-    	assertTrue(dr.getConclusion().equals(onlyRule.getConclusion()));
+    	assertEquals(dr.getConclusion(), onlyRule.getConclusion());
     	assertTrue(dr.getPremise().contains(onlyRule.getPremise().iterator().next()));
     	DLPNot defNot = new DLPNot(new DLPNeg(dr.getConclusion().iterator().next().getAtom()));
     	assertTrue(dr.getPremise().contains(defNot));
@@ -50,12 +50,12 @@ public class DefaultificationTest extends TestCase {
     	
     	p.add(onlyRule);
     	dp = Program.defaultification(p);
-    	assertTrue(p.size() == dp.size());
+    	assertEquals(p.size(), dp.size());
     	dr = dp.iterator().next();
     	
-    	assertTrue(dr.getConclusion().equals(onlyRule.getConclusion()));
+    	assertEquals(dr.getConclusion(), onlyRule.getConclusion());
     	defNot = new DLPNot(dr.getConclusion().iterator().next().getAtom());
-    	assertTrue(dr.getPremise().contains(defNot));
+    	assertEquals(true, dr.getPremise().contains(defNot));
     }
     
     public void testDefaultificationOfAlreadyDefaulticated() {
@@ -71,7 +71,7 @@ public class DefaultificationTest extends TestCase {
     	// defaultisated
     	Program dp = Program.defaultification(p);
     	Rule rd = dp.iterator().next();
-    	assertTrue(rd.equals(r));
-    	assertTrue(dp.equals(p));
+    	assertEquals(rd, r);
+    	assertEquals(dp, p);
     }
 }

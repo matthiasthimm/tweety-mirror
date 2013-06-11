@@ -1,6 +1,6 @@
 package net.sf.tweety.logics.commons.syntax.interfaces;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -10,7 +10,7 @@ import java.util.Set;
  * @author Tim Janus
  */
 public interface AssociativeFormula<T extends SimpleLogicalFormula> 
-	extends SimpleLogicalFormula, Collection<T> {
+	extends SimpleLogicalFormula, List<T> {
 	
 	/** @return all the formulas saved as childs in the associative formula */
 	Set<T> getFormulas();

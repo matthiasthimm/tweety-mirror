@@ -3,6 +3,8 @@ package net.sf.tweety.logics.firstorderlogic.syntax;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -295,5 +297,55 @@ public abstract class AssociativeFOLFormula extends FolFormula implements
 	@Override
 	public <T> T[] toArray(T[] a) {
 		return this.support.toArray(a);
+	}
+	
+	@Override
+	public void add(int index, RelationalFormula element) {
+		this.support.add(index, element);
+	}
+
+	@Override
+	public boolean addAll(int index, Collection<? extends RelationalFormula> c) {
+		return this.support.addAll(index, c);
+	}
+
+	@Override
+	public RelationalFormula get(int index) {
+		return this.support.get(index);
+	}
+
+	@Override
+	public int indexOf(Object o) {
+		return this.support.indexOf(o);
+	}
+
+	@Override
+	public int lastIndexOf(Object o) {
+		return this.support.lastIndexOf(o);
+	}
+
+	@Override
+	public ListIterator<RelationalFormula> listIterator() {
+		return this.support.listIterator();
+	}
+
+	@Override
+	public ListIterator<RelationalFormula> listIterator(int index) {
+		return this.support.listIterator(index);
+	}
+
+	@Override
+	public RelationalFormula remove(int index) {
+		return this.support.remove(index);
+	}
+
+	@Override
+	public RelationalFormula set(int index, RelationalFormula element) {
+		return this.support.set(index, element);
+	}
+
+	@Override
+	public List<RelationalFormula> subList(int fromIndex, int toIndex) {
+		return this.support.subList(fromIndex, toIndex);
 	}
 }
