@@ -2,7 +2,6 @@ package net.sf.tweety.logics.propositionallogic.syntax;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Set;
 
 import net.sf.tweety.logics.commons.LogicalSymbols;
 
@@ -73,12 +72,6 @@ public class Disjunction extends AssociativePropositionalFormula {
 	@Override
 	public PropositionalFormula clone() {
 		return new Disjunction(support.copyHelper(this));
-	}
-
-	@Override
-	public Set<Proposition> getAtoms() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@SuppressWarnings("unchecked")
