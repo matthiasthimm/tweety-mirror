@@ -56,18 +56,20 @@ public class Compilation extends DefaultGraph<CompilationNode>{
 	 * @return the argument tree for the given argument.
 	 */
 	public ArgumentTree getArgumentTree(DeductiveArgument arg){
-		ArgumentTree argTree = new ArgumentTree(arg);
-		argTree.add(arg);
+		DeductiveArgumentNode argNode = new DeductiveArgumentNode(arg);
+		ArgumentTree argTree = new ArgumentTree(argNode);
+		argTree.add(argNode);
 		Set<CompilationNode> firstLevelNodes = this.firstLevel(arg);
 		for(CompilationNode node: firstLevelNodes){
 			Set<PropositionalFormula> support = new HashSet<PropositionalFormula>(node);
 			support.removeAll(arg.getSupport());
 			DeductiveArgument undercut = new DeductiveArgument(support,new Negation(new Conjunction(arg.getSupport())));
-			argTree.add(undercut);
-			argTree.add(new DirectedEdge<DeductiveArgument>(undercut,arg));
+			DeductiveArgumentNode undercutNode = new DeductiveArgumentNode(undercut); 
+			argTree.add(undercutNode);
+			argTree.add(new DirectedEdge<DeductiveArgumentNode>(undercutNode,argNode));
 			Set<CompilationNode> remainingNodes = new HashSet<CompilationNode>(this.getNodes());
 			remainingNodes.remove(node);
-			this.subcuts(undercut, remainingNodes, node, new HashSet<PropositionalFormula>(arg.getSupport()), argTree);
+			this.subcuts(undercutNode, remainingNodes, node, new HashSet<PropositionalFormula>(arg.getSupport()), argTree);
 		}
 		return argTree;
 	}
@@ -126,12 +128,12 @@ public class Compilation extends DefaultGraph<CompilationNode>{
 	 * @param currentSupport the union of the supports of the current path.
 	 * @param argTree the argument tree.
 	 */
-	private void subcuts(DeductiveArgument arg, Set<CompilationNode> remainingNodes, CompilationNode current, Set<PropositionalFormula> currentSupport, ArgumentTree argTree){
+	private void subcuts(DeductiveArgumentNode argNode, Set<CompilationNode> remainingNodes, CompilationNode current, Set<PropositionalFormula> currentSupport, ArgumentTree argTree){
 		for(CompilationNode node: remainingNodes){
 			UndirectedEdge<CompilationNode> edge = new UndirectedEdge<CompilationNode>(current,node);
 			if(this.contains(edge)){
 				if(!currentSupport.containsAll(node)){
-					Set<PropositionalFormula> set = new HashSet<PropositionalFormula>(arg.getSupport());
+					Set<PropositionalFormula> set = new HashSet<PropositionalFormula>(argNode.getSupport());
 					set.retainAll(node);
 					if(!set.isEmpty()){
 						boolean properUndercut = true;
@@ -142,8 +144,8 @@ public class Compilation extends DefaultGraph<CompilationNode>{
 								if(edge2.getNodeA() == current)
 									set2 = new  HashSet<PropositionalFormula>(edge2.getNodeB());
 								else set2 = new  HashSet<PropositionalFormula>(edge2.getNodeA());
-								set1.retainAll(arg.getSupport());
-								set2.retainAll(arg.getSupport());
+								set1.retainAll(argNode.getSupport());
+								set2.retainAll(argNode.getSupport());
 								if(set1.containsAll(set2)){
 									properUndercut = false;
 									break;
@@ -152,15 +154,16 @@ public class Compilation extends DefaultGraph<CompilationNode>{
 						}
 						if(properUndercut){
 							Set<PropositionalFormula> support = new HashSet<PropositionalFormula>(node);
-							support.removeAll(arg.getSupport());
-							DeductiveArgument undercut = new DeductiveArgument(support,new Negation(new Conjunction(arg.getSupport())));
-							argTree.add(undercut);
-							argTree.add(new DirectedEdge<DeductiveArgument>(undercut,arg));
+							support.removeAll(argNode.getSupport());
+							DeductiveArgument undercut = new DeductiveArgument(support,new Negation(new Conjunction(argNode.getSupport())));
+							DeductiveArgumentNode undercutNode = new DeductiveArgumentNode(undercut); 
+							argTree.add(undercutNode);
+							argTree.add(new DirectedEdge<DeductiveArgumentNode>(undercutNode,argNode));
 							Set<CompilationNode> newRemainingNodes = new HashSet<CompilationNode>(remainingNodes);
 							newRemainingNodes.remove(node);
 							Set<PropositionalFormula> newSupport = new HashSet<PropositionalFormula>(support);
 							newSupport.addAll(undercut.getSupport());
-							this.subcuts(undercut, newRemainingNodes, node, newSupport, argTree);
+							this.subcuts(undercutNode, newRemainingNodes, node, newSupport, argTree);
 						}
 					}
 				}

@@ -2,7 +2,6 @@ package net.sf.tweety.argumentation.deductive.semantics;
 
 import java.util.Collection;
 
-import net.sf.tweety.graphs.Node;
 import net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula;
 
 /**
@@ -14,7 +13,7 @@ import net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula;
  * 
  * @author Matthias Thimm
  */
-public class DeductiveArgument implements Node {
+public class DeductiveArgument {
 
 	/** The support of this argument. */
 	private Collection<? extends PropositionalFormula> support;

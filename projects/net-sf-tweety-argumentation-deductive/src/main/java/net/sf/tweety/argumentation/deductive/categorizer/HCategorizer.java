@@ -3,7 +3,7 @@ package net.sf.tweety.argumentation.deductive.categorizer;
 import java.util.Collection;
 
 import net.sf.tweety.argumentation.deductive.semantics.ArgumentTree;
-import net.sf.tweety.argumentation.deductive.semantics.DeductiveArgument;
+import net.sf.tweety.argumentation.deductive.semantics.DeductiveArgumentNode;
 
 /**
  * This class implements the h-categorizer from<br/>
@@ -30,13 +30,13 @@ public class HCategorizer implements Categorizer{
 	 * @param node some node.
 	 * @return the categorization of the node.
 	 */
-	private double categorize(ArgumentTree argumentTree, DeductiveArgument parent, DeductiveArgument node){
-		Collection<DeductiveArgument> children = argumentTree.getNeighbors(node);
+	private double categorize(ArgumentTree argumentTree, DeductiveArgumentNode parent, DeductiveArgumentNode node){
+		Collection<DeductiveArgumentNode> children = argumentTree.getNeighbors(node);
 		if(parent != null) children.remove(parent);
 		if(children.isEmpty())
 			return 1;
 		double sumChildren = 1;
-		for(DeductiveArgument child: children)
+		for(DeductiveArgumentNode child: children)
 			sumChildren += this.categorize(argumentTree, node, child);
 		return 1d/sumChildren;
 	}
