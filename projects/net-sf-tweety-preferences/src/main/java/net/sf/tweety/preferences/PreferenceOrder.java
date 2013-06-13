@@ -3,6 +3,7 @@ package net.sf.tweety.preferences;
 import java.util.*;
 
 import net.sf.tweety.preferences.ranking.LevelingFunction;
+import net.sf.tweety.preferences.ranking.RankingFunction;
 import net.sf.tweety.util.Triple;
 
 /**
@@ -380,7 +381,7 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	/* (non-Javadoc)
 	 * @see java.util.Set#retainAll(java.util.Collection)
 	 */
-	// TODO check überarbeiten
+	// TODO equality-check testen
 	@Override
 	public boolean retainAll(Collection<?> c) {
 		Iterator<?> it = c.iterator();
@@ -393,9 +394,9 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 				}
 			}
 		}	
-//		if (tempRel.equals(relations)){
-//			return false;
-//		}
+		if (tempRel.equals(c)){
+			return false;
+		}
 		relations = tempRel;
 		return true;
 	}
@@ -414,12 +415,11 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 				changed = true;
 				}
 		}
-		
 		return changed;
 	}
 
 	/**
-	 * 
+	 * an Iterator over all relations in this po
 	 */
 	@Override
 	public Iterator<Triple<T, T, Relation>> iterator() {
@@ -427,38 +427,57 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	}
 
 	/**
-	 * 
-	 * @param po
-	 * @return
+	 * compares this preference order to another given one whether each relation is contained in both
+	 * @param po the preference order to compare with
+	 * @return true if both are equal, false if not
 	 */
 	public boolean compareEqualityWith(PreferenceOrder<T> po){
 		
 		for(Triple<T, T, Relation> f : po){
-				if(this.containsTriple(f.getFirst(), f.getSecond(), f.getThird())){
-					return true;
+				if(!(this.containsTriple(f.getFirst(), f.getSecond(), f.getThird()))){
+					return false;
 				}
 		}
-		return false;
+		return true;
 	}
 	
 	/**
-	 * weakens the given element in this preference order
-	 * @param element
+	 * weakens the given element in this preference order in its leveling function
+	 * @param element the element to be weaken
 	 */
-	public void weakenElement(T element){
+	public void weakenElementInLF(T element){
 		LevelingFunction<T> tempLF = getLevelingFunction();
 		tempLF.weakenElement(element);
 		relations = tempLF.generatePreferenceOrder();
 	}
 	
 	/**
-	 * strengthens the given element in this preference order
-	 * @param element
+	 * strengthens the given element in this preference order in its leveling function
+	 * @param element the element to be strengthen
 	 */
-	public void strengthenElement(T element){
+	public void strengthenElementInLF(T element){
 		LevelingFunction<T> tempLF = getLevelingFunction();
 		tempLF.strengthenElement(element);
 		relations = tempLF.generatePreferenceOrder();
 	}
 
+	/**
+	 * weakens the given element in this preference order in its ranking function
+	 * @param element the element to be weaken
+	 */
+	public void weakenElementInRF(T element){
+		RankingFunction<T> tempRF = getLevelingFunction().getRankingFunction();
+		tempRF.weakenElement(element);
+		relations = tempRF.generatePreferenceOrder();
+	}
+	
+	/**
+	 * strengthens the given element in this preference order in its ranking function
+	 * @param element the element to be strengthen
+	 */
+	public void strengthenElementInRF(T element){
+		RankingFunction<T> tempRF = getLevelingFunction().getRankingFunction();
+		tempRF.strengthenElement(element);
+		relations = tempRF.generatePreferenceOrder();
+	}
 }
