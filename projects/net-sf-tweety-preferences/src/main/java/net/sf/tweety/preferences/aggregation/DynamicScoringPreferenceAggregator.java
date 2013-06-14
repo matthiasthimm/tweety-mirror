@@ -17,30 +17,32 @@ import net.sf.tweety.preferences.update.Update;
 import net.sf.tweety.preferences.update.UpdateStream;
 
 /**
- * This Demo-class provides a basic implementation similar to the ScoringPreferenceAggregator but dynamic aggregation instead of static
+ * This Demo-class provides a basic implementation similar to the
+ * ScoringPreferenceAggregator but dynamic aggregation instead of static
+ * 
  * @author Bastian Wolf
- *
+ * 
  * @param <T>
  */
 
 public abstract class DynamicScoringPreferenceAggregator<T> implements
-		DynamicPreferenceAggregator<T> {	
-	
+		DynamicPreferenceAggregator<T> {
+
 	/**
 	 * The weight vector for the aggregator given via the constructor
 	 */
 	private WeightVector v;
-	
+
 	/**
 	 * The input list of preference orders
 	 */
 	private List<PreferenceOrder<T>> input;
-	
+
 	/**
-	 * The list containing the update listeners 
+	 * The list containing the update listeners
 	 */
 	private ArrayList<UpdateListener<T>> _listeners;
-	
+
 	/**
 	 * Constructor with given weight vector
 	 * 
@@ -51,16 +53,16 @@ public abstract class DynamicScoringPreferenceAggregator<T> implements
 		this._listeners = new ArrayList<UpdateListener<T>>();
 		this.v = v;
 	}
-	
-	
+
 	/**
-	 * This method aggregates the given preference orders according to the WeightVector used within construction
+	 * This method aggregates the given preference orders according to the
+	 * WeightVector used within construction
 	 */
 	public PreferenceOrder<T> aggregate(List<PreferenceOrder<T>> input) {
-//		PreferenceOrder<T> tempPO = new PreferenceOrder<T>();
+		// PreferenceOrder<T> tempPO = new PreferenceOrder<T>();
 		this.input = input;
 		Map<T, Integer> elem = new HashMap<T, Integer>();
-		
+
 		// all single elements are store in one HashMap
 		// note that every input-po only consists of the exact same domain
 		// elements
@@ -77,21 +79,22 @@ public abstract class DynamicScoringPreferenceAggregator<T> implements
 					} else {
 						continue;
 					}
-					
+
 				}
-				while (it.hasNext()){
+				while (it.hasNext()) {
 					PreferenceOrder<T> checkPO = it.next();
-					for(T e : checkPO.getDomainElements()){
-						if(!elem.containsKey(e)){
-							//TODO Exception handling for null pointer exception
-							System.out.println("Invalid preference order used");;
+					for (T e : checkPO.getDomainElements()) {
+						if (!elem.containsKey(e)) {
+							// TODO Exception handling for null pointer
+							// exception
+							System.out.println("Invalid preference order used");
 						}
 					}
 				}
 			}
-			
+
 		}
-		
+
 		// for each element in each po the weight vector value is
 		// requested
 		// and
@@ -104,111 +107,116 @@ public abstract class DynamicScoringPreferenceAggregator<T> implements
 				T t = e.getKey();
 				Integer i = e.getValue();
 				int val = v.getWeight(i);
-				elem.put(t, elem.get(t)-val);
+				elem.put(t, elem.get(t) - val);
 			}
 		}
 
 		// finally a temporary ranking function is created an generates the
 		// aggregated preference order
-		
+
 		LevelingFunction<T> tempRF = new LevelingFunction<T>();
 		tempRF.putAll(elem);
-	
+
 		return tempRF.generatePreferenceOrder();
 
 	}
-	
-	
-	
+
 	/**
-	 * The update-method for dynamically changing the input for preference aggregation
-	 * @param update the update element containing the changes to be applied
+	 * The update-method for dynamically changing the input for preference
+	 * aggregation
+	 * 
+	 * @param update
+	 *            the update element containing the changes to be applied
 	 */
-	public PreferenceOrder<T> update(Update<T> update, List<PreferenceOrder<T>> input) {
-		
-		// get the list-index of the po to be changed 
+	public PreferenceOrder<T> update(Update<T> update,
+			List<PreferenceOrder<T>> input) {
+
+		// get the list-index of the po to be changed
 		PreferenceOrder<T> po = update.getPreferenceOrder();
 		int i = -1;
-		
-		for (PreferenceOrder<T> in : input){
-			if(po.compareEqualityWith(in)){
+
+		for (PreferenceOrder<T> in : input) {
+			if (po.compareEqualityWith(in)) {
 				i = input.indexOf(po);
 				break;
 			}
 		}
-		
+
 		Operation op = update.getOperation();
 		T element = update.getElement();
-		
-		if(input.get(i).getDomainElements().contains(element)) {
+
+		if (input.get(i).getDomainElements().contains(element)) {
 			int amount = update.getAmount();
-			if(op == Operation.WEAKEN) {
-				while(amount > 0){
-					po.weakenElement(element);
+			if (op == Operation.WEAKEN) {
+				while (amount > 0) {
+					po.weakenElementInLF(element);
 					input.set(i, po);
 					amount--;
 				}
-			} else if(op == Operation.STRENGTHEN) {
-				while(amount > 0) {
-					
-					po.strengthenElement(element);
+			} else if (op == Operation.STRENGTHEN) {
+				while (amount > 0) {
+
+					po.strengthenElementInLF(element);
 					input.set(i, po);
 					amount--;
 				}
-			}			
+			}
 		}
-		
+
 		// aggregate the updated preference orders into a new result
 		PreferenceOrder<T> result = aggregate(input);
-		
-		// firing a new event for every update to every listener using this result
+
+		// firing a new event for every update to every listener using this
+		// result
 		UpdateEvent<T> event = new UpdateEvent<T>(this, result);
 		fireEvent(event);
-		
+
 		// return the newly aggregated result
 		return result;
 	}
 
 	/**
-	 * this method extends the update-functionality with input-streams consisting of
-	 * Update-elements
-	 * @param stream the input stream with the Update-elements
-	 * @return the newly aggregated preference order after all updates are applied
+	 * this method extends the update-functionality with input-streams
+	 * consisting of Update-elements
+	 * 
+	 * @param stream
+	 *            the input stream with the Update-elements
+	 * @return the newly aggregated preference order after all updates are
+	 *         applied
 	 */
-	public PreferenceOrder<T> update(UpdateStream<T> stream, List<PreferenceOrder<T>> input){
+	public PreferenceOrder<T> update(UpdateStream<T> stream,
+			List<PreferenceOrder<T>> input) {
 		PreferenceOrder<T> temp = new PreferenceOrder<T>();
-		
-		while(!(stream.isEmpty())){
+
+		while (!(stream.isEmpty())) {
 			Update<T> up = stream.next();
 			temp = update(up, input);
 		}
-		
+
 		return temp;
 	}
-	
-	
+
 	/**
 	 * Fires an event every time a change occurred
+	 * 
 	 * @param event
 	 */
-	private void fireEvent(UpdateEvent<T> event){
-		
+	private void fireEvent(UpdateEvent<T> event) {
+
 		Iterator<UpdateListener<T>> i = _listeners.iterator();
-		
-		while(i.hasNext()){
+
+		while (i.hasNext()) {
 			(i.next()).eventOccurred(event);
 		}
-		
 	}
-	
-	
+
 	/**
 	 * adds a listener to this dynamic preference aggregator
 	 */
 	@Override
 	public synchronized void addListener(UpdateListener<T> listener) {
 		_listeners.add(listener);
-		
+
 	}
 
 	/**
@@ -217,7 +225,7 @@ public abstract class DynamicScoringPreferenceAggregator<T> implements
 	@Override
 	public synchronized void removeListener(UpdateListener<T> listener) {
 		_listeners.remove(listener);
-		
+
 	}
 
 }
