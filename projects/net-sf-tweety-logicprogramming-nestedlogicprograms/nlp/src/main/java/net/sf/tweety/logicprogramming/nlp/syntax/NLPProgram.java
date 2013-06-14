@@ -1,6 +1,8 @@
 package net.sf.tweety.logicprogramming.nlp.syntax;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import net.sf.tweety.logics.commons.syntax.interfaces.LogicProgram;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
@@ -19,6 +21,19 @@ public class NLPProgram
 	/** kill warning */
 	private static final long serialVersionUID = 1050122194243070233L;
 
+	/**
+	 * @return	A set of facts as FOL formulas
+	 */
+	public Set<FolFormula> getFacts() {
+		Set<FolFormula> reval = new HashSet<FolFormula>();
+		for(NLPRule rule : this) {
+			if(rule.isFact()) {
+				reval.add(rule.getConclusion());
+			}
+		}
+		return reval;
+	}
+	
 	@Override
 	public void addFact(FolFormula fact) {
 		this.add(new NLPRule(fact));

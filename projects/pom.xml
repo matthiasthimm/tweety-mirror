@@ -95,5 +95,7 @@
   	<module>
   		net-sf-tweety-logicprogramming-nestedlogicprograms/nlp
   	</module>
+  	<module>net-sf-tweety-logics-translate-aspnlp/aspnlp</module>
+  	<module>net-sf-tweety-logics-translate-aspfol/aspfol</module>
   </modules>
 </project>

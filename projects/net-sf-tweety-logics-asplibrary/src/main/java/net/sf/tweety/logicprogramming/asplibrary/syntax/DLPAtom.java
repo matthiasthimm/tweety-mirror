@@ -29,6 +29,9 @@ public class DLPAtom extends DLPElementAdapter implements DLPLiteral {
 	/** a list of arguments of the atom */
 	protected List<Term<?>>	arguments = new LinkedList<Term<?>>();
 	
+	/** Default-Ctor: Used for dynamic instantiation */
+	public DLPAtom() {}
+	
 	/**
 	 * Copy-Ctor: Generates a deep copy of the given atom
 	 * @param other	The atom acting as source for the deep copy

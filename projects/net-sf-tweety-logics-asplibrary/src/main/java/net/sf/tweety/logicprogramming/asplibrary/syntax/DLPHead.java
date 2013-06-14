@@ -36,10 +36,21 @@ public class DLPHead extends DLPElementAdapter
 	private AssociativeFormulaSupport<DLPLiteral> assocSupport =
 			new AssociativeFormulaSupport<DLPLiteral>(this);
 	
-	public DLPHead() {
-		
+	/** Default-Ctor: Generates empty head */
+	public DLPHead() {}
+	
+	/**
+	 * Ctor: Generates a head with one literal
+	 * @param literal	The literal of the head
+	 */
+	public DLPHead(DLPLiteral literal) {
+		this.add(literal);
 	}
 	
+	/**
+	 * Copy-Ctor: Generates a deep copy from the given head
+	 * @param other		The DLPHead object which acts as source for the copy operation.
+	 */
 	public DLPHead(DLPHead other) {
 		//@todo copy ctor
 	}

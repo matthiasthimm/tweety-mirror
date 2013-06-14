@@ -106,6 +106,13 @@ public abstract class Translator {
 	}
 	
 	
+	/**
+	 * Translates the given AssociativeFormula into another AssociativeFormula
+	 * thats type is given by the parameter assocCls
+	 * @param source	The 
+	 * @param assocCls
+	 * @return
+	 */
 	public <A extends AssociativeFormula<? extends SimpleLogicalFormula>> 
 		AssociativeFormula<?> translateAssociative(A source, Class<?> assocCls) {
 		@SuppressWarnings("unchecked")
@@ -117,8 +124,12 @@ public abstract class Translator {
 		return dest;
 	}
 	
+	protected Pair<Integer, Class<?>> getTranslateInfo(Class<?> cls) {
+		return translateMap.get(cls);
+	}
+	
 	public SimpleLogicalFormula translateUsingMap(SimpleLogicalFormula source) {
-		Pair<Integer, Class<?>> translateInfo = translateMap.get(source.getClass());
+		Pair<Integer, Class<?>> translateInfo = getTranslateInfo(source.getClass());
 		if(translateInfo != null) {
 			switch(translateInfo.getFirst()) {
 			case TT_ATOM:
