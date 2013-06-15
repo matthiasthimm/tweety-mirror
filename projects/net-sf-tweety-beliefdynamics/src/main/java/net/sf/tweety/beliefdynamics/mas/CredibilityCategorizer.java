@@ -45,12 +45,12 @@ public class CredibilityCategorizer extends AbstractCredibilityComparer implemen
 	 * @param node the current node.
 	 * @return "1" if node is undefeated, "0" otherwise.
 	 */
-	private double categorize(ArgumentTree argumentTree, DeductiveArgument parent, DeductiveArgument node){
-		Collection<DeductiveArgument> children = argumentTree.getNeighbors(node);
+	private double categorize(ArgumentTree argumentTree, DeductiveArgumentNode parent, DeductiveArgumentNode node){
+		Collection<DeductiveArgumentNode> children = argumentTree.getNeighbors(node);
 		if(parent != null) children.remove(parent);
 		if(children.isEmpty())
 			return 1;
-		for(DeductiveArgument child: children){
+		for(DeductiveArgumentNode child: children){
 			if(this.isAtLeastAsPreferredAs(child.getSupport(), node.getSupport()))
 				if(this.categorize(argumentTree, node, child) != 0)
 					return 0;
