@@ -34,42 +34,6 @@ public class Program extends RuleSet<Rule> implements LogicProgram<DLPHead, DLPE
 		this.addAll(other); 
 	}
 	
-	//Differs from contains in that it does a deep comparision of the rules rather than a reference-based one
-	//Could be turned into an override of the ArrayList contains method later
-	//--Daniel
-	public boolean hasRule(Rule compRule)
-	{
-		/*
-		for(Rule r : this)
-		{
-			//This solution depends on the rule.equals being a deep comparision
-			if(compRule.equals(r))
-				return true;
-		}
-		*/
-		if (this.toString().contains(compRule.toString())) //Temporary fix
-			return true;
-		return false;
-	}
-	
-	public void add(String expr) {
-		/*
-		try {
-			expr = expr.trim();
-			if(expr.charAt(expr.length() -1) != '.')
-				expr += ".";
-			
-			ELPParser ep = new ELPParser( new StringReader( expr ));
-			List<Rule> rules = ep.program();
-			this.addAll(rules);
-		} catch (Exception e) {
-			System.err.println("Rule: could not parse input!");
-			System.err.println(e);
-			System.err.println("Input: " + expr);
-		}
-		*/
-	}
-	
 	/**
 	 * Adds another programs content to the content of this program.
 	 * @param other	Reference to the other program.
