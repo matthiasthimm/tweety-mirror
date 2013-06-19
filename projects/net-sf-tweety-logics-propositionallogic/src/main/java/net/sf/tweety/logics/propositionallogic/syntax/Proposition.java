@@ -64,6 +64,13 @@ public class Proposition extends PropositionalFormula implements Atom, Comparabl
 	public PropositionalFormula collapseAssociativeFormulas(){
 		return this;
 	}
+	
+	@Override
+	public PropositionalSignature getSignature() {
+		PropositionalSignature reval = new PropositionalSignature();
+		reval.add(this);
+		return reval;
+	}
 
 	@Override
 	public int hashCode() {

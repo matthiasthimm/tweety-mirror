@@ -84,7 +84,7 @@ public class PossibleWorld extends InterpretationSet<Proposition> {
 	 * @return the set of all possible worlds for the
 	 * given propositional signature.
 	 */
-	public static Set<PossibleWorld> getAllPossibleWorlds(PropositionalSignature signature){
+	public static Set<PossibleWorld> getAllPossibleWorlds(Collection<Proposition> signature){
 		Set<PossibleWorld> possibleWorlds = new HashSet<PossibleWorld>();
 		Set<Set<Proposition>> propositions = new SetTools<Proposition>().subsets(signature);
 		for(Set<Proposition> p: propositions)

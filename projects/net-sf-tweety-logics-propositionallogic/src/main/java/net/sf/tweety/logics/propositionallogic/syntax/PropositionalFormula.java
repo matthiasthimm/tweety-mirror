@@ -3,7 +3,6 @@ package net.sf.tweety.logics.propositionallogic.syntax;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.Signature;
 import net.sf.tweety.logics.commons.syntax.interfaces.ClassicalFormula;
 import net.sf.tweety.logics.commons.syntax.interfaces.Conjuctable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Disjunctable;
@@ -25,7 +24,7 @@ public abstract class PropositionalFormula implements ClassicalFormula {
 	}
 	
 	@Override
-	public Signature getSignature() {
+	public PropositionalSignature getSignature() {
 		return new PropositionalSignature();
 	}
 

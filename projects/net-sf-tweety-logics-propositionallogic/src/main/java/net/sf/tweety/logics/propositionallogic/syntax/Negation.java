@@ -8,6 +8,7 @@ import net.sf.tweety.logics.commons.LogicalSymbols;
  * This class models classical negation of propositional logic.
  * 
  * @author Matthias Thimm
+ * @author Tim Janus
  */
 public class Negation extends PropositionalFormula {
 
@@ -140,5 +141,10 @@ public class Negation extends PropositionalFormula {
 	@Override
 	public boolean isLiteral() {
 		return (formula instanceof Proposition);
+	}
+	
+	@Override
+	public PropositionalSignature getSignature() {
+		return formula.getSignature();
 	}
 }
