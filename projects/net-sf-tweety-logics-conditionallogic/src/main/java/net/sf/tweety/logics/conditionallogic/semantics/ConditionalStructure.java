@@ -23,12 +23,12 @@ import net.sf.tweety.util.Pair;
  * "Conditionals in Nonmonotonic Reasoning and Belief Revision" of 
  * Gabrielle Kern-Isberner
  * 
- * Internally it saves to nested Maps. First mapping to each PossibleWorld
- * a map of Conditional to Generators and second mapping to each Conditional
- * a map of PossibleWorlds to Generators. This to maps allow fast access to
+ * Internally it saves the data to two nested Maps. The first map maps to each PossibleWorld
+ * a map of Conditionals to Generators and the second map maps to each Conditional
+ * a map of PossibleWorlds to Generators. Those two maps allow fast access to
  * the data of the ConditionalStructure. The first map can be used to support
  * a nice representation of the ConditionalStructure and the second map can
- * be used for further processing depending of the Conditionals (for Kappa 
+ * be used for further processing depending on the Conditionals (for Kappa 
  * values in C-Representation for example).
  * 
  * To change the representation of the ConditionalStructure the user can
@@ -38,8 +38,8 @@ import net.sf.tweety.util.Pair;
  * in the NicePossibleWorld representation.
  * The later approach will fit for most situations.
  * 
- * The default behavior depends on the representation behavior of NicePossibleWorld
- * that can also be adapt. It uses the toString method() and sorts it alphabetically
+ * The default sorting behavior depends on the representation behavior of NicePossibleWorld
+ * that can also be adapt because it uses the toString method() and sorts this string alphabetically
  * so that all possible worlds for a,b,c are represented in the following order:
  * 
  *  a b c
@@ -51,10 +51,13 @@ import net.sf.tweety.util.Pair;
  * -a-b c
  * -a-b-c
  * 
- * So the default Sorting provides the binary switching of true/false values and if
+ * The default Sorting provides a clean binary switching of true/false like counting a bit string. If
  * the user wants another ordering like c a b the Sorting behavior of the NicePossibleWorld
  * shall be adapted by providing a Comparator<Pair<Proposition, Boolean>> implementation that
- * implements the relation "c < a < b".
+ * implements the relation "c < a < b" by using the setWorldRepresentation() method.
+ * 
+ * If the user wants to use a sorting depending on the Generator count for the worlds the
+ * setWorldSorting() method can be used to provide the correct sorting method.
  * 
  * @author Tim Janus
  */
@@ -204,6 +207,12 @@ public class ConditionalStructure implements Comparator<NicePossibleWorld>{
 		}
 	}
 	
+	/**
+	 * Changes the internal representations of the worlds, normally the propositions of a world
+	 * are ordered alphabetically but this behavior can be changed using this method.
+	 * @param comparator	The new implementation of a Comparator that provides the new
+	 * 						sorting behavior for the Propositions in a PossibleWorld.
+	 */
 	public void setWorldRepresentation(Comparator<Pair<Proposition, Boolean>> comparator) {
 		this.worldRepresentation = comparator;
 		for(NicePossibleWorld npw : worldData.keySet()) {
@@ -243,7 +252,7 @@ public class ConditionalStructure implements Comparator<NicePossibleWorld>{
 	}
 	
 	/**
-	 * Removes the given Condtional from the ConditionalStructure and updates
+	 * Removes the given Conditional from the ConditionalStructure and updates
 	 * the structure.
 	 * @param cond	The Conditional that shall be removed
 	 * @return		True if the Conditional is part of the ConditionalStructure and
@@ -320,7 +329,7 @@ public class ConditionalStructure implements Comparator<NicePossibleWorld>{
 	}
 	
 	/**
-	 * Processes the generator of the given Conditinoal cond for the PossibleWorld
+	 * Processes the generator of the given Conditional cond for the PossibleWorld
 	 * npw and saves it in the worldData data structure if it is not equal CG_ONE.
 	 * @param npw	The PossibleWorld 
 	 * @param cond	The Conditional
