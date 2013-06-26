@@ -39,7 +39,7 @@ public class RevisionCompareModel {
 	protected Set<BaseRevisionOperator<?>> selectableOperators = new HashSet<BaseRevisionOperator<?>>();
 	
 	/** an ordered list of belief bases which are revised for the comparsation of the two selected revision methods */
-	protected List<Collection<? extends Formula>> beliefBases = new LinkedList<Collection<? extends Formula>>();
+	protected List<Collection<?>> beliefBases = new LinkedList<Collection<?>>();
 	
 	/**
 	 * Adds a property change listener
@@ -94,7 +94,7 @@ public class RevisionCompareModel {
 	 * Removes a belief base from the ordered list of belief bases.
 	 * @param beliefBase Reference to the belief base which shall be removed.
 	 */
-	public void removeBeliefbase(Collection<? extends Formula> beliefBase) {
+	public void removeBeliefbase(Collection<?> beliefBase) {
 		int index = beliefBases.indexOf(beliefBase);
 		if(index != -1) {
 			beliefBases.remove(index);
@@ -108,7 +108,7 @@ public class RevisionCompareModel {
 	 * @param dir			Either -1 if the belief base shall move one index to the front of the list or
 	 * 						1 if the belief base shall move one unit index to the end of the list.
 	 */
-	public void moveBeliefbase(Collection<? extends Formula> beliefBase, int dir) {
+	public void moveBeliefbase(Collection<?> beliefBase, int dir) {
 		if(dir != -1 && dir != 1)
 			throw new IllegalArgumentException("dir must not be 1 for upwards or -1 for downwards");
 		
@@ -116,7 +116,7 @@ public class RevisionCompareModel {
 		if(index != -1) {
 			int newIndex = index + dir;
 			if(newIndex >= 0 && newIndex < beliefBases.size()) {
-				Collection<? extends Formula> other = beliefBases.get(newIndex);
+				Collection<?> other = beliefBases.get(newIndex);
 				beliefBases.set(newIndex, beliefBase);
 				beliefBases.set(index, other);
 				change.fireIndexedPropertyChange("beliefBases", index, beliefBase, other);

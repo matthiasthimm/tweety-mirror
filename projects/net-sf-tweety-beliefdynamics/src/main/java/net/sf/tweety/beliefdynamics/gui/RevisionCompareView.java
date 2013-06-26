@@ -40,9 +40,9 @@ public class RevisionCompareView extends JPanel implements PropertyChangeListene
 	/** kill warning */
 	private static final long serialVersionUID = 5699544277473453367L;
 
-	protected JComboBox<BaseRevisionOperator<?>> cbOperatorLeft;
+	protected JComboBox cbOperatorLeft;
 	
-	protected JComboBox<BaseRevisionOperator<?>> cbOperatorRight;
+	protected JComboBox cbOperatorRight;
 
 	protected JCheckBox checkIterativeLeft;
 	
@@ -64,9 +64,9 @@ public class RevisionCompareView extends JPanel implements PropertyChangeListene
 	
 	protected JTextArea txtBeliefBases;
 	
-	private DefaultListModel<Collection<? extends Formula>> lstModel = new DefaultListModel<Collection<? extends Formula>>();
+	private DefaultListModel lstModel = new DefaultListModel<Collection<? extends Formula>>();
 	
-	protected JList<Collection<? extends Formula>> lstBeliefBases;
+	protected JList lstBeliefBases;
 	
 	/** Default Ctor: Creates the view */
 	public RevisionCompareView() {		
@@ -232,7 +232,7 @@ public class RevisionCompareView extends JPanel implements PropertyChangeListene
 	private void beliefbasesUpdated() {
 		String txtRepr = "";
 		for(int i=0; i<lstBeliefBases.getModel().getSize(); ++i) {
-			Collection<?> col = lstBeliefBases.getModel().getElementAt(i);
+			Collection<?> col = (Collection<?>)lstBeliefBases.getModel().getElementAt(i);
 			for(Object obj : col) {
 				txtRepr += obj.toString() + "\n";
 			}

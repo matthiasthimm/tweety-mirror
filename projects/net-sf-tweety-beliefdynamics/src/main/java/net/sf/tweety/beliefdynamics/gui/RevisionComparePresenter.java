@@ -113,10 +113,10 @@ public class RevisionComparePresenter implements ItemListener, ChangeListener, A
 				}
 			}
 		} else if(ev.getSource() == view.btnRemove) {
-			model.removeBeliefbase(view.lstBeliefBases.getSelectedValue());
+			model.removeBeliefbase((Collection<?>)view.lstBeliefBases.getSelectedValue());
 		} else if(ev.getSource() == view.btnUp || ev.getSource() == view.btnDown) {
 			int dir = ev.getSource() == view.btnUp ? -1 : 1;
-			model.moveBeliefbase(view.lstBeliefBases.getSelectedValue(), dir);
+			model.moveBeliefbase((Collection<?>)view.lstBeliefBases.getSelectedValue(), dir);
 		}
 	}
 
