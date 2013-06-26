@@ -4,8 +4,7 @@ package net.sf.tweety.logics.firstorderlogic.parser;
 import java.util.*;
 import net.sf.tweety.logics.firstorderlogic.syntax.*;
 import net.sf.tweety.logics.commons.syntax.*;
-import net.sf.tweety.logics.commons.syntax.interfaces.Term;
-import net.sf.tweety.logics.commons.syntax.interfaces.TypedStructure;
+import net.sf.tweety.logics.commons.syntax.interfaces.*;
 import net.sf.tweety.util.Pair;
 
 import net.sf.tweety.logics.firstorderlogic.FolBeliefSet;
@@ -591,16 +590,6 @@ public class FolParserB implements FolParserBConstants {
     finally { jj_save(1, xla); }
   }
 
-  private boolean jj_3R_9() {
-    Token xsp;
-    if (jj_3_2()) return true;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3_2()) { jj_scanpos = xsp; break; }
-    }
-    return false;
-  }
-
   private boolean jj_3R_10() {
     Token xsp;
     xsp = jj_scanpos;
@@ -619,6 +608,16 @@ public class FolParserB implements FolParserBConstants {
   private boolean jj_3_2() {
     if (jj_3R_10()) return true;
     if (jj_scan_token(EQUAL)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_9() {
+    Token xsp;
+    if (jj_3_2()) return true;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3_2()) { jj_scanpos = xsp; break; }
+    }
     return false;
   }
 
