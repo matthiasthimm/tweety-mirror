@@ -13,3 +13,7 @@ if not "%ERRORLEVEL%" == "0" exit /b
 call mvn install:install-file -Dfile="lib/net-sf-tweety-graphs/Jama-1.0.3.jar" -DgroupId="net.sf.tweety.dependencies" -DartifactId="jama" -Dversion="1.0.3" -Dpackaging="jar"
 echo Exit Code = %ERRORLEVEL%
 if not "%ERRORLEVEL%" == "0" exit /b
+
+call mvn install:install-file -Dfile="lib/net-sf-tweety-cli/jspf.core-1.0.2.jar" -DgroupId="net.sf.tweety.dependencies" -DartifactId="jspf" -Dversion="1.0.2" -Dpackaging="jar"
+echo Exit Code = %ERRORLEVEL%
+if not "%ERRORLEVEL%" == "0" exit /b
