@@ -2,12 +2,13 @@ package net.sf.tweety.preferences;
 
 import java.util.HashSet;
 
+import net.sf.tweety.math.opt.solver.LpSolve;
 import net.sf.tweety.util.Triple;
 
 public class PreferencesIntegerBugExample {
 
 	public static void main(String[] args) {
-	
+		LpSolve.setBinary("/opt/local/bin/lp_solve");
 ///*		
 		HashSet<Triple<String, String, Relation>> relations = new HashSet<Triple<String, String, Relation>>();
 		relations.add(new Triple<String, String, Relation>("a", "b", Relation.LESS));
