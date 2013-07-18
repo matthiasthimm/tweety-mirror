@@ -28,7 +28,7 @@ public abstract class Variable extends Term{
 	 * @param name the name of this variable.
 	 */
 	public Variable(String name){
-		this.name = name;
+		this(name,false);		
 	}
 	
 	/**
@@ -37,6 +37,9 @@ public abstract class Variable extends Term{
 	 * @param isPositive whether this variables should be positive.
 	 */
 	public Variable(String name, boolean isPositive){
+		// every variable should start with a letter or "_"
+		if(!name.matches("^[a-zA-Z_].*"))
+			throw new IllegalArgumentException("Variable names should start with a letter or \"_\"");
 		this.name = name;
 		this.isPositive = isPositive;	
 	}
