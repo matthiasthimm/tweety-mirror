@@ -14,6 +14,9 @@ import net.sf.tweety.math.term.*;
  */
 public class LpSolve extends Solver {
 	
+	/**Path to the binay or lp_solve*/
+	private static String binary = "lp_solve";
+	
 	/**
 	 * Creates a new solver for the given optimization problem.
 	 * @param problem an optimization problem.
@@ -40,7 +43,7 @@ public class LpSolve extends Solver {
 			out.write(((OptimizationProblem)this.getProblem()).convertToLpFormat());
 			out.close();		
 			//execute lp_solve on problem in lp format and retrieve console output					
-			Process child = Runtime.getRuntime().exec("lp_solve " + lpFile.getAbsolutePath());
+			Process child = Runtime.getRuntime().exec(LpSolve.binary+ " " + lpFile.getAbsolutePath());
 			int c;				
 	        InputStream in = child.getInputStream();
 	        while ((c = in.read()) != -1)
@@ -89,4 +92,11 @@ public class LpSolve extends Solver {
 		return result;
 	}
 
+	/**
+	 * Sets the path to the binary.
+	 * @param binary the path to the binary.
+	 */
+	public static void setBinary(String binary){
+		LpSolve.binary = binary;
+	}
 }
