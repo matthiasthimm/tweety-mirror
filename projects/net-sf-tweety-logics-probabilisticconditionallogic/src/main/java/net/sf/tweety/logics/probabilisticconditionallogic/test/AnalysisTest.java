@@ -14,7 +14,7 @@ public class AnalysisTest {
 		
 		PclBeliefSet beliefSet = (PclBeliefSet) new net.sf.tweety.logics.probabilisticconditionallogic.parser.PclParser().parseBeliefBaseFromFile("/Users/mthimm/Desktop/test.pcl");
 	
-		InconsistencyMeasure dist = new DistanceMinimizationInconsistencyMeasure();
+		InconsistencyMeasure<PclBeliefSet> dist = new DistanceMinimizationInconsistencyMeasure();
 		MeanDistanceCulpabilityMeasure cp = new MeanDistanceCulpabilityMeasure(false);
 		System.out.println(beliefSet);
 		System.out.println(dist.inconsistencyMeasure(beliefSet));

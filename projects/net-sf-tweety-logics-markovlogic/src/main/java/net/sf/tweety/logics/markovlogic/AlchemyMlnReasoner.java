@@ -134,6 +134,7 @@ public class AlchemyMlnReasoner extends AbstractMlnReasoner {
                 line = resultReader.readLine();
                 resultString += line != null ? line + "\n" : "";
             }
+            resultReader.close();
 	        StringTokenizer tokenizer = new StringTokenizer(resultString);
 	        String token = null;
 	        while(tokenizer.hasMoreTokens())

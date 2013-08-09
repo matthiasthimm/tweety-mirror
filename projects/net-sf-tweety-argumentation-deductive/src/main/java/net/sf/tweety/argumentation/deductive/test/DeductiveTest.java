@@ -3,7 +3,6 @@ package net.sf.tweety.argumentation.deductive.test;
 import java.io.IOException;
 
 import net.sf.tweety.*;
-import net.sf.tweety.argumentation.deductive.CompilationReasoner;
 import net.sf.tweety.argumentation.deductive.DeductiveKnowledgeBase;
 import net.sf.tweety.argumentation.deductive.SimpleReasoner;
 import net.sf.tweety.argumentation.deductive.accumulator.SimpleAccumulator;

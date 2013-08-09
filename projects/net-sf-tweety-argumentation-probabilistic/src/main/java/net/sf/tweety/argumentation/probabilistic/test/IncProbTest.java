@@ -13,14 +13,19 @@ public class IncProbTest {
 		DungTheory theory = new DungTheory();
 		Argument a = new Argument("A");
 		Argument b = new Argument("B");
+		Argument c = new Argument("C");
 		theory.add(a);
 		theory.add(b);
+		theory.add(c);
 		theory.add(new Attack(a,b));
+		theory.add(new Attack(b,c));
+		theory.add(new Attack(a,c));
 		
 		PartialProbabilityAssignment ppa = new PartialProbabilityAssignment();
-		ppa.put(a, new Probability(0.2));
+		ppa.put(b, new Probability(0.7));
+		ppa.put(c, new Probability(0.6));
 		
-		PAInconsistencyMeasure mes = new PAInconsistencyMeasure(new ManhattanNorm(), theory, PAInconsistencyMeasure.DISTANCE_WRT_JUSTIFIABILITY);
+		PAInconsistencyMeasure mes = new PAInconsistencyMeasure(new ManhattanNorm(), theory, PAInconsistencyMeasure.DISTANCE_WRT_JUSTIFIABILITY, PAInconsistencyMeasure.NOT_IMPOSE_RATIONALITY);
 		
 		System.out.println(mes.inconsistencyMeasure(ppa));
 	}

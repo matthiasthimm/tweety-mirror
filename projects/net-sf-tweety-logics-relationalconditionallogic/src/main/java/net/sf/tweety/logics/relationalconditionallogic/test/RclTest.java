@@ -34,6 +34,7 @@ public class RclTest {
 			while ((line = in.readLine()) != null) {
 				System.out.println(line + "\t:\t" + kappa.rank((FolFormula)pars.parseFormula(line)));				
 			}
+			in.close();
 		}
 	}
 }

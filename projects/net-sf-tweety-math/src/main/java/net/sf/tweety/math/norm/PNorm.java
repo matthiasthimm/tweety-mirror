@@ -22,8 +22,8 @@ public class PNorm implements RealVectorNorm{
 	 * @param p the parameter of this p-norm.
 	 */
 	public PNorm(int p){
-		if(p == 0)
-			throw new IllegalArgumentException("p=0 illegal, use Manhattan norm instead.");
+		if(p <= 1)
+			throw new IllegalArgumentException("p<=1 illegal, use Manhattan norm instead.");
 		this.p = p;
 	}
 
