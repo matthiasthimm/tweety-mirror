@@ -1,5 +1,6 @@
 package net.sf.tweety.logics.probabilisticconditionallogic.analysis;
 
+import net.sf.tweety.InconsistencyMeasure;
 import net.sf.tweety.logics.probabilisticconditionallogic.*;
 
 /**
@@ -7,7 +8,7 @@ import net.sf.tweety.logics.probabilisticconditionallogic.*;
  * 
  * @author Matthias Thimm
  */
-public class MiInconsistencyMeasure implements InconsistencyMeasure {
+public class MiInconsistencyMeasure implements InconsistencyMeasure<PclBeliefSet> {
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.probabilisticconditionallogic.analysis.InconsistencyMeasure#inconsistencyMeasure(net.sf.tweety.logics.probabilisticconditionallogic.PclBeliefSet)

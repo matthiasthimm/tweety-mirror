@@ -14,7 +14,7 @@ import net.sf.tweety.math.probability.Probability;
  * @author Matthias Thimm
  * @param <T> The actual interpretation class used for this distribution.
  */
-public class ProbabilityDistribution<T extends Interpretation> extends Interpretation implements Map<T,Probability>{
+public class ProbabilityDistribution<T extends Interpretation> extends AbstractInterpretation implements Map<T,Probability>{
 
 	/**
 	 * The probabilities of the interpretations.

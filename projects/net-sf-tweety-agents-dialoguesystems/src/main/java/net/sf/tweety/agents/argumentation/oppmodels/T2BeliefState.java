@@ -16,7 +16,7 @@ import net.sf.tweety.util.Pair;
  * 
  * @author Tjitze Rienstra, Matthias Thimm
  */
-public class T2BeliefState extends BeliefState {
+public class T2BeliefState extends BeliefState implements Comparable<T2BeliefState> {
 
 	/** The probability function on opponent models*/
 	private ProbabilityFunction<T2BeliefState> prob;
@@ -211,5 +211,15 @@ public class T2BeliefState extends BeliefState {
 		return true;
 	}
 	
-	
+	/* (non-Javadoc)
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
+	@Override
+	public int compareTo(T2BeliefState arg0) {
+		if(this.hashCode() < arg0.hashCode())
+			return -1;
+		if(this.hashCode() > arg0.hashCode())
+			return 1;
+		return 0;
+	}
 }

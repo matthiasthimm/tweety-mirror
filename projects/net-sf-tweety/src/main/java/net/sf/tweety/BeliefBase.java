@@ -13,10 +13,10 @@ public interface BeliefBase {
 	 * Returns the signature of the language of this knowledge base.
 	 * @return the signature of the language of this knowledge base.
 	 */
-	Signature getSignature();
+	public Signature getSignature();
 	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
-	String toString();
+	public String toString();
 }

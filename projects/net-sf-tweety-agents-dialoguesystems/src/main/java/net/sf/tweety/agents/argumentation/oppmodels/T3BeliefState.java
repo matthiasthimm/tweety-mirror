@@ -18,7 +18,7 @@ import net.sf.tweety.util.Pair;
  * 
  * @author Tjitze Rienstra, Matthias Thimm
  */
-public class T3BeliefState extends BeliefState{
+public class T3BeliefState extends BeliefState implements Comparable<T3BeliefState>{
 
 	/** The set of virtual arguments assumed to exist. */
 	private Set<Argument> virtualArguments;	
@@ -241,4 +241,16 @@ public class T3BeliefState extends BeliefState{
 			return false;
 		return true;
 	}	
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
+	@Override
+	public int compareTo(T3BeliefState arg0) {
+		if(this.hashCode() < arg0.hashCode())
+			return -1;
+		if(this.hashCode() > arg0.hashCode())
+			return 1;
+		return 0;
+	}
 }

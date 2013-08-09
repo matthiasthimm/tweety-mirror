@@ -3,10 +3,10 @@ package net.sf.tweety;
 import java.util.*;
 
 /**
- * An abstract interpretation for some logical language.
+ * An interpretation for some logical language.
  * @author Matthias Thimm
  */
-public abstract class Interpretation {
+public interface Interpretation {
 	
 	/**
 	 * Checks whether this interpretation satisfies the given formula.
@@ -15,7 +15,7 @@ public abstract class Interpretation {
 	 * @throws IllegalArgumentException if the formula does not correspond
 	 * 		to the expected language.
 	 */
-	public abstract boolean satisfies(Formula formula) throws IllegalArgumentException;
+	public boolean satisfies(Formula formula) throws IllegalArgumentException;
 	
 	/**
 	 * Checks whether this interpretation satisfies all given formulas.
@@ -24,12 +24,7 @@ public abstract class Interpretation {
 	 * @throws IllegalArgumentException if at least one formula does not correspond
 	 * 		to the expected language.
 	 */
-	public boolean satisfies(Collection<? extends Formula> formulas) throws IllegalArgumentException{
-		for(Formula f: formulas)
-			if(!this.satisfies(f))
-				return false;
-		return true;
-	}
+	public boolean satisfies(Collection<? extends Formula> formulas) throws IllegalArgumentException;
 	
 	/**
 	 * Checks whether this interpretation satisfies the given knowledge base.

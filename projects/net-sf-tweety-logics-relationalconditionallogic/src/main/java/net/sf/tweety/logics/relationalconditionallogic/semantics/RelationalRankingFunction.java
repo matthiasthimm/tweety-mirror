@@ -21,7 +21,7 @@ import net.sf.tweety.logics.relationalconditionallogic.syntax.*;
  * @author Matthias Thimm
  *
  */
-public class RelationalRankingFunction extends Interpretation {
+public class RelationalRankingFunction extends AbstractInterpretation {
 
 	/**
 	 * Integer used to define infinity.

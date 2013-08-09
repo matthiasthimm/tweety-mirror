@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import net.sf.tweety.InconsistencyMeasure;
 import net.sf.tweety.logics.probabilisticconditionallogic.PclBeliefSet;
 import net.sf.tweety.logics.probabilisticconditionallogic.syntax.ProbabilisticConditional;
 import net.sf.tweety.logics.propositionallogic.semantics.PossibleWorld;
@@ -30,7 +31,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Matthias Thimm
  */
-public class DistanceMinimizationInconsistencyMeasure implements InconsistencyMeasure {
+public class DistanceMinimizationInconsistencyMeasure implements InconsistencyMeasure<PclBeliefSet> {
 
 	/**
 	 * Logger.

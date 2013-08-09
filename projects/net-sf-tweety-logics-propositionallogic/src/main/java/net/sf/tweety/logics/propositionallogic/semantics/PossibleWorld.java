@@ -14,7 +14,7 @@ import net.sf.tweety.util.*;
  * 
  * @author Matthias Thimm
  */
-public class PossibleWorld extends InterpretationSet<Proposition> {
+public class PossibleWorld extends InterpretationSet<Proposition> implements Comparable<PossibleWorld> {
 	
 	/**
 	 * Creates a new empty possible world.
@@ -90,6 +90,19 @@ public class PossibleWorld extends InterpretationSet<Proposition> {
 		for(Set<Proposition> p: propositions)
 			possibleWorlds.add(new PossibleWorld(p));
 		return possibleWorlds;
+	}
+	
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
+	@Override
+	public int compareTo(PossibleWorld arg0) {
+		if(this.hashCode() < arg0.hashCode())
+			return -1;
+		if(this.hashCode() > arg0.hashCode())
+			return 1;
+		return 0;
 	}
 
 }

@@ -11,7 +11,7 @@ import java.util.*;
  * 
  * @author Matthias Thimm
  */
-public abstract class InterpretationSet<T extends Formula> extends Interpretation implements Collection<T> {
+public abstract class InterpretationSet<T extends Formula> extends AbstractInterpretation implements Collection<T> {
 
 	/**
 	 * The set of formulas of this interpretation.

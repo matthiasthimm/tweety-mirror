@@ -2,10 +2,7 @@ package net.sf.tweety.argumentation.dung.semantics;
 
 import java.util.*;
 
-import net.sf.tweety.*;
-import net.sf.tweety.argumentation.dung.*;
 import net.sf.tweety.argumentation.dung.syntax.*;
-import net.sf.tweety.math.probability.*;
 
 
 /**
@@ -14,7 +11,12 @@ import net.sf.tweety.math.probability.*;
  * @author Matthias Thimm
  *
  */
-public class Extension extends InterpretationSet<Argument> {
+public class Extension extends AbstractArgumentationInterpretation implements Collection<Argument>, Comparable<Extension> {
+	
+	/**
+	 * The arguments in the extension
+	 */
+	private Set<Argument> arguments; 
 	
 	/**
 	 * Creates a new empty extension.
@@ -28,143 +30,9 @@ public class Extension extends InterpretationSet<Argument> {
 	 * @param arguments a set of arguments
 	 */
 	public Extension(Collection<? extends Argument> arguments){
-		super(arguments);
-	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.kr.Interpretation#satisfies(net.sf.tweety.kr.Formula)
-	 */
-	@Override
-	public boolean satisfies(Formula formula) throws IllegalArgumentException {
-		if(!(formula instanceof Argument)) throw new IllegalArgumentException("Argument expected.");
-		return this.contains(formula);
+		this.arguments = new HashSet<Argument>(arguments);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.kr.Interpretation#satisfies(net.sf.tweety.kr.BeliefBase)
-	 */
-	@Override
-	public boolean satisfies(BeliefBase beliefBase) throws IllegalArgumentException{
-		throw new IllegalArgumentException("Satisfaction of belief bases by extensions is undefined.");
-	}
-			
-	/**
-	 * Returns all arguments that are "in" in this extension wrt.
-	 * the given theory, i.e. this extension itself.
-	 * @param dungTheory some Dung theory.
-	 * @return this extension
-	 */
-	public Extension getInArguments(DungTheory dungTheory){
-		if(dungTheory.containsAll(this))
-			return new Extension(this);
-		throw new IllegalArgumentException("The arguments of this extension are not all in the given theory.");
-	}
-	
-	/**
-	 * Returns all arguments that are "out" in this extension wrt.
-	 * the given theory, i.e. all arguments in the given theory
-	 * that are attacked by some argument in this extension.
-	 * @param dungTheory some Dung theory.
-	 * @return the set of arguments attacked by this extension.
-	 */
-	public Extension getOutArguments(DungTheory dungTheory){
-		if(dungTheory.containsAll(this)){
-			Extension ext = new Extension();
-			for(Argument a: dungTheory){
-				if(!this.contains(a))
-					if(dungTheory.isAttacked(a, this))
-						ext.add(a);
-			}
-			return ext;
-		}
-		throw new IllegalArgumentException("The arguments of this extension are not all in the given theory.");
-	}
-	
-	/**
-	 * Returns all arguments that are "undecided" in this extension wrt.
-	 * the given theory, i.e. all arguments that are neither in nor out.
-	 * @param dungTheory some Dung theory.
-	 * @return the set of undecided arguments.
-	 */
-	public Extension getUndecidedArguments(DungTheory dungTheory){
-		if(dungTheory.containsAll(this)){
-			Extension ext = this.getInArguments(dungTheory);
-			ext.addAll(this.getOutArguments(dungTheory));
-			Extension result = new Extension(dungTheory);
-			result.removeAll(ext);
-			return result;
-		}
-		throw new IllegalArgumentException("The arguments of this extension are not all in the given theory.");
-	}
-	
-	/**
-	 * returns true if every element of this is defended by some element in this wrt. the
-	 * given Dung theory.
-	 * @param dungTheory a Dung theory. 
-	 * @return true if every element of this is defended by some element in this wrt. the
-	 * given Dung theory.
-	 */
-	public boolean isAdmissable(DungTheory dungTheory){
-		if(!isConflictFree(dungTheory)) return false;
-		Iterator<Argument> it = this.iterator();
-		while(it.hasNext()){			
-			if(!isAcceptable(it.next(),dungTheory))
-				return false;
-		}
-		return true;
-	}
-	
-	/**
-	 * returns true if no argument attacks another one in <source>arguments</source>.
-	 * @param arguments a set of arguments
-	 * @return true if no argument attacks another one in <source>arguments</source>.
-	 */
-	public boolean isConflictFree(DungTheory dungTheory){
-		Iterator<Attack> it = dungTheory.getAttacks().iterator();
-		while (it.hasNext()){
-			Attack attack = (Attack) it.next();
-			if(!attack.isConflictFree(this))
-				return false;
-		}
-		return true;
-	}	
-
-	/**
-	 * returns true if every attacker on <source>argument</source> is attacked by some element from <source>this</source>.
-	 * @param argument an argument
-	 * @param dungTheory a Dung theory (the knowledge base)
-	 * @return true if every attacker on <source>argument</source> is attacked by some element from <source>this</source>.
-	 */
-	public boolean isAcceptable(Argument argument, DungTheory dungTheory){
-		Set<Argument> attackers = dungTheory.getAttackers(argument);
-		Iterator<Argument> it = attackers.iterator();
-		while (it.hasNext())			
-			if(!dungTheory.isAttacked(it.next(),this))
-				return false;		
-		return true;
-	}
-	
-	/**
-	 * Returns the characteristic probabilistic extension of this extension,
-	 * i.e. the probabilistic extension that assigns probability 0.5
-	 * to this extension and 0.5 to the union of this extension and the set
-	 * of undecided arguments.
-	 * @param theory some Dung theory
-	 * @return the characteristic probabilistic extension of this extension.
-	 */
-	public ProbabilisticExtension getCharacteristicProbabilisticExtension(DungTheory theory){
-		ProbabilisticExtension pe = new ProbabilisticExtension((DungSignature)theory.getSignature());
-		if(this.getUndecidedArguments(theory).isEmpty()){
-			pe.put(new Extension(this), new Probability(1d));
-			return pe;
-		}
-		pe.put(new Extension(this), new Probability(0.5));
-		Extension e = new Extension(this);
-		e.addAll(this.getUndecidedArguments(theory));
-		pe.put(e, new Probability(0.5));		
-		return pe;
-	}
-	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
@@ -179,22 +47,155 @@ public class Extension extends InterpretationSet<Argument> {
 		return s+="}";
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
-		return 1;
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((arguments == null) ? 0 : arguments.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Extension other = (Extension) obj;
+		if (arguments == null) {
+			if (other.arguments != null)
+				return false;
+		} else if (!arguments.equals(other.arguments))
+			return false;
+		return true;
 	}
 
 	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
+	 * @see net.sf.tweety.argumentation.dung.semantics.AbstractArgumentationInterpretation#getArgumentsOfStatus(net.sf.tweety.argumentation.dung.semantics.ArgumentStatus)
 	 */
 	@Override
-	public boolean equals(Object obj) {
-		if(!super.equals(obj))
-			return false;
-		return this.getClass() == obj.getClass();		
+	public Extension getArgumentsOfStatus(ArgumentStatus status) {
+		if(status.equals(ArgumentStatus.IN)) return this;
+		throw new IllegalArgumentException("Arguments of status different from \"IN\" cannot be determined from an extension alone");
+	}
+
+	/* (non-Javadoc)
+	 * @see java.util.Collection#add(java.lang.Object)
+	 */
+	@Override
+	public boolean add(Argument arg0) {
+		return this.arguments.add(arg0);
+	}
+
+	/* (non-Javadoc)
+	 * @see java.util.Collection#addAll(java.util.Collection)
+	 */
+	@Override
+	public boolean addAll(Collection<? extends Argument> arg0) {
+		return this.arguments.addAll(arg0);
+	}
+
+	/* (non-Javadoc)
+	 * @see java.util.Collection#clear()
+	 */
+	@Override
+	public void clear() {
+		this.arguments.clear();
+	}
+
+	/* (non-Javadoc)
+	 * @see java.util.Collection#contains(java.lang.Object)
+	 */
+	@Override
+	public boolean contains(Object arg0) {
+		return this.arguments.contains(arg0);
+	}
+
+	/* (non-Javadoc)
+	 * @see java.util.Collection#containsAll(java.util.Collection)
+	 */
+	@Override
+	public boolean containsAll(Collection<?> arg0) {
+		return this.arguments.containsAll(arg0);
+	}
+
+	/* (non-Javadoc)
+	 * @see java.util.Collection#isEmpty()
+	 */
+	@Override
+	public boolean isEmpty() {
+		return this.arguments.isEmpty();
+	}
+
+	/* (non-Javadoc)
+	 * @see java.util.Collection#iterator()
+	 */
+	@Override
+	public Iterator<Argument> iterator() {
+		return this.arguments.iterator();
+	}
+
+	/* (non-Javadoc)
+	 * @see java.util.Collection#remove(java.lang.Object)
+	 */
+	@Override
+	public boolean remove(Object arg0) {
+		return this.arguments.remove(arg0);
+	}
+
+	/* (non-Javadoc)
+	 * @see java.util.Collection#removeAll(java.util.Collection)
+	 */
+	@Override
+	public boolean removeAll(Collection<?> arg0) {
+		return this.arguments.removeAll(arg0);
+	}
+
+	/* (non-Javadoc)
+	 * @see java.util.Collection#retainAll(java.util.Collection)
+	 */
+	@Override
+	public boolean retainAll(Collection<?> arg0) {
+		return this.arguments.retainAll(arg0);
+	}
+
+	/* (non-Javadoc)
+	 * @see java.util.Collection#size()
+	 */
+	@Override
+	public int size() {
+		return this.arguments.size();
+	}
+
+	/* (non-Javadoc)
+	 * @see java.util.Collection#toArray()
+	 */
+	@Override
+	public Object[] toArray() {
+		return this.arguments.toArray();
+	}
+
+	/* (non-Javadoc)
+	 * @see java.util.Collection#toArray(T[])
+	 */
+	@Override
+	public <T> T[] toArray(T[] arg0) {
+		return this.arguments.toArray(arg0);
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
+	@Override
+	public int compareTo(Extension arg0) {
+		if(this.hashCode() < arg0.hashCode())
+			return -1;
+		if(this.hashCode() > arg0.hashCode())
+			return 1;
+		return 0;
 	}
 
 }

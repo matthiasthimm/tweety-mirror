@@ -102,6 +102,7 @@ public class OpenOptSolver extends Solver {
 	 */
 	@Override
 	public Map<Variable, Term> solve() throws GeneralMathException {
+		//System.out.println(this.getOpenOptCode());System.exit(0);
 		String output = "";
 		//String error = "";
 		InputStream in = null;

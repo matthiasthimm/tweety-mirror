@@ -2,6 +2,7 @@ package net.sf.tweety.math.probability;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -9,13 +10,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.Vector;
 
 /**
  * This class represents a probability distribution over some set of objects
  * @author Matthias Thimm
  * @param <T> The class of the objects used.
  */
-public class ProbabilityFunction<T> implements Map<T,Probability> {
+public class ProbabilityFunction<T extends Comparable<T>> implements Map<T,Probability> {
 	
 		/** For random sampling. */
 		private static Random random = new Random();
@@ -80,18 +82,6 @@ public class ProbabilityFunction<T> implements Map<T,Probability> {
 		}
 		
 		/**
-		 * Returns the entropy of this probability distribution.
-		 * @return the entropy of this probability distribution.
-		 */
-		public double entropy(){
-			double entropy = 0;
-			for(T o : this.probabilities.keySet())
-				if(this.probability(o).getValue() != 0)
-					entropy -= this.probability(o).getValue() * Math.log(this.probability(o).getValue());
-			return entropy;
-		}
-		
-		/**
 		 * Computes the convex combination of this P1 and the
 		 * given probability distribution P2 with parameter d, i.e.
 		 * it returns a P with P(i)=d P1(i) + (1-d) P2(i) for every interpretation i.
@@ -151,7 +141,7 @@ public class ProbabilityFunction<T> implements Map<T,Probability> {
 		 * the given probability distributions are not defined on the same set of objects, or
 		 * the lengths of creators and factors differ.
 		 */
-		public static <S> ProbabilityFunction<S> convexCombination(double[] factors, ProbabilityFunction<S>[] creators) throws IllegalArgumentException{
+		public static <S extends Comparable<S>> ProbabilityFunction<S> convexCombination(double[] factors, ProbabilityFunction<S>[] creators) throws IllegalArgumentException{
 			if(factors.length != creators.length)
 				throw new IllegalArgumentException("Length of factors and creators does not coincide.");
 			double sum = 0;
@@ -180,7 +170,7 @@ public class ProbabilityFunction<T> implements Map<T,Probability> {
 		 * @param sig a signature
 		 * @return the uniform distribution on the given interpretations.
 		 */
-		public static <S> ProbabilityFunction<S> getUniformDistribution(Set<S> objects){
+		public static <S extends Comparable<S>> ProbabilityFunction<S> getUniformDistribution(Set<S> objects){
 			ProbabilityFunction<S> p = new ProbabilityFunction<S>();
 			double size = objects.size();
 			for(S i: objects)
@@ -325,6 +315,36 @@ public class ProbabilityFunction<T> implements Map<T,Probability> {
 			return result;
 		}
 
+		/**
+		 * Returns the vector of probabilities, depending on the order
+		 * of the domain elements (which can be ordered as they
+		 * implement Comparable). 
+		 * @return the vector of probabilities
+		 */
+		public Vector<Probability> getProbabilityVector(){
+			List<T> keys = new LinkedList<T>(this.keySet());
+			Collections.sort(keys);
+			Vector<Probability> vec = new Vector<Probability>();
+			for(T key: keys)
+				vec.add(this.get(key));
+			return vec;
+		}
+		
+		/**
+		 * Returns the vector of probabilities, depending on the order
+		 * of the domain elements (which can be ordered as they
+		 * implement Comparable). 
+		 * @return the vector of probabilities as doubles
+		 */
+		public Vector<Double> getProbabilityVectorAsDoubles(){
+			List<T> keys = new LinkedList<T>(this.keySet());
+			Collections.sort(keys);
+			Vector<Double> vec = new Vector<Double>();
+			for(T key: keys)
+				vec.add(this.get(key).getValue());
+			return vec;
+		}
+		
 		/* (non-Javadoc)
 		 * @see java.lang.Object#equals(java.lang.Object)
 		 */

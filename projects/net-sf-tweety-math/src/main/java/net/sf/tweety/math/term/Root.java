@@ -10,21 +10,22 @@ import net.sf.tweety.math.*;
 public class Root extends FunctionalTerm {
 
 	/** The base of the root */
-	private double base;
+	private Term base;
 	
 	/**
 	 * Creates a new square root.
 	 * @param term the term inside the square root
 	 */
 	public Root(Term term) {
-		this(term,2);
+		this(term,new IntegerConstant(2));
 	}
 	
 	/**
-	 * Creates a new square root.
+	 * Creates a new root for the given base.
 	 * @param term the term inside the square root
+	 * @param base the base of the root
 	 */
-	public Root(Term term, double base) {
+	public Root(Term term, Term base) {
 		super(term);
 		this.base = base;
 	}
@@ -50,7 +51,7 @@ public class Root extends FunctionalTerm {
 	 */
 	@Override
 	public Constant value() throws IllegalArgumentException {
-		return new FloatConstant(Math.pow(this.getTerm().value().doubleValue(), 1.0/this.base));
+		return new FloatConstant(Math.pow(this.getTerm().value().doubleValue(), 1.0/this.base.doubleValue()));
 	}
 
 	/* (non-Javadoc)

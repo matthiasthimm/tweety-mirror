@@ -13,7 +13,7 @@ import net.sf.tweety.logics.modallogic.syntax.*;
  * @author Matthias Thimm
  *
  */
-public class KripkeModel extends Interpretation {
+public class KripkeModel extends AbstractInterpretation {
 
 	/**
 	 * The possible worlds of this model.

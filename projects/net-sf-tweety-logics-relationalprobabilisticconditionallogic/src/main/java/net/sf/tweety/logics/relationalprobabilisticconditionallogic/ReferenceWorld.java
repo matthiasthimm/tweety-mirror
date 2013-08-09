@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import net.sf.tweety.AbstractInterpretation;
 import net.sf.tweety.BeliefBase;
 import net.sf.tweety.Formula;
-import net.sf.tweety.Interpretation;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.firstorderlogic.FolBeliefSet;
@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Matthias Thimm
  */
-public class ReferenceWorld extends Interpretation implements Map<Predicate,InstanceAssignment>{
+public class ReferenceWorld extends AbstractInterpretation implements Map<Predicate,InstanceAssignment>{
 
 	/**
 	 * Logger.

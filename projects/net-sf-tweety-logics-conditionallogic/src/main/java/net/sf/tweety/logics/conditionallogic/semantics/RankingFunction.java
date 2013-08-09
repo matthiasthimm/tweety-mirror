@@ -21,7 +21,7 @@ import net.sf.tweety.logics.propositionallogic.syntax.*;
  * @author Matthias Thimm
  *
  */
-public class RankingFunction extends Interpretation {
+public class RankingFunction extends AbstractInterpretation {
 	
 	/**
 	 * Integer used to define infinity.

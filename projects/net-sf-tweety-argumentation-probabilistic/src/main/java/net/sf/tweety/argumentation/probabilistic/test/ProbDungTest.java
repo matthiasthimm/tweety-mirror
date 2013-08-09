@@ -1,4 +1,4 @@
-package net.sf.tweety.argumentation.dung.test;
+package net.sf.tweety.argumentation.probabilistic.test;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -20,10 +20,10 @@ import net.sf.tweety.argumentation.dung.GroundReasoner;
 import net.sf.tweety.argumentation.dung.PreferredReasoner;
 import net.sf.tweety.argumentation.dung.StableReasoner;
 import net.sf.tweety.argumentation.dung.semantics.Extension;
-import net.sf.tweety.argumentation.dung.semantics.ProbabilisticExtension;
+import net.sf.tweety.argumentation.dung.semantics.Labeling;
 import net.sf.tweety.argumentation.dung.syntax.Argument;
 import net.sf.tweety.argumentation.dung.syntax.Attack;
-import net.sf.tweety.argumentation.dung.syntax.DungSignature;
+import net.sf.tweety.argumentation.probabilistic.ProbabilisticExtension;
 import net.sf.tweety.math.GeneralMathException;
 import net.sf.tweety.math.equation.Equation;
 import net.sf.tweety.math.equation.Inequation;
@@ -119,7 +119,7 @@ public class ProbDungTest {
 			if(child != null) child.destroy();
 		}
 		// parser output
-		ProbabilisticExtension result = new ProbabilisticExtension((DungSignature)theory.getSignature());
+		ProbabilisticExtension result = new ProbabilisticExtension();
 		try{
 			
 			int valuesBegin = output.lastIndexOf("[");
@@ -198,11 +198,11 @@ public class ProbDungTest {
 		System.out.println("Complete extensions:  " + completeReasoner.getExtensions());
 		List<ProbabilisticExtension> allComplete = new LinkedList<ProbabilisticExtension>();
 		for(Extension ex: completeReasoner.getExtensions()){
-			allComplete.add(ex.getCharacteristicProbabilisticExtension(theory));			
+			allComplete.add(ProbabilisticExtension.getCharacteristicProbabilisticExtension(theory, new Labeling(theory,ex)));			
 		}
 		
 		// compute average
-		ProbabilisticExtension avg = new ProbabilisticExtension((DungSignature)theory.getSignature());		
+		ProbabilisticExtension avg = new ProbabilisticExtension();		
 		for(Set<Argument> set: new SetTools<Argument>().subsets(theory)){
 			Extension ext = new Extension(set);
 			double prob = 0;
@@ -318,7 +318,7 @@ public class ProbDungTest {
 			solver.contol = 0.001;
 			Map<Variable,Term> solution = solver.solve();
 			// construct probability distribution
-			ProbabilisticExtension p = new ProbabilisticExtension((DungSignature)theory.getSignature());
+			ProbabilisticExtension p = new ProbabilisticExtension();
 			for(Set<Argument> w: configurations)
 				p.put(new Extension(w), new Probability(solution.get(vars.get(w)).doubleValue()));
 		

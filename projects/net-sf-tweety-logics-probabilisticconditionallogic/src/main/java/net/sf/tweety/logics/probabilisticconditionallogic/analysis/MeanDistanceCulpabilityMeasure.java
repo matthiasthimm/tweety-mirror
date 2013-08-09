@@ -2,6 +2,7 @@ package net.sf.tweety.logics.probabilisticconditionallogic.analysis;
 
 import java.util.*;
 
+import net.sf.tweety.InconsistencyMeasure;
 import net.sf.tweety.logics.probabilisticconditionallogic.*;
 import net.sf.tweety.logics.probabilisticconditionallogic.syntax.*;
 import net.sf.tweety.logics.propositionallogic.semantics.*;

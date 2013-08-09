@@ -2,6 +2,7 @@ package net.sf.tweety.logics.probabilisticconditionallogic.analysis;
 
 import java.util.*;
 
+import net.sf.tweety.InconsistencyMeasure;
 import net.sf.tweety.logics.probabilisticconditionallogic.*;
 import net.sf.tweety.logics.probabilisticconditionallogic.syntax.*;
 import net.sf.tweety.util.*;
@@ -16,7 +17,7 @@ public class ShapleyCulpabilityMeasure implements CulpabilityMeasure {
 	/**
 	 * The inconsistency measure this Shapley culpability measure bases on.
 	 */
-	private InconsistencyMeasure inconsistencyMeasure;
+	private InconsistencyMeasure<PclBeliefSet> inconsistencyMeasure;
 	
 	/** Stores previously computed culpability values. */
 	private Map<Pair<PclBeliefSet,ProbabilisticConditional>,Double> archive;
@@ -26,7 +27,7 @@ public class ShapleyCulpabilityMeasure implements CulpabilityMeasure {
 	 * inconsistency measure.
 	 * @param inconsistencyMeasure an inconsistency measure.
 	 */
-	public ShapleyCulpabilityMeasure(InconsistencyMeasure inconsistencyMeasure){
+	public ShapleyCulpabilityMeasure(InconsistencyMeasure<PclBeliefSet> inconsistencyMeasure){
 		this.inconsistencyMeasure = inconsistencyMeasure;
 		this.archive = new HashMap<Pair<PclBeliefSet,ProbabilisticConditional>,Double>();
 	}
