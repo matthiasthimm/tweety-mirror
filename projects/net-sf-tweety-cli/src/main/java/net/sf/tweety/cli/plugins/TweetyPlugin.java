@@ -2,6 +2,11 @@ package net.sf.tweety.cli.plugins;
 
 import java.io.File;
 
+import java.util.List;
+
+import net.sf.tweety.cli.plugins.parameter.CommandParameter;
+import net.xeoh.plugins.base.Plugin;
+
 /**
  * This class provides the base for each plugin's functionality
  * 
@@ -9,12 +14,13 @@ import java.io.File;
  *
  */
 
-public abstract class PluginModel {
+public interface TweetyPlugin extends Plugin {
+	
 	/**
 	 * returns the keyword used in the cli to call this plugin
 	 * @return the keyword used in the cli to call this plugin
 	 */
-	public abstract String getCommand();	
+	public String getCommand();	
 	
 	/**
 	 * passes by the arguments given with the call to the called plugin
@@ -24,12 +30,17 @@ public abstract class PluginModel {
 	 * @param params parameter handled in the plugin (e.g. desired output file, iterations...)
 	 * @return the output resulted after the execution
 	 */
-	public abstract PluginOutput execute(File[] input, ComputeOperation cop, PluginParameter[] params); 
-	
+	public PluginOutput execute(File[] input, CommandParameter[] params); 
+		
 	/**
 	 * returns parameters allowed with plugin calls
 	 * @return parameters allowed with plugin calls
 	 */
-	public abstract PluginParameter[] getParameters(); 
+	public List<CommandParameter> getParameters();
+	
+	
+	
+	// future work:
+	// getDependencies()-Methode
 
 }

@@ -12,16 +12,18 @@ package net.sf.tweety.cli.plugins;
 public class PluginOutput {
 	
 	// TODO: implementation of solid representation (e.g. Output-Strings, error-messages, help-text)
-	public PluginOutput() {
-		
+	private String out;
+	
+	public PluginOutput(String output) {
+		this.out = output;
 	}
 	
-	public void handleOutput(){
-		
+	public void appendToOutput(String ap){
+		out += ap;
 	}
 	
-	public void printToConsole(){
-		
+	public String getOutput(){
+		return out;
 	}
 
 }
