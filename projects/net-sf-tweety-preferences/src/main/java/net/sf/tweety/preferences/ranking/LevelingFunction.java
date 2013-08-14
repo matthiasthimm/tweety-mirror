@@ -25,7 +25,7 @@ import net.sf.tweety.util.Triple;
  * TODO exception handling for invalid preference orders (total preorder)
  * 
  * @author Bastian Wolf
- * @param <T>
+ * @param <T> the generic type used for this leveling function
  * 
  */
 
@@ -34,31 +34,32 @@ public class LevelingFunction<T> extends Functions<T> {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * constructs a new, empty ranking function caller can use Map-method putAll
-	 * to fill this empty ranking function
+	 * constructs a new, empty leveling function caller can use Map-method putAll
+	 * to fill this empty leveling function
 	 */
 	public LevelingFunction() {
 		new HashMap<T, Integer>();
 	}
 
 	/**
-	 * this constructor creates a ranking function using a given preference
+	 * this constructor creates a leveling function using a given preference
 	 * order
 	 * 
 	 * @param po
 	 *            the given preference order
 	 */
 	public LevelingFunction(PreferenceOrder<T> po) {
-		
+
 		// empty hash map for the integer variables
 		Map<T, IntegerVariable> intVar = new HashMap<T, IntegerVariable>();
-		
+
 		// new optimization problem
-		Set<Triple<IntegerVariable, IntegerVariable, Relation>> optIneq = new HashSet<Triple<IntegerVariable, IntegerVariable, Relation>>();
+//		Set<Triple<IntegerVariable, IntegerVariable, Relation>> optIneq = new HashSet<Triple<IntegerVariable, IntegerVariable, Relation>>();
 		OptimizationProblem opt = new OptimizationProblem(
 				OptimizationProblem.MINIMIZE);
-		
-		// creates a new integer variable for each domain element of the given preference order
+
+		// creates a new integer variable for each domain element of the given
+		// preference order
 		for (final T e : po.getDomainElements()) {
 			intVar.put(e, new IntegerVariable(e.toString(), true));
 		}
@@ -68,31 +69,34 @@ public class LevelingFunction<T> extends Functions<T> {
 
 		while (it.hasNext()) {
 			Triple<T, T, Relation> tempRel = it.next();
-			
+
 			// empty initialized IntegerVariables for ech relation
 			IntegerVariable tempVarF = null;
 			IntegerVariable tempVarS = null;
-			
-			// mapping the relations between each two elements into the integer variables hash map
+
+			// mapping the relations between each two elements into the integer
+			// variables hash map
 			if (po.contains(tempRel)) {
 				tempVarF = intVar.get(tempRel.getFirst());
 				tempVarS = intVar.get(tempRel.getSecond());
-//				switch (tempRel.getThird()) {
-				if (tempRel.getThird().equals(Relation.LESS)){
-//				case Relation.LESS:
+				// switch (tempRel.getThird()) {
+				if (tempRel.getThird().equals(Relation.LESS)) {
+					// case Relation.LESS:
 					opt.add(new Inequation(tempVarF, tempVarS, Inequation.LESS));
-				} else if(tempRel.getThird().equals(Relation.LESS_EQUAL)){
-//				case LESS_EQUAL:
+				} else if (tempRel.getThird().equals(Relation.LESS_EQUAL)) {
+					// case LESS_EQUAL:
 					opt.add(new Inequation(tempVarF, tempVarS,
 							Inequation.LESS_EQUAL));
-//				default:
-				}else{
-				continue;
+					// default:
+				} else {
+					continue;
 				}
 			} else {
 				continue;
 			}
 		}
+//		try{
+			
 
 		// setting the term for the solver
 		List<Term> terms = new LinkedList<Term>();
@@ -103,7 +107,7 @@ public class LevelingFunction<T> extends Functions<T> {
 		}
 
 		Iterator<Term> termIt = terms.listIterator();
-		
+
 		// using this term for the target function
 		if (termIt.hasNext()) {
 			Term t = termIt.next();
@@ -117,18 +121,24 @@ public class LevelingFunction<T> extends Functions<T> {
 		Map<Variable, Term> solution = solver.solve();
 		Map<T, Integer> sol = new HashMap<T, Integer>();
 		for (Entry<Variable, Term> e : solution.entrySet()) {
-			T key = (T) e.getKey().toString();
+			T key = (T) e.getKey();
 			Integer val = (int) e.getValue().doubleValue();
 			sol.put(key, val);
 		}
-
+		
 		this.putAll(sol);
+		
+//		} catch (StringIndexOutOfBoundsException e){
+//			System.err.println("You're input preference order seems to be invalid, please check it.");
+//		}
+		
+		
 	}
 
 	/**
-	 * returns the ranking function
+	 * returns this leveling function
 	 * 
-	 * @return ranking function
+	 * @return this leveling function
 	 */
 	public Map<T, Integer> getLevelingFunction() {
 		return this;
@@ -144,9 +154,9 @@ public class LevelingFunction<T> extends Functions<T> {
 	}
 
 	/**
-	 * this method returns a preference order made out of an ranking function
+	 * this method returns a preference order made out of this leveling function
 	 * 
-	 * @returns a preference order out of a given ranking function
+	 * @returns a preference order out of a given leveling function
 	 */
 	public PreferenceOrder<T> generatePreferenceOrder() {
 		Set<Triple<T, T, Relation>> tempPO = new HashSet<Triple<T, T, Relation>>();
@@ -167,7 +177,6 @@ public class LevelingFunction<T> extends Functions<T> {
 						tempPO.add(rel);
 					} else
 						continue;
-
 				}
 			}
 		}
@@ -176,7 +185,7 @@ public class LevelingFunction<T> extends Functions<T> {
 	}
 
 	/**
-	 * weakens the given element in the ranking function
+	 * weakens the given element in the leveling function
 	 * 
 	 * @param element
 	 *            the element being weakened
@@ -194,17 +203,19 @@ public class LevelingFunction<T> extends Functions<T> {
 					lf.put(e.getKey(), e.getValue() + 1);
 				}
 			}
+		} else {
+			lf.put(element, this.get(element) + 1);
 		}
 	}
 
 	/**
-	 * strengthens the given element in the ranking function
+	 * strengthens the given element in the leveling function
 	 * 
 	 * @param element
 	 *            the element being strengthened
 	 */
 	public void strengthenElement(T element) {
-		
+
 		HashMap<T, Integer> lf = this;
 		int level = getElementsByValue(this.get(element)).size();
 		int val = this.get(element);
@@ -217,7 +228,7 @@ public class LevelingFunction<T> extends Functions<T> {
 				}
 			}
 		} else {
-			lf.put(element, this.get(element)-1);
+			lf.put(element, this.get(element) - 1);
 		}
 	}
 

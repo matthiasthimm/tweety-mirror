@@ -1,0 +1,24 @@
+/**
+ * JavaCC file
+ */options{  JDK_VERSION = "1.6";  STATIC = false;}PARSER_BEGIN(UPParser)package net.sf.tweety.preferences.io;
+import java.util.*;
+import net.sf.tweety.preferences.*;
+import net.sf.tweety.preferences.update;
+
+public class UPParser{
+
+  public static Update< String > parse(String updatefile) throws ParseException, java.io.FileNotFoundException  {
+    UPParser parser;
+    parser = new UPParser(new java.io.FileInputStream(filename));
+    return parser.Update();  }
+  
+  public static void main(String args []) throws ParseException  {   try   {		
+   }  }}PARSER_END(UPParser)SKIP :{  " "}TOKEN : /* OPERATORS */{  < LBRA : "(" >| < RBRA : ")" >
+| < PO: ((["A"-"Z"])?(["a"-"z"])+) >| < OPERATION: (["A"-"Z"])+ >
+| < ELEMENT: (["a"-"z"])+ >
+| < AMOUNT: (["1"-"9"]["0"-"9"]+) >| < EOL :
+	"\n"
+  | "\r\n"
+  | "\t" >}
+Update < String > StringUpdate() : {	Token po, op, amount, element;
+}
