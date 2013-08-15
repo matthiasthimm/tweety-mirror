@@ -69,7 +69,7 @@ public abstract class ScoringPreferenceAggregator<T> implements
 					for(T e : checkPO.getDomainElements()){
 						if(!elem.containsKey(e)){
 							//TODO Exception handling for null pointer exception
-							System.out.println("Invalid preference order used");;
+							System.out.println("Invalid preference order used");
 						}
 					}
 				}

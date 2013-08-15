@@ -36,6 +36,7 @@ public class LpSolve extends Solver {
 		//String error = "";
 		try{
 			File lpFile = File.createTempFile("lptmp", null);
+//			File lpFile = new File("lptmp2");
 			// Delete temp file when program exits.
 			lpFile.deleteOnExit();    
 			// Write to temp file
