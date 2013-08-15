@@ -1,19 +1,20 @@
 package net.sf.tweety.preferences.cli;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
 import net.sf.tweety.cli.plugins.AbstractTweetyPlugin;
 import net.sf.tweety.cli.plugins.PluginOutput;
 import net.sf.tweety.cli.plugins.parameter.CommandParameter;
 import net.sf.tweety.cli.plugins.parameter.SelectionCommandParameter;
 import net.sf.tweety.preferences.PreferenceOrder;
+import net.sf.tweety.preferences.aggregation.BordaScoringPreferenceAggregator;
+import net.sf.tweety.preferences.aggregation.DynamicBordaScoringPreferenceAggregator;
+import net.sf.tweety.preferences.aggregation.DynamicPluralityScoringPreferenceAggregator;
+import net.sf.tweety.preferences.aggregation.DynamicVetoScoringPreferenceAggregator;
+import net.sf.tweety.preferences.aggregation.PluralityScoringPreferenceAggregator;
+import net.sf.tweety.preferences.aggregation.VetoScoringPreferenceAggregator;
 import net.sf.tweety.preferences.io.POParser;
-import net.sf.tweety.preferences.io.ParseException;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 /**
@@ -68,9 +69,10 @@ public class PreferencesPlugin extends AbstractTweetyPlugin {
 
 	@Override
 	public PluginOutput execute(File[] input, CommandParameter[] params) {
+		PreferenceOrder<String> result = new PreferenceOrder<String>();
 		// File-Handler
 		// Parsing,...
-		Set<PreferenceOrder<String>> poset = new HashSet<PreferenceOrder<String>>();
+		List<PreferenceOrder<String>> poset = new ArrayList<PreferenceOrder<String>>();
 		for (int i = 0; i < input.length; i++) {
 			String filename = input[i].getAbsoluteFile().getAbsolutePath();
 			if (filename.endsWith(".po")) {
@@ -83,12 +85,46 @@ public class PreferencesPlugin extends AbstractTweetyPlugin {
 		for (CommandParameter tempComParam : params) {
 			// if command parameter is for aggregation
 			if (tempComParam.getIdentifier().equals("-aggr")) {
+				SelectionCommandParameter tmp = (SelectionCommandParameter) tempComParam;
+				// plurality scoring
+				if (tmp.getValue().equalsIgnoreCase("plurality")) {
+					PluralityScoringPreferenceAggregator<String> pluraggr = new PluralityScoringPreferenceAggregator<String>();
+					result = pluraggr.aggregate(poset);
+
+				// borda scoring
+				} else if (tmp.getValue().equalsIgnoreCase("borda")) {
+					BordaScoringPreferenceAggregator<String> brdaggr = new BordaScoringPreferenceAggregator<String>(
+							poset.iterator().next().size());
+					result = brdaggr.aggregate(poset);
+
+				// veto scoring
+				} else if (tmp.getValue().equalsIgnoreCase("veto")) {
+					VetoScoringPreferenceAggregator<String> vetoaggr = new VetoScoringPreferenceAggregator<String>(
+							0);
+					result = vetoaggr.aggregate(poset);
+				}
 
 			}
 
 			// if command parameter is for dynamic aggregation
 			if (tempComParam.getIdentifier().equals("-dynaggr")) {
+				SelectionCommandParameter tmp = (SelectionCommandParameter) tempComParam;
 
+				// dynamic plurality scoring
+				if (tmp.getValue().equalsIgnoreCase("dynplurality")) {
+					DynamicPluralityScoringPreferenceAggregator<String> dynpluraggr = new DynamicPluralityScoringPreferenceAggregator<String>();
+					result = dynpluraggr.aggregate(poset);
+				// dynamic borda scoring
+				} else if (tmp.getValue().equalsIgnoreCase("dynborda")) {
+					DynamicBordaScoringPreferenceAggregator<String> dynbrdaggr = new DynamicBordaScoringPreferenceAggregator<String>(
+							poset.iterator().next().size());
+					result = dynbrdaggr.aggregate(poset);
+				// dynamic veto scoring	
+				} else if (tmp.getValue().equalsIgnoreCase("dynveto")) {
+					DynamicVetoScoringPreferenceAggregator<String> dynvetoaggr = new DynamicVetoScoringPreferenceAggregator<String>(
+							0);
+					result = dynvetoaggr.aggregate(poset);
+				}
 			}
 
 			// if command parameter is for updates of dynamic aggregation
@@ -96,8 +132,9 @@ public class PreferencesPlugin extends AbstractTweetyPlugin {
 
 			}
 		}
+		PluginOutput out = new PluginOutput(result.toString());
 
-		return null; //
+		return out;
 	}
 
 	@Override
