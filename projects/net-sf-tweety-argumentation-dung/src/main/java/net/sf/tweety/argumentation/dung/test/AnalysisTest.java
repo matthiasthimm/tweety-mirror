@@ -15,35 +15,20 @@ public class AnalysisTest {
 		// 1: theory
 		// 2: number of stable extensions
 		// 3: number of Eigenvalues
-		// 4: largest Eigenvalue
-		// 5: real Eigenvalues?
-		// 6: imag Eigenvalues?
+		// 4: actual Eigenvalues
 		
 		for(int i = 0; i < 40; i++){
 			DungTheory theory = gen.generate();
 			reasoner = new StableReasoner(theory);			
 			
 			ComplexNumber[] eigenvalues = GraphUtil.eigenvalues(theory);
-			byte real = 0;
-			byte imag = 0;
-			ComplexNumber largestRealEV = new ComplexNumber(Double.MIN_VALUE,0); 
-			for(ComplexNumber n: eigenvalues){
-				if(n.getImagPart() > 0.00001 || n.getImagPart() > 0.00001)
-					imag = 1;
-				if(n.getRealPart() > 0.00001 || n.getRealPart() > 0.00001){
-					real = 1;
-					if(n.getRealPart() > largestRealEV.getRealPart())
-						largestRealEV = n;
-				}
-			}
-			
-			
-			System.out.println(theory + "\t" +
+			System.out.print(theory + "\t" +
 					reasoner.getExtensions().size() + "\t" +
-					eigenvalues.length + "\t" +
-					largestRealEV + "\t" + 
-					real + "\t" +
-					imag);
+					eigenvalues.length + "\t");			 
+			for(ComplexNumber n: eigenvalues){
+				System.out.print(n +"\t");
+			}
+			System.out.println();
 		}
 		
 	}
