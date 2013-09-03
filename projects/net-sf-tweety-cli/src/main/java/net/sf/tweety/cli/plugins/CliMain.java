@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import net.sf.tweety.cli.TweetyCli;
 import net.sf.tweety.cli.plugins.parameter.CommandParameter;
 import net.xeoh.plugins.base.Plugin;
 import net.xeoh.plugins.base.PluginManager;
@@ -144,18 +145,6 @@ public class CliMain {
 				}
 
 				inputFiles = inf;
-
-				// deprecated
-				// List<File> in = new ArrayList<File>();
-				//
-				// for(String s : files){
-				// File f = new File(s).getAbsoluteFile();
-				// in.add(f);
-				// }
-				// File[] inf = new File[in.size()];
-				// for(int k = 0; k<in.size()-1;k++){
-				// inf[k] = in.get(k);
-				// }
 			}
 
 			// output file
@@ -183,9 +172,11 @@ public class CliMain {
 		
 		if(!pluginPresent){
 			if(availablePlugins.containsKey(plugin)) {
-			pmu.addPluginsFrom(new File(availablePlugins.get(plugin).toString()).toURI());				
+			pmu.addPluginsFrom(new File(availablePlugins.get(plugin)).toURI());
 			}
 		}
+		// kein plugin geladen...
+		System.out.println(pmu.getPlugins(TweetyPlugin.class));
 		
 		for(TweetyPlugin tp : pmu.getPlugins(TweetyPlugin.class)){
 				if(tp.getCommand().equalsIgnoreCase(plugin)){

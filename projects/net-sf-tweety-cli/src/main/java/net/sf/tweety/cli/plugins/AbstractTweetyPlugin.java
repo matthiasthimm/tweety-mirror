@@ -5,6 +5,7 @@ import java.io.File;
 import java.util.List;
 
 import net.sf.tweety.cli.plugins.parameter.CommandParameter;
+import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 /**
  * This abstract class implements the TweetyPlugin interface and provides a base
@@ -13,7 +14,7 @@ import net.sf.tweety.cli.plugins.parameter.CommandParameter;
  * @author Bastian Wolf
  * 
  */
-
+//@PluginImplementation
 public abstract class AbstractTweetyPlugin implements TweetyPlugin {
 	/**
 	 * valid parameters for this plugin
