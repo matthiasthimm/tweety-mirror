@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import net.sf.tweety.cli.plugins.AbstractTweetyPlugin;
 import net.sf.tweety.cli.plugins.PluginOutput;
+import net.sf.tweety.cli.plugins.TweetyPlugin;
 import net.sf.tweety.cli.plugins.parameter.CommandParameter;
 import net.sf.tweety.cli.plugins.parameter.SelectionCommandParameter;
 import net.sf.tweety.preferences.PreferenceOrder;
@@ -24,7 +25,7 @@ import net.xeoh.plugins.base.annotations.PluginImplementation;
  * 
  */
 @PluginImplementation
-public class PreferencesPlugin extends AbstractTweetyPlugin {
+public class PreferencesPlugin extends AbstractTweetyPlugin implements TweetyPlugin {
 
 	// the static identifier for this plugin
 	private static final String PREF__CALL_PARAMETER = "preferences";
