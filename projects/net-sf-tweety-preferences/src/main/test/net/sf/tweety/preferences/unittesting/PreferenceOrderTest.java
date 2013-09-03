@@ -1859,6 +1859,7 @@ public class PreferenceOrderTest {
 	 * @generatedBy CodePro at 12.12.12 15:11
 	 */
 	public static void main(String[] args) {
+		
 		new org.junit.runner.JUnitCore().run(PreferenceOrderTest.class);
 	}
 }

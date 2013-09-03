@@ -16,6 +16,8 @@ import net.sf.tweety.util.Triple;
  *            the generic type of objects/pairs in this preference order
  */
 
+// TODO: Equals-Methode schreiben
+
 public class PreferenceOrder<T> implements BinaryRelation<T> {
 	
 	

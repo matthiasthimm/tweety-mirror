@@ -8,8 +8,8 @@ import net.sf.tweety.util.Triple;
 public class PreferencesIntegerBugExample {
 
 	public static void main(String[] args) {
-		LpSolve.setBinary("/opt/local/bin/lp_solve");
-///*		
+		LpSolve.setBinary("/home/bwolf/Applikationen/lpsolve/source/lp_solve_5.5/lp_solve/bin/ux64/lp_solve");
+/*		
 		HashSet<Triple<String, String, Relation>> relations = new HashSet<Triple<String, String, Relation>>();
 		relations.add(new Triple<String, String, Relation>("a", "b", Relation.LESS));
 		relations.add(new Triple<String, String, Relation>("a", "c", Relation.LESS));
@@ -23,9 +23,9 @@ public class PreferencesIntegerBugExample {
 		relations.add(new Triple<String, String, Relation>("d", "e", Relation.LESS));	
 
 		PreferenceOrder<String> po = new PreferenceOrder<String>(relations);
-//*/		
+*/		
 	
-/*	
+///*	
 	HashSet<Triple<Integer, Integer, Relation>> relations = new HashSet<Triple<Integer, Integer, Relation>>();
 	relations.add(new Triple<Integer, Integer, Relation>(1, 2, Relation.LESS));
 	relations.add(new Triple<Integer, Integer, Relation>(1, 3, Relation.LESS));
@@ -35,7 +35,7 @@ public class PreferencesIntegerBugExample {
 	relations.add(new Triple<Integer, Integer, Relation>(3, 4, Relation.LESS));
 	
 	PreferenceOrder<Integer> po = new PreferenceOrder<Integer>(relations);
-*/
+//*/
 	
 /*
 	HashSet<Triple<Integer, Integer, Relation>> relations = new HashSet<Triple<Integer, Integer, Relation>>();

@@ -15,7 +15,7 @@ public class UpdatePrinter<T> implements UpdateListener<T> {
 	 * This method is called every time an update occurs
 	 */
 	public void eventOccurred(UpdateEvent<T> e) {
-
+	
 	System.out.println("Updated aggregation result: "+ e.getResult());
 	System.out.println(e.getResult().getLevelingFunction());
 	System.out.println(e.getResult().getLevelingFunction().getLevelingFunction());	
