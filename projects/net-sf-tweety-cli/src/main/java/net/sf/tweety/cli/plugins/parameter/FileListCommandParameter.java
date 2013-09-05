@@ -1,6 +1,7 @@
 package net.sf.tweety.cli.plugins.parameter;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -94,4 +95,7 @@ public class FileListCommandParameter extends CommandParameter {
 		return null;
 	}
 
+	public ArrayList<CommandParameter> instantiate(ArrayList<String> a){
+		return null;
+	}
 }
