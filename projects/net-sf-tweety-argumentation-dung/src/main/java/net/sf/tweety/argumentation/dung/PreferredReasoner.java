@@ -5,6 +5,8 @@ import java.util.*;
 import net.sf.tweety.*;
 import net.sf.tweety.argumentation.dung.semantics.*;
 import net.sf.tweety.argumentation.dung.syntax.*;
+import net.sf.tweety.logics.propositionallogic.PlBeliefSet;
+import net.sf.tweety.logics.propositionallogic.syntax.Proposition;
 
 
 /**
@@ -68,4 +70,11 @@ public class PreferredReasoner extends AbstractExtensionReasoner {
 		return extensions;
 	}
 	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.argumentation.dung.AbstractExtensionReasoner#getPropositionalCharacterisationBySemantics(java.util.Map, java.util.Map, java.util.Map)
+	 */
+	@Override
+	protected PlBeliefSet getPropositionalCharacterisationBySemantics(Map<Argument, Proposition> in, Map<Argument, Proposition> out,Map<Argument, Proposition> undec) {
+		throw new UnsupportedOperationException("not defined for preferred semantics");
+	}
 }

@@ -5,6 +5,11 @@ import java.util.*;
 import net.sf.tweety.*;
 import net.sf.tweety.argumentation.dung.semantics.*;
 import net.sf.tweety.argumentation.dung.syntax.*;
+import net.sf.tweety.logics.propositionallogic.PlBeliefSet;
+import net.sf.tweety.logics.propositionallogic.syntax.Contradiction;
+import net.sf.tweety.logics.propositionallogic.syntax.Proposition;
+import net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula;
+import net.sf.tweety.logics.propositionallogic.syntax.Tautology;
 
 
 /**
@@ -65,6 +70,34 @@ public class StableReasoner extends AbstractExtensionReasoner {
 			}
 		}
 		return extensions;
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.argumentation.dung.AbstractExtensionReasoner#getPropositionalCharacterisationBySemantics(java.util.Map, java.util.Map, java.util.Map)
+	 */
+	@Override
+	protected PlBeliefSet getPropositionalCharacterisationBySemantics(Map<Argument, Proposition> in, Map<Argument, Proposition> out,Map<Argument, Proposition> undec) {
+		DungTheory theory = (DungTheory) this.getKnowledgBase();
+		PlBeliefSet beliefSet = new PlBeliefSet();
+		// an argument is in iff all attackers are out, and
+		// no argument is undecided
+		for(Argument a: theory){
+			PropositionalFormula attackersAnd = new Tautology();
+			PropositionalFormula attackersOr = new Contradiction();
+			PropositionalFormula attackersNotAnd = new Tautology();
+			PropositionalFormula attackersNotOr = new Contradiction();
+			for(Argument b: theory.getAttackers(a)){
+				attackersAnd = attackersAnd.combineWithAnd(out.get(b));
+				attackersOr = attackersOr.combineWithOr(in.get(b));
+				attackersNotAnd = attackersNotAnd.combineWithAnd(in.get(b).complement());
+				attackersNotOr = attackersNotOr.combineWithOr(out.get(b).complement());
+			}
+			beliefSet.add(((PropositionalFormula)out.get(a).complement()).combineWithOr(attackersOr));
+			beliefSet.add(((PropositionalFormula)in.get(a).complement()).combineWithOr(attackersAnd));
+			beliefSet.add((PropositionalFormula)undec.get(a).complement());
+			
+		}
+		return beliefSet;
 	}
 	
 }

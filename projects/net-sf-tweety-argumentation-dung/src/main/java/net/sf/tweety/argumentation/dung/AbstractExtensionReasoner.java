@@ -5,6 +5,9 @@ import java.util.*;
 import net.sf.tweety.*;
 import net.sf.tweety.argumentation.dung.semantics.*;
 import net.sf.tweety.argumentation.dung.syntax.*;
+import net.sf.tweety.logics.propositionallogic.PlBeliefSet;
+import net.sf.tweety.logics.propositionallogic.syntax.Proposition;
+import net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula;
 
 
 /**
@@ -96,6 +99,48 @@ public abstract class AbstractExtensionReasoner extends Reasoner {
 		answer.appendText("The answer is: false");
 		return answer;
 	}
+	
+
+	/**
+	 * Creates a propositional representation of the set of labelings of the underlying
+	 * Dung theory that are consistent with the given semantics. This means that
+	 * for every argument A in the theory three propositions are created: in_A, out_A,
+	 * undec_A. For every attack A->B the formula "in_A => out_B" is added to the belief set.
+	 * Depending on the actual semantics further propositional formulas are added. For example,
+	 * for any admissable semantics and unattacked argument A, the constraint "\top=>in_A" is added;
+	 * another constraint added for admissable semantics is, given any argument A and attackers B1...BN,
+	 * add the constraint in_A => out_B1 ^ ... ^ out_BN.    
+	 * @return a propositional belief set.
+	 */
+	public PlBeliefSet getPropositionalCharacterisation(){
+		Map<Argument,Proposition> in = new HashMap<Argument,Proposition>();
+		Map<Argument,Proposition> out = new HashMap<Argument,Proposition>();
+		Map<Argument,Proposition> undec = new HashMap<Argument,Proposition>();
+		PlBeliefSet beliefSet = new PlBeliefSet();
+		for(Argument a: (DungTheory) this.getKnowledgBase()){
+			in.put(a, new Proposition("in_" + a.getName()));
+			out.put(a, new Proposition("out_" + a.getName()));
+			undec.put(a, new Proposition("undec_" + a.getName()));
+			// for every argument only one of in/out/undec can be true
+			beliefSet.add(in.get(a).combineWithOr(out.get(a).combineWithOr(undec.get(a))));
+			beliefSet.add((PropositionalFormula)in.get(a).combineWithAnd(out.get(a)).complement());
+			beliefSet.add((PropositionalFormula)in.get(a).combineWithAnd(undec.get(a)).complement());
+			beliefSet.add((PropositionalFormula)out.get(a).combineWithAnd(undec.get(a)).complement());
+		}
+		beliefSet.addAll(this.getPropositionalCharacterisationBySemantics(in,out,undec));
+		return beliefSet;
+	}
+	
+	/**
+	 * Returns the semantic-specific propositional characterization of the underlying Dung
+	 * theory, see <code>getPropositionalCharacterisation</code>. 
+	 * @param in propositional variables of in arguments.
+	 * @param out propositional variables of out arguments.
+	 * @param undec propositional variables of undec arguments.
+	 * @return the semantic-specific propositional characterization of the underlying Dung
+	 * theory, see <code>getPropositionalCharacterisation</code>.
+	 */
+	protected abstract PlBeliefSet getPropositionalCharacterisationBySemantics(Map<Argument,Proposition> in, Map<Argument,Proposition> out, Map<Argument,Proposition> undec);
 	
 	/**
 	 * Returns the extensions this reasoner bases upon.

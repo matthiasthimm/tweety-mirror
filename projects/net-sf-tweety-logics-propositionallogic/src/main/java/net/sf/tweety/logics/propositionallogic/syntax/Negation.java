@@ -147,4 +147,29 @@ public class Negation extends PropositionalFormula {
 	public PropositionalSignature getSignature() {
 		return formula.getSignature();
 	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#toCnf()
+	 */
+	@Override
+	public Conjunction toCnf() {	
+		if(this.formula instanceof Negation){
+			return ((Negation)this.formula).getFormula().toCnf();
+		}else if(this.formula instanceof Conjunction){
+			Disjunction disj = new Disjunction();
+			for(PropositionalFormula f: (Conjunction) this.formula)
+				disj.add((PropositionalFormula)f.complement());
+			return disj.toCnf();
+		}else if(this.formula instanceof Disjunction){
+			Conjunction conj = new Conjunction();
+			for(PropositionalFormula f: (Disjunction) this.formula)
+				conj.add((PropositionalFormula)f.complement());
+			return conj.toCnf();
+		}
+		Conjunction conj = new Conjunction();
+		Disjunction disj = new Disjunction();
+		disj.add(this);
+		conj.add(disj);
+		return conj;
+	}
 }

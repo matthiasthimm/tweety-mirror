@@ -2,8 +2,10 @@ package net.sf.tweety.logics.propositionallogic.syntax;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 
 import net.sf.tweety.logics.commons.LogicalSymbols;
+import net.sf.tweety.util.SetTools;
 
 /**
  * This class represents a disjunction in propositional logic.
@@ -88,5 +90,25 @@ public class Disjunction extends AssociativePropositionalFormula {
 	@Override
 	public String getEmptySymbol() {
 		return LogicalSymbols.TAUTOLOGY();
+	}
+	
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#toCnf()
+	 */
+	@Override
+	public Conjunction toCnf() {	
+		Set<Set<PropositionalFormula>> conjs = new HashSet<Set<PropositionalFormula>>();
+		for(PropositionalFormula f: this)
+			conjs.add(new HashSet<PropositionalFormula>(f.toCnf()));				
+		Collection<PropositionalFormula> newConjs = new HashSet<PropositionalFormula>();
+		SetTools<PropositionalFormula> setTools = new SetTools<PropositionalFormula>();		
+		for(Set<PropositionalFormula> permut: setTools.permutations(conjs)){
+			Disjunction disj = new Disjunction();
+			for(PropositionalFormula f: permut)
+				disj.addAll(((Disjunction)f));
+			newConjs.add(disj);
+		}		
+		return new Conjunction(newConjs);
 	}
 }

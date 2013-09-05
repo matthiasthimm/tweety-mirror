@@ -145,5 +145,17 @@ public class Proposition extends PropositionalFormula implements Atom, Comparabl
 	public int compareTo(Proposition o) {
 		return predicate.compareTo(o.predicate);
 	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#toCnf()
+	 */
+	@Override
+	public Conjunction toCnf() {
+		Conjunction conj = new Conjunction();
+		Disjunction disj = new Disjunction();
+		disj.add(this);
+		conj.add(disj);
+		return conj;
+	}
 	
 }

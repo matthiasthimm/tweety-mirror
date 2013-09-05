@@ -19,5 +19,10 @@
   		<artifactId>deductive</artifactId>
   		<version>0.2.0-SNAPSHOT</version>
   	</dependency>
-  </dependencies>
+  	<dependency>
+  		<groupId>net.sf.tweety.argumentation</groupId>
+  		<artifactId>dung</artifactId>
+  		<version>0.2.0-SNAPSHOT</version>
+  	</dependency>
+  	</dependencies>
 </project>

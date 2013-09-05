@@ -275,7 +275,7 @@ public class DungTheory extends BeliefSet<Argument> implements Graph<Argument> {
 		}
 		return false;
 	}
-
+	
 	// Misc methods
 
 	

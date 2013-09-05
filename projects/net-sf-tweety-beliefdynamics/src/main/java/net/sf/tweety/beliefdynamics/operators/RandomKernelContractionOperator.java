@@ -1,8 +1,8 @@
 package net.sf.tweety.beliefdynamics.operators;
 
 import net.sf.tweety.beliefdynamics.kernels.*;
+import net.sf.tweety.logics.propositionallogic.ClassicalEntailment;
 import net.sf.tweety.logics.propositionallogic.syntax.*;
-import net.sf.tweety.logics.propositionallogic.semantics.*;
 
 /**
  * This class implements a simple kernel base contraction for propositional logic with 

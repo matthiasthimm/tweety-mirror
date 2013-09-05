@@ -35,4 +35,16 @@ public abstract class SpecialFormula extends PropositionalFormula {
 	public Set<Proposition> getAtoms() {
 		return new HashSet<Proposition>();
 	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#toCnf()
+	 */
+	@Override
+	public Conjunction toCnf() {
+		Conjunction conj = new Conjunction();
+		Disjunction disj = new Disjunction();
+		disj.add(this);
+		conj.add(disj);
+		return conj;
+	}
 }

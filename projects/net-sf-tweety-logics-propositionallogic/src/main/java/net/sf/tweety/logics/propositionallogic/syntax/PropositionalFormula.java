@@ -75,6 +75,13 @@ public abstract class PropositionalFormula implements ClassicalFormula {
      */
 	public abstract PropositionalFormula toNnf();
 	
+	/**
+     * This method returns this formula in conjunctive normal form (CNF).
+     * A formula is in CNF iff it is a conjunction of disjunctions and in NNF.
+     * @return the formula in CNF.
+     */
+	public abstract Conjunction toCnf();
+	
     /**
 	 * This method returns this formula in disjunctive normal form (DNF).
 	 * A formula is in DNF iff it is a disjunction of conjunctive clauses.

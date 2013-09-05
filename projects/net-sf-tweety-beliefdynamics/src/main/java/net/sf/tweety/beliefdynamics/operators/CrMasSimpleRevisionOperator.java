@@ -6,7 +6,7 @@ import net.sf.tweety.agents.*;
 import net.sf.tweety.beliefdynamics.*;
 import net.sf.tweety.beliefdynamics.mas.*;
 import net.sf.tweety.graphs.orders.*;
-import net.sf.tweety.logics.propositionallogic.semantics.*;
+import net.sf.tweety.logics.propositionallogic.ClassicalEntailment;
 import net.sf.tweety.logics.propositionallogic.syntax.*;
 
 /**

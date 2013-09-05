@@ -34,7 +34,7 @@ public class PlBeliefSet extends BeliefSet<PropositionalFormula> {
 	 * @return "true" if this belief set is consistent.
 	 */
 	public boolean isConsistent(){
-		return !new ClassicalInference(this).query(new Contradiction()).getAnswerBoolean();
+		return !new ClassicalInference(this, new ClassicalEntailment()).query(new Contradiction()).getAnswerBoolean();
 	}
 	
 	/** 
@@ -74,6 +74,18 @@ public class PlBeliefSet extends BeliefSet<PropositionalFormula> {
 		for(Formula f: this)
 			signature.addAll(((PropositionalFormula)f).getAtoms());
 		return signature;
+	}
+	
+	/**
+     * This method returns this belief set in conjunctive normal form (CNF).
+     * A formula is in CNF iff it is a conjunction of disjunctions and in NNF.
+     * @return the formula in CNF.
+     */
+	public Conjunction toCnf(){
+		Conjunction conj = new Conjunction();
+		for(PropositionalFormula f: this)
+			conj.add(f);
+		return conj.toCnf();
 	}
 
 }

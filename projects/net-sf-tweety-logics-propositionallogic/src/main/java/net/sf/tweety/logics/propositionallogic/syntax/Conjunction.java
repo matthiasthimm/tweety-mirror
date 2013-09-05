@@ -92,4 +92,15 @@ public class Conjunction extends AssociativePropositionalFormula {
 		return LogicalSymbols.CONTRADICTION();
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#toCnf()
+	 */
+	@Override
+	public Conjunction toCnf() {
+		Collection<PropositionalFormula> cnf = new HashSet<PropositionalFormula>();
+		for(PropositionalFormula conjunct: this)
+			for(PropositionalFormula f: conjunct.toCnf())
+			cnf.add(f);		
+		return new Conjunction(cnf);
+	}
 }
