@@ -103,8 +103,15 @@ public class SelectionCommandParameter extends CommandParameter {
 		if (this.isValid(s)) {
 			SelectionCommandParameter newParameter = (SelectionCommandParameter) this.clone();
 			newParameter.setValue(s);
-
+			return newParameter;
 		}
+		return null;
+	}
+	
+	// TODO: Instantiation with an arraylist of strings instead of strings 
+	public ArrayList<CommandParameter> instantiate(ArrayList<String> s){
+		ArrayList<CommandParameter> alcp = new ArrayList<CommandParameter>();
+		//		for()
 		return null;
 	}
 

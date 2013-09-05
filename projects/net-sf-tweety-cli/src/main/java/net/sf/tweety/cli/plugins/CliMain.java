@@ -50,6 +50,8 @@ public class CliMain {
 	/** the optional plugin parameters */
 	private static CommandParameter[] pluginParams = null;
 
+	
+	
 	/**
 	 * This method is meant to load the tweety plugin pathes on startup
 	 * 
@@ -84,10 +86,22 @@ public class CliMain {
 
 	}
 
+	/**
+	 * TODO: own method for plugin loading
+	 * @param plugin
+	 */
 	public static void loadPlugin(String plugin) {
 		// move plugin loading in here
 	}
 
+	
+	/**
+	 * instantiates each given input parameter within the called plugin - if possible
+	 * @param tp the called Tweety-Plugin Implementation
+	 * @param inparams the parameter given as input
+	 * @returns an ArrayList of instantiated CommandParameter
+	 * @throws CloneNotSupportedException if the CommandParameter does not implement Cloneable
+	 */
 	public static ArrayList<CommandParameter> instantiateParameters(
 			TweetyPlugin tp, ArrayList<ArrayList<String>> inparams)
 			throws CloneNotSupportedException {
@@ -114,8 +128,9 @@ public class CliMain {
 		return tmp;
 	}
 
-	public static void main(String[] args) {
 	
+	public static void main(String[] args) {
+
 		PluginManager pm = PluginManagerFactory.createPluginManager();
 		PluginManagerUtil pmu = new PluginManagerUtil(pm);
 		System.out.println(pmu.getPlugins());
@@ -176,22 +191,25 @@ public class CliMain {
 			}
 
 			// collecting given command parameters
-			else {
+			else if (args[i].startsWith("-")) {
 				ArrayList<String> temp = new ArrayList<String>();
+				temp.add(args[i]);
 				while ((i + 1) < args.length && !args[i + 1].startsWith("-")) {
 					temp.add(args[++i]);
+
 				}
 				collectedparams.add(temp);
 			}
 		}
 
+		// whether the called plugin is present
 		boolean pluginPresent = false;
 		for (TweetyPlugin tp : pmu.getPlugins(TweetyPlugin.class)) {
 			if (tp.getCommand().equalsIgnoreCase(plugin)) {
 				pluginPresent = true;
 			}
 		}
-
+		// trying to load plugin if not present
 		if (!pluginPresent) {
 			if (availablePlugins.containsKey(plugin)) {
 				pm.addPluginsFrom(new File(availablePlugins.get(plugin))
@@ -199,15 +217,16 @@ public class CliMain {
 			}
 		}
 
-		// kein plugin geladen...
+		// Testausgabe aller Plugins
 		System.out.println(pm.getPlugin(TweetyPlugin.class));
 		System.out.println(pmu.getPlugins());
-		
+
+		//
 		for (TweetyPlugin tp : pmu.getPlugins(TweetyPlugin.class)) {
 			if (tp.getCommand().equalsIgnoreCase(plugin)) {
 				// each input parameter is checked against the called plugin
 				// whether it is valid
-				
+
 				try {
 					inParams = instantiateParameters(tp, collectedparams);
 				} catch (CloneNotSupportedException e) {

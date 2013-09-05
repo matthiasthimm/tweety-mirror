@@ -95,6 +95,7 @@ public class FileListCommandParameter extends CommandParameter {
 		return null;
 	}
 
+	// TODO: implement ArrayList-Instantiation
 	public ArrayList<CommandParameter> instantiate(ArrayList<String> a){
 		return null;
 	}

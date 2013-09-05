@@ -17,7 +17,6 @@ import net.sf.tweety.preferences.aggregation.PluralityScoringPreferenceAggregato
 import net.sf.tweety.preferences.aggregation.VetoScoringPreferenceAggregator;
 import net.sf.tweety.preferences.io.POParser;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
-import net.xeoh.plugins.base.annotations.events.Init;
 
 /**
  * The CLI-Plugin for the Preferences-Package
@@ -59,6 +58,10 @@ public class PreferencesPlugin extends AbstractTweetyPlugin {
 		return PREF__CALL_PARAMETER;
 	}
 	
+	/**
+	 * non-empty constructur in case of errors in JSPF
+	 * @param args
+	 */
 	public PreferencesPlugin(String[] args){
 		super();
 		this.addParameter(new SelectionCommandParameter(PREF__AGGR_IDENTIFIER,
@@ -70,7 +73,9 @@ public class PreferencesPlugin extends AbstractTweetyPlugin {
 	}
 	
 	// init command parameter
-	
+	/**
+	 * Default empty constructor initializing this plugins parameter
+	 */
 	public PreferencesPlugin() {
 		super();
 		this.addParameter(new SelectionCommandParameter(PREF__AGGR_IDENTIFIER,
@@ -83,74 +88,77 @@ public class PreferencesPlugin extends AbstractTweetyPlugin {
 	
 
 	@Override
+	/**
+	 * executes the given parameters and files in this plugin
+	 */
 	public PluginOutput execute(File[] input, CommandParameter[] params) {
 		PreferenceOrder<String> result = new PreferenceOrder<String>();
 		// File-Handler
 		// Parsing,...
-//		List<PreferenceOrder<String>> poset = new ArrayList<PreferenceOrder<String>>();
-//		for (int i = 0; i < input.length; i++) {
-//			String filename = input[i].getAbsoluteFile().getAbsolutePath();
-//			if (filename.endsWith(".po")) {
-//				// PreferenceOrder<String> po = POParser.parse(filename);
-//				// poset.add(po);
-//			}
-//		}
-//
-//		// parameter
-//		for (CommandParameter tempComParam : params) {
-//			// if command parameter is for aggregation
-//			if (tempComParam.getIdentifier().equals("-aggr")) {
-//				SelectionCommandParameter tmp = (SelectionCommandParameter) tempComParam;
-//				// plurality scoring
-//				if (tmp.getValue().equalsIgnoreCase("plurality")) {
-//					PluralityScoringPreferenceAggregator<String> pluraggr = new PluralityScoringPreferenceAggregator<String>();
-//					result = pluraggr.aggregate(poset);
-//
-//				// borda scoring
-//				} else if (tmp.getValue().equalsIgnoreCase("borda")) {
-//					BordaScoringPreferenceAggregator<String> brdaggr = new BordaScoringPreferenceAggregator<String>(
-//							poset.iterator().next().size());
-//					result = brdaggr.aggregate(poset);
-//
-//				// veto scoring
-//				} else if (tmp.getValue().equalsIgnoreCase("veto")) {
-//					VetoScoringPreferenceAggregator<String> vetoaggr = new VetoScoringPreferenceAggregator<String>(
-//							0);
-//					result = vetoaggr.aggregate(poset);
-//				}
-//
-//			}
-//
-//			// if command parameter is for dynamic aggregation
-//			if (tempComParam.getIdentifier().equals("-dynaggr")) {
-//				SelectionCommandParameter tmp = (SelectionCommandParameter) tempComParam;
-//
-//				// dynamic plurality scoring
-//				if (tmp.getValue().equalsIgnoreCase("dynplurality")) {
-//					DynamicPluralityScoringPreferenceAggregator<String> dynpluraggr = new DynamicPluralityScoringPreferenceAggregator<String>();
-//					result = dynpluraggr.aggregate(poset);
-//				// dynamic borda scoring
-//				} else if (tmp.getValue().equalsIgnoreCase("dynborda")) {
-//					DynamicBordaScoringPreferenceAggregator<String> dynbrdaggr = new DynamicBordaScoringPreferenceAggregator<String>(
-//							poset.iterator().next().size());
-//					result = dynbrdaggr.aggregate(poset);
-//				// dynamic veto scoring	
-//				} else if (tmp.getValue().equalsIgnoreCase("dynveto")) {
-//					DynamicVetoScoringPreferenceAggregator<String> dynvetoaggr = new DynamicVetoScoringPreferenceAggregator<String>(
-//							0);
-//					result = dynvetoaggr.aggregate(poset);
-//				}
-//			}
-//
-//			// if command parameter is for updates of dynamic aggregation
-//			if (tempComParam.getIdentifier().equals("-up")) {
-//
-//			}
-//		}
-//		PluginOutput out = new PluginOutput(result.toString());
-//
-//		return out;
-		return new PluginOutput("s");
+		List<PreferenceOrder<String>> poset = new ArrayList<PreferenceOrder<String>>();
+		for (int i = 0; i < input.length; i++) {
+			String filename = input[i].getAbsoluteFile().getAbsolutePath();
+			if (filename.endsWith(".po")) {
+				// PreferenceOrder<String> po = POParser.parse(filename);
+				// poset.add(po);
+			}
+		}
+
+		// parameter
+		for (CommandParameter tempComParam : params) {
+			// if command parameter is for aggregation
+			if (tempComParam.getIdentifier().equals("-aggr")) {
+				SelectionCommandParameter tmp = (SelectionCommandParameter) tempComParam;
+				// plurality scoring
+				if (tmp.getValue().equalsIgnoreCase("plurality")) {
+					PluralityScoringPreferenceAggregator<String> pluraggr = new PluralityScoringPreferenceAggregator<String>();
+					result = pluraggr.aggregate(poset);
+
+				// borda scoring
+				} else if (tmp.getValue().equalsIgnoreCase("borda")) {
+					BordaScoringPreferenceAggregator<String> brdaggr = new BordaScoringPreferenceAggregator<String>(
+							poset.iterator().next().size());
+					result = brdaggr.aggregate(poset);
+
+				// veto scoring
+				} else if (tmp.getValue().equalsIgnoreCase("veto")) {
+					VetoScoringPreferenceAggregator<String> vetoaggr = new VetoScoringPreferenceAggregator<String>(
+							0);
+					result = vetoaggr.aggregate(poset);
+				}
+
+			}
+
+			// if command parameter is for dynamic aggregation
+			if (tempComParam.getIdentifier().equals("-dynaggr")) {
+				SelectionCommandParameter tmp = (SelectionCommandParameter) tempComParam;
+
+				// dynamic plurality scoring
+				if (tmp.getValue().equalsIgnoreCase("dynplurality")) {
+					DynamicPluralityScoringPreferenceAggregator<String> dynpluraggr = new DynamicPluralityScoringPreferenceAggregator<String>();
+					result = dynpluraggr.aggregate(poset);
+				// dynamic borda scoring
+				} else if (tmp.getValue().equalsIgnoreCase("dynborda")) {
+					DynamicBordaScoringPreferenceAggregator<String> dynbrdaggr = new DynamicBordaScoringPreferenceAggregator<String>(
+							poset.iterator().next().size());
+					result = dynbrdaggr.aggregate(poset);
+				// dynamic veto scoring	
+				} else if (tmp.getValue().equalsIgnoreCase("dynveto")) {
+					DynamicVetoScoringPreferenceAggregator<String> dynvetoaggr = new DynamicVetoScoringPreferenceAggregator<String>(
+							0);
+					result = dynvetoaggr.aggregate(poset);
+				}
+			}
+
+			// if command parameter is for updates of dynamic aggregation
+			if (tempComParam.getIdentifier().equals("-up")) {
+
+			}
+		}
+		PluginOutput out = new PluginOutput(result.toString());
+
+		return out;
+		
 	}
 
 	@Override

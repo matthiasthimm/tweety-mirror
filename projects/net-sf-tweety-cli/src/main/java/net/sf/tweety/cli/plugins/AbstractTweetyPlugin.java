@@ -55,8 +55,8 @@ public abstract class AbstractTweetyPlugin implements TweetyPlugin {
 	 * checks, whether each command parameter given with the plugin call is
 	 * valid within is this plugin
 	 * 
-	 * @param s
-	 * @return
+	 * @param s the given parameter string
+	 * @return a newly instantiated command parameter with the given value
 	 * @throws CloneNotSupportedException
 	 */
 	public CommandParameter validateParameter(String s)
@@ -69,7 +69,13 @@ public abstract class AbstractTweetyPlugin implements TweetyPlugin {
 		}
 		return null;
 	}
-
+	
+	/**
+	 * This method handels instantiations with array-lists instead of a simple string (e.g. for multi-argument parameter)
+	 * @param s the ArrayList<String> containing the input parameter
+	 * @return the newly instantiated command parameter with the given value 
+	 * @throws CloneNotSupportedException
+	 */
 	public ArrayList<CommandParameter> validateParameter(ArrayList<String> s)
 			throws CloneNotSupportedException {
 		ArrayList<CommandParameter> alcp = new ArrayList<CommandParameter>(
