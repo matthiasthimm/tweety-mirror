@@ -17,6 +17,7 @@ import net.sf.tweety.preferences.aggregation.PluralityScoringPreferenceAggregato
 import net.sf.tweety.preferences.aggregation.VetoScoringPreferenceAggregator;
 import net.sf.tweety.preferences.io.POParser;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
+import net.xeoh.plugins.base.annotations.events.Init;
 
 /**
  * The CLI-Plugin for the Preferences-Package
@@ -25,7 +26,7 @@ import net.xeoh.plugins.base.annotations.PluginImplementation;
  * 
  */
 @PluginImplementation
-public class PreferencesPlugin extends AbstractTweetyPlugin implements TweetyPlugin {
+public class PreferencesPlugin extends AbstractTweetyPlugin {
 
 	// the static identifier for this plugin
 	private static final String PREF__CALL_PARAMETER = "preferences";
@@ -53,13 +54,13 @@ public class PreferencesPlugin extends AbstractTweetyPlugin implements TweetyPlu
 
 	private static final String[] PREF__UP_RULES = new String[] { "weaken",
 			"strengthen" };
-
+	
 	public String getCommand() {
 		return PREF__CALL_PARAMETER;
 	}
-
-	// init command parameter
-	public PreferencesPlugin() {
+	
+	public PreferencesPlugin(String[] args){
+		super();
 		this.addParameter(new SelectionCommandParameter(PREF__AGGR_IDENTIFIER,
 				PREF__AGGR_DESCRIPTION, PREF__AGGR_RULES));
 		this.addParameter(new SelectionCommandParameter(PREF__DYN_IDENTIFIER,
@@ -67,75 +68,89 @@ public class PreferencesPlugin extends AbstractTweetyPlugin implements TweetyPlu
 		this.addParameter(new SelectionCommandParameter(PREF__UP_IDENTIFIER,
 				PREF__UP_DESCRIPTION, PREF__UP_RULES));
 	}
+	
+	// init command parameter
+	
+	public PreferencesPlugin() {
+		super();
+		this.addParameter(new SelectionCommandParameter(PREF__AGGR_IDENTIFIER,
+				PREF__AGGR_DESCRIPTION, PREF__AGGR_RULES));
+		this.addParameter(new SelectionCommandParameter(PREF__DYN_IDENTIFIER,
+				PREF__DYN_DESCRIPTION, PREF__DYN_RULES));
+		this.addParameter(new SelectionCommandParameter(PREF__UP_IDENTIFIER,
+				PREF__UP_DESCRIPTION, PREF__UP_RULES));
+	}
+	
 
 	@Override
 	public PluginOutput execute(File[] input, CommandParameter[] params) {
 		PreferenceOrder<String> result = new PreferenceOrder<String>();
 		// File-Handler
 		// Parsing,...
-		List<PreferenceOrder<String>> poset = new ArrayList<PreferenceOrder<String>>();
-		for (int i = 0; i < input.length; i++) {
-			String filename = input[i].getAbsoluteFile().getAbsolutePath();
-			if (filename.endsWith(".po")) {
-				// PreferenceOrder<String> po = POParser.parse(filename);
-				// poset.add(po);
-			}
-		}
-
-		// parameter
-		for (CommandParameter tempComParam : params) {
-			// if command parameter is for aggregation
-			if (tempComParam.getIdentifier().equals("-aggr")) {
-				SelectionCommandParameter tmp = (SelectionCommandParameter) tempComParam;
-				// plurality scoring
-				if (tmp.getValue().equalsIgnoreCase("plurality")) {
-					PluralityScoringPreferenceAggregator<String> pluraggr = new PluralityScoringPreferenceAggregator<String>();
-					result = pluraggr.aggregate(poset);
-
-				// borda scoring
-				} else if (tmp.getValue().equalsIgnoreCase("borda")) {
-					BordaScoringPreferenceAggregator<String> brdaggr = new BordaScoringPreferenceAggregator<String>(
-							poset.iterator().next().size());
-					result = brdaggr.aggregate(poset);
-
-				// veto scoring
-				} else if (tmp.getValue().equalsIgnoreCase("veto")) {
-					VetoScoringPreferenceAggregator<String> vetoaggr = new VetoScoringPreferenceAggregator<String>(
-							0);
-					result = vetoaggr.aggregate(poset);
-				}
-
-			}
-
-			// if command parameter is for dynamic aggregation
-			if (tempComParam.getIdentifier().equals("-dynaggr")) {
-				SelectionCommandParameter tmp = (SelectionCommandParameter) tempComParam;
-
-				// dynamic plurality scoring
-				if (tmp.getValue().equalsIgnoreCase("dynplurality")) {
-					DynamicPluralityScoringPreferenceAggregator<String> dynpluraggr = new DynamicPluralityScoringPreferenceAggregator<String>();
-					result = dynpluraggr.aggregate(poset);
-				// dynamic borda scoring
-				} else if (tmp.getValue().equalsIgnoreCase("dynborda")) {
-					DynamicBordaScoringPreferenceAggregator<String> dynbrdaggr = new DynamicBordaScoringPreferenceAggregator<String>(
-							poset.iterator().next().size());
-					result = dynbrdaggr.aggregate(poset);
-				// dynamic veto scoring	
-				} else if (tmp.getValue().equalsIgnoreCase("dynveto")) {
-					DynamicVetoScoringPreferenceAggregator<String> dynvetoaggr = new DynamicVetoScoringPreferenceAggregator<String>(
-							0);
-					result = dynvetoaggr.aggregate(poset);
-				}
-			}
-
-			// if command parameter is for updates of dynamic aggregation
-			if (tempComParam.getIdentifier().equals("-up")) {
-
-			}
-		}
-		PluginOutput out = new PluginOutput(result.toString());
-
-		return out;
+//		List<PreferenceOrder<String>> poset = new ArrayList<PreferenceOrder<String>>();
+//		for (int i = 0; i < input.length; i++) {
+//			String filename = input[i].getAbsoluteFile().getAbsolutePath();
+//			if (filename.endsWith(".po")) {
+//				// PreferenceOrder<String> po = POParser.parse(filename);
+//				// poset.add(po);
+//			}
+//		}
+//
+//		// parameter
+//		for (CommandParameter tempComParam : params) {
+//			// if command parameter is for aggregation
+//			if (tempComParam.getIdentifier().equals("-aggr")) {
+//				SelectionCommandParameter tmp = (SelectionCommandParameter) tempComParam;
+//				// plurality scoring
+//				if (tmp.getValue().equalsIgnoreCase("plurality")) {
+//					PluralityScoringPreferenceAggregator<String> pluraggr = new PluralityScoringPreferenceAggregator<String>();
+//					result = pluraggr.aggregate(poset);
+//
+//				// borda scoring
+//				} else if (tmp.getValue().equalsIgnoreCase("borda")) {
+//					BordaScoringPreferenceAggregator<String> brdaggr = new BordaScoringPreferenceAggregator<String>(
+//							poset.iterator().next().size());
+//					result = brdaggr.aggregate(poset);
+//
+//				// veto scoring
+//				} else if (tmp.getValue().equalsIgnoreCase("veto")) {
+//					VetoScoringPreferenceAggregator<String> vetoaggr = new VetoScoringPreferenceAggregator<String>(
+//							0);
+//					result = vetoaggr.aggregate(poset);
+//				}
+//
+//			}
+//
+//			// if command parameter is for dynamic aggregation
+//			if (tempComParam.getIdentifier().equals("-dynaggr")) {
+//				SelectionCommandParameter tmp = (SelectionCommandParameter) tempComParam;
+//
+//				// dynamic plurality scoring
+//				if (tmp.getValue().equalsIgnoreCase("dynplurality")) {
+//					DynamicPluralityScoringPreferenceAggregator<String> dynpluraggr = new DynamicPluralityScoringPreferenceAggregator<String>();
+//					result = dynpluraggr.aggregate(poset);
+//				// dynamic borda scoring
+//				} else if (tmp.getValue().equalsIgnoreCase("dynborda")) {
+//					DynamicBordaScoringPreferenceAggregator<String> dynbrdaggr = new DynamicBordaScoringPreferenceAggregator<String>(
+//							poset.iterator().next().size());
+//					result = dynbrdaggr.aggregate(poset);
+//				// dynamic veto scoring	
+//				} else if (tmp.getValue().equalsIgnoreCase("dynveto")) {
+//					DynamicVetoScoringPreferenceAggregator<String> dynvetoaggr = new DynamicVetoScoringPreferenceAggregator<String>(
+//							0);
+//					result = dynvetoaggr.aggregate(poset);
+//				}
+//			}
+//
+//			// if command parameter is for updates of dynamic aggregation
+//			if (tempComParam.getIdentifier().equals("-up")) {
+//
+//			}
+//		}
+//		PluginOutput out = new PluginOutput(result.toString());
+//
+//		return out;
+		return new PluginOutput("s");
 	}
 
 	@Override
@@ -144,7 +159,8 @@ public class PreferencesPlugin extends AbstractTweetyPlugin implements TweetyPlu
 	}
 
 	@Override
-	protected void addParameter(CommandParameter cmdParameter) {
+	public void addParameter(CommandParameter cmdParameter) {
 		super.addParameter(cmdParameter);
 	}
+
 }

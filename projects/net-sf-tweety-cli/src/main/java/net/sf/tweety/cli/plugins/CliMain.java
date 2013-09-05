@@ -2,16 +2,12 @@ package net.sf.tweety.cli.plugins;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.tweety.cli.TweetyCli;
 import net.sf.tweety.cli.plugins.parameter.CommandParameter;
 import net.xeoh.plugins.base.Plugin;
 import net.xeoh.plugins.base.PluginManager;
@@ -20,7 +16,6 @@ import net.xeoh.plugins.base.util.PluginManagerUtil;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
-import org.apache.commons.logging.impl.AvalonLogger;
 
 /**
  * skeleton of the new main method of this CLI using plugins.
@@ -90,26 +85,53 @@ public class CliMain {
 	}
 
 	public static void loadPlugin(String plugin) {
+		// move plugin loading in here
+	}
 
+	public static ArrayList<CommandParameter> instantiateParameters(
+			TweetyPlugin tp, ArrayList<ArrayList<String>> inparams)
+			throws CloneNotSupportedException {
+		// new array list for the instantiated command parameter
+		ArrayList<CommandParameter> tmp = new ArrayList<CommandParameter>(
+				inparams.size());
+
+		for (int i = 0; i < inparams.size(); i++) {
+			// get each inparams entry first element (the identifier for the)
+			String cmdIdentifier = inparams.get(i).get(0);
+			// checks, if the first element starts with an "-", e.g. "-aggr"
+			// instead of "aggr"
+			// if(!cmdIdentifier.startsWith("-")){
+			// cmdIdentifier = "-" + cmdIdentifier;
+			// }
+
+			for (CommandParameter cp : tp.getParameters()) {
+				if (cp.getIdentifier().equalsIgnoreCase(cmdIdentifier)) {
+					tmp.add(cp.instantiate(inparams.get(i).remove(0)));
+				}
+			}
+		}
+
+		return tmp;
 	}
 
 	public static void main(String[] args) {
-
+	
 		PluginManager pm = PluginManagerFactory.createPluginManager();
 		PluginManagerUtil pmu = new PluginManagerUtil(pm);
-
+		System.out.println(pmu.getPlugins());
 		ArrayList<ArrayList<String>> collectedparams = new ArrayList<ArrayList<String>>();
 		List<CommandParameter> inParams = new ArrayList<CommandParameter>();
 
 		Map<String, String> availablePlugins = new HashMap<String, String>();
-		
+
 		try {
 			availablePlugins = configCLI();
 		} catch (ConfigurationException e) {
-			System.out.println("Something went wrong with your Configuration: ");
+			System.out
+					.println("Something went wrong with your Configuration: ");
 			e.printStackTrace();
 		} catch (FileNotFoundException e) {
-			System.out.println("No such file: ");
+			System.out.println("No such configuration file: ");
 			e.printStackTrace();
 		}
 
@@ -121,7 +143,7 @@ public class CliMain {
 			if (args[i].equals(ARG__CALLED_PLUGIN)
 					|| args[i].equals(ARG__CALLED_PLUGIN_SHORT)) {
 				String calledPlugin = "";
-				while ((i+1) < args.length && !args[i+1].startsWith("-")){
+				while ((i + 1) < args.length && !args[i + 1].startsWith("-")) {
 					calledPlugin += args[++i];
 				}
 				plugin = calledPlugin;
@@ -131,10 +153,10 @@ public class CliMain {
 			else if (args[i].equals(ARG__INPUT_FILES)
 					|| args[i].equals(ARG__INPUT_FILES_SHORT)) {
 				ArrayList<String> inFiles = new ArrayList<String>();
-				while ((i+1) < args.length && !args[i + 1].startsWith("-")) {
+				while ((i + 1) < args.length && !args[i + 1].startsWith("-")) {
 					inFiles.add(args[++i]);
 				}
-				
+
 				String[] files = new String[inFiles.size()];
 				inFiles.toArray(files);
 
@@ -156,84 +178,42 @@ public class CliMain {
 			// collecting given command parameters
 			else {
 				ArrayList<String> temp = new ArrayList<String>();
-				while ((i+1) < args.length && !args[i + 1].startsWith("-")) {
+				while ((i + 1) < args.length && !args[i + 1].startsWith("-")) {
 					temp.add(args[++i]);
 				}
 				collectedparams.add(temp);
 			}
 		}
-		
+
 		boolean pluginPresent = false;
-		for(TweetyPlugin tp : pmu.getPlugins(TweetyPlugin.class)){
-			if (tp.getCommand().equalsIgnoreCase(plugin)){
+		for (TweetyPlugin tp : pmu.getPlugins(TweetyPlugin.class)) {
+			if (tp.getCommand().equalsIgnoreCase(plugin)) {
 				pluginPresent = true;
 			}
 		}
-		
-		if(!pluginPresent){
-			if(availablePlugins.containsKey(plugin)) {
-			pmu.addPluginsFrom(new File(availablePlugins.get(plugin)).toURI());
+
+		if (!pluginPresent) {
+			if (availablePlugins.containsKey(plugin)) {
+				pm.addPluginsFrom(new File(availablePlugins.get(plugin))
+						.toURI());
 			}
 		}
+
 		// kein plugin geladen...
-		System.out.println(pmu.getPlugins(TweetyPlugin.class));
+		System.out.println(pm.getPlugin(TweetyPlugin.class));
+		System.out.println(pmu.getPlugins());
 		
-		for(TweetyPlugin tp : pmu.getPlugins(TweetyPlugin.class)){
-				if(tp.getCommand().equalsIgnoreCase(plugin)){
+		for (TweetyPlugin tp : pmu.getPlugins(TweetyPlugin.class)) {
+			if (tp.getCommand().equalsIgnoreCase(plugin)) {
 				// each input parameter is checked against the called plugin
 				// whether it is valid
-				for (ArrayList<String> inparam : collectedparams) {
-
-					for (CommandParameter tpcp : tp.getParameters() ) {
-
-						if (inparam.get(0).startsWith("-")) {
-
-							if (inparam.get(0).equalsIgnoreCase(
-									tpcp.getIdentifier())) {
-								try {
-									CommandParameter temp = tpcp
-											.instantiate(inparam.remove(0)
-													.toString());
-									if (!temp.equals(null)) {
-										inParams.add(temp);
-									} else {
-										
-									}
-								} catch (CloneNotSupportedException e) {
-
-									e.printStackTrace();
-								} catch (NullPointerException e) {
-									System.out
-											.println("Your input parameter arguments are somehow wrong:");
-									e.printStackTrace();
-								}
-							}
-						} else {
-							String s = "-";
-							s += inparam.get(0);
-							if (s.equalsIgnoreCase(tpcp.getIdentifier())) {
-								try {
-									CommandParameter temp = tpcp
-											.instantiate(inparam.remove(0)
-													.toString());
-									if (!temp.equals(null)) {
-										inParams.add(temp);
-									} else {
-										// parameter error
-									}
-								} catch (CloneNotSupportedException e) {
-
-									e.printStackTrace();
-								} catch (NullPointerException e) {
-									System.out
-											.println("Your input parameter arguments are somehow wrong:");
-									e.printStackTrace();
-								}
-							}
-						}
-
-					}
+				
+				try {
+					inParams = instantiateParameters(tp, collectedparams);
+				} catch (CloneNotSupportedException e) {
+					//
 				}
+
 			}
 
 		}

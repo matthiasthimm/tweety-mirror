@@ -427,7 +427,32 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	public Iterator<Triple<T, T, Relation>> iterator() {
 		return relations.iterator();
 	}
-
+	
+	/**
+	 * 
+	 * @param po
+	 * @return
+	 */
+	public boolean equals(Object obj){
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof PreferenceOrder))
+			return false;
+		PreferenceOrder<T> po = (PreferenceOrder<T>) obj;
+		if(!this.getClass().equals(po.getClass())){
+			return false;
+		}
+		if(!this.getDomainElements().equals(po.getDomainElements())){
+			return false;
+		}
+		if(!this.getLevelingFunction().equals(po.getLevelingFunction())){
+			return false;
+		}
+		return true;
+	}
+	
 	/**
 	 * compares this preference order to another given one whether each relation is contained in both
 	 * @param po the preference order to compare with

@@ -2,6 +2,7 @@ package net.sf.tweety.cli.plugins;
 
 import java.io.File;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.sf.tweety.cli.plugins.parameter.CommandParameter;
@@ -14,12 +15,12 @@ import net.xeoh.plugins.base.annotations.PluginImplementation;
  * @author Bastian Wolf
  * 
  */
-//@PluginImplementation
+// @PluginImplementation
 public abstract class AbstractTweetyPlugin implements TweetyPlugin {
 	/**
 	 * valid parameters for this plugin
 	 */
-	protected List<CommandParameter> parameters;
+	protected List<CommandParameter> parameters = new ArrayList<CommandParameter>();
 
 	/**
 	 * returns the command this plugin is called with
@@ -35,9 +36,11 @@ public abstract class AbstractTweetyPlugin implements TweetyPlugin {
 
 	/**
 	 * adds new command parameter to this plugin
-	 * @param cmdParameter the command parameter to be added
+	 * 
+	 * @param cmdParameter
+	 *            the command parameter to be added
 	 */
-	protected void addParameter(CommandParameter cmdParameter) {
+	public void addParameter(CommandParameter cmdParameter) {
 		parameters.add(cmdParameter);
 	}
 
@@ -49,37 +52,35 @@ public abstract class AbstractTweetyPlugin implements TweetyPlugin {
 	}
 
 	/**
-	 * checks, whether each command parameter given with the plugin call is valid within is this plugin
+	 * checks, whether each command parameter given with the plugin call is
+	 * valid within is this plugin
+	 * 
 	 * @param s
 	 * @return
 	 * @throws CloneNotSupportedException
 	 */
 	public CommandParameter validateParameter(String s)
 			throws CloneNotSupportedException {
-
-		String commandpart = "";
-		String valuepart = "";
-
-		String[] split = s.split(" ");
-		// only one value parameter is currently estimated within each string
-		for (int j = 0; j < split.length; j++) {
-			if (split[j].contains("-")) {
-				commandpart = split[j];
-			} else {
-				valuepart = split[j];
-			}
-		}
-
-		for (CommandParameter cp : parameters) {
-			if (commandpart.equalsIgnoreCase(cp.getIdentifier())
-					&& cp.isValid(valuepart)) {
-				CommandParameter cparam = cp.instantiate(valuepart);
-				return cparam;
-			} else if (!cp.isValid(s)) {
-				throw new IllegalArgumentException();
+		for (CommandParameter cmp : parameters) {
+			if (cmp.isValid(s)) {
+				CommandParameter cpa = cmp.instantiate(s);
+				return cpa;
 			}
 		}
 		return null;
+	}
+
+	public ArrayList<CommandParameter> validateParameter(ArrayList<String> s)
+			throws CloneNotSupportedException {
+		ArrayList<CommandParameter> alcp = new ArrayList<CommandParameter>(
+				s.size());
+		for (String value : s) {
+			CommandParameter cp = validateParameter(value);
+			if(!(cp==null)){
+			alcp.add(cp);
+			}
+		}
+		return alcp;
 	}
 
 }
