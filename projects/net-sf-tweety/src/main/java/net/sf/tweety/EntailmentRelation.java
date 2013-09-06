@@ -86,34 +86,26 @@ public abstract class EntailmentRelation<T extends Formula> {
 	 * @return the collection of kernels
 	 */	
 	public Collection<Collection<T>> getKernels(Collection<T> formulas, T formula){
-		//System.out.println("PING!");
 		Collection<Collection<T>> kernels = new HashSet<Collection<T>>();
 		if(!this.entails(formulas, formula)) return kernels;
-		DefaultSubsetIterator<T> it = new DefaultSubsetIterator<T>(new HashSet<T>(formulas));
+		SubsetIterator<T> it = new IncreasingSubsetIterator<T>(new HashSet<T>(formulas));
 		boolean superSetOfKernel;
-		Collection<Collection<T>> toBeRemoved = new HashSet<Collection<T>>();
-		//double i=0;
-		//double pow = Math.pow(2, formulas.size());
-		while(it.hasNext()){
-			//System.out.println(++i + " - " + (i/pow * 100) + "% - " + kernels);
+		double i=0;
+		double pow = Math.pow(2, formulas.size());
+		while(it.hasNext()){			
 			Set<T> candidate = it.next();
-			superSetOfKernel = false;	
-			toBeRemoved.clear();
+			System.out.println(++i + " - " + (i/pow * 100) + "% - " + kernels + " - " + candidate.size());
+			superSetOfKernel = false;
 			for(Collection<T> kernel: kernels){
 				if(candidate.containsAll(kernel)){
 					superSetOfKernel = true;
 					break;
 				}
-				if(kernel.containsAll(candidate))					
-					toBeRemoved.add(kernel);
 			}			
 			if(!superSetOfKernel)
-				if(this.entails(candidate, formula)){
-					kernels.removeAll(toBeRemoved);
+				if(this.entails(candidate, formula))
 					kernels.add(candidate);
-				}			
-		}
-		//System.out.print("PONG!");
+		}		
 		return kernels;		
 	}
 }

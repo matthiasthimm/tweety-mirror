@@ -24,6 +24,9 @@ public class IncreasingSubsetIterator<T> extends SubsetIterator<T> {
 	/** The current size of the subsets generated. */
 	private int currentSize;
 	
+	/** For hasNext(). */
+	private boolean hasNext;
+	
 	/** Creates a new subset iterator for the given set.
 	 * @param set some set.
 	 */
@@ -32,6 +35,7 @@ public class IncreasingSubsetIterator<T> extends SubsetIterator<T> {
 		this.set = new ArrayList<T>(set);
 		this.indices = new int[set.size()];
 		this.currentSize = 0;
+		this.hasNext = true;
 	}
 
 	/* (non-Javadoc)
@@ -39,7 +43,7 @@ public class IncreasingSubsetIterator<T> extends SubsetIterator<T> {
 	 */
 	@Override
 	public boolean hasNext() {
-		return this.currentSize < this.set.size();
+		return this.hasNext;
 	}
 
 	/* (non-Javadoc)
@@ -51,7 +55,9 @@ public class IncreasingSubsetIterator<T> extends SubsetIterator<T> {
 		for(int i = 0; i < this.currentSize; i++){
 			result.add(this.set.get(this.indices[i]));
 		}
-		this.increment();
+		if(this.currentSize != this.set.size())
+			this.increment();
+		else this.hasNext = false;
 		return result;
 	}
 	
@@ -62,10 +68,22 @@ public class IncreasingSubsetIterator<T> extends SubsetIterator<T> {
 		if(this.currentSize == 0){
 			this.currentSize = 1;
 			this.indices[0] = 0;
-		}else{
-			//TODO go on
-			
-		}		
+		}else this.increment(0);	
 	}
-
+	
+	/**
+	 * Increments the indices.
+	 * @param lvl the level
+	 */
+	private int increment(int lvl){
+		if(lvl >= this.currentSize){
+			this.indices[lvl] = 0;
+			this.currentSize++;	
+		}else if(this.indices[lvl] < this.set.size()-lvl-1){			
+			this.indices[lvl]++; 
+		}else{
+			this.indices[lvl] = this.increment(lvl+1) + 1;  
+		}		
+		return this.indices[lvl];
+	}
 }
