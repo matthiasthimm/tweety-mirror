@@ -84,27 +84,36 @@ public abstract class EntailmentRelation<T extends Formula> {
 	 * @param formulas a set of formulas.
 	 * @param formula a formula.
 	 * @return the collection of kernels
-	 */
+	 */	
 	public Collection<Collection<T>> getKernels(Collection<T> formulas, T formula){
-		Collection<Collection<T>> possibleKernels = new HashSet<Collection<T>>();
-		// check each subset of the collection
-		for(Set<T> subset: new SetTools<T>().subsets(formulas))
-			if(this.isConsistent(subset))
-				if(this.entails(subset, formula))
-					possibleKernels.add(subset);
-		// do subset check
+		//System.out.println("PING!");
 		Collection<Collection<T>> kernels = new HashSet<Collection<T>>();
-		for(Collection<T> set: possibleKernels){
-			boolean isKernel = true;
-			for(Collection<T> set2: possibleKernels){
-				if(set != set2 && set.containsAll(set2)){
-					isKernel = false;
+		if(!this.entails(formulas, formula)) return kernels;
+		DefaultSubsetIterator<T> it = new DefaultSubsetIterator<T>(new HashSet<T>(formulas));
+		boolean superSetOfKernel;
+		Collection<Collection<T>> toBeRemoved = new HashSet<Collection<T>>();
+		//double i=0;
+		//double pow = Math.pow(2, formulas.size());
+		while(it.hasNext()){
+			//System.out.println(++i + " - " + (i/pow * 100) + "% - " + kernels);
+			Set<T> candidate = it.next();
+			superSetOfKernel = false;	
+			toBeRemoved.clear();
+			for(Collection<T> kernel: kernels){
+				if(candidate.containsAll(kernel)){
+					superSetOfKernel = true;
 					break;
 				}
-			}
-			if(isKernel)
-				kernels.add(set);
+				if(kernel.containsAll(candidate))					
+					toBeRemoved.add(kernel);
+			}			
+			if(!superSetOfKernel)
+				if(this.entails(candidate, formula)){
+					kernels.removeAll(toBeRemoved);
+					kernels.add(candidate);
+				}			
 		}
-		return kernels;
+		//System.out.print("PONG!");
+		return kernels;		
 	}
 }

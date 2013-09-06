@@ -9,7 +9,7 @@ import java.util.*;
  *
  * @param <T> The element class which is iterated.
  */
-public class RandomSubsetIterator<T> implements Iterator<Set<T>> {
+public class RandomSubsetIterator<T> extends SubsetIterator<T> {
 
 	/** The set over which subsets are iterated. */
 	private List<T> set;
@@ -45,6 +45,7 @@ public class RandomSubsetIterator<T> implements Iterator<Set<T>> {
 	 *  and needed space drastically.
 	 */
 	public RandomSubsetIterator(Set<T> set, boolean avoidDuplicates){
+		super(set);
 		this.set = new ArrayList<T>(set);
 		this.avoidDuplicates = avoidDuplicates;
 		this.random = new Random();
@@ -115,14 +116,6 @@ public class RandomSubsetIterator<T> implements Iterator<Set<T>> {
 			bitSet.set(i, tmp ^ bitSet.get(i));
 			i++;
 		}
-	}
-	
-	/* (non-Javadoc)
-	 * @see java.util.Iterator#remove()
-	 */
-	@Override
-	public void remove() {
-		throw new UnsupportedOperationException("This operation is not supported by this class.");		
 	}
 
 	/**

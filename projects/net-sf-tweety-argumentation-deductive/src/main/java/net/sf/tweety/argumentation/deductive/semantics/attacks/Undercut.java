@@ -8,7 +8,7 @@ import net.sf.tweety.logics.propositionallogic.ClassicalEntailment;
 import net.sf.tweety.logics.propositionallogic.syntax.Conjunction;
 import net.sf.tweety.logics.propositionallogic.syntax.Negation;
 import net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula;
-import net.sf.tweety.util.SubsetIterator;
+import net.sf.tweety.util.DefaultSubsetIterator;
 
 /**
  * This attack notion models the undercut relation; A is defeated by B iff there is C subset of support(A) with claim(B) == \neg C.
@@ -36,7 +36,7 @@ public class Undercut implements Attack{
 	@Override
 	public boolean isAttackedBy(DeductiveArgument a, DeductiveArgument b) {
 		ClassicalEntailment entailment = new ClassicalEntailment();
-		SubsetIterator<PropositionalFormula> it = new SubsetIterator<PropositionalFormula>(new HashSet<PropositionalFormula>(a.getSupport()));
+		DefaultSubsetIterator<PropositionalFormula> it = new DefaultSubsetIterator<PropositionalFormula>(new HashSet<PropositionalFormula>(a.getSupport()));
 		Set<PropositionalFormula> set = null;
 		while(it.hasNext()){
 			set = it.next();

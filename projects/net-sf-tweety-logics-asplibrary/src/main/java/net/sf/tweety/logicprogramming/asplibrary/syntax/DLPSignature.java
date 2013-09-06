@@ -44,6 +44,13 @@ public class DLPSignature extends Signature {
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.Signature#isOverlappingSignature(net.sf.tweety.Signature)
+	 */
+	public boolean isOverlappingSignature(Signature other){
+		throw new RuntimeException("Implement Me!");
+	}
+	
 	@Override
 	public void addSignature(Signature other) {
 		if(other instanceof DLPSignature) {

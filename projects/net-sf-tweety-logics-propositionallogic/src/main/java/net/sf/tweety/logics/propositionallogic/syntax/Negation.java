@@ -165,6 +165,18 @@ public class Negation extends PropositionalFormula {
 			for(PropositionalFormula f: (Disjunction) this.formula)
 				conj.add((PropositionalFormula)f.complement());
 			return conj.toCnf();
+		}else if(this.formula instanceof Contradiction){
+			Conjunction conj = new Conjunction();
+			Disjunction disj = new Disjunction();
+			disj.add(new Tautology());
+			conj.add(disj);
+			return conj;
+		} if(this.formula instanceof Tautology){
+			Conjunction conj = new Conjunction();
+			Disjunction disj = new Disjunction();
+			disj.add(new Contradiction());
+			conj.add(disj);
+			return conj;
 		}
 		Conjunction conj = new Conjunction();
 		Disjunction disj = new Disjunction();

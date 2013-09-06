@@ -15,6 +15,15 @@ public abstract class Signature {
 	 */
 	public abstract boolean isSubSignature(Signature other);
 	
+	/**
+	 * Checks whether this signature has common elements with the
+	 * given signature, i.e. whether there are logical expressions expressible
+	 * with this signature that are also expressible with the given signature.
+	 * @param other a signature.
+	 * @return "true" iff this signature is overlapping with the given one.
+	 */
+	public abstract boolean isOverlappingSignature(Signature other);
+	
 	/** 
 	 * Adds the elements of the given signature to this signature.
 	 * @param other a signature.

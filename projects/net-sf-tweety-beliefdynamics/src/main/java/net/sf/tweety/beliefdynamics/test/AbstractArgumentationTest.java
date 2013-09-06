@@ -12,6 +12,7 @@ import net.sf.tweety.beliefdynamics.kernels.KernelContractionOperator;
 import net.sf.tweety.beliefdynamics.kernels.RandomIncisionFunction;
 import net.sf.tweety.logics.propositionallogic.ClassicalEntailment;
 import net.sf.tweety.logics.propositionallogic.PlBeliefSet;
+import net.sf.tweety.logics.propositionallogic.Sat4jEntailment;
 import net.sf.tweety.logics.propositionallogic.semantics.PossibleWorld;
 import net.sf.tweety.logics.propositionallogic.syntax.Proposition;
 import net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula;
@@ -45,10 +46,10 @@ public class AbstractArgumentationTest {
 		}
 		
 		MultipleBaseRevisionOperator<PropositionalFormula> revise = new LeviMultipleBaseRevisionOperator<PropositionalFormula>(
-				new KernelContractionOperator<PropositionalFormula>(new RandomIncisionFunction<PropositionalFormula>(), new ClassicalEntailment()),
+				new KernelContractionOperator<PropositionalFormula>(new RandomIncisionFunction<PropositionalFormula>(), new Sat4jEntailment()),
 				new DefaultMultipleBaseExpansionOperator<PropositionalFormula>());
 		
-		PlBeliefSet beliefSet2 = new PlBeliefSet(revise.revise(beliefSet, new Proposition("in_c")));
+		PlBeliefSet beliefSet2 = new PlBeliefSet(revise.revise(beliefSet, new Proposition("in_a")));
 		
 		System.out.println(beliefSet2);
 		System.out.println();

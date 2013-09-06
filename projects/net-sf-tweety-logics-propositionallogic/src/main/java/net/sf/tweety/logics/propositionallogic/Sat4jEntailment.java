@@ -14,11 +14,13 @@ import org.sat4j.specs.TimeoutException;
 
 import net.sf.tweety.EntailmentRelation;
 import net.sf.tweety.logics.propositionallogic.syntax.Conjunction;
+import net.sf.tweety.logics.propositionallogic.syntax.Contradiction;
 import net.sf.tweety.logics.propositionallogic.syntax.Disjunction;
 import net.sf.tweety.logics.propositionallogic.syntax.Negation;
 import net.sf.tweety.logics.propositionallogic.syntax.Proposition;
 import net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula;
 import net.sf.tweety.logics.propositionallogic.syntax.PropositionalSignature;
+import net.sf.tweety.logics.propositionallogic.syntax.Tautology;
 
 /**
  * Uses the Sat4j library for SAT solving.
@@ -49,8 +51,7 @@ public class Sat4jEntailment extends EntailmentRelation<PropositionalFormula> {
 	 */
 	@Override
 	public boolean entails(Collection<PropositionalFormula> formulas, PropositionalFormula formula) {
-		if(this.solver == null) this.init();
-		this.solver.reset();
+		this.init();		
 		Set<PropositionalFormula> fset = new HashSet<PropositionalFormula>(formulas);
 		fset.add((PropositionalFormula)formula.complement());
 		return !this.isConsistent(fset);
@@ -61,8 +62,7 @@ public class Sat4jEntailment extends EntailmentRelation<PropositionalFormula> {
 	 */
 	@Override
 	public boolean isConsistent(Collection<PropositionalFormula> formulas) {
-		if(this.solver == null) this.init();
-		this.solver.reset();
+		this.init();		
 		PropositionalSignature sig = new PropositionalSignature();
 		for(PropositionalFormula f: formulas)
 			sig.addAll(f.getAtoms());		
@@ -78,16 +78,22 @@ public class Sat4jEntailment extends EntailmentRelation<PropositionalFormula> {
 				Conjunction conj = f.toCnf();
 				for(PropositionalFormula f2: conj){
 					Disjunction disj = (Disjunction) f2;
+					// first remove contradictions
+					while(disj.remove(new Contradiction()));					
 					int[] clause = new int[disj.size()];
 					i = 0;
+					boolean taut = false;
 					for(PropositionalFormula f3: disj){
 						if(f3 instanceof Proposition){
 							clause[i++] = prop2Idx.get(f3) + 1; 
 						}else if(f3 instanceof Negation){
 							clause[i++] = - prop2Idx.get(((Negation)f3).getFormula()) - 1;
+						}else if(f3 instanceof Tautology){
+							taut = true;
+							break;
 						}else throw new RuntimeException("Unexpected formula type in conjunctive normal form: " + f3.getClass());
 					}
-					this.solver.addClause(new VecInt(clause));
+					if(!taut) this.solver.addClause(new VecInt(clause));
 				}
 			}
 			return this.solver.isSatisfiable();

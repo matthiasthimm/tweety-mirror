@@ -47,6 +47,17 @@ public class SetSignature<T> extends Signature implements Collection<T> {
 	}
 	
 	/* (non-Javadoc)
+	 * @see net.sf.tweety.Signature#isOverlappingSignature(net.sf.tweety.Signature)
+	 */
+	public boolean isOverlappingSignature(Signature other){
+		if(!(other instanceof SetSignature<?>))
+			return false;
+		for(Object o: ((SetSignature<?>)other))
+			if(this.contains(o)) return true;		
+		return false;
+	}
+	
+	/* (non-Javadoc)
 	 * @see net.sf.tweety.Signature#addSignature(net.sf.tweety.Signature)
 	 */
 	@SuppressWarnings("unchecked")

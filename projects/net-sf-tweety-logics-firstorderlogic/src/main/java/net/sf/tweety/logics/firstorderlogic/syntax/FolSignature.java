@@ -59,6 +59,20 @@ public class FolSignature extends Signature{
 		return true;
 	}
 	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.Signature#isOverlappingSignature(net.sf.tweety.Signature)
+	 */
+	public boolean isOverlappingSignature(Signature other){
+		if(!(other instanceof FolSignature))
+			return false;
+		FolSignature o = (FolSignature) other;
+		for(Object obj: o.constants) if(this.constants.contains(obj)) return true;
+		for(Object obj: o.functors) if(this.functors.contains(obj)) return true;
+		for(Object obj: o.predicates) if(this.predicates.contains(obj)) return true;
+		for(Object obj: o.sorts) if(this.sorts.contains(obj)) return true;
+		return true;
+	}
+	
 	/**
 	 * Adds the given object, either a constant, a sort, a predicate, or a functor,
 	 * to this signature. If a constant is added its sort is added as well, the same is

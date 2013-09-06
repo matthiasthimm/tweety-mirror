@@ -12,7 +12,7 @@ import net.sf.tweety.logics.firstorderlogic.semantics.*;
 import net.sf.tweety.logics.probabilisticconditionallogic.semantics.ProbabilityDistribution;
 import net.sf.tweety.math.probability.Probability;
 import net.sf.tweety.util.RandomSubsetIterator;
-import net.sf.tweety.util.SubsetIterator;
+import net.sf.tweety.util.DefaultSubsetIterator;
 
 /**
  * This reasoner performs approximate reasoning with MLNs by considering
@@ -104,7 +104,7 @@ public class ApproximateNaiveMlnReasoner extends AbstractMlnReasoner{
 		// The iterator for Herbrand interpretations
 		Iterator<Set<FOLAtom>> it;
 		if(this.maxNumberOfSelectedInterpretations == -1 || Math.pow(2, hBase.getAtoms().size()) <= this.maxNumberOfSelectedInterpretations )
-			it = new SubsetIterator<FOLAtom>(hBase.getAtoms());
+			it = new DefaultSubsetIterator<FOLAtom>(hBase.getAtoms());
 		else it = new RandomSubsetIterator<FOLAtom>(hBase.getAtoms(),false);
 		long count = 0;
 		HerbrandInterpretation hInt;
