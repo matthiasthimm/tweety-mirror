@@ -1,5 +1,6 @@
 package net.sf.tweety.logicprogramming.asplibrary.syntax;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,7 +18,7 @@ import net.sf.tweety.util.rules.RuleSet;
  * @author Thomas Vengels
  *
  */
-public class Program extends RuleSet<Rule> implements LogicProgram<DLPHead, DLPElement, Rule>{
+public class Program extends RuleSet<Rule> implements LogicProgram<DLPHead, DLPElement, Rule> {
 	
 	/** kill warning */
 	private static final long serialVersionUID = -5078398905222624805L;
@@ -34,6 +35,14 @@ public class Program extends RuleSet<Rule> implements LogicProgram<DLPHead, DLPE
 		this.addAll(other); 
 	}
 	
+	/**
+	 * Add all rules from base to this program.
+	 * @param base a collection of rules
+	 */
+	public Program(Collection<Rule> base) {
+		super(base);
+	}
+
 	/**
 	 * Adds another programs content to the content of this program.
 	 * @param other	Reference to the other program.

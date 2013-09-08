@@ -68,7 +68,7 @@ public class Rule
 		this.head.add(head);
 	}
 	
-	public Rule(DLPLiteral head, DLPLiteral body) {
+	public Rule(DLPLiteral head, DLPElement body) {
 		this.head.add(head);
 		this.body.add(body);
 	}

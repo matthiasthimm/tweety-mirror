@@ -95,5 +95,11 @@
   	<module>net-sf-tweety-logicprogramming-nestedlogicprograms</module>
   	<module>net-sf-tweety-logics-translate-aspnlp</module>
   	<module>net-sf-tweety-logics-translate-aspfol</module>
+  	<module>
+  		net-sf-tweety-argumentation-parameterisedhierarchy
+  	</module>
+  	<module>
+  		net-sf-tweety-logicprogramming-asplibrary-beliefdynamics
+  	</module>
   </modules>
 </project>
