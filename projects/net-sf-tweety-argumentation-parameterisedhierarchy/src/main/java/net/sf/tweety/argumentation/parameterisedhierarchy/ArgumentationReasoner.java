@@ -69,6 +69,13 @@ public class ArgumentationReasoner extends Reasoner {
 		return answer;
 	}
 	
+	/**
+	 * An argument is called x/y-overruled, if it is attacked by an 
+	 * x/y-justified argument.
+	 * 
+	 * @param arg an argument
+	 * @return true iff arg is x-attacked by an x/y-justified argument
+	 */
 	public boolean isOverruled(Argument arg) {
 		for(Argument attacker : getJustifiedArguments()) {
 			if(attack.attacks(attacker, arg)) {
@@ -78,18 +85,31 @@ public class ArgumentationReasoner extends Reasoner {
 		return false;
 	}
 	
+	/**
+	 * An argument is called x/y-justified if it is contained in J_{P,x/y}.
+	 * See class description for details.
+	 * 
+	 * @param arg an argument
+	 * @return true iff arg is x/y-justified
+	 */
 	public boolean isJustified(Argument arg) {
 		return query(arg).getAnswerBoolean();
 	}
 	
+	/**
+	 * An argument is called x/y-defensible if it is neither x/y-justified
+	 * nor x/y-overruled.
+	 * @param arg an argument
+	 * @return true iff arg is neither x/y-justified nor x/y-overruled.
+	 */
 	public boolean isDefensible(Argument arg) {
 		return (! isOverruled(arg) ) && (! isJustified(arg) );
 	}
 	
 	
 	/**
-	 * Returns the set of justified arguments using a bottom-up fixpoint calculation
-	 * @return
+	 * Returns the set of x/y-justified arguments using a bottom-up fixpoint calculation
+	 * @return the set of x/y-justified arguments
 	 */
 	public Set<Argument> getJustifiedArguments() {
 		ArgumentationKnowledgeBase kb = (ArgumentationKnowledgeBase) this.getKnowledgBase();

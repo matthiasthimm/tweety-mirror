@@ -7,11 +7,10 @@ import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
 
 /**
  * This class implements a monotone global maxichoise selection function
- * for remainder sets of extended logic programs as introduced in [1]. A selection
+ * for remainder sets of extended logic programs as introduced in [KKI12]. A selection
  * function is monotone if it treats 
  * 
- * 
- *  [1] Krümpelmann, Patrick und Gabriele Kern-Isberner: 
+ *  [KKI12] Krümpelmann, Patrick und Gabriele Kern-Isberner: 
  * 	Belief Base Change Operations for Answer Set Programming. 
  *  In: Cerro, Luis Fariñas, Andreas Herzig und Jérôme Mengin (Herausgeber):
  *  Proceedings of the 13th European conference on Logics in Artificial 
@@ -19,7 +18,6 @@ import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
  *  Springer Berlin Heidelberg.
  *  
  * @author Sebastian Homann
- *
  */
 public class MonotoneGlobalMaxichoiceSelectionFunction implements SelectionFunction<Rule> {
 
@@ -32,7 +30,7 @@ public class MonotoneGlobalMaxichoiceSelectionFunction implements SelectionFunct
 	 */
 	public Collection<Rule> select(ScreenedRemainderSets remainderSets) {
 		if(remainderSets.isEmpty()) {
-			return remainderSets.getInputProgram();
+			return remainderSets.getSourceBeliefBase();
 		}
 		
 		return Collections.max(remainderSets.asPrograms(), new ELPLexicographicalComparator());

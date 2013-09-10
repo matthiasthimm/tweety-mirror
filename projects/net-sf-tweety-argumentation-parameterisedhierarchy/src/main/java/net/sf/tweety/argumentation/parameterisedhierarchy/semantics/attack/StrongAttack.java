@@ -36,5 +36,21 @@ public class StrongAttack implements AttackStrategy {
 	public boolean attacks(Argument a, Argument b) {
 		return attack.attacks(a, b) && (! undercut.attacks(b, a) );
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "strong attack";
+	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.tweety.argumentation.parameterisedhierarchy.semantics.attack.AttackStrategy#toAbbreviation()
+	 */
+	public String toAbbreviation() {
+		return "sa";
+	}
 }

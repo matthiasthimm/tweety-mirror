@@ -17,11 +17,11 @@ import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
  * This class represents a selective revision using the base revision approach
  *  from [1] for the inner revision and the sceptical argumentative transformation 
  *  function from [2]. The selective revision operator is parameterised by two
- *  notions of attack used by the argumentation framework which in turn is invoked 
- *  by the transformation function. In [2] it is shown, that there are 4 classes
- *  of distinct plausible instantiatiations of this operator: a/a, d/d, sa/sa and sa/a
+ *  notions of attack used by the argumentation framework utilised by the transformation
+ *  function. In [2] it is shown that there are exactly 4 classes
+ *  of distinct plausible instantiations of this operator: a/a, d/d, sa/sa and sa/a,
  *  where "a" stands for Attack, "d" for Defeat, and "sa" for Strong Attack.
- *  For further information see net.sf.tweety.argumentation.parameterisedhierarchy and [2]. 
+ *  For further information see the parameterisedhierarchy tweety project and [2]. 
  * 
  * [1] Krümpelmann, Patrick und Gabriele Kern-Isberner: 
  * 	Belief Base Change Operations for Answer Set Programming. 
@@ -32,7 +32,7 @@ import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
  * 
  * [2] Homann, Sebastian:
  *  Master thesis: Argumentationsbasierte selektive Revision von erweiterten logischen
- *  Programmen.
+ *  Programmen. t.a.
  * 
  * @author Sebastian Homann
  *
@@ -40,9 +40,21 @@ import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
 public class ParameterisedArgumentativeSelectiveRevisionOperator extends
 		MultipleBaseRevisionOperator<Rule> {
 	
+	public enum TransformationType {
+		SCEPTICAL, NAIVE;
+		
+		@Override
+		public String toString() {
+			   //only capitalize the first letter
+			   String s = super.toString();
+			   return s.substring(0, 1) + s.substring(1).toLowerCase();
+			 }
+	}
+	
 	private Solver solver;
 	private AttackStrategy attackRelation;
 	private AttackStrategy defenseRelation;
+	private TransformationType transformationType;
 
 	/**
 	 * Constructs a new selective revision operator using the given attack relations
@@ -51,10 +63,11 @@ public class ParameterisedArgumentativeSelectiveRevisionOperator extends
 	 * @param attackRelation a notion of attack
 	 * @param defenseRelation a notion of attack
 	 */
-	public ParameterisedArgumentativeSelectiveRevisionOperator(Solver solver, AttackStrategy attackRelation, AttackStrategy defenseRelation) {
+	public ParameterisedArgumentativeSelectiveRevisionOperator(Solver solver, AttackStrategy attackRelation, AttackStrategy defenseRelation, TransformationType type) {
 		this.solver = solver;
 		this.attackRelation = attackRelation;
 		this.defenseRelation = defenseRelation;
+		this.transformationType = type;
 	}
 
 	/*
@@ -72,12 +85,25 @@ public class ParameterisedArgumentativeSelectiveRevisionOperator extends
 		
 		// transformation function
 		MultipleTransformationFunction<Rule> transformationFunction;
-		transformationFunction = new ScepticalLiteralTransformationFunction(base, attackRelation, defenseRelation);
+		switch(transformationType) {
+			case NAIVE:
+				transformationFunction = new NaiveLiteralTransformationFunction(base, attackRelation, defenseRelation);
+				break;
+			case SCEPTICAL:
+			default:
+				transformationFunction = new ScepticalLiteralTransformationFunction(base, attackRelation, defenseRelation);
+				break;
+		}
 
 		MultipleSelectiveRevisionOperator<Rule> revisionOperator;
 		revisionOperator = new MultipleSelectiveRevisionOperator<Rule>(transformationFunction, innerRevision);
 		
 		return revisionOperator.revise(base, formulas);
+	}
+	
+	@Override
+	public String toString() {
+		return transformationType + " revision " + attackRelation.toAbbreviation() + "/" + defenseRelation.toAbbreviation();
 	}
 
 }

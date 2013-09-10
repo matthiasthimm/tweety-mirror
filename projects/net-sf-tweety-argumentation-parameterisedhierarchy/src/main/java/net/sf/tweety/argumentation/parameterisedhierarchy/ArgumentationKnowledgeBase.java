@@ -106,7 +106,13 @@ public class ArgumentationKnowledgeBase extends BeliefSet<Argument> {
 		}
 		return result;
 	}
-		
+	
+	/**
+	 * This method returns the set of conclusions of all rules in the collection
+	 * of rules given.
+	 * @param rules a collection of rules
+	 * @return the set of conclusions of said rules 
+	 */
 	@SuppressWarnings("unused")
 	private Set<DLPLiteral> getDerivableLiterals(Collection<Rule> rules) {
 		Set<DLPLiteral> result = new HashSet<DLPLiteral>();

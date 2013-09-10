@@ -37,5 +37,21 @@ public class StrongUndercut implements AttackStrategy {
 	public boolean attacks(Argument a, Argument b) {
 		return undercut.attacks(a, b) && (! undercut.attacks(b, a) );
 	}
-
+	
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "strong undercut";
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.tweety.argumentation.parameterisedhierarchy.semantics.attack.AttackStrategy#toAbbreviation()
+	 */
+	public String toAbbreviation() {
+		return "su";
+	}
 }

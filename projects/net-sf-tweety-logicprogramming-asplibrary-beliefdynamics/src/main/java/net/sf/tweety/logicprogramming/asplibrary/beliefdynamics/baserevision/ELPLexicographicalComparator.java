@@ -16,7 +16,6 @@ import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
  * is smaller than the second smallest rule of B and so on.
  * 
  * @author Sebastian Homann
- *
  */
 public class ELPLexicographicalComparator implements Comparator<Program> {
 

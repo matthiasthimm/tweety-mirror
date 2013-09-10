@@ -4,8 +4,8 @@ import net.sf.tweety.argumentation.parameterisedhierarchy.syntax.Argument;
 
 
 /**
- * This interface is the common interface for notions of attack between two arguments.
- * (analogous to Attack-interface in deductive package)
+ * This interface is the common denominator for notions of attack between two arguments.
+ * The implementation is analogous to the Attack interface in the "deductive" package.
  * @author Sebastian Homann
  */
 public interface AttackStrategy {
@@ -17,4 +17,10 @@ public interface AttackStrategy {
 	 * @return "true" iff <code>a</code> attacks <code>b</code>.
 	 */
 	public boolean attacks(Argument a, Argument b);
+	
+	/**
+	 * Returns the abbreviated identifier of this notion of attack, i.e. "a" for attack
+	 * @return a short identifier
+	 */
+	public String toAbbreviation();
 }

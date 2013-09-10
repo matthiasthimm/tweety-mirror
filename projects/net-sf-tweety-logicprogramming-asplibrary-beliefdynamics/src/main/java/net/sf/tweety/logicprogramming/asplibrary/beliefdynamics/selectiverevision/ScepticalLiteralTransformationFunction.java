@@ -60,6 +60,8 @@ public class ScepticalLiteralTransformationFunction implements
 				if(reasoner.isJustified(head)) {
 					result.add(r);
 				}
+			} else {
+				throw new IllegalArgumentException("Cannot process rule " + r +".\nTransformation function is only defined for literals/facts.");
 			}
 		}
 		return result;

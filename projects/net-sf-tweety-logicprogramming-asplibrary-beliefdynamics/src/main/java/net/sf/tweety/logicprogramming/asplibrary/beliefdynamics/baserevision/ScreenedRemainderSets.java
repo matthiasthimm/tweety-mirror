@@ -16,7 +16,7 @@ import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
 /**
  * This class represents the set of Screened Consistent Remainder Sets as 
  * defined in [1]. A screened remainder set X of P regarding a 
- * set of sentences R \subseteq P is a Set X s.t. 
+ * set of sentences R \subseteq P is a set X s.t. 
  *  (1) R \subseteq X \subseteq P,
  *  (2) X is consistent and
  *  (3) there is no proper superset X' of X in P that is also consistent.
@@ -38,6 +38,16 @@ public class ScreenedRemainderSets extends RemainderSets<Rule> {
 	private Program screen;
 	private Solver solver;
 	
+	/**
+	 * Creates a new set of screened remainder sets of program p that all contain
+	 * the screened rules r. An asp-solver is used to calculate the consistency
+	 * of remainder set candidates.
+	 * 
+	 * @param p an asp-program for which the screened remainder sets are calculated
+	 * @param r an asp-program representing the set of rules, that have to be contained in every remainder set. Has to be a subset of p
+	 * @param solver an asp-solver
+	 * @throws SolverException
+	 */
 	public ScreenedRemainderSets(Program p, Program r, Solver solver) throws SolverException {
 		if(!p.containsAll(r)) {
 			throw new IllegalArgumentException("r has to be a subset of p");
@@ -64,10 +74,21 @@ public class ScreenedRemainderSets extends RemainderSets<Rule> {
 		}
 	}
 	
-	public Program getInputProgram() {
+	/**
+	 * Returns the original program p for which this set represents the
+	 * set of remainder sets.
+	 * 
+	 * @return an elp program.
+	 */
+	public Program getSourceBeliefBase() {
 		return program;
 	}
 	
+	/**
+	 * Returns the screened rules that are contained in every remainder set.
+	 * 
+	 * @return an elp program.
+	 */
 	public Program getScreen() {
 		return screen;
 	}
@@ -111,6 +132,12 @@ public class ScreenedRemainderSets extends RemainderSets<Rule> {
 		return !solver.computeModels(p, 1).isEmpty();
 	}
 	
+	/**
+	 * Returns this set of remainder sets as a collection of programs where
+	 * each program contains exactly the rules of one remainder set.
+	 * 
+	 * @return a collection of programs.
+	 */
 	public Collection<Program> asPrograms() {
 		Set<Program> result = new HashSet<Program>();
 		for(Collection<Rule> remainder : this) {
@@ -128,6 +155,7 @@ public class ScreenedRemainderSets extends RemainderSets<Rule> {
 	public static void main(String[] args) throws ParseException, SolverException {
 		String input = "a :- b.\n -a. \n b. \n :- not -a, not b.";
 		
+		//TODO: replace
 		String pathToSolver = "/home/sese/devel/asp_solver/unix/dlv";
 		Solver solver = new DLV(pathToSolver);
 		

@@ -17,12 +17,12 @@ import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
 
 /**
  * Instances of this class represent arguments in the sense
- * of Definition 2 in
+ * of Definition 2 in [1].
  * 
- * Ralf Schweimeier and Michael Schroeder: A Parameterised Hierarchy of 
- * Argumentation Semantics for Extended Logic Programming and its 
- * Application to the Well-founded Semantics. 
- * In: Theory and Practice of Logic Programming, 5(1-2):207–242, 2003.
+ * [1] Ralf Schweimeier and Michael Schroeder: A Parameterised Hierarchy of 
+ *  Argumentation Semantics for Extended Logic Programming and its 
+ *  Application to the Well-founded Semantics. 
+ *  In: Theory and Practice of Logic Programming, 5(1-2):207–242, 2003.
  * 
  * @author Sebastian Homann
  */

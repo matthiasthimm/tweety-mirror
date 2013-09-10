@@ -40,5 +40,21 @@ public class Undercut implements AttackStrategy {
 		}
 		return false;
 	}
-
+	
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "undercut";
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.tweety.argumentation.parameterisedhierarchy.semantics.attack.AttackStrategy#toAbbreviation()
+	 */
+	public String toAbbreviation() {
+		return "u";
+	}
 }

@@ -7,15 +7,35 @@ import net.sf.tweety.argumentation.parameterisedhierarchy.ArgumentationKnowledge
 import net.sf.tweety.argumentation.parameterisedhierarchy.semantics.attack.AttackStrategy;
 import net.sf.tweety.argumentation.parameterisedhierarchy.syntax.Argument;
 
+/**
+ * This class represents an attack relation for a specific set
+ * of arguments represented by an ArgumentationKnowledgeBase.
+ * 
+ * @author Sebastian Homann
+ *
+ */
 public class AttackRelation {
 	private ArgumentationKnowledgeBase kb;
 	private AttackStrategy strategy;
 	
+	/**
+	 * Creates a new AttackRelation for an argumentation knowledgebase
+	 * and a certain notion of attack.
+	 * @param kb an argument knowledge base
+	 * @param strategy a notion of attack for arguments in the knowledgebase
+	 */
 	public AttackRelation(ArgumentationKnowledgeBase kb, AttackStrategy strategy) {
 		this.kb = kb;
 		this.strategy = strategy;
 	}
 	
+	/**
+	 * Returns true iff argument a attacks argument b for the notion of
+	 * attack represented by this attack relation.
+	 * @param a an argument
+	 * @param b another argument
+	 * @return true iff argument a attacks argument b
+	 */
 	public boolean attacks(Argument a, Argument b) {
 		return strategy.attacks(a, b);
 	}
@@ -37,7 +57,7 @@ public class AttackRelation {
 	
 	/**
 	 * Returns all arguments from the knowledgebase, that attack argument a.
-	 * @param a An argument
+	 * @param a an argument
 	 * @return the set of arguments from kb, that attack argument a
 	 */
 	public Set<Argument> getAttackingArguments(Argument a) {

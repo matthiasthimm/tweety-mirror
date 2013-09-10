@@ -36,5 +36,13 @@ public class Attack implements AttackStrategy {
 	public boolean attacks(Argument a, Argument b) {
 		return rebut.attacks(a, b) || undercut.attacks(a, b);
 	}
-
+	
+	@Override
+	public String toString() {
+		return "attack";
+	}
+	
+	public String toAbbreviation() {
+		return "a";
+	}
 }

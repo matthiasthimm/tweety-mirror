@@ -41,5 +41,21 @@ public class Rebut implements AttackStrategy {
 		}
 		return false;
 	}
-
+	
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "rebut";
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.tweety.argumentation.parameterisedhierarchy.semantics.attack.AttackStrategy#toAbbreviation()
+	 */
+	public String toAbbreviation() {
+		return "r";
+	}
 }

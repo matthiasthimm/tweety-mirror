@@ -10,5 +10,12 @@ import net.sf.tweety.Formula;
  *
  */
 public interface SelectionFunction<T extends Formula> {
+	
+	/**
+	 * Select exactly one remainder set from the set of remainder sets.
+	 * 
+	 * @param remainderSets a set of remainder sets
+	 * @return one remainder set.
+	 */
 	public Collection<T> select(RemainderSets<T> remainderSets);
 }

@@ -37,7 +37,7 @@ public class NaiveLiteralTransformationFunction implements
 	 * @param attackRelation the notion of attack used for attacking arguments
 	 * @param defenseRelation the notion of attack used to attack attacking arguments
 	 */
-	public NaiveLiteralTransformationFunction(Program beliefSet, AttackStrategy attackRelation, AttackStrategy defenseRelation) {
+	public NaiveLiteralTransformationFunction(Collection<Rule> beliefSet, AttackStrategy attackRelation, AttackStrategy defenseRelation) {
 		this.beliefSet = new Program(beliefSet);
 		this.attackRelation = attackRelation;
 		this.defenseRelation = defenseRelation;
@@ -65,9 +65,9 @@ public class NaiveLiteralTransformationFunction implements
 	}
 	
 	/**
-	 * "Transforms" the single Fact by either accepting or rejecting it.
+	 * "Transforms" the single fact by either accepting or rejecting it.
 	 * @param rule a single fact
-	 * @return the fact if its negation is not acceptable for the given attack-relations and beliefbase, an empty collection otherwise
+	 * @return the fact if its negation is not acceptable for the given attack-relations and belief base, an empty collection otherwise
 	 */
 	public Collection<Rule> transform(Rule rule) {
 		LinkedList<Rule> in = new LinkedList<Rule>();
