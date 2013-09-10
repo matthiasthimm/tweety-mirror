@@ -500,4 +500,19 @@ public class DungTheory extends BeliefSet<Argument> implements Graph<Argument> {
 		}
 		return m;
 	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.graphs.Graph#getComplementGraph()
+	 */
+	@Override
+	public DungTheory getComplementGraph() {
+		DungTheory comp = new DungTheory();
+		for(Argument node: this)
+			comp.add(node);
+		for(Argument node1: this)
+			for(Argument node2: this)
+				if(!this.isAttackedBy(node1, node2))
+					comp.add(new Attack(node1, node2));
+		return comp;
+	}
 }
