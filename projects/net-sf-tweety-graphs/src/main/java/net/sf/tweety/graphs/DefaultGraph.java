@@ -183,4 +183,19 @@ public class DefaultGraph<T extends Node> implements Graph<T>{
 	public String toString(){
 		return "<" + this.nodes + "," + this.edges + ">";
 	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.graphs.Graph#getComplementGraph()
+	 */
+	@Override
+	public Graph<T> getComplementGraph() {
+		Graph<T> comp = new DefaultGraph<T>();
+		for(T node: this)
+			comp.add(node);
+		for(T node1: this)
+			for(T node2: this)
+				if(!this.areAdjacent(node1, node2))
+					comp.add(new DirectedEdge<T>(node1, node2));
+		return comp;
+	}
 }

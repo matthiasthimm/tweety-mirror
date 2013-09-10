@@ -112,6 +112,15 @@ public interface Graph<T extends Node> extends Iterable<T>{
 	 */
 	public Matrix getAdjancyMatrix();
 	
+	/**
+	 * Returns the complement graph of this graph, i.e. the graph
+	 * on the same set of vertices as this graph that connects two
+	 * vertices v and w with an edge if and only if v and w are not
+	 * connected in this graph.
+	 * @return the complement graph of this graph.
+	 */
+	public Graph<T> getComplementGraph();
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
