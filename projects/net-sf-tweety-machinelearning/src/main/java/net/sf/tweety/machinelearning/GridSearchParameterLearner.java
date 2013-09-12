@@ -3,7 +3,7 @@ package net.sf.tweety.machinelearning;
 /**
  * A grid-search approach for learning parameters. For each parameter with I=[l,u] being
  * the boundaries for the parameter value of a given trainer, I is divided into <code>partitions<code>
- * number of partitions. For each partition of each parameter the center point is chosen and a new
+ * number of partitions. For each partition of each parameter the border points are chosen and a new
  * classifier is learned with given parameter combination. From all combinations the combination
  * where the classifier performs best is chosen. If <code>depth</code> > 1, the process is iterated: after selecting
  * the best interval combination of the parameters, these intervals are again divided and the process
@@ -64,13 +64,12 @@ public class GridSearchParameterLearner<S extends Observation, T extends Categor
 					maxPerformance = performance;
 					System.arraycopy(indices, 0, bestIdxs, 0, set.size());					
 				}
-				System.out.println("XXXXX " + indices[0] + " " + indices[1] + "   " + trainer.getParameterSet() + " -------- " + performance);
 			}while(!this.increment(indices, this.partitions));
 			// if going into recursion, select the best indices and adjust upper/lower bounds
 			if(i+1 != this.depth){
 				for(int j = 0; j < set.size(); j++){
-					lowerBounds[j] = lowerBounds[j]+(upperBounds[j]-lowerBounds[j])/this.partitions*(indices[j]-1);
-					upperBounds[j] = lowerBounds[j]+(upperBounds[j]-lowerBounds[j])/this.partitions*(indices[j]);
+					lowerBounds[j] = lowerBounds[j]+(upperBounds[j]-lowerBounds[j])/this.partitions*(Math.max(indices[j]-1,0));
+					upperBounds[j] = lowerBounds[j]+(upperBounds[j]-lowerBounds[j])/this.partitions*(Math.min(indices[j]+1,this.partitions));
 					// re-init index
 					indices[j] = 0;
 				}
@@ -94,7 +93,7 @@ public class GridSearchParameterLearner<S extends Observation, T extends Categor
 		ParameterSet newParams = new ParameterSet();
 		int idx = 0;
 		for(TrainingParameter param: set){								
-			newParams.add(param.instantiate(lowerBounds[idx]+(upperBounds[idx]-lowerBounds[idx])/this.partitions*(indices[idx]-1/2)));
+			newParams.add(param.instantiate(lowerBounds[idx]+(upperBounds[idx]-lowerBounds[idx])/this.partitions*(indices[idx])));
 			idx++;
 		}
 		return newParams;

@@ -16,7 +16,7 @@ public class SVMTest {
 	public static void main(String[] args) throws IOException{
 		TrainingSet<DefaultObservation,DoubleCategory> trainingSet = TrainingSet.loadLibsvmTrainingFile(new File("/Users/mthimm/Desktop/train.1.txt"));
 		MultiClassRbfTrainer trainer = new MultiClassRbfTrainer();
-		GridSearchParameterLearner<DefaultObservation,DoubleCategory> parameterLearner = new GridSearchParameterLearner<DefaultObservation,DoubleCategory>(trainer, new CrossValidator<DefaultObservation,DoubleCategory>(4), 1, 3); 
+		GridSearchParameterLearner<DefaultObservation,DoubleCategory> parameterLearner = new GridSearchParameterLearner<DefaultObservation,DoubleCategory>(trainer, new CrossValidator<DefaultObservation,DoubleCategory>(4), 2, 3); 
 		SupportVectorMachine svm = (SupportVectorMachine) parameterLearner.train(trainingSet); 
 	
 		System.out.println();
