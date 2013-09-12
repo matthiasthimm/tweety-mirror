@@ -4,7 +4,9 @@ import libsvm.svm;
 import libsvm.svm_parameter;
 import net.sf.tweety.machinelearning.DefaultObservation;
 import net.sf.tweety.machinelearning.DoubleCategory;
+import net.sf.tweety.machinelearning.ParameterSet;
 import net.sf.tweety.machinelearning.Trainer;
+import net.sf.tweety.machinelearning.TrainingParameter;
 import net.sf.tweety.machinelearning.TrainingSet;
 
 /**
@@ -15,9 +17,22 @@ import net.sf.tweety.machinelearning.TrainingSet;
 public class MultiClassRbfTrainer implements Trainer<DefaultObservation,DoubleCategory> {
 
 	/**The c parameter for learning */
-	private double c; 
+	public static final TrainingParameter C_PARAMETER = new TrainingParameter("C", 2E3, 2E3, 2E-5, 2E15);
 	/** The gamma parameter for learning */
-	private double gamma;
+	public static final TrainingParameter GAMMA_PARAMETER = new TrainingParameter("gamma", 2E-8, 2E-8, 2E-15, 2E3);
+	
+	/**The c parameter for learning */
+	private TrainingParameter c; 
+	/** The gamma parameter for learning */
+	private TrainingParameter gamma;
+	
+	/**
+	 * Initializes the trainer with the default parameters.
+	 */
+	public MultiClassRbfTrainer(){
+		this.c = MultiClassRbfTrainer.C_PARAMETER.instantiateWithDefaultValue();
+		this.gamma = MultiClassRbfTrainer.GAMMA_PARAMETER.instantiateWithDefaultValue();
+	}
 	
 	/**
 	 * Initializes the trainer with the given parameters.
@@ -25,8 +40,8 @@ public class MultiClassRbfTrainer implements Trainer<DefaultObservation,DoubleCa
 	 * @param gamma the gamma parameter for learning
 	 */
 	public MultiClassRbfTrainer(double c, double gamma){
-		this.c = c;
-		this.gamma = gamma;
+		this.c = MultiClassRbfTrainer.C_PARAMETER.instantiate(c);
+		this.gamma = MultiClassRbfTrainer.GAMMA_PARAMETER.instantiate(gamma);
 	}
 	
 	/* (non-Javadoc)
@@ -34,8 +49,21 @@ public class MultiClassRbfTrainer implements Trainer<DefaultObservation,DoubleCa
 	 */
 	@Override
 	public SupportVectorMachine train(TrainingSet<DefaultObservation, DoubleCategory> trainingSet) {
+		ParameterSet set = new ParameterSet();
+		set.add(this.c);
+		set.add(this.gamma);
+		return this.train(trainingSet, set);		
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.machinelearning.Trainer#train(net.sf.tweety.machinelearning.TrainingSet, net.sf.tweety.machinelearning.ParameterSet)
+	 */
+	@Override
+	public SupportVectorMachine train(TrainingSet<DefaultObservation, DoubleCategory> trainingSet, ParameterSet params) {
+		if(!params.containsParameter(C_PARAMETER) || !params.containsParameter(GAMMA_PARAMETER))
+			throw new IllegalArgumentException("Parameters missing.");
 		svm_parameter param = new svm_parameter();
-		//TODO the following properties should be parameterized
+		//TODO the following properties should be parameterized as well
 		// Type of SVM
 		param.svm_type = svm_parameter.C_SVC;
 		// Kernel type (leave it at RBF for now)
@@ -49,11 +77,40 @@ public class MultiClassRbfTrainer implements Trainer<DefaultObservation,DoubleCa
 
 		// Given parameters
 		// gamma parameter of RBF kernel
-		param.gamma = this.gamma;
+		param.gamma = params.getParameter(GAMMA_PARAMETER).getValue();
 		// C parameter of RBF kernel
-		param.C = this.c;
+		param.C = params.getParameter(C_PARAMETER).getValue();
 				
-		return new SupportVectorMachine(svm.svm_train(trainingSet.toLibsvmProblem(), param));		
+		return new SupportVectorMachine(svm.svm_train(trainingSet.toLibsvmProblem(), param));
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.machinelearning.Trainer#getParameterSet()
+	 */
+	@Override
+	public ParameterSet getParameterSet() {
+		ParameterSet set = new ParameterSet();
+		set.add(this.c);
+		set.add(this.gamma);
+		return set;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.machinelearning.Trainer#setParameterSet(net.sf.tweety.machinelearning.ParameterSet)
+	 */
+	@Override
+	public boolean setParameterSet(ParameterSet params) {
+		if(!params.containsParameter(C_PARAMETER) || !params.containsParameter(GAMMA_PARAMETER))
+			throw new IllegalArgumentException("Parameters missing.");
+		this.c = params.getParameter(C_PARAMETER);
+		this.gamma = params.getParameter(GAMMA_PARAMETER);
+		return true;
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString(){
+		return "RBF<" + this.c.getValue() + "," + this.gamma.getValue() + ">";
+	}
 }

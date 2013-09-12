@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.StringTokenizer;
 
@@ -41,6 +42,31 @@ public class TrainingSet<S extends Observation, T extends Category> extends Hash
 		return this.add(new Pair<S,T>(obs,cat));
 	}
 
+	/**
+	 * Returns the collection of categories present in this 
+	 * training set.
+	 * @return a set of categories.
+	 */
+	public Collection<T> getCategories(){
+		Collection<T> cats = new HashSet<T>();
+		for(Pair<S,T> entry: this)
+			cats.add(entry.getSecond());
+		return cats;
+	}
+	
+	/**
+	 * Returns all observations of the given category.
+	 * @param cat a category
+	 * @return all observations of the given category.
+	 */
+	public TrainingSet<S,T> getObservations(T cat){
+		TrainingSet<S,T> result = new TrainingSet<S,T>();
+		for(Pair<S,T> entry: this)
+			if(entry.getSecond().equals(cat))
+				result.add(entry);
+		return result;
+	}
+	
 	/**
 	 * Returns a svm_problem (the data data model of libsvm) of this training set.
 	 * @return a svm_problem (the data data model of libsvm) of this training set.
