@@ -1,6 +1,7 @@
 package net.sf.tweety.preferences.cli;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import net.sf.tweety.cli.plugins.AbstractTweetyPlugin;
@@ -16,6 +17,8 @@ import net.sf.tweety.preferences.aggregation.DynamicVetoScoringPreferenceAggrega
 import net.sf.tweety.preferences.aggregation.PluralityScoringPreferenceAggregator;
 import net.sf.tweety.preferences.aggregation.VetoScoringPreferenceAggregator;
 import net.sf.tweety.preferences.io.POParser;
+import net.sf.tweety.preferences.io.ParseException;
+import net.sf.tweety.preferences.unittesting.newPreferenceOrderTest;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 /**
@@ -94,13 +97,22 @@ public class PreferencesPlugin extends AbstractTweetyPlugin {
 	public PluginOutput execute(File[] input, CommandParameter[] params) {
 		PreferenceOrder<String> result = new PreferenceOrder<String>();
 		// File-Handler
+		POParser parser;
 		// Parsing,...
 		List<PreferenceOrder<String>> poset = new ArrayList<PreferenceOrder<String>>();
 		for (int i = 0; i < input.length; i++) {
-			String filename = input[i].getAbsoluteFile().getAbsolutePath();
-			if (filename.endsWith(".po")) {
-				// PreferenceOrder<String> po = POParser.parse(filename);
-				// poset.add(po);
+			if (input[i].getAbsolutePath().endsWith(".po")) {
+//				 PreferenceOrder<String> po;
+				try {
+					PreferenceOrder<String> po = POParser.parse(input[i]);
+					poset.add(po);
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}	 
 			}
 		}
 

@@ -50,8 +50,6 @@ public class CliMain {
 	/** the optional plugin parameters */
 	private static CommandParameter[] pluginParams = null;
 
-	
-	
 	/**
 	 * This method is meant to load the tweety plugin pathes on startup
 	 * 
@@ -81,30 +79,34 @@ public class CliMain {
 		for (int i = 0; i < tmp.size(); i++) {
 			loadablePlugins.put(tmp2.get(i), tmp.get(i));
 		}
-
 		return loadablePlugins;
-
 	}
 
 	/**
 	 * TODO: own method for plugin loading
+	 * 
 	 * @param plugin
 	 */
 	public static void loadPlugin(String plugin) {
 		// move plugin loading in here
 	}
 
-	
 	/**
-	 * instantiates each given input parameter within the called plugin - if possible
-	 * @param tp the called Tweety-Plugin Implementation
-	 * @param inparams the parameter given as input
+	 * instantiates each given input parameter within the called plugin - if
+	 * possible
+	 * 
+	 * @param tp
+	 *            the called Tweety-Plugin Implementation
+	 * @param inparams
+	 *            the parameter given as input
 	 * @returns an ArrayList of instantiated CommandParameter
-	 * @throws CloneNotSupportedException if the CommandParameter does not implement Cloneable
+	 * @throws CloneNotSupportedException
+	 *             if the CommandParameter does not implement Cloneable
 	 */
 	public static ArrayList<CommandParameter> instantiateParameters(
 			TweetyPlugin tp, ArrayList<ArrayList<String>> inparams)
 			throws CloneNotSupportedException {
+		
 		// new array list for the instantiated command parameter
 		ArrayList<CommandParameter> tmp = new ArrayList<CommandParameter>(
 				inparams.size());
@@ -112,6 +114,7 @@ public class CliMain {
 		for (int i = 0; i < inparams.size(); i++) {
 			// get each inparams entry first element (the identifier for the)
 			String cmdIdentifier = inparams.get(i).get(0);
+			inparams.get(i).remove(0);
 			// checks, if the first element starts with an "-", e.g. "-aggr"
 			// instead of "aggr"
 			// if(!cmdIdentifier.startsWith("-")){
@@ -120,17 +123,17 @@ public class CliMain {
 
 			for (CommandParameter cp : tp.getParameters()) {
 				if (cp.getIdentifier().equalsIgnoreCase(cmdIdentifier)) {
-					tmp.add(cp.instantiate(inparams.get(i).remove(0)));
-				}
+					for(int j = 0; j<inparams.get(i).size(); j++){
+					tmp.add(cp.instantiate(inparams.get(i).get(j)));
+					}				}
 			}
 		}
 
 		return tmp;
 	}
 
-	
 	public static void main(String[] args) {
-
+		TweetyPlugin tweetyPlugin;
 		PluginManager pm = PluginManagerFactory.createPluginManager();
 		PluginManagerUtil pmu = new PluginManagerUtil(pm);
 		System.out.println(pmu.getPlugins());
@@ -151,7 +154,6 @@ public class CliMain {
 		}
 
 		// TODO implement the main CLI
-		// FIXME: while-loops
 		for (int i = 0; i < args.length; i++) {
 
 			// The called plugin
@@ -177,7 +179,7 @@ public class CliMain {
 
 				File[] inf = new File[inFiles.size()];
 
-				for (int k = 0; k < inf.length - 1; k++) {
+				for (int k = 0; k < inf.length; k++) {
 					inf[k] = new File(files[k]).getAbsoluteFile();
 				}
 
@@ -202,18 +204,22 @@ public class CliMain {
 			}
 		}
 
-		// whether the called plugin is present
+		// check whether the called plugin is present
 		boolean pluginPresent = false;
 		for (TweetyPlugin tp : pmu.getPlugins(TweetyPlugin.class)) {
 			if (tp.getCommand().equalsIgnoreCase(plugin)) {
 				pluginPresent = true;
 			}
 		}
+		// TODO: move loading into own method
 		// trying to load plugin if not present
 		if (!pluginPresent) {
 			if (availablePlugins.containsKey(plugin)) {
 				pm.addPluginsFrom(new File(availablePlugins.get(plugin))
 						.toURI());
+			} else {
+				System.out.println("No such plugin available.");
+				
 			}
 		}
 
@@ -226,16 +232,19 @@ public class CliMain {
 			if (tp.getCommand().equalsIgnoreCase(plugin)) {
 				// each input parameter is checked against the called plugin
 				// whether it is valid
-
+				ArrayList<CommandParameter> ip = new ArrayList<CommandParameter>();
+				tweetyPlugin = tp;
 				try {
-					inParams = instantiateParameters(tp, collectedparams);
+					ip.addAll(instantiateParameters(tp, collectedparams));
 				} catch (CloneNotSupportedException e) {
 					//
 				}
-
+				PluginOutput out = tp.execute(inputFiles, ip.toArray(new CommandParameter[ip.size()]));	
+				System.out.println("Output: " + out.getOutput());
 			}
 
 		}
-
+		
 	}
+	
 }

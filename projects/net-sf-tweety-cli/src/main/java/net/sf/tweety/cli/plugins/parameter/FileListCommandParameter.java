@@ -8,21 +8,16 @@ import java.util.List;
  * This parameter holds a file-list of possible arguments
  * 
  * @author Bastian Wolf
- *
+ * 
  */
 
 public class FileListCommandParameter extends CommandParameter {
-	
-	/**
-	 * all possible values for this parameter's argument
-	 */
-	private List<File> files;
-	
+
 	/**
 	 * the value each instantiated needs, has to be in selections
 	 */
 	private File[] value;
-	
+
 	/**
 	 * 
 	 * @param id
@@ -30,38 +25,12 @@ public class FileListCommandParameter extends CommandParameter {
 	 */
 	public FileListCommandParameter(String id, String des) {
 		super(id, des);
-		
-	}
 
-	/**
-	 * 
-	 * @param id
-	 * @param des
-	 * @param files
-	 */
-	public FileListCommandParameter(String id, String des, List<File> files){
-		super(id, des);
-		setFiles(files);
-	}
-	
-	/**
-	 * returns each possible selection argument
-	 * @return each possible selection argument
-	 */
-	public List<File> getFiles() {
-		return files;
-	}
-
-	/**
-	 * sets new files selection parameter
-	 * @param files
-	 */
-	public void setFiles(List<File> files) {
-		this.files = files;
 	}
 
 	/**
 	 * returns the given instantiation argument value for this parameter
+	 * 
 	 * @return the given instantiation argument value for this parameter
 	 */
 	public File[] getValue() {
@@ -69,34 +38,51 @@ public class FileListCommandParameter extends CommandParameter {
 	}
 
 	/**
-	 * sets the instantiated parameter argument value,
-	 * value has to be one of the options contained in selections
-	 * @param value the value given as argument value
+	 * sets the instantiated parameter argument value, value has to be one of
+	 * the options contained in selections
+	 * 
+	 * @param value
+	 *            the value given as argument value
 	 */
 	public void setValue(File[] value) {
 		this.value = value;
 	}
 
 	/**
-	 * checks whether a cli input parameter argument is valid for the called command parameter
+	 * checks whether a cli input parameter argument is valid for the called
+	 * command parameter
 	 */
 	@Override
 	public boolean isValid(String s) {
-		
+		// validation criteria?
 		return false;
 	}
-	
+
 	/**
-	 * instantiates a new parameter iff the given value ist valid for this command parameter
+	 * instantiates a new parameter iff the given value ist valid for this
+	 * command parameter
 	 */
-	@Override
+
 	public CommandParameter instantiate(String s) {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 
 	// TODO: implement ArrayList-Instantiation
-	public ArrayList<CommandParameter> instantiate(ArrayList<String> a){
-		return null;
+	public File[] instantiate(ArrayList<String> a)
+			throws CloneNotSupportedException {
+		File[] out = new File[a.size()];
+
+		for (int i = 0; i < a.size(); i++) {
+			// if(this.isValid(a.get(i))){
+			out[i] = new File(a.get(i).toString()).getAbsoluteFile();
+			// }
+		}
+
+		FileListCommandParameter filelist = (FileListCommandParameter) this
+				.clone();
+		filelist.setValue(out);
+
+		return out;
 	}
 }

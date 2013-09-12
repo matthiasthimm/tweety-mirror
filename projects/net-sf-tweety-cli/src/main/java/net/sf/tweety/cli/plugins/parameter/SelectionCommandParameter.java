@@ -109,10 +109,16 @@ public class SelectionCommandParameter extends CommandParameter {
 	}
 	
 	// TODO: Instantiation with an arraylist of strings instead of strings 
-	public ArrayList<CommandParameter> instantiate(ArrayList<String> s){
+	public ArrayList<CommandParameter> instantiate(ArrayList<String> s) throws CloneNotSupportedException {
 		ArrayList<CommandParameter> alcp = new ArrayList<CommandParameter>();
-		//		for()
-		return null;
+		for(int i = 0; i < s.size(); i++){
+			if (this.isValid(s.get(i))){
+				SelectionCommandParameter newParameter = (SelectionCommandParameter) this.clone();
+				newParameter.setValue(s.remove(0).toString());
+				alcp.add(newParameter);
+			}
+		}
+		return alcp;
 	}
 
 }
