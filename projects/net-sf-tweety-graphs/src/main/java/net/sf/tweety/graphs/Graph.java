@@ -15,6 +15,13 @@ import Jama.Matrix;
  */
 public interface Graph<T extends Node> extends Iterable<T>{
 
+	/** When inverting a graph, ignore self loops (don't add and don't remove) */
+	public static final int IGNORE_SELFLOOPS = 1;
+	/** When inverting a graph, deal with self loops like ordinary edges (add if not present and remove if present) */
+	public static final int INVERT_SELFLOOPS = 2;
+	/** When inverting a graph, simple remove self loops, but don't add new ones. */
+	public static final int REMOVE_SELFLOOPS = 3;
+	
 	/**
 	 * Adds the given node to this graph.
 	 * @param node some node.
@@ -117,9 +124,19 @@ public interface Graph<T extends Node> extends Iterable<T>{
 	 * on the same set of vertices as this graph that connects two
 	 * vertices v and w with an edge if and only if v and w are not
 	 * connected in this graph.
+	 * @param How to deal with selfloops:<br/>
+	 * 	IGNORE_SELFLOOPS - ignore self loops (don't add and don't remove)<br/> 
+	 *  INVERT_SELFLOOPS - deal with self loops like ordinary edges (add if not present and remove if present)<br/>	
+	 *  REMOVE_SELFLOOPS - simple remove self loops, but don't add new ones.<br/>	
 	 * @return the complement graph of this graph.
 	 */
-	public Graph<T> getComplementGraph();
+	public Graph<T> getComplementGraph(int selfloops);
+	
+	/**
+	 * Returns "true" iff the graph has a self loop (an edge from a node to itself).
+	 * @return  "true" iff the graph has a self loop (an edge from a node to itself).
+	 */
+	public boolean hasSelfLoops();
 	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()

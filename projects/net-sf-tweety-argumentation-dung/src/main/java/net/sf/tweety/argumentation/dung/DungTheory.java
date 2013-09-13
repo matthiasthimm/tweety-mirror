@@ -502,17 +502,36 @@ public class DungTheory extends BeliefSet<Argument> implements Graph<Argument> {
 	}
 
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.graphs.Graph#getComplementGraph()
+	 * @see net.sf.tweety.graphs.Graph#getComplementGraph(int)
 	 */
 	@Override
-	public DungTheory getComplementGraph() {
+	public DungTheory getComplementGraph(int selfloops) {
 		DungTheory comp = new DungTheory();
 		for(Argument node: this)
 			comp.add(node);
 		for(Argument node1: this)
 			for(Argument node2: this)
-				if(!this.isAttackedBy(node1, node2))
+				if(node1 == node2){
+					if(selfloops == Graph.INVERT_SELFLOOPS){
+						if(!this.isAttackedBy(node2, node1))
+							comp.add(new Attack(node1, node2));
+					}else if(selfloops == Graph.IGNORE_SELFLOOPS){
+						if(this.isAttackedBy(node2, node1))
+							comp.add(new Attack(node1, node2));						
+					}
+				}else if(!this.isAttackedBy(node2, node1))
 					comp.add(new Attack(node1, node2));
 		return comp;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.graphs.Graph#hasSelfLoops()
+	 */
+	@Override
+	public boolean hasSelfLoops() {
+		for(Argument a: this)
+			if(this.isAttackedBy(a, a))
+				return true;
+		return false;
 	}
 }

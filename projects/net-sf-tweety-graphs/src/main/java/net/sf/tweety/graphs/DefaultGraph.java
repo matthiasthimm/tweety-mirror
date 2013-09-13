@@ -185,17 +185,36 @@ public class DefaultGraph<T extends Node> implements Graph<T>{
 	}
 
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.graphs.Graph#getComplementGraph()
+	 * @see net.sf.tweety.graphs.Graph#getComplementGraph(int)
 	 */
 	@Override
-	public Graph<T> getComplementGraph() {
+	public Graph<T> getComplementGraph(int selfloops) {
 		Graph<T> comp = new DefaultGraph<T>();
 		for(T node: this)
 			comp.add(node);
 		for(T node1: this)
 			for(T node2: this)
-				if(!this.areAdjacent(node1, node2))
+				if(node1 == node2){
+					if(selfloops == Graph.INVERT_SELFLOOPS){
+						if(!this.areAdjacent(node1, node2))
+							comp.add(new DirectedEdge<T>(node1, node2));
+					}else if(selfloops == Graph.IGNORE_SELFLOOPS){
+						if(this.areAdjacent(node1, node2))
+							comp.add(new DirectedEdge<T>(node1, node2));						
+					}
+				}else if(!this.areAdjacent(node1, node2))
 					comp.add(new DirectedEdge<T>(node1, node2));
 		return comp;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.graphs.Graph#hasSelfLoops()
+	 */
+	@Override
+	public boolean hasSelfLoops() {
+		for(T node1: this)
+			if(this.areAdjacent(node1, node1))
+				return true;
+		return false;
 	}
 }
