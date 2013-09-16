@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import net.sf.tweety.cli.plugins.AbstractTweetyPlugin;
 import net.sf.tweety.cli.plugins.PluginOutput;
-import net.sf.tweety.cli.plugins.TweetyPlugin;
 import net.sf.tweety.cli.plugins.parameter.CommandParameter;
 import net.sf.tweety.cli.plugins.parameter.SelectionCommandParameter;
 import net.sf.tweety.preferences.PreferenceOrder;
@@ -18,7 +17,6 @@ import net.sf.tweety.preferences.aggregation.PluralityScoringPreferenceAggregato
 import net.sf.tweety.preferences.aggregation.VetoScoringPreferenceAggregator;
 import net.sf.tweety.preferences.io.POParser;
 import net.sf.tweety.preferences.io.ParseException;
-import net.sf.tweety.preferences.unittesting.newPreferenceOrderTest;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 /**
