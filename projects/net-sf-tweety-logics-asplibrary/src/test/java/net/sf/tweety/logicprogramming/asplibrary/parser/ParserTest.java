@@ -307,7 +307,7 @@ public class ParserTest {
 		assertEquals(true, rule.isFact());
 		
 		// disjunctive fact
-		str = "a v b.";
+		str = "a ; b.";
 		parser.ReInit(new StringReader(str));
 		rule = (Rule)parser.Rule().jjtAccept(visitor, null);
 		assertEquals(true, rule.isFact());

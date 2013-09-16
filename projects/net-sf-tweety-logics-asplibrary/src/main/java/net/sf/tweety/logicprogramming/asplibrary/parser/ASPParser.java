@@ -11,7 +11,7 @@ import net.sf.tweety.logicprogramming.asplibrary.util.*;
  *	The parser is capable of parsing a disjunctive logic program using the following BNF:
  *	- PROGRAM 		:= (RULE|COMMENT)*
  *	- RULE 			:= HEAD (':-' (ELEMENTLST)? )?.
- *	- HEAD 			:= ELEMENT ('v' ELEMENT)*
+ *	- HEAD 			:= ELEMENT (';' ELEMENT)*
  *	- ELEMENT 		:= (ATOM|ARITHMETIC|COMPARATIVE)
  *	- ATOM 			:= ('-')? IDENTIFIER ( '(' (TERMLST)? ')')?
  *	- ARITHMETIC	:= (TERM '=' TERM ARITHMETICOP TERM)

@@ -17,8 +17,6 @@ private final int jjStopStringLiteralDfa_0(int pos, long active0)
    switch (pos)
    {
       case 0:
-         if ((active0 & 0x40000L) != 0L)
-            return 2;
          if ((active0 & 0x100L) != 0L)
          {
             jjmatchedKind = 30;
@@ -74,6 +72,8 @@ private int jjMoveStringLiteralDfa0_0()
       case 58:
          jjmatchedKind = 35;
          return jjMoveStringLiteralDfa1_0(0x20L);
+      case 59:
+         return jjStopAtPos(0, 18);
       case 60:
          jjmatchedKind = 22;
          return jjMoveStringLiteralDfa1_0(0x800000L);
@@ -89,8 +89,6 @@ private int jjMoveStringLiteralDfa0_0()
          return jjStopAtPos(0, 14);
       case 110:
          return jjMoveStringLiteralDfa1_0(0x100L);
-      case 118:
-         return jjStartNfaWithStates_0(0, 18, 2);
       case 123:
          return jjStopAtPos(0, 16);
       case 124:
@@ -320,7 +318,7 @@ static final int[] jjnextStates = {
 /** Token literal values. */
 public static final String[] jjstrLiteralImages = {
 "", null, null, null, null, "\72\55", "\55", "\43", "\156\157\164", "\56", 
-"\54", "\50", "\51", "\133", "\135", "\174", "\173", "\175", "\166", "\53", "\52", 
+"\54", "\50", "\51", "\133", "\135", "\174", "\173", "\175", "\73", "\53", "\52", 
 "\57", "\74", "\74\75", "\76", "\76\75", "\75", "\75\75", "\41\75", null, null, null, 
 null, null, null, "\72", };
 
