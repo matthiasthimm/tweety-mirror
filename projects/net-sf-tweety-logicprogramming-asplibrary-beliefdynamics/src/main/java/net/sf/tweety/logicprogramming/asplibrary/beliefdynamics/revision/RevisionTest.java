@@ -18,8 +18,6 @@ import net.sf.tweety.beliefdynamics.gui.RevisionCompareView;
 import net.sf.tweety.logicprogramming.asplibrary.parser.ASPParser;
 import net.sf.tweety.logicprogramming.asplibrary.parser.InstantiateVisitor;
 import net.sf.tweety.logicprogramming.asplibrary.parser.ParseException;
-import net.sf.tweety.logicprogramming.asplibrary.revision.CredibilityRevision;
-import net.sf.tweety.logicprogramming.asplibrary.revision.PreferenceHandling;
 import net.sf.tweety.logicprogramming.asplibrary.solver.DLVComplex;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 
