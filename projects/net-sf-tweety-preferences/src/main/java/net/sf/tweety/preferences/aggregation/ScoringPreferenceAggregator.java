@@ -57,7 +57,7 @@ public abstract class ScoringPreferenceAggregator<T> implements
 
 				for (T e : tPO.getDomainElements()) {
 
-					if (!elem.containsKey(e)) {
+					if (!elem.containsKey(e)) {	
 						elem.put(e, 0);
 					} else {
 						continue;
@@ -89,18 +89,23 @@ public abstract class ScoringPreferenceAggregator<T> implements
 				T t = e.getKey();
 				Integer i = e.getValue();
 				int val = v.getWeight(i);
-				elem.put(t, elem.get(t)-val);
+				//TODO: implement new way to comparate used elements - priority
+				
+				int nw = elem.get(t.toString())-val;
+				elem.put((T) t.toString(),nw);
+//				elem.put((T) t, elem.get((T) t)-val);
+//				elem.put(t, elem.get(t.toString())-val);
 			}
 		}
 
 		// finally a temporary ranking function is created an generates the
 		// aggregated preference order
 		
-		LevelingFunction<T> tempRF = new LevelingFunction<T>();
-		tempRF.putAll(elem);
+		LevelingFunction<T> tempLF = new LevelingFunction<T>();
+		tempLF.putAll(elem);
 	
 
-		return tempRF.generatePreferenceOrder();
+		return tempLF.generatePreferenceOrder();
 
 	}
 }

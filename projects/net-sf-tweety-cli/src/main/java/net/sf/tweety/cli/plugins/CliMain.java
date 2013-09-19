@@ -241,6 +241,7 @@ public class CliMain {
 				}
 				PluginOutput out = tp.execute(inputFiles, ip.toArray(new CommandParameter[ip.size()]));	
 				System.out.println("Output: " + out.getOutput());
+				
 			}
 
 		}

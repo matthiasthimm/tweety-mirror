@@ -165,7 +165,7 @@ public class PreferencesPlugin extends AbstractTweetyPlugin {
 
 			}
 		}
-		PluginOutput out = new PluginOutput(result.toString());
+		PluginOutput out = new PluginOutput(result.getLevelingFunction().toString());
 
 		return out;
 		
