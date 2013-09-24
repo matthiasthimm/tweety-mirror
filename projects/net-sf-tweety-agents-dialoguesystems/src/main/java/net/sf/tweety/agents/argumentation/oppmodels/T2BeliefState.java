@@ -6,6 +6,7 @@ import java.util.Set;
 import net.sf.tweety.agents.argumentation.DialogueTrace;
 import net.sf.tweety.agents.argumentation.ExecutableExtension;
 import net.sf.tweety.argumentation.dung.semantics.Extension;
+import net.sf.tweety.argumentation.dung.syntax.Argument;
 import net.sf.tweety.math.probability.Probability;
 import net.sf.tweety.math.probability.ProbabilityFunction;
 import net.sf.tweety.util.Pair;
@@ -27,7 +28,7 @@ public class T2BeliefState extends BeliefState implements Comparable<T2BeliefSta
 	 * @param utilityFunction the utility function of the agent.
 	 * @param prob the probability function over opponent models.
 	 */
-	public T2BeliefState(Extension knownArguments, UtilityFunction utilityFunction, ProbabilityFunction<T2BeliefState> prob){
+	public T2BeliefState(Extension knownArguments, UtilityFunction<Argument,Extension> utilityFunction, ProbabilityFunction<T2BeliefState> prob){
 		super(knownArguments, utilityFunction);
 		this.prob = prob;
 	}
@@ -37,7 +38,7 @@ public class T2BeliefState extends BeliefState implements Comparable<T2BeliefSta
 	 * @param knownArguments the set of arguments known by the agent.
 	 * @param utilityFunction the utility function of the agent.	 
 	 */
-	public T2BeliefState(Extension knownArguments, UtilityFunction utilityFunction){
+	public T2BeliefState(Extension knownArguments, UtilityFunction<Argument,Extension> utilityFunction){
 		this(knownArguments, utilityFunction, new ProbabilityFunction<T2BeliefState>());		
 	}
 	
@@ -45,8 +46,8 @@ public class T2BeliefState extends BeliefState implements Comparable<T2BeliefSta
 	 * @see net.sf.tweety.agents.argumentation.oppmodels.BeliefState#update(net.sf.tweety.agents.argumentation.DialogueTrace)
 	 */
 	@Override
-	public void update(DialogueTrace trace) {
-		this.getKnownArguments().addAll(trace.getArguments());
+	public void update(DialogueTrace<Argument,Extension> trace) {
+		this.getKnownArguments().addAll(trace.getElements());
 		ProbabilityFunction<T2BeliefState> newProb = new ProbabilityFunction<T2BeliefState>();
 		for(T2BeliefState state: this.prob.keySet()){
 			Probability p = this.prob.get(state);
@@ -75,13 +76,13 @@ public class T2BeliefState extends BeliefState implements Comparable<T2BeliefSta
 	 * @see net.sf.tweety.agents.argumentation.oppmodels.BeliefState#doMove(net.sf.tweety.agents.argumentation.oppmodels.GroundedEnvironment, net.sf.tweety.agents.argumentation.DialogueTrace)
 	 */
 	@Override
-	protected Pair<Double, Set<ExecutableExtension>> doMove(GroundedEnvironment env, DialogueTrace trace) {
+	protected Pair<Double, Set<ExecutableExtension>> doMove(GroundedEnvironment env, DialogueTrace<Argument,Extension> trace) {
 		double bestEU = this.getUtilityFunction().getUtility(env.getDialogueTrace());
 		Set<ExecutableExtension> bestMoves = new HashSet<ExecutableExtension>();
 		bestMoves.add(new ExecutableExtension());
 		/* For every legal move newMove ... */		
 		for(ExecutableExtension newMove: this.getLegalMoves(env,trace)){			
-			DialogueTrace t2 = trace.addAndCopy(newMove);
+			DialogueTrace<Argument,Extension> t2 = trace.addAndCopy(newMove);
 			double newMoveEU = 0;			
 			/* For all possible opponent states oppState ... */
 			if(this.prob.isEmpty())
@@ -106,7 +107,7 @@ public class T2BeliefState extends BeliefState implements Comparable<T2BeliefSta
 								newMoveEU += this.getUtilityFunction().getUtility(t2) * oppStateProb.doubleValue() * oppResponseProb;
 								continue;
 							}
-							DialogueTrace t3 = t2.addAndCopy(oppResponse);		
+							DialogueTrace<Argument,Extension> t3 = t2.addAndCopy(oppResponse);		
 							/* Get best response to oppResponse */
 							Pair<Double, Set<ExecutableExtension>> r = this.doMove(env, t3);						
 							/* Expected utility is utility of best response times probability of 

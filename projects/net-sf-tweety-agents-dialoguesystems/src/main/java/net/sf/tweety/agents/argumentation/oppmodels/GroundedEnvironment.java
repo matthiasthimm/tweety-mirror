@@ -12,6 +12,7 @@ import net.sf.tweety.agents.argumentation.DialogueTrace;
 import net.sf.tweety.agents.argumentation.ExecutableExtension;
 import net.sf.tweety.argumentation.dung.DungTheory;
 import net.sf.tweety.argumentation.dung.semantics.Extension;
+import net.sf.tweety.argumentation.dung.syntax.Argument;
 
 /**
  * This class models the environment for agents in a grounded
@@ -24,7 +25,7 @@ import net.sf.tweety.argumentation.dung.semantics.Extension;
 public class GroundedEnvironment implements Environment, Perceivable {
 
 	/** The current dialogue trace. */
-	private DialogueTrace trace;
+	private DialogueTrace<Argument,Extension> trace;
 	/** The universal Dung theory used for argumentation. */
 	private DungTheory universalTheory;
 	
@@ -33,7 +34,7 @@ public class GroundedEnvironment implements Environment, Perceivable {
 	 * @param universalTheory the universal Dung theory used for argumentation.
 	 */
 	public GroundedEnvironment(DungTheory universalTheory){
-		this.trace = new DialogueTrace();
+		this.trace = new DialogueTrace<Argument,Extension>();
 		this.universalTheory = universalTheory;
 	}
 	
@@ -78,7 +79,7 @@ public class GroundedEnvironment implements Environment, Perceivable {
 	 * Returns the current dialogue trace.
 	 * @return the current dialogue trace.
 	 */
-	public DialogueTrace getDialogueTrace(){
+	public DialogueTrace<Argument,Extension> getDialogueTrace(){
 		return this.trace;
 	}
 	
@@ -86,7 +87,7 @@ public class GroundedEnvironment implements Environment, Perceivable {
 	 * @see net.sf.tweety.agents.Environment#reset()
 	 */
 	public boolean reset(){
-		this.trace = new DialogueTrace();
+		this.trace = new DialogueTrace<Argument,Extension>();
 		return true;
 	}
 	

@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
  * @author Tjitze Rienstra, Matthias Thimm
  *
  */
-public class GroundedGameUtilityFunction extends UtilityFunction {
+public class GroundedGameUtilityFunction extends UtilityFunction<Argument,Extension> {
 	
 	/** Logger */
 	static private Logger log = LoggerFactory.getLogger(GroundedGameUtilityFunction.class);
@@ -54,7 +54,7 @@ public class GroundedGameUtilityFunction extends UtilityFunction {
 	 * @param trace some trace
 	 * @return a utility
 	 */
-	private double getUtility(Extension groundedExtension, DialogueTrace trace){
+	private double getUtility(Extension groundedExtension, DialogueTrace<Argument,Extension> trace){
 		double utility = 0;
 		switch(this.faction){
 			case PRO:
@@ -78,8 +78,8 @@ public class GroundedGameUtilityFunction extends UtilityFunction {
 	 * @see net.sf.tweety.agents.argumentation.oppmodels.UtilityFunction#getUtility(net.sf.tweety.agents.argumentation.DialogueTrace)
 	 */
 	@Override
-	public double getUtility(DialogueTrace trace) {		
-		DungTheory theory = this.theory.getRestriction(trace.getArguments());
+	public double getUtility(DialogueTrace<Argument,Extension> trace) {		
+		DungTheory theory = this.theory.getRestriction(trace.getElements());
 		Extension groundedExtension = new GroundReasoner(theory).getExtensions().iterator().next();
 		return this.getUtility(groundedExtension, trace);
 	}
@@ -88,8 +88,8 @@ public class GroundedGameUtilityFunction extends UtilityFunction {
 	 * @see net.sf.tweety.agents.argumentation.oppmodels.UtilityFunction#getUtility(net.sf.tweety.agents.argumentation.DialogueTrace, java.util.Set, java.util.Set)
 	 */
 	@Override
-	public double getUtility(DialogueTrace trace, Set<Argument> additionalArguments, Set<Attack> additionalAttacks){
-		DungTheory theory = this.theory.getRestriction(trace.getArguments());
+	public double getUtility(DialogueTrace<Argument,Extension> trace, Set<Argument> additionalArguments, Set<Attack> additionalAttacks){
+		DungTheory theory = this.theory.getRestriction(trace.getElements());
 		theory.addAll(additionalArguments);
 		theory.addAllAttacks(additionalAttacks);
 		Extension groundedExtension = new GroundReasoner(theory).getExtensions().iterator().next();

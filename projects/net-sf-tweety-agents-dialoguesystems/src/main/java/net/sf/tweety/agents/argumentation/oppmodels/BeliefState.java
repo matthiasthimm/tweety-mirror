@@ -22,14 +22,14 @@ public abstract class BeliefState {
 	/** The set of arguments known by the agent. */
 	private Extension knownArguments;
 	/** The utility function of the agent. */
-	private UtilityFunction utilityFunction;
+	private UtilityFunction<Argument,Extension> utilityFunction;
 	
 	/**
 	 * Creates a new belief-state with the given parameters. 
 	 * @param knownArguments the set of arguments known by the agent.
 	 * @param utilityFunction the utility function of the agent.
 	 */
-	public BeliefState(Extension knownArguments, UtilityFunction utilityFunction){
+	public BeliefState(Extension knownArguments, UtilityFunction<Argument,Extension> utilityFunction){
 		this.knownArguments = knownArguments;
 		this.utilityFunction = utilityFunction;
 	}
@@ -42,11 +42,11 @@ public abstract class BeliefState {
 	 * @param move a possible move
 	 * @return "true" if the given move is legal.
 	 */
-	private boolean isLegal(GroundedEnvironment env, DialogueTrace trace, Set<Argument> move) {		
+	private boolean isLegal(GroundedEnvironment env, DialogueTrace<Argument,Extension> trace, Set<Argument> move) {		
 		/* Moves of size 1 */
 		if(move.size() != 1) return false;	
 		/* Enforce that all but first move attacks a previous move */
-		if(!trace.isEmpty() && !env.getPerceivedDungTheory(trace.addAndCopy(new ExecutableExtension(move)).getArguments()).isAttacked(new Extension(trace.getArguments()),new Extension(move)))
+		if(!trace.isEmpty() && !env.getPerceivedDungTheory(new Extension(trace.addAndCopy(new ExecutableExtension(move)).getElements())).isAttacked(new Extension(trace.getElements()),new Extension(move)))
 			return false;		
 		/* Enforce conflict free moves */
 		//if(env.getPerceivedDungTheory(trace.getArguments()).isAttacked(new Extension(move), new Extension(move))) return false;		
@@ -59,10 +59,10 @@ public abstract class BeliefState {
 	 * @param trace the trace to be considered.
 	 * @return the set of possible moves in the given situation.
 	 */
-	protected Set<ExecutableExtension> getLegalMoves(GroundedEnvironment env, DialogueTrace trace){
+	protected Set<ExecutableExtension> getLegalMoves(GroundedEnvironment env, DialogueTrace<Argument,Extension> trace){
 		Set<ExecutableExtension> moves = new HashSet<ExecutableExtension>();
 		Set<Argument> arguments = new HashSet<Argument>(this.knownArguments);
-		arguments.removeAll(trace.getArguments());
+		arguments.removeAll(trace.getElements());
 		Set<Set<Argument>> allMoves = new SetTools<Argument>().subsets(arguments);
 		for(Set<Argument> move: allMoves)
 			if(this.isLegal(env, trace, move))
@@ -82,7 +82,7 @@ public abstract class BeliefState {
 	 * Returns the utility function of this belief state.
 	 * @return the utility function of this belief state.
 	 */
-	protected UtilityFunction getUtilityFunction(){
+	protected UtilityFunction<Argument,Extension> getUtilityFunction(){
 		return this.utilityFunction;
 	}
 	
@@ -91,7 +91,7 @@ public abstract class BeliefState {
 	 * the given dialogue trace.
 	 * @param trace a dialogue trace
 	 */
-	public abstract void update(DialogueTrace trace);
+	public abstract void update(DialogueTrace<Argument,Extension> trace);
 	
 	/**
 	 * Gives the set of all best next moves with their expected utility
@@ -100,7 +100,7 @@ public abstract class BeliefState {
 	 * @param trace the dialogue trace.
 	 * @return the set of all best next moves with their expected utility
 	 */
-	protected abstract Pair<Double,Set<ExecutableExtension>> doMove(GroundedEnvironment env, DialogueTrace trace);
+	protected abstract Pair<Double,Set<ExecutableExtension>> doMove(GroundedEnvironment env, DialogueTrace<Argument,Extension> trace);
 	
 	/**
 	 * Pretty print of this belief state.

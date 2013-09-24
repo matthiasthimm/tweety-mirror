@@ -6,6 +6,8 @@ import net.sf.tweety.agents.Agent;
 import net.sf.tweety.agents.Executable;
 import net.sf.tweety.agents.Perceivable;
 import net.sf.tweety.agents.argumentation.DialogueTrace;
+import net.sf.tweety.argumentation.dung.semantics.Extension;
+import net.sf.tweety.argumentation.dung.syntax.Argument;
 
 /**
  * This class represent a general arguing agent with an belief state. 
@@ -66,7 +68,7 @@ public class ArguingAgent extends Agent {
 	 * @param trace a dialogue trace
 	 * @return the utility of this agent for this dialog trace
 	 */
-	protected double getUtility(DialogueTrace trace){
+	protected double getUtility(DialogueTrace<Argument,Extension> trace){
 		return this.beliefState.getUtilityFunction().getUtility(trace);
 	}
 

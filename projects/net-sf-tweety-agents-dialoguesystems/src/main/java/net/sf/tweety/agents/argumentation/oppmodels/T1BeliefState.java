@@ -6,6 +6,7 @@ import java.util.Set;
 import net.sf.tweety.agents.argumentation.DialogueTrace;
 import net.sf.tweety.agents.argumentation.ExecutableExtension;
 import net.sf.tweety.argumentation.dung.semantics.Extension;
+import net.sf.tweety.argumentation.dung.syntax.Argument;
 import net.sf.tweety.util.Pair;
 
 /**
@@ -26,7 +27,7 @@ public class T1BeliefState extends BeliefState {
 	 * @param utilityFunction the utility function of the agent.
 	 * @param oppModel the opponent model of the agent (null if no further model is given).
 	 */
-	public T1BeliefState(Extension knownArguments, UtilityFunction utilityFunction, T1BeliefState oppModel){
+	public T1BeliefState(Extension knownArguments, UtilityFunction<Argument,Extension> utilityFunction, T1BeliefState oppModel){
 		super(knownArguments, utilityFunction);
 		this.oppModel = oppModel;
 	}
@@ -36,7 +37,7 @@ public class T1BeliefState extends BeliefState {
 	 * @param knownArguments the set of arguments known by the agent.
 	 * @param utilityFunction the utility function of the agent.	 
 	 */
-	public T1BeliefState(Extension knownArguments, UtilityFunction utilityFunction){
+	public T1BeliefState(Extension knownArguments, UtilityFunction<Argument,Extension> utilityFunction){
 		this(knownArguments, utilityFunction, null);
 	}
 	
@@ -44,8 +45,8 @@ public class T1BeliefState extends BeliefState {
 	 * @see net.sf.tweety.agents.argumentation.oppmodels.BeliefState#update(net.sf.tweety.agents.argumentation.DialogueTrace)
 	 */
 	@Override
-	public void update(DialogueTrace trace) {
-		this.getKnownArguments().addAll(trace.getArguments());
+	public void update(DialogueTrace<Argument,Extension> trace) {
+		this.getKnownArguments().addAll(trace.getElements());
 		if(this.oppModel != null)
 			this.oppModel.update(trace);
 	}
@@ -54,7 +55,7 @@ public class T1BeliefState extends BeliefState {
 	 * @see net.sf.tweety.agents.argumentation.oppmodels.BeliefState#doMove(net.sf.tweety.agents.argumentation.oppmodels.GroundedEnvironment, net.sf.tweety.agents.argumentation.DialogueTrace)
 	 */
 	@Override
-	public Pair<Double,Set<ExecutableExtension>> doMove(GroundedEnvironment env, DialogueTrace trace) {
+	public Pair<Double,Set<ExecutableExtension>> doMove(GroundedEnvironment env, DialogueTrace<Argument,Extension> trace) {
 		double maxUtility = this.getUtilityFunction().getUtility(trace);
 		Set<ExecutableExtension> bestMoves = new HashSet<ExecutableExtension>();
 		Set<ExecutableExtension> ee = this.getLegalMoves(env, trace);		

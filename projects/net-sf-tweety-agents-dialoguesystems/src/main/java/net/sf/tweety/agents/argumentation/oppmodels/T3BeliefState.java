@@ -36,7 +36,7 @@ public class T3BeliefState extends BeliefState implements Comparable<T3BeliefSta
 	 * @param utilityFunction the utility function of the agent.
 	 * @param prob the probability function over opponent models.
 	 */
-	public T3BeliefState(Extension knownArguments, UtilityFunction utilityFunction, Set<Argument> virtualArguments, Set<Attack> virtualAttacks, RecognitionFunction rec, ProbabilityFunction<T3BeliefState> prob){
+	public T3BeliefState(Extension knownArguments, UtilityFunction<Argument,Extension> utilityFunction, Set<Argument> virtualArguments, Set<Attack> virtualAttacks, RecognitionFunction rec, ProbabilityFunction<T3BeliefState> prob){
 		super(knownArguments, utilityFunction);
 		this.virtualArguments = virtualArguments;
 		this.virtualAttacks = virtualAttacks;
@@ -48,9 +48,9 @@ public class T3BeliefState extends BeliefState implements Comparable<T3BeliefSta
 	 * @see net.sf.tweety.agents.argumentation.oppmodels.BeliefState#update(net.sf.tweety.agents.argumentation.DialogueTrace)
 	 */
 	@Override
-	public void update(DialogueTrace trace) {
-		this.getKnownArguments().addAll(trace.getArguments());
-		for(Argument a: trace.getArguments())
+	public void update(DialogueTrace<Argument,Extension> trace) {
+		this.getKnownArguments().addAll(trace.getElements());
+		for(Argument a: trace.getElements())
 			if(this.rec.get(a) != null)
 				this.virtualArguments.removeAll(this.rec.get(a));
 		Set<Attack> newVirtualAttacks = new HashSet<Attack>();
@@ -73,13 +73,13 @@ public class T3BeliefState extends BeliefState implements Comparable<T3BeliefSta
 	 * @see net.sf.tweety.agents.argumentation.oppmodels.BeliefState#doMove(net.sf.tweety.agents.argumentation.oppmodels.GroundedEnvironment, net.sf.tweety.agents.argumentation.DialogueTrace)
 	 */
 	@Override
-	protected Pair<Double, Set<ExecutableExtension>> doMove(GroundedEnvironment env, DialogueTrace trace) {
+	protected Pair<Double, Set<ExecutableExtension>> doMove(GroundedEnvironment env, DialogueTrace<Argument,Extension> trace) {
 		double bestEU = this.getUtilityFunction().getUtility(env.getDialogueTrace(), this.virtualArguments, this.virtualAttacks);
 		Set<ExecutableExtension> bestMoves = new HashSet<ExecutableExtension>();
 		bestMoves.add(new ExecutableExtension());
 		/* For every legal move newMove ... */		
 		for(ExecutableExtension newMove: this.getLegalMoves(env,trace)){			
-			DialogueTrace t2 = trace.addAndCopy(newMove);
+			DialogueTrace<Argument,Extension> t2 = trace.addAndCopy(newMove);
 			double newMoveEU = 0;			
 			/* For all possible opponent states oppState ... */
 			if(this.prob.isEmpty())
@@ -104,7 +104,7 @@ public class T3BeliefState extends BeliefState implements Comparable<T3BeliefSta
 								newMoveEU += this.getUtilityFunction().getUtility(t2, this.virtualArguments, this.virtualAttacks) * oppStateProb.doubleValue() * oppResponseProb;
 								continue;
 							}
-							DialogueTrace t3 = t2.addAndCopy(oppResponse);		
+							DialogueTrace<Argument,Extension> t3 = t2.addAndCopy(oppResponse);		
 							/* Get best response to oppResponse */
 							Pair<Double, Set<ExecutableExtension>> r = this.doMove(env, t3);						
 							/* Expected utility is utility of best response times probability of 
