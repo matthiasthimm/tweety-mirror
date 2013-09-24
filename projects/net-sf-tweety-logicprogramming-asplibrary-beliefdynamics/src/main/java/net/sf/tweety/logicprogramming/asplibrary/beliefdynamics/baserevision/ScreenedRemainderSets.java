@@ -156,7 +156,7 @@ public class ScreenedRemainderSets extends RemainderSets<Rule> {
 		String input = "a :- b.\n -a. \n b. \n :- not -a, not b.";
 		
 		//TODO: replace
-		String pathToSolver = "/home/sese/devel/asp_solver/unix/dlv";
+		String pathToSolver = "";
 		Solver solver = new DLV(pathToSolver);
 		
 		Program p = ASPParser.parseProgram(input);

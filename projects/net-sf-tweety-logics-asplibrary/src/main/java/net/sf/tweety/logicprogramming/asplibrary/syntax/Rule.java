@@ -229,6 +229,10 @@ public class Rule
 		if(comp != 0)
 			return comp;
 		
+		//TODO: This implementation is not compatible with equals, because
+		//      the comparison depends on the order in which the elements
+		//      have been added to the premise list. Ex.:
+		//      compareTo(:- a,b., :- b,a.) = -1 
 		// if the head is the same use the body.
 		for(int i=0; i<body.size() && i<arg0.body.size(); ++i) {
 			comp = body.get(i).toString().compareTo(arg0.body.get(i).toString());

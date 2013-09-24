@@ -106,7 +106,6 @@ public class ArgumentationReasoner extends Reasoner {
 		return (! isOverruled(arg) ) && (! isJustified(arg) );
 	}
 	
-	
 	/**
 	 * Returns the set of x/y-justified arguments using a bottom-up fixpoint calculation
 	 * @return the set of x/y-justified arguments
@@ -116,7 +115,7 @@ public class ArgumentationReasoner extends Reasoner {
 		Set<Argument> arguments = kb.getArguments();
 		Set<Argument> result = new HashSet<Argument>();
 		
-		// fixpoint calculation, add defended arguments until nothing changes
+		// fixpoint calculation: add defended arguments until nothing changes
 		boolean changes = true;
 		while(changes) {
 			changes = false;
@@ -126,6 +125,47 @@ public class ArgumentationReasoner extends Reasoner {
 						result.add(arg);
 						changes = true;
 					}
+				}
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * Returns the set of overruled arguments, i.e. the set of arguments,
+	 * which are attacked by a justified argument.
+	 * @return the set of overruled arguments.
+	 */
+	public Set<Argument> getOverruledArguments() {
+		ArgumentationKnowledgeBase kb = (ArgumentationKnowledgeBase) this.getKnowledgBase();
+		Set<Argument> arguments = kb.getArguments();
+		Set<Argument> result = new HashSet<Argument>();
+		Set<Argument> justifiedArguments = getJustifiedArguments();
+		for(Argument candidate : arguments) {
+			for(Argument justified : justifiedArguments) {
+				if(attack.attacks(justified, candidate)) {
+					result.add(candidate);
+				}
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * Returns the set of defensible arguments, i.e. the set of arguments,
+	 * that are neither justified nor overruled.
+	 * @return the set of defensible arguments.
+	 */
+	public Set<Argument> getDefensibleArguments() {
+		ArgumentationKnowledgeBase kb = (ArgumentationKnowledgeBase) this.getKnowledgBase();
+		Set<Argument> result = new HashSet<Argument>();
+		Set<Argument> arguments = kb.getArguments();
+		Set<Argument> justifiedArguments = getJustifiedArguments();
+		Set<Argument> overruledArguments = getOverruledArguments();
+		for(Argument candidate : arguments) {
+			if(!justifiedArguments.contains(candidate)) {
+				if(!overruledArguments.contains(candidate)) {
+					result.add(candidate);
 				}
 			}
 		}
