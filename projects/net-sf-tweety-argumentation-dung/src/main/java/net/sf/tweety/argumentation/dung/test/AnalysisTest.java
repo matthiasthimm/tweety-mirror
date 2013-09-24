@@ -44,7 +44,7 @@ public class AnalysisTest {
 			reasoner = new GroundReasoner(theory);
 			Labeling lab = new Labeling(theory,reasoner.getExtensions().iterator().next());
 			
-			DungTheory invertedTheory = theory.getComplementGraph(Graph.IGNORE_SELFLOOPS);
+			DungTheory invertedTheory = theory;//.getComplementGraph(Graph.IGNORE_SELFLOOPS);
 			//System.out.println(theory + "\t\t" + invertedTheory);
 			for(Argument arg: invertedTheory){
 				for(Argument arg2: invertedTheory)
@@ -65,10 +65,38 @@ public class AnalysisTest {
 			
 		}
 	}
+
+	public static void PageRankTest2(){
+		GroundReasoner reasoner;
+		for(int i = 0; i < 100; i++){
+			DungTheory theory = new DungTheory();
+			Argument prev = new Argument("A0");
+			theory.add(prev);
+			for(int j = 1; j <= i; j++){
+				Argument next = new Argument("A"+j);
+				theory.add(next);
+				theory.add(new Attack(prev,next));
+				prev = next;
+			}
+			
+			reasoner = new GroundReasoner(theory);
+			Labeling lab = new Labeling(theory,reasoner.getExtensions().iterator().next());
+			
+			DungTheory invertedTheory = theory.getComplementGraph(Graph.IGNORE_SELFLOOPS);
+			System.out.println(theory + "\t\t" + invertedTheory);
+			for(Argument arg: invertedTheory){
+				System.out.println(arg + "\t" + lab.get(arg) + "\t" + GraphUtil.hitsRank(invertedTheory, arg, 0.0001, true) + "\t" + GraphUtil.hitsRank(invertedTheory, arg, 0.0001, false));  //GraphUtil.pageRank(invertedTheory, arg, 0.75, 0.0001));				
+			}
+			System.out.println();
+			
+		}
+	}
 	
 	public static void main(String[] args){
 		//AnalysisTest.EigenvalueTest();
-		AnalysisTest.PageRankTest();
+		//AnalysisTest.PageRankTest();
+		AnalysisTest.PageRankTest2();
 	}
 }
+
 

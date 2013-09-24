@@ -21,6 +21,10 @@ public abstract class GraphUtil {
 	/** For archiving page rank values. */
 	private static Map<Graph<? extends Node>,Map<Double,Map<Double,Map<Node,Double>>>> archivePageRank = new HashMap<Graph<? extends Node>,Map<Double,Map<Double,Map<Node,Double>>>>();
 	
+	/** For archiving HITS rank values. */
+	private static Map<Graph<? extends Node>,Map<Double,Map<Node,Double>>> archiveHITSAuthRank = new HashMap<Graph<? extends Node>,Map<Double,Map<Node,Double>>>();
+	private static Map<Graph<? extends Node>,Map<Double,Map<Node,Double>>> archiveHITSHubRank = new HashMap<Graph<? extends Node>,Map<Double,Map<Node,Double>>>();
+	
 	/**
 	 * Computes the PageRank of the given node in the given graph.
 	 * @param g a graph
@@ -68,6 +72,77 @@ public abstract class GraphUtil {
 			GraphUtil.archivePageRank.get(g).put(dampingFactor, new HashMap<Double,Map<Node,Double>>());
 		GraphUtil.archivePageRank.get(g).get(dampingFactor).put(precision, pageRanks);		
 		return pageRanks.get(n);
+	}
+	
+	/**
+	 * Computes the HITS rank of the given node in the given graph.
+	 * @param g a graph
+	 * @param n a node
+	 * @param precision the precision (smaller values mean higher precision)
+	 * @return the HITS rank of the given node in the given graph.
+	 */
+	public static Double hitsRank(Graph<? extends Node> g, Node n, double precision, boolean getAuth){
+		if(getAuth){
+			if(GraphUtil.archiveHITSAuthRank.containsKey(g) &&
+					GraphUtil.archiveHITSAuthRank.get(g).containsKey(precision))
+				return GraphUtil.archiveHITSAuthRank.get(g).get(precision).get(n);
+		}else{
+			if(GraphUtil.archiveHITSHubRank.containsKey(g) &&
+					GraphUtil.archiveHITSHubRank.get(g).containsKey(precision))
+				return GraphUtil.archiveHITSHubRank.get(g).get(precision).get(n);
+		}
+		Map<Node,Double> auth = new HashMap<Node,Double>();
+		Map<Node,Double> hub = new HashMap<Node,Double>();
+		// init
+		for(Node v: g){
+			auth.put(v,1d);
+			hub.put(v,1d);			
+		}
+		// iterate
+		double maxDiff;
+		double sum;
+		double norm;
+		Map<Node,Double> auth_tmp, hub_tmp;		
+		do{						
+			maxDiff = 0;
+			norm = 0;
+			auth_tmp = new HashMap<Node,Double>();
+			for(Node v: g){
+				sum = 0;
+				for(Node w: g.getParents(v))
+					sum += hub.get(w);
+				auth_tmp.put(v, sum);
+				norm += Math.pow(sum, 2);
+			}
+			norm = Math.sqrt(norm);
+			for(Node v: g){
+				auth_tmp.put(v, auth_tmp.get(v) / norm);
+				maxDiff = Math.max(maxDiff, Math.abs(auth.get(v)-auth_tmp.get(v)));
+			}
+			norm = 0;
+			hub_tmp = new HashMap<Node,Double>();
+			for(Node v: g){
+				sum = 0;
+				for(Node w: g.getChildren(v))
+					sum += auth.get(w);
+				hub_tmp.put(v, sum);
+				norm += Math.pow(sum, 2);
+			}
+			norm = Math.sqrt(norm);
+			for(Node v: g){
+				hub_tmp.put(v, hub_tmp.get(v) / norm);
+				maxDiff = Math.max(maxDiff, Math.abs(hub.get(v)-hub_tmp.get(v)));
+			}
+			auth = auth_tmp;
+			hub = hub_tmp;			
+		}while(maxDiff > precision);	
+		if(!GraphUtil.archiveHITSHubRank.containsKey(g))
+			GraphUtil.archiveHITSHubRank.put(g, new HashMap<Double,Map<Node,Double>>());		
+		GraphUtil.archiveHITSHubRank.get(g).put(precision,hub);		
+		if(!GraphUtil.archiveHITSAuthRank.containsKey(g))
+			GraphUtil.archiveHITSAuthRank.put(g, new HashMap<Double,Map<Node,Double>>());		
+		GraphUtil.archiveHITSAuthRank.get(g).put(precision,auth);
+		return getAuth ? auth.get(n) : hub.get(n);		
 	}
 	
 	/**
