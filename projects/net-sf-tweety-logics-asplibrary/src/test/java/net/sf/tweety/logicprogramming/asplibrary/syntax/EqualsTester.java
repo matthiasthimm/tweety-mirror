@@ -5,10 +5,11 @@ import static org.junit.Assert.assertEquals;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPAtom;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
+import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.logics.commons.syntax.FunctionalTerm;
+import net.sf.tweety.logics.commons.syntax.Functor;
 import net.sf.tweety.logics.commons.syntax.NumberTerm;
+import net.sf.tweety.logics.commons.syntax.Variable;
 
 import org.junit.Test;
 
@@ -21,6 +22,13 @@ public class EqualsTester {
 		assertEquals(false, a1.equals(a2));
 		assertEquals(true, a1.equals(new DLPAtom("test", new NumberTerm(1))));
 		assertEquals(false, a1.equals(new DLPAtom("test", new NumberTerm(2))));
+	}
+	
+	@Test
+	public void testCloneEqualAtom() {
+		DLPAtom atom = new DLPAtom("blub", new Variable("X"), new Constant("y"), 
+				new FunctionalTerm(new Functor("test"), new NumberTerm(1), new Variable("X"), new Constant("x")));
+		assertEquals(true, atom.equals(atom.clone())); 
 	}
 	
 	@Test

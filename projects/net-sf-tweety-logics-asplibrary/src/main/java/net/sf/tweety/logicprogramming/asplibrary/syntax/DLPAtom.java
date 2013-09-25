@@ -1,6 +1,5 @@
 package net.sf.tweety.logicprogramming.asplibrary.syntax;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -38,7 +37,7 @@ public class DLPAtom extends DLPElementAdapter implements DLPLiteral {
 	 */
 	public DLPAtom(DLPAtom other) {
 		this.pred = new DLPPredicate(other.getName(), other.getArity());
-		for(Term<?> t : other.getTerms()) {
+		for(Term<?> t : other.getArguments()) {
 			this.arguments.add((Term<?>)t.clone());
 		}
 	}
@@ -61,13 +60,9 @@ public class DLPAtom extends DLPElementAdapter implements DLPLiteral {
 	 * and uses a list of terms as arguments for the atom. 
 	 * Size of terms determines arity of the predicate.
 	 */
-	public DLPAtom(String symbol, Collection<Term<?>> terms) {
+	public DLPAtom(String symbol, List<? extends Term<?>> terms) {
 		this.pred = new DLPPredicate(symbol, terms.size());
 		this.arguments.addAll(terms);
-	}
-		
-	public static DLPAtom instantiate(String functor, Collection<Term<?>> terms) {
-		return new DLPAtom(functor, (terms != null ? terms : new LinkedList<Term<?>>()) );
 	}
 
 	@Override

@@ -24,8 +24,9 @@ public class FunctionalTest {
 				bb += "-argued(john)\n";
 				bb += "test(wife(john))";
 		*/
-		String bb = "(q_Mary(said(X), 1) && a) || b";
-				
+		//String bb = "(q_Mary(said(X), 1) && a) || b";
+			
+		String bb = "not_sure(excused(employee))";		
 		FolParserB bp = new FolParserB(new StringReader(bb));
 		//bp.setForce(true);
 		

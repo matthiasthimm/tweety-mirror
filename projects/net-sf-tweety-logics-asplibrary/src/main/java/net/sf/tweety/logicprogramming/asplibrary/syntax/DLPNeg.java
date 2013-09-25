@@ -1,6 +1,5 @@
 package net.sf.tweety.logicprogramming.asplibrary.syntax;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
@@ -39,7 +38,7 @@ public class DLPNeg extends DLPElementAdapter implements DLPLiteral {
 	 * 
 	 * @param atomexpr
 	 */
-	public DLPNeg(String symbol, Collection<Term<?>> terms) {
+	public DLPNeg(String symbol, List<Term<?>> terms) {
 		atom = new DLPAtom(symbol, terms);
 	}
 	

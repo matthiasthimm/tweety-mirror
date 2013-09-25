@@ -31,4 +31,4 @@ public interface ASPParserVisitor
   public Object visit(ASTCompareOp node, Object data);
   public Object visit(ASTArithmeticOp node, Object data);
 }
-/* JavaCC - OriginalChecksum=32c10ee6e4aa6ed5669e94c42bc95238 (do not edit this line) */
+/* JavaCC - OriginalChecksum=4938ba66312c508aebcaab4f0945b006 (do not edit this line) */
