@@ -46,7 +46,7 @@ public class DLPAtom extends DLPElementAdapter implements DLPLiteral {
 	 * Ctor: Creates an atom with the given predicate as name and the
 	 * given terms as argument
 	 * @param symbol	The name of the atom
-	 * @param terms		A list of Term<?> definining the arguments of the term
+	 * @param terms		A list of Term<?> defining the arguments of the term
 	 */
 	public DLPAtom(String symbol, Term<?>... terms) {
 		this.pred = new DLPPredicate(symbol, terms.length);

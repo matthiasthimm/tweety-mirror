@@ -47,13 +47,13 @@ public class SymbolicSet {
 		String reval = "{";
 		
 		Iterator<Variable> sIter = this.openVariables.iterator();	
+		String vars = "";
 		while(sIter.hasNext()) {
-			reval += ", "+sIter.next();
+			vars += ", "+sIter.next();
 		}
-		reval = reval.substring(2) + ":";	
+		reval += vars.substring(2) + ":";	
 		
 		Iterator<DLPElement> lIter = conjunctions.iterator();
-		
 		String lits = "";
 		while(lIter.hasNext()) {
 			lits += ", " + lIter.next();

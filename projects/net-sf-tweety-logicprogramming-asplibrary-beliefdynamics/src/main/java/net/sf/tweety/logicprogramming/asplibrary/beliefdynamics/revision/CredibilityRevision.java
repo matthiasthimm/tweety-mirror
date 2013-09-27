@@ -133,6 +133,8 @@ public class CredibilityRevision extends CredibilityRevisionNonIterative<Rule> {
 	
 	private AnswerSetList lastProjectedAnswersets;
 	
+	private int maxInt;
+	
 	/** Default Ctor: Do not forget to set the solver */
 	public CredibilityRevision() {}
 	
@@ -141,7 +143,12 @@ public class CredibilityRevision extends CredibilityRevisionNonIterative<Rule> {
 	 * @param solver	Reference to the solver used for answer set generation.
 	 */
 	public CredibilityRevision(Solver solver) {
+		this(solver, 10);
+	}
+	
+	public CredibilityRevision(Solver solver, int maxInt) {
 		this.solver = solver;
+		this.maxInt = maxInt;
 	}
 	
 	public AnswerSetList getLastAnswerset() {
@@ -183,7 +190,7 @@ public class CredibilityRevision extends CredibilityRevisionNonIterative<Rule> {
 		
 		// compute the answer set of the extended alphabet
 		try {
-			lastAnswersets = solver.computeModels(credProgram, 10);
+			lastAnswersets = solver.computeModels(credProgram, maxInt);
 		} catch (SolverException e) {
 			e.printStackTrace();
 			return null;

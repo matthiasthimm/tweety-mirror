@@ -44,10 +44,17 @@ import net.sf.tweety.util.Pair;
  **/
 public class PreferenceHandling extends CredibilityRevisionIterative<Rule> {
 	
+	private int maxInt;
+	
 	private Solver solver;
 	
 	public PreferenceHandling(Solver solver) {
+		this(solver, 5);
+	}
+	
+	public PreferenceHandling(Solver solver, int maxInt)  {
 		this.solver = solver;
+		this.maxInt = maxInt;
 	}
 	
 	public void setSolver(Solver solver) {
@@ -106,7 +113,7 @@ public class PreferenceHandling extends CredibilityRevisionIterative<Rule> {
 		concat.add(pd2);
 		AnswerSetList asDefault;
 		try {
-			asDefault = solver.computeModels(concat, 5);
+			asDefault = solver.computeModels(concat, maxInt);
 		} catch (SolverException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
