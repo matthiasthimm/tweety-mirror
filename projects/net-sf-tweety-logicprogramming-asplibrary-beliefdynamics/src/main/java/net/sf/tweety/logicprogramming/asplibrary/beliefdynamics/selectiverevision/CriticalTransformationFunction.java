@@ -14,7 +14,7 @@ import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
 
 /**
- * This class represents the sceptical transformation function
+ * This class represents the critical transformation function
  * for arbitrary extended logic programs as introduced in [1].
  * 
  * [1] Homann, Sebastian:
@@ -32,7 +32,7 @@ public class CriticalTransformationFunction implements
 	private AttackStrategy defenseRelation;
 	
 	/**
-	 * Creates a new sceptical transformation function for literals.
+	 * Creates a new critical transformation function for literals.
 	 * @param beliefSet The belief set used for this transformation function.
 	 * @param attackRelation the notion of attack used for attacking arguments
 	 * @param defenseRelation the notion of attack used to attack attacking arguments

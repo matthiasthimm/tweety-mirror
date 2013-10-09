@@ -4,31 +4,31 @@ import net.sf.tweety.argumentation.parameterisedhierarchy.syntax.Argument;
 
 
 /**
- * This notion of attack models the defeat relation. 
- * A defeats B iff 
- * (1) A undercuts B or
- * (2) A rebuts B and B does not undercut A
+ * This notion of attack models the strong confident attack relation. 
+ * A strongly attacks B iff 
+ *   (1) A confidently attacks B and 
+ *   (2) B does not undercut A.
  *  
  * @author Sebastian Homann
  *
  */
-public class Defeat implements AttackStrategy {
+public class StrongConfidentAttack implements AttackStrategy {
 
 	/** Singleton instance. */
-	private static Defeat instance = new Defeat();
+	private static StrongConfidentAttack instance = new StrongConfidentAttack();
 	
-	private Rebut rebut = Rebut.getInstance();
+	private ConfidentAttack confidentAttack = ConfidentAttack.getInstance();
 	private Undercut undercut = Undercut.getInstance();
 	
 	/** Private constructor. */
-	private Defeat(){};
+	private StrongConfidentAttack(){};
 	
 	/**
 	 * Returns the singleton instance of this class.
 	 * @return the singleton instance of this class.
 	 */
-	public static Defeat getInstance(){
-		return Defeat.instance;
+	public static StrongConfidentAttack getInstance(){
+		return StrongConfidentAttack.instance;
 	}	
 	
 	/*
@@ -36,10 +36,7 @@ public class Defeat implements AttackStrategy {
 	 * @see net.sf.tweety.argumentation.parameterisedhierarchy.semantics.attack.NotionOfAttack#attacks(net.sf.tweety.argumentation.parameterisedhierarchy.syntax.Argument, net.sf.tweety.argumentation.parameterisedhierarchy.syntax.Argument)
 	 */
 	public boolean attacks(Argument a, Argument b) {
-		if(undercut.attacks(a,b)) {
-			return true;
-		}
-		return rebut.attacks(a,b) && !undercut.attacks(b,a);
+		return confidentAttack.attacks(a, b) && (! undercut.attacks(b, a) );
 	}
 	
 	/*
@@ -48,14 +45,14 @@ public class Defeat implements AttackStrategy {
 	 */
 	@Override
 	public String toString() {
-		return "defeat";
+		return "strong confident attack";
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * @see net.sf.tweety.argumentation.parameterisedhierarchy.semantics.attack.AttackStrategy#toAbbreviation()
 	 */
 	public String toAbbreviation() {
-		return "d";
+		return "sca";
 	}
 }

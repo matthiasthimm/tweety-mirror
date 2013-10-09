@@ -38,11 +38,9 @@ public class SimpleRevisionCompareView extends JPanel implements PropertyChangeL
 	/** kill warning */
 	private static final long serialVersionUID = 5699544277473453367L;
 
-	@SuppressWarnings("rawtypes")
-	protected JComboBox cbOperatorLeft;
+	protected JComboBox<BaseRevisionOperator<?>> cbOperatorLeft;
 	
-	@SuppressWarnings("rawtypes")
-	protected JComboBox cbOperatorRight;
+	protected JComboBox<BaseRevisionOperator<?>> cbOperatorRight;
 
 	protected JButton btnAddLeft;
 	
@@ -151,20 +149,19 @@ public class SimpleRevisionCompareView extends JPanel implements PropertyChangeL
 		return actPanel;
 	}
 	
-	@SuppressWarnings("rawtypes")
 	private JPanel guiGetOperatorControls() {
 		JPanel result = new JPanel();
 		result.setLayout(new BoxLayout(result, BoxLayout.X_AXIS));
 		result.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
 		result.add(new JLabel("Left revision operator:"));
 		result.add(Box.createRigidArea(new Dimension(10, 0)));
-		cbOperatorLeft = new JComboBox();
+		cbOperatorLeft = new JComboBox<BaseRevisionOperator<?>>();
 		result.add(cbOperatorLeft);
 		
 		result.add(Box.createRigidArea(new Dimension(10, 0)));
 		result.add(new JLabel("Right revision operator:"));
 		result.add(Box.createRigidArea(new Dimension(10, 0)));
-		cbOperatorRight = new JComboBox();
+		cbOperatorRight = new JComboBox<BaseRevisionOperator<?>>();
 		result.add(cbOperatorRight);
 		return result;
 	}
@@ -190,7 +187,6 @@ public class SimpleRevisionCompareView extends JPanel implements PropertyChangeL
 	 * Reacts to property change events to keep the view up to date. The presenter is
 	 * responsible to register the view at the correct data-model.
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		if(evt.getPropertyName().equals("leftOperator")) {

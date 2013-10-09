@@ -4,8 +4,10 @@ import net.sf.tweety.argumentation.parameterisedhierarchy.syntax.Argument;
 
 
 /**
- * This notion of attack models the attack relation. 
- * A attacks B iff A undercuts or rebuts B.
+ * This notion of attack models the strong attack relation. 
+ * A strongly attacks B iff 
+ *   (1) A attacks B and 
+ *   (2) B does not undercut A.
  *  
  * @author Sebastian Homann
  *

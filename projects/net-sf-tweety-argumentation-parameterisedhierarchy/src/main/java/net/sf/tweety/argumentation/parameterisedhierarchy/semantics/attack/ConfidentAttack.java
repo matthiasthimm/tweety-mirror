@@ -4,31 +4,29 @@ import net.sf.tweety.argumentation.parameterisedhierarchy.syntax.Argument;
 
 
 /**
- * This notion of attack models the defeat relation. 
- * A defeats B iff 
- * (1) A undercuts B or
- * (2) A rebuts B and B does not undercut A
+ * This notion of attack models the confident attack relation. 
+ * A attacks B iff A undercuts or confidently rebuts B.
  *  
  * @author Sebastian Homann
  *
  */
-public class Defeat implements AttackStrategy {
+public class ConfidentAttack implements AttackStrategy {
 
 	/** Singleton instance. */
-	private static Defeat instance = new Defeat();
+	private static ConfidentAttack instance = new ConfidentAttack();
 	
-	private Rebut rebut = Rebut.getInstance();
+	private ConfidentRebut confidentRebut = ConfidentRebut.getInstance();
 	private Undercut undercut = Undercut.getInstance();
 	
 	/** Private constructor. */
-	private Defeat(){};
+	private ConfidentAttack(){};
 	
 	/**
 	 * Returns the singleton instance of this class.
 	 * @return the singleton instance of this class.
 	 */
-	public static Defeat getInstance(){
-		return Defeat.instance;
+	public static ConfidentAttack getInstance(){
+		return ConfidentAttack.instance;
 	}	
 	
 	/*
@@ -36,26 +34,15 @@ public class Defeat implements AttackStrategy {
 	 * @see net.sf.tweety.argumentation.parameterisedhierarchy.semantics.attack.NotionOfAttack#attacks(net.sf.tweety.argumentation.parameterisedhierarchy.syntax.Argument, net.sf.tweety.argumentation.parameterisedhierarchy.syntax.Argument)
 	 */
 	public boolean attacks(Argument a, Argument b) {
-		if(undercut.attacks(a,b)) {
-			return true;
-		}
-		return rebut.attacks(a,b) && !undercut.attacks(b,a);
+		return confidentRebut.attacks(a, b) || undercut.attacks(a, b);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
-		return "defeat";
+		return "confident attack";
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see net.sf.tweety.argumentation.parameterisedhierarchy.semantics.attack.AttackStrategy#toAbbreviation()
-	 */
 	public String toAbbreviation() {
-		return "d";
+		return "ca";
 	}
 }

@@ -84,8 +84,9 @@ public class ArgumentativeSelectiveRevisionTest {
 		if(args.length >= 1) {
 			path = args[0];
 		} else {
-			String msg = "Please provide the path to the dlv binary.";
-			JOptionPane.showMessageDialog(view, msg);
+//			String msg = "Please provide the path to the dlv binary.";
+//			JOptionPane.showMessageDialog(view, msg);
+			path = "/home/sese/devel/asp_solver/unix/dlv";
 		}
 		
 		if(!new File(path).exists()) {
@@ -129,8 +130,21 @@ public class ArgumentativeSelectiveRevisionTest {
 		model.addOperator(new ParameterisedArgumentativeSelectiveRevisionOperator(solver, attack, defense, type));
 		
 		type = TransformationType.NAIVE;
+		
+		attack = StrongAttack.getInstance();
+		defense = Attack.getInstance();
+		model.addOperator(new ParameterisedArgumentativeSelectiveRevisionOperator(solver, attack, defense, type));
+		
+		attack = StrongAttack.getInstance();
+		defense = StrongAttack.getInstance();
+		model.addOperator(new ParameterisedArgumentativeSelectiveRevisionOperator(solver, attack, defense, type));
+		
 		attack = Defeat.getInstance();
 		defense = Defeat.getInstance();
+		model.addOperator(new ParameterisedArgumentativeSelectiveRevisionOperator(solver, attack, defense, type));
+		
+		attack = Attack.getInstance();
+		defense = Attack.getInstance();
 		model.addOperator(new ParameterisedArgumentativeSelectiveRevisionOperator(solver, attack, defense, type));
 		
 		type = TransformationType.CRITICAL;
