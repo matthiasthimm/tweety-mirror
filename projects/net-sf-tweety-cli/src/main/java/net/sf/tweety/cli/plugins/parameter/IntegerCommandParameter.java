@@ -23,9 +23,13 @@ public class IntegerCommandParameter extends CommandParameter {
 
 	public IntegerCommandParameter(String id, String des) {
 		super(id, des);
-
 	}
-
+	
+	public IntegerCommandParameter(String id, String des, Interval<Integer> interval) {
+		super(id, des);
+		this.interval = interval;
+	}
+	
 	public IntegerCommandParameter(String id, String des, String interval) {
 		super(id, des);
 		setInterval(interval);
@@ -67,6 +71,7 @@ public class IntegerCommandParameter extends CommandParameter {
 	/**
 	 * checks whether a cli input parameter argument is valid for the called command parameter
 	 */
+	@Override
 	public boolean isValid(String s) {
 		Integer in = Integer.parseInt(s);
 		if(in >= interval.getLowerBound() && in <= interval.getUpperBound()){
@@ -78,6 +83,7 @@ public class IntegerCommandParameter extends CommandParameter {
 	/**
 	 * instantiates a new parameter iff the given value ist valid for this command parameter
 	 */
+	@Override
 	public CommandParameter instantiate(String s) throws CloneNotSupportedException{
 		if(isValid(s)){
 			IntegerCommandParameter newParameter = (IntegerCommandParameter) this.clone();
@@ -92,8 +98,8 @@ public class IntegerCommandParameter extends CommandParameter {
 	 * 
 	 */
 	@Override
-	public Object clone() throws CloneNotSupportedException{
-		return super.clone();
+	public Object clone(){
+		return new IntegerCommandParameter(this.getIdentifier(), this.getDescription(), this.getInterval());
 	}
 
 }

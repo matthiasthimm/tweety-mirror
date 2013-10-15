@@ -2,7 +2,6 @@ package net.sf.tweety.cli.plugins.parameter;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This parameter holds a file-list of possible arguments
@@ -63,6 +62,7 @@ public class FileListCommandParameter extends CommandParameter {
 	 * command parameter
 	 */
 
+	@Override
 	public CommandParameter instantiate(String s) {
 
 		return null;
@@ -84,5 +84,11 @@ public class FileListCommandParameter extends CommandParameter {
 		filelist.setValue(out);
 
 		return out;
+	}
+
+	@Override
+	public Object clone(){
+		
+		return new FileListCommandParameter(this.getIdentifier(), this.getDescription());
 	}
 }

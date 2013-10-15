@@ -1,0 +1,23 @@
+Tweety CLI Hilfe:
+ 
+Standard-Parameter:
+"-p <pluginname>" Plugin <pluginname> aufrufen
+z.B.: "-p preferences" ruft Plugin "preferences" auf
+ 
+"-i <datei>" Input-Datei <datei>
+z.B.: "-i Test.txt" liest Datei Test.txt ein
+ 
+"-o <datei>" Output in Datei <datei> schreiben
+(wenn nicht angeben, wird der Output auf der Konsole ausgegeben)
+z.B.: "-o Ausgabe.txt" schreibt in Datei "Ausgabe.txt"
+ 
+Kompletter Beispielaufruf:
+"-p preferences -i testA.po testB.po -o result.po -aggr plurality"
+Ruft das Plugin "preferences" mit den beiden Dateien "testA" und
+"testB", verarbeitet sie anhand der des Plugin-spezfischen
+Parameters "-aggr plurality" und schreibt das Ergebnis in die 
+Datei "result.po"
+ 
+(Angedacht) 
+Sonstige Parameter:
+"-p <plugin> --parameter" von gewünschtem Plugin abrufbar.

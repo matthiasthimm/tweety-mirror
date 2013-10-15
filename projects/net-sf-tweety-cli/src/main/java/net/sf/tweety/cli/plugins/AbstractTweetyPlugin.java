@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.sf.tweety.cli.plugins.parameter.CommandParameter;
-import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 /**
  * This abstract class implements the TweetyPlugin interface and provides a base
@@ -47,6 +46,7 @@ public abstract class AbstractTweetyPlugin implements TweetyPlugin {
 	/**
 	 * returns all possible parameters
 	 */
+	@Override
 	public List<CommandParameter> getParameters() {
 		return parameters;
 	}

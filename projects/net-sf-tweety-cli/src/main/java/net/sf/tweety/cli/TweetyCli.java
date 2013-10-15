@@ -181,27 +181,27 @@ public class TweetyCli {
 		try{
 			RpclBeliefSet kb = (RpclBeliefSet)((RpclParser) inputParser[0]).parseBeliefBaseFromFile(inputFiles[0]);
 			if(inputFiles.length == 1){				
-				RpclMeReasoner reasoner = new RpclMeReasoner(kb,semantics,(FolSignature)((RpclParser) inputParser[0]).getSignature(),inferenceType);
+				RpclMeReasoner reasoner = new RpclMeReasoner(kb,semantics,((RpclParser) inputParser[0]).getSignature(),inferenceType);
 				ProbabilityDistribution<?> p = reasoner.getMeDistribution();
 				outputWriter.setObject(p);
 				outputWriter.writeToFile(outputFile);
 				System.exit(0);
 			}else if(inputParser[1] instanceof RpclProbabilityDistributionParser) {
 				((RpclProbabilityDistributionParser)inputParser[1]).setSemantics(semantics);
-				((RpclProbabilityDistributionParser)inputParser[1]).setSignature((FolSignature)((RpclParser) inputParser[0]).getSignature());
+				((RpclProbabilityDistributionParser)inputParser[1]).setSignature(((RpclParser) inputParser[0]).getSignature());
 				ProbabilityDistribution<?> p = ((RpclProbabilityDistributionParser)inputParser[1]).parseProbabilityDistribution(new InputStreamReader(new java.io.FileInputStream(inputFiles[1])));
 				FolParser folParser = new FolParser();
-				folParser.setSignature((FolSignature)((RpclParser) inputParser[0]).getSignature());
-				Probability result = p.probability((FolFormula)folParser.parseFormula(query));
+				folParser.setSignature(((RpclParser) inputParser[0]).getSignature());
+				Probability result = p.probability(folParser.parseFormula(query));
 				log.info("Probability of '" + query + "' on knowledge base '" + kb + "'  is: " + result.getValue());
 				System.out.println(result.getValue());
 				System.exit(0);
 			}else if(inputParser[1] instanceof RpclCondensedProbabilityDistributionParser) {
 				((RpclCondensedProbabilityDistributionParser)inputParser[1]).setSemantics(semantics);
-				((RpclCondensedProbabilityDistributionParser)inputParser[1]).setSignature((FolSignature)((RpclParser) inputParser[0]).getSignature());
+				((RpclCondensedProbabilityDistributionParser)inputParser[1]).setSignature(((RpclParser) inputParser[0]).getSignature());
 				CondensedProbabilityDistribution p = ((RpclCondensedProbabilityDistributionParser)inputParser[1]).parseCondensedProbabilityDistribution(new InputStreamReader(new java.io.FileInputStream(inputFiles[1])));
 				FolParser folParser = new FolParser();
-				folParser.setSignature((FolSignature)((RpclParser) inputParser[0]).getSignature());
+				folParser.setSignature(((RpclParser) inputParser[0]).getSignature());
 				Probability result = p.probability((FolFormula)folParser.parseFormula(query));
 				log.info("Probability of '" + query + "' on knowledge base '" + kb + "' is: " + result.getValue());
 				System.out.println(result.getValue());

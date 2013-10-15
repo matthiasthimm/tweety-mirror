@@ -1,7 +1,11 @@
 package net.sf.tweety.cli.plugins;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -9,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 
 import net.sf.tweety.cli.plugins.parameter.CommandParameter;
-import net.xeoh.plugins.base.Plugin;
 import net.xeoh.plugins.base.PluginManager;
 import net.xeoh.plugins.base.impl.PluginManagerFactory;
 import net.xeoh.plugins.base.util.PluginManagerUtil;
@@ -25,6 +28,8 @@ import org.apache.commons.configuration.XMLConfiguration;
  */
 
 public class CliMain {
+
+	public static final String HELPTEXT = "help.txt";
 
 	public static final String TWEETY_CLI_DEFAULT_CONFIG = "tweety_config.xml";
 
@@ -51,6 +56,32 @@ public class CliMain {
 	private static CommandParameter[] pluginParams = null;
 
 	/**
+	 * prints help text if cli is called with parameter "--help"
+	 */
+	public static void printHelpText() {
+		File help = new File(HELPTEXT).getAbsoluteFile();
+		try {
+			BufferedReader bfrd = new BufferedReader(new FileReader(help));
+
+			try {
+				String line;
+				while ((line = bfrd.readLine()) != null) {
+					if (line.length() >= 1) {
+						System.out.println(line);
+					}
+				}
+				bfrd.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+		} catch (FileNotFoundException f) {
+			f.printStackTrace();
+		}
+
+	}
+
+	/**
 	 * This method is meant to load the tweety plugin pathes on startup
 	 * 
 	 * @returns an object with one or more pluginpathes
@@ -63,21 +94,26 @@ public class CliMain {
 
 		XMLConfiguration tweetyXmlConfig = new XMLConfiguration();
 		File in = new File(TWEETY_CLI_DEFAULT_CONFIG);
-		String inPath = in.getAbsolutePath();
-		tweetyXmlConfig.setBasePath(inPath.substring(0, inPath.length()
-				- TWEETY_CLI_DEFAULT_CONFIG.length() - 1));
-		tweetyXmlConfig.load(in);
+		try {
+			String inPath = in.getAbsolutePath();
+			tweetyXmlConfig.setBasePath(inPath.substring(0, inPath.length()
+					- TWEETY_CLI_DEFAULT_CONFIG.length() - 1));
+			tweetyXmlConfig.load(in);
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		}
 
 		// map über "plugins.plugin" mit keys ()
+		// TODO: Verhalten bei leeren Feldern prüfen
 		Iterator<String> it = tweetyXmlConfig.getKeys("plugin");
 
-		ArrayList<String> tmp = (ArrayList<String>) tweetyXmlConfig
+		ArrayList<String> pluginPath = (ArrayList<String>) tweetyXmlConfig
 				.getProperty(it.next());
-		ArrayList<String> tmp2 = (ArrayList<String>) tweetyXmlConfig
+		ArrayList<String> pluginName = (ArrayList<String>) tweetyXmlConfig
 				.getProperty(it.next());
 
-		for (int i = 0; i < tmp.size(); i++) {
-			loadablePlugins.put(tmp2.get(i), tmp.get(i));
+		for (int i = 0; i < pluginPath.size(); i++) {
+			loadablePlugins.put(pluginName.get(i), pluginPath.get(i));
 		}
 		return loadablePlugins;
 	}
@@ -106,7 +142,7 @@ public class CliMain {
 	public static ArrayList<CommandParameter> instantiateParameters(
 			TweetyPlugin tp, ArrayList<ArrayList<String>> inparams)
 			throws CloneNotSupportedException {
-		
+
 		// new array list for the instantiated command parameter
 		ArrayList<CommandParameter> tmp = new ArrayList<CommandParameter>(
 				inparams.size());
@@ -123,9 +159,10 @@ public class CliMain {
 
 			for (CommandParameter cp : tp.getParameters()) {
 				if (cp.getIdentifier().equalsIgnoreCase(cmdIdentifier)) {
-					for(int j = 0; j<inparams.get(i).size(); j++){
-					tmp.add(cp.instantiate(inparams.get(i).get(j)));
-					}				}
+					for (int j = 0; j < inparams.get(i).size(); j++) {
+						tmp.add(cp.instantiate(inparams.get(i).get(j)));
+					}
+				}
 			}
 		}
 
@@ -133,6 +170,18 @@ public class CliMain {
 	}
 
 	public static void main(String[] args) {
+		// System.out.println(args.length);
+		if (args.length == 0) {
+			System.out.println("Tweety CLI: Hilfetext verfügbar mit --help");
+			System.exit(-1);
+		} else if ((args.length == 1 && args[0].equals("--help"))) {
+			printHelpText();
+			System.exit(-1);
+		} else if (args.length == 1 && !args[0].contains("--help")){
+			System.out.println("Keine gültige Eingabe, Hilfe über --help");
+			System.exit(-1);
+		}
+
 		TweetyPlugin tweetyPlugin;
 		PluginManager pm = PluginManagerFactory.createPluginManager();
 		PluginManagerUtil pmu = new PluginManagerUtil(pm);
@@ -219,13 +268,13 @@ public class CliMain {
 						.toURI());
 			} else {
 				System.out.println("No such plugin available.");
-				
+
 			}
 		}
 
 		// Testausgabe aller Plugins
-		System.out.println(pm.getPlugin(TweetyPlugin.class));
-		System.out.println(pmu.getPlugins());
+		// System.out.println(pm.getPlugin(TweetyPlugin.class));
+		// System.out.println(pmu.getPlugins());
 
 		//
 		for (TweetyPlugin tp : pmu.getPlugins(TweetyPlugin.class)) {
@@ -237,15 +286,16 @@ public class CliMain {
 				try {
 					ip.addAll(instantiateParameters(tp, collectedparams));
 				} catch (CloneNotSupportedException e) {
-					//
+					e.printStackTrace();
 				}
-				PluginOutput out = tp.execute(inputFiles, ip.toArray(new CommandParameter[ip.size()]));	
+				PluginOutput out = tp.execute(inputFiles,
+						ip.toArray(new CommandParameter[ip.size()]));
 				System.out.println("Output: " + out.getOutput());
-				
+
 			}
 
 		}
-		
+
 	}
-	
+
 }

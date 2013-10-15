@@ -71,7 +71,5 @@ public abstract class CommandParameter implements Cloneable {
 	 * 
 	 */
 	@Override
-	public Object clone() throws CloneNotSupportedException{
-		return super.clone();
-	}
+	public abstract Object clone() throws CloneNotSupportedException;
 }
