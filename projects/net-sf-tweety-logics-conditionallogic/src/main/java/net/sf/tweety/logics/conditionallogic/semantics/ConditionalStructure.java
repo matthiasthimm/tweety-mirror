@@ -1,10 +1,12 @@
 package net.sf.tweety.logics.conditionallogic.semantics;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
@@ -93,6 +95,10 @@ public class ConditionalStructure implements Comparator<NicePossibleWorld>{
 	private Map<Conditional, SortedMap<NicePossibleWorld, Generator>> conditionalData = 
 			new HashMap<Conditional, SortedMap<NicePossibleWorld,Generator>>();
 
+	private Map<Conditional, List<NicePossibleWorld>> verifyingWorlds = new HashMap<Conditional, List<NicePossibleWorld>>();
+	
+	private Map<Conditional, List<NicePossibleWorld>> falsifyingWorlds = new HashMap<Conditional, List<NicePossibleWorld>>();
+	
 	/**
 	 * The object used to sort the Nice Possible worlds
 	 */
@@ -154,6 +160,16 @@ public class ConditionalStructure implements Comparator<NicePossibleWorld>{
 	/** @return An unmodifiable set of all possible worlds in this ConditionalStructure */
 	public Set<NicePossibleWorld> getPossibleWorlds() {
 		return Collections.unmodifiableSet(worldData.keySet());
+	}
+	
+	public List<NicePossibleWorld> getFalsifiyingWorlds(Conditional cond) {
+		List<NicePossibleWorld> toWrap = falsifyingWorlds.get(cond);
+		return toWrap == null ? null : Collections.unmodifiableList(toWrap);
+	}
+	
+	public List<NicePossibleWorld> getVerifyingWorlds(Conditional cond) {
+		List<NicePossibleWorld> toWrap = verifyingWorlds.get(cond);
+		return toWrap == null ? null : Collections.unmodifiableList(toWrap);
 	}
 	
 	/**
@@ -241,6 +257,10 @@ public class ConditionalStructure implements Comparator<NicePossibleWorld>{
 			updateSignature(this.signature);
 		}
 		
+		// generate fast falsifying and verifying lists:
+		this.verifyingWorlds.put(cond, new ArrayList<NicePossibleWorld>());
+		this.falsifyingWorlds.put(cond, new ArrayList<NicePossibleWorld>());
+		
 		// add the new conditional and update the world data:
 		this.conditionalData.put(cond, 
 				new TreeMap<NicePossibleWorld, ConditionalStructure.Generator>(this.worldSorting));
@@ -276,6 +296,10 @@ public class ConditionalStructure implements Comparator<NicePossibleWorld>{
 			for(NicePossibleWorld npw : worldData.keySet()) {
 				worldData.get(npw).remove(cond);
 			}
+			
+			// remove fast access lists:
+			verifyingWorlds.remove(cond);
+			falsifyingWorlds.remove(cond);
 			return true;
 		}
 		return false;
@@ -288,6 +312,8 @@ public class ConditionalStructure implements Comparator<NicePossibleWorld>{
 	public void clear() {
 		this.conditionalData.clear();
 		this.worldData.clear();
+		this.verifyingWorlds.clear();
+		this.falsifyingWorlds.clear();
 		this.signature.clear();
 	}
 	
@@ -357,6 +383,11 @@ public class ConditionalStructure implements Comparator<NicePossibleWorld>{
 		if(gen != Generator.CG_ONE) {
 			worldData.get(npw).put(cond, gen);
 			conditionalData.get(cond).put(npw, gen);
+			if(gen == Generator.CG_PLUS) {
+				verifyingWorlds.get(cond).add(npw);
+			} else if(gen == Generator.CG_MINUS) {
+				falsifyingWorlds.get(cond).add(npw);
+			}
 			return true;
 		}
 		return false;

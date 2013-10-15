@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+
 import net.sf.tweety.cli.plugins.AbstractTweetyPlugin;
 import net.sf.tweety.cli.plugins.PluginOutput;
 import net.sf.tweety.cli.plugins.parameter.CommandParameter;
