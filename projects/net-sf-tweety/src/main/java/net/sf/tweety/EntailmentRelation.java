@@ -90,11 +90,11 @@ public abstract class EntailmentRelation<T extends Formula> {
 		if(!this.entails(formulas, formula)) return kernels;
 		SubsetIterator<T> it = new IncreasingSubsetIterator<T>(new HashSet<T>(formulas));
 		boolean superSetOfKernel;
-		double i=0;
-		double pow = Math.pow(2, formulas.size());
+		//double i=0;
+		//double pow = Math.pow(2, formulas.size());
 		while(it.hasNext()){			
 			Set<T> candidate = it.next();
-			System.out.println(++i + " - " + (i/pow * 100) + "% - " + kernels + " - " + candidate.size());
+			//System.out.println(++i + " - " + (i/pow * 100) + "% - " + kernels + " - " + candidate.size());
 			superSetOfKernel = false;
 			for(Collection<T> kernel: kernels){
 				if(candidate.containsAll(kernel)){
