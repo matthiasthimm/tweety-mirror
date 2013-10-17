@@ -56,7 +56,7 @@ public class CliMain {
 	private static CommandParameter[] pluginParams = null;
 
 	/**
-	 * prints help text if cli is called with parameter "--help"
+	 * prints help text if cli is called with parameter "--help" or empty argument array
 	 */
 	public static void printHelpText() {
 		File help = new File(HELPTEXT).getAbsoluteFile();
@@ -172,14 +172,14 @@ public class CliMain {
 	public static void main(String[] args) {
 		// System.out.println(args.length);
 		if (args.length == 0) {
-			System.out.println("Tweety CLI: Hilfetext verfügbar mit --help");
-			System.exit(-1);
+			System.out.println("Tweety CLI: Obtain help with command --help");
+			System.exit(0);
 		} else if ((args.length == 1 && args[0].equals("--help"))) {
 			printHelpText();
-			System.exit(-1);
+			System.exit(0);
 		} else if (args.length == 1 && !args[0].contains("--help")){
-			System.out.println("Keine gültige Eingabe, Hilfe über --help");
-			System.exit(-1);
+			System.out.println("No valid input, call with --help for helptext");
+			System.exit(0);
 		}
 
 		TweetyPlugin tweetyPlugin;
