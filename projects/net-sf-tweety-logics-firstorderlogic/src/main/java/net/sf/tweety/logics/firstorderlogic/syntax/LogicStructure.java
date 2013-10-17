@@ -48,6 +48,7 @@ public abstract class LogicStructure {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#toString()
 	 */
+	@Override
 	public abstract String toString();
 	
 }

@@ -31,7 +31,7 @@ public class RankingFunction<T> extends Functions<T>{
 	 * caller can use Map-method putAll to fill this empty ranking function
 	 */
 	public RankingFunction(){
-		new HashMap<T, Integer>();
+		super();
 	}
 	
 	/**
@@ -108,7 +108,7 @@ public class RankingFunction<T> extends Functions<T>{
 		// weakening the elements rank by this amount
 		this.put(element, this.get(element)+amount);
 		
-		// strengthen each element on the same rank as the now weaken element
+		// strengthen each element on the same rank as the now weakened element
 		for(Entry<T, Integer> e : getElementsByValue(this.get(element))){
 			if (!e.getKey().equals(element)){
 				this.put(e.getKey(), e.getValue()-1);
@@ -127,7 +127,7 @@ public class RankingFunction<T> extends Functions<T>{
 		// strengthening the elements rank by this amount
 		this.put(element, this.get(element)-amount);
 		
-		// weakening each element on the same rank as the now strengthen element
+		// weakening each element on the same rank as the now strengthened element
 		for(Entry<T, Integer> e : getElementsByValue(this.get(element))){
 			if (!e.getKey().equals(element)){
 				this.put(e.getKey(), e.getValue()+1);

@@ -77,7 +77,7 @@ public class MaximumEntropyMachineShop implements BeliefBaseMachineShop {
 				rightSide = new FloatConstant(c.getProbability().getValue()).add(mu).minus(nu);
 			}else{				
 				PropositionalFormula body = c.getPremise().iterator().next();
-				PropositionalFormula head_and_body = (PropositionalFormula) c.getConclusion().combineWithAnd(body);
+				PropositionalFormula head_and_body = c.getConclusion().combineWithAnd(body);
 				for(PossibleWorld w: worlds){
 					if(w.satisfies(head_and_body)){
 						if(leftSide == null)

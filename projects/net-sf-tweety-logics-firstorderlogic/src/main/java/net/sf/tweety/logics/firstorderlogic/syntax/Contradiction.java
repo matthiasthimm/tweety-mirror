@@ -26,6 +26,7 @@ public class Contradiction extends SpecialFormula{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolBasicStructure#hashCode()
 	 */
+	@Override
 	public int hashCode(){
 		return 3;
 	}
@@ -33,6 +34,7 @@ public class Contradiction extends SpecialFormula{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolBasicStructure#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj){
 		if (this == obj)
 			return true;		

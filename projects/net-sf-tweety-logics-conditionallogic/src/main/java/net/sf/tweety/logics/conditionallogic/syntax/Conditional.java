@@ -72,6 +72,7 @@ public class Conditional implements SimpleLogicalFormula, Rule<PropositionalForm
 	 * has a tautological premise.
 	 * @return "true" iff this conditional is a fact.
 	 */
+	@Override
 	public boolean isFact(){
 		return (this.premise instanceof Tautology);
 	}
@@ -79,6 +80,7 @@ public class Conditional implements SimpleLogicalFormula, Rule<PropositionalForm
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.kr.Formula#getSignature()
 	 */
+	@Override
 	public Signature getSignature(){		
 		return this.premise.combineWithAnd(this.conclusion).getSignature();
 	}
@@ -86,6 +88,7 @@ public class Conditional implements SimpleLogicalFormula, Rule<PropositionalForm
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString(){
 		return "(" + conclusion + "|" + premise + ")";
 	}

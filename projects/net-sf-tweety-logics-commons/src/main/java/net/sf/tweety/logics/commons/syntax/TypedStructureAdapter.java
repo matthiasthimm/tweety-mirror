@@ -172,6 +172,7 @@ public abstract class TypedStructureAdapter implements TypedStructure, Comparabl
 		return argumentTypes;
 	}
 	
+	@Override
 	public abstract TypedStructure clone();
 	
 	@Override

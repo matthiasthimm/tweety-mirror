@@ -91,7 +91,7 @@ public class BalancedMachineShop implements BeliefBaseMachineShop {
 				rightSide = new FloatConstant(c.getProbability().getValue()).add(eta).minus(tau);
 			}else{				
 				PropositionalFormula body = c.getPremise().iterator().next();
-				PropositionalFormula head_and_body = (PropositionalFormula) c.getConclusion().combineWithAnd(body);
+				PropositionalFormula head_and_body = c.getConclusion().combineWithAnd(body);
 				for(PossibleWorld w: worlds){
 					if(w.satisfies(head_and_body)){
 						if(leftSide == null)

@@ -32,6 +32,7 @@ public class FolBeliefSet extends BeliefSet<FolFormula>{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.kr.BeliefBase#getSignature()
 	 */
+	@Override
 	public Signature getSignature(){
 		FolSignature sig = new FolSignature();
 		sig.addAll(this);

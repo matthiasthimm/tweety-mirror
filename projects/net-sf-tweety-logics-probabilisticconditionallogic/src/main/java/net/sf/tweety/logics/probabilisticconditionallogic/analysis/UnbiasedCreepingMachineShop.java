@@ -17,6 +17,7 @@ public class UnbiasedCreepingMachineShop extends AbstractCreepingMachineShop {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.probabilisticconditionallogic.analysis.AbstractCreepingMachineShop#getValues(double, net.sf.tweety.logics.probabilisticconditionallogic.PclBeliefSet)
 	 */
+	@Override
 	protected Map<ProbabilisticConditional,Probability> getValues(double delta, PclBeliefSet beliefSet){
 		Map<ProbabilisticConditional,Probability> values = new HashMap<ProbabilisticConditional,Probability>();
 		for(ProbabilisticConditional pc: beliefSet)

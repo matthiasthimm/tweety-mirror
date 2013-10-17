@@ -84,7 +84,7 @@ public class IntegerCommandParameter extends CommandParameter {
 	 * instantiates a new parameter iff the given value ist valid for this command parameter
 	 */
 	@Override
-	public CommandParameter instantiate(String s) throws CloneNotSupportedException{
+	public CommandParameter instantiate(String s){
 		if(isValid(s)){
 			IntegerCommandParameter newParameter = (IntegerCommandParameter) this.clone();
 			newParameter.setValue(Integer.parseInt(s));

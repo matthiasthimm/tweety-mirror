@@ -36,6 +36,7 @@ public class IntegerVariable extends Variable{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#isInteger()
 	 */
+	@Override
 	public boolean isInteger(){
 		return true;
 	}

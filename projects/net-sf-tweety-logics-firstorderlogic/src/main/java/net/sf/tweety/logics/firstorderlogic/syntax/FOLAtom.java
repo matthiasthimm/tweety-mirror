@@ -75,6 +75,7 @@ public class FOLAtom extends FolFormula implements Atom {
 	 * @throws IllegalArgumentException if the given term does not correspond
 	 *   to the expected sort or the argument list is complete.
 	 */
+	@Override
 	public void addArgument(Term<?> term) throws IllegalArgumentException{
 		if(this.arguments.size() == this.predicate.getArity())
 			throw new IllegalArgumentException("No more arguments expected.");
@@ -106,6 +107,7 @@ public class FOLAtom extends FolFormula implements Atom {
 	 * every argument is set.
 	 * @return "true" if the atom is complete.
 	 */
+	@Override
 	public boolean isComplete(){
 		return this.arguments.size() == this.predicate.getArity();
 	}
@@ -113,6 +115,7 @@ public class FOLAtom extends FolFormula implements Atom {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getUnboundVariables()
 	 */
+	@Override
 	public Set<Variable> getUnboundVariables(){
 		return this.getTerms(Variable.class);
 	}
@@ -146,6 +149,7 @@ public class FOLAtom extends FolFormula implements Atom {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#isClosed()
 	 */
+	@Override
 	public boolean isClosed(){
 		return this.getTerms(Variable.class).isEmpty();
 	}
@@ -153,6 +157,7 @@ public class FOLAtom extends FolFormula implements Atom {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#isClosed(java.util.Set)
 	 */
+	@Override
 	public boolean isClosed(Set<Variable> boundVariables){
 		return boundVariables.containsAll(this.getTerms(Variable.class));
 	}
@@ -160,6 +165,7 @@ public class FOLAtom extends FolFormula implements Atom {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#isWellBound()
 	 */
+	@Override
 	public boolean isWellBound(){
 		return true;
 	}
@@ -167,6 +173,7 @@ public class FOLAtom extends FolFormula implements Atom {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#isWellBound(java.util.Set)
 	 */
+	@Override
 	public boolean isWellBound(Set<Variable> boundVariables){
 		return true;
 	}
@@ -174,6 +181,7 @@ public class FOLAtom extends FolFormula implements Atom {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#containsQuantifier()
 	 */
+	@Override
 	public boolean containsQuantifier(){
 		return false;
 	}
@@ -182,6 +190,7 @@ public class FOLAtom extends FolFormula implements Atom {
 	 * Returns the predicate of this atom
 	 * @return the predicate of this atom
 	 */
+	@Override
 	public Predicate getPredicate(){
 		return this.predicate;
 	}
@@ -189,6 +198,7 @@ public class FOLAtom extends FolFormula implements Atom {
 	/**
 	 * @return the arguments of this atom.
 	 */
+	@Override
 	public List<Term<?>> getArguments(){
 		return Collections.unmodifiableList(this.arguments);
 	}
@@ -197,6 +207,7 @@ public class FOLAtom extends FolFormula implements Atom {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#isDnf()
 	 */
+	@Override
 	public boolean isDnf(){
 		return true;
 	}
@@ -212,6 +223,7 @@ public class FOLAtom extends FolFormula implements Atom {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#toString()
 	 */
+	@Override
 	public String toString(){
 		if(!this.isWellFormed()) throw new IllegalArgumentException("FolFormula not well-formed.");
 		String output = this.predicate.getName();

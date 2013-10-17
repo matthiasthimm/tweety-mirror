@@ -267,7 +267,7 @@ public class RelationalRankingFunction extends AbstractInterpretation {
 		Set<RelationalConditional> weakPrototypes = this.getWeakPrototypes(rc);
 		Set<RelationalConditional> prototypes = new HashSet<RelationalConditional>();
 		for(RelationalConditional r: weakPrototypes){
-			RelationalConditional instance = (RelationalConditional)r;
+			RelationalConditional instance = r;
 			if(prototypes.isEmpty()){
 				prototypes.add(instance);
 			}else{
@@ -373,6 +373,7 @@ public class RelationalRankingFunction extends AbstractInterpretation {
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString(){
 		String s = "[\n";
 		Iterator<HerbrandInterpretation> it = this.ranks.keySet().iterator();

@@ -23,6 +23,7 @@ public class FolLanguage extends Language {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.kr.Language#isRepresentable(net.sf.tweety.kr.Formula)
 	 */
+	@Override
 	public boolean isRepresentable(Formula formula){
 		if(!(formula instanceof FolFormula)) return false;
 		FolSignature folSignature = (FolSignature) this.getSignature();
@@ -35,6 +36,7 @@ public class FolLanguage extends Language {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.kr.Language#isRepresentable(net.sf.tweety.kr.BeliefBase)
 	 */
+	@Override
 	public boolean isRepresentable(BeliefBase beliefBase){
 		if(!(beliefBase instanceof FolBeliefSet)) return false;
 		for(Formula f : (FolBeliefSet)beliefBase)

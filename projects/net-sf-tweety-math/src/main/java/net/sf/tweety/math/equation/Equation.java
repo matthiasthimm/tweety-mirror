@@ -20,6 +20,7 @@ public class Equation extends Statement{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.equation.Statement#replaceTerm(net.sf.tweety.math.term.Term, net.sf.tweety.math.term.Term)
 	 */
+	@Override
 	public Statement replaceTerm(Term toSubstitute, Term substitution){
 		return new Equation(this.getLeftTerm().replaceTerm(toSubstitute, substitution),this.getRightTerm().replaceTerm(toSubstitute, substitution));
 	}
@@ -27,6 +28,7 @@ public class Equation extends Statement{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.equation.Statement#isNormalized()
 	 */
+	@Override
 	public boolean isNormalized(){
 		if(this.getRightTerm() instanceof Constant){
 			if(this.getRightTerm() instanceof FloatConstant){
@@ -44,6 +46,7 @@ public class Equation extends Statement{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.equation.Statement#toNormalizedForm()
 	 */
+	@Override
 	public Statement toNormalizedForm(){
 		// Check whether it is already normalized
 		if(this.isNormalized()) return this;
@@ -54,6 +57,7 @@ public class Equation extends Statement{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.equation.Statement#toLinearForm()
 	 */
+	@Override
 	public Statement toLinearForm(){
 		Term left = this.getLeftTerm().toLinearForm();
 		Term right = (this.isNormalized())?(this.getRightTerm()):(this.getRightTerm().toLinearForm());
@@ -63,6 +67,7 @@ public class Equation extends Statement{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.equation.Statement#getRelationSymbol()
 	 */
+	@Override
 	public String getRelationSymbol(){
 		return "=";
 	}

@@ -74,6 +74,7 @@ public abstract class AssociativePropositionalFormula extends PropositionalFormu
 	
 	}
 	
+	@Override
 	@SuppressWarnings("unchecked")
 	public Set<Proposition> getAtoms() {
 		return (Set<Proposition>) support.getAtoms();

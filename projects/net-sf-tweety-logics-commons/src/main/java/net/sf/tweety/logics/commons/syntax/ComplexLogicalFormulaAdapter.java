@@ -76,5 +76,6 @@ public abstract class ComplexLogicalFormulaAdapter
 		return false;
 	}
 	
+	@Override
 	public abstract ComplexLogicalFormula clone();
 }

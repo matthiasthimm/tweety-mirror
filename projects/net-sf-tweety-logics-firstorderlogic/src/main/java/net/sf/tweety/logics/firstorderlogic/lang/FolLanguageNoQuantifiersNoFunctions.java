@@ -18,6 +18,7 @@ public class FolLanguageNoQuantifiersNoFunctions extends FolLanguageNoQuantifier
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.lang.FolLanguageNoQuantifiers#isRepresentable(net.sf.tweety.kr.Formula)
 	 */
+	@Override
 	public boolean isRepresentable(Formula formula){
 		if(!super.isRepresentable(formula)) return false;
 		return (new FolLanguageNoFunctions(this.getSignature()).isRepresentable(formula));		

@@ -6,12 +6,29 @@ import net.sf.tweety.preferences.*;
 import net.sf.tweety.preferences.update.Update;
 import net.sf.tweety.preferences.Operation;
 
+/**
+Update Parser for reading updates for dynamic Preference Aggregation
+Please note: update file syntax changed from
+(index, operation, amount, element)
+e.g. (1, WEAKEN, 2, a)
+to
+(index, operation(amount), element)
+e.g. (1, -2, a)  where
+-(/+) is equal to WEAKEN(/STRENGTHEN)
+and 2 is the amount
+*/
 public class UPParser implements UPParserConstants {
+        public UPParser()
+        {
+
+        }
+
+
   public static ArrayList<Update < String >> parse(String updatefile) throws ParseException, java.io.FileNotFoundException
   {
     UPParser parser;
     parser = new UPParser(new java.io.FileInputStream(updatefile));
-    return parser.update();
+    return parser.getUpdate();
   }
 
   public static void main(String args []) throws ParseException
@@ -29,7 +46,7 @@ public class UPParser implements UPParserConstants {
     }
   }
 
-  final public ArrayList<Update < String > > update() throws ParseException, java.io.FileNotFoundException {
+  final public ArrayList<Update < String > > getUpdate() throws ParseException, java.io.FileNotFoundException {
   Token index, op, element;
   ArrayList < Update < String >> updates = new ArrayList < Update < String >> ();
     label_1:

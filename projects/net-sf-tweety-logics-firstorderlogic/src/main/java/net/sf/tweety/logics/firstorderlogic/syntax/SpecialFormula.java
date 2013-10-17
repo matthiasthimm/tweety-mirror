@@ -84,6 +84,7 @@ public abstract class SpecialFormula extends FolFormula {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#isLiteral()
 	 */
+	@Override
 	public boolean isLiteral(){
 		//TODO is this correct?
 		return true;
@@ -100,6 +101,7 @@ public abstract class SpecialFormula extends FolFormula {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getUnboundVariables()
 	 */
+	@Override
 	public Set<Variable> getUnboundVariables(){
 		return this.getTerms(Variable.class);
 	}
@@ -136,6 +138,7 @@ public abstract class SpecialFormula extends FolFormula {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#isDnf()
 	 */
+	@Override
 	public boolean isDnf(){
 		return true;
 	}

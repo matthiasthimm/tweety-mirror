@@ -83,6 +83,7 @@ public class Functor extends TypedStructureAdapter {
 		return true;
 	}
 
+	@Override
 	public Functor clone() {
 		return new Functor(this.getName(), copyArgumentTypes(), this.targetSort.clone());
 	}

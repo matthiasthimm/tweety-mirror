@@ -116,7 +116,7 @@ public class CondensedProbabilityDistribution extends ProbabilityDistribution<Re
 		List<Double> probs = new ArrayList<Double>();
 		for(int i = 0; i < interpretations.size(); i++)
 			probs.add(rand.nextDouble());
-		RpclProbabilityDistribution.normalize(probs);
+		ProbabilityDistribution.normalize(probs);
 		Iterator<Double> itProbs = probs.iterator();
 		for(ReferenceWorld i: interpretations)
 			p.put(i, new Probability(itProbs.next()/i.spanNumber()));

@@ -226,6 +226,7 @@ public class ProbabilityDistribution<T extends Interpretation> extends AbstractI
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString(){
 		return this.probabilities.toString();
 	}

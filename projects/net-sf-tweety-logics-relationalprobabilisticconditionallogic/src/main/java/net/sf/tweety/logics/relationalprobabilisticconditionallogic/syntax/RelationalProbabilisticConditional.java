@@ -50,7 +50,7 @@ public class RelationalProbabilisticConditional extends RelationalConditional {
 	 * @param probability a probability.
 	 */
 	public RelationalProbabilisticConditional(RelationalConditional conditional, Probability probability){
-		this((FolFormula)conditional.getPremise().iterator().next(),(FolFormula)conditional.getConclusion(),probability);
+		this(conditional.getPremise().iterator().next(),conditional.getConclusion(),probability);
 	}
 	
 	/**

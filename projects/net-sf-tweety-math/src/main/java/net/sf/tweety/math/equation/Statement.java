@@ -155,6 +155,7 @@ public abstract class Statement {
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString(){
 		return this.getLeftTerm().toString() + " " + this.getRelationSymbol() + " " + this.getRightTerm().toString();
 	}

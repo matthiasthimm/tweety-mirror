@@ -50,11 +50,13 @@ public abstract class BeliefSet<T extends Formula> implements BeliefBase, Collec
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.kr.BeliefBase#getSignature()
 	 */
+	@Override
 	public abstract Signature getSignature();
 	
 	/* (non-Javadoc)
 	 * @see java.util.Collection#add(java.lang.Object)
 	 */
+	@Override
 	public boolean add(T f){
 		return this.formulas.add(f);
 	}
@@ -62,6 +64,7 @@ public abstract class BeliefSet<T extends Formula> implements BeliefBase, Collec
 	/* (non-Javadoc)
 	 * @see java.util.Collection#addAll(java.util.Collection)
 	 */
+	@Override
 	public boolean addAll(Collection<? extends T> c){
 		return this.formulas.addAll(c);
 	}
@@ -69,6 +72,7 @@ public abstract class BeliefSet<T extends Formula> implements BeliefBase, Collec
 	/* (non-Javadoc)
 	 * @see java.util.Collection#clear()
 	 */
+	@Override
 	public void clear(){
 		this.formulas.clear();
 	}
@@ -76,6 +80,7 @@ public abstract class BeliefSet<T extends Formula> implements BeliefBase, Collec
 	/* (non-Javadoc)
 	 * @see java.util.Collection#contains(java.lang.Object)
 	 */
+	@Override
 	public boolean contains(Object o){
 		return this.formulas.contains(o);
 	}
@@ -83,6 +88,7 @@ public abstract class BeliefSet<T extends Formula> implements BeliefBase, Collec
 	/* (non-Javadoc)
 	 * @see java.util.Collection#containsAll(java.util.Collection)
 	 */
+	@Override
 	public boolean containsAll(Collection<?> c){
 		return this.formulas.containsAll(c);
 	}
@@ -122,6 +128,7 @@ public abstract class BeliefSet<T extends Formula> implements BeliefBase, Collec
 	/* (non-Javadoc)
 	 * @see java.util.Collection#isEmpty()
 	 */
+	@Override
 	public boolean isEmpty(){
 		return this.formulas.isEmpty();
 	}
@@ -129,6 +136,7 @@ public abstract class BeliefSet<T extends Formula> implements BeliefBase, Collec
 	/* (non-Javadoc)
 	 * @see java.util.Collection#iterator()
 	 */
+	@Override
 	public Iterator<T> iterator(){
 		return this.formulas.iterator();
 	}
@@ -136,6 +144,7 @@ public abstract class BeliefSet<T extends Formula> implements BeliefBase, Collec
 	/* (non-Javadoc)
 	 * @see java.util.Collection#remove(java.lang.Object)
 	 */
+	@Override
 	public boolean remove(Object o){
 		return this.formulas.remove(o);
 	}
@@ -143,6 +152,7 @@ public abstract class BeliefSet<T extends Formula> implements BeliefBase, Collec
 	/* (non-Javadoc)
 	 * @see java.util.Collection#removeAll(java.util.Collection)
 	 */
+	@Override
 	public boolean removeAll(Collection<?> c){
 		return this.formulas.removeAll(c);
 	}
@@ -150,6 +160,7 @@ public abstract class BeliefSet<T extends Formula> implements BeliefBase, Collec
 	/* (non-Javadoc)
 	 * @see java.util.Collection#retainAll(java.util.Collection)
 	 */
+	@Override
 	public boolean retainAll(Collection<?> c){
 		return this.formulas.retainAll(c);
 	}
@@ -157,6 +168,7 @@ public abstract class BeliefSet<T extends Formula> implements BeliefBase, Collec
 	/* (non-Javadoc)
 	 * @see java.util.Collection#size()
 	 */
+	@Override
 	public int size(){
 		return this.formulas.size();
 	}
@@ -164,6 +176,7 @@ public abstract class BeliefSet<T extends Formula> implements BeliefBase, Collec
 	/* (non-Javadoc)
 	 * @see java.util.Collection#toArray()
 	 */
+	@Override
 	public Object[] toArray(){
 		return this.formulas.toArray();
 	}
@@ -171,6 +184,7 @@ public abstract class BeliefSet<T extends Formula> implements BeliefBase, Collec
 	/* (non-Javadoc)
 	 * @see java.util.Collection#toArray(T[])
 	 */
+	@Override
 	public <S> S[] toArray(S[] a) {
 		return this.formulas.toArray(a);
 	}
@@ -178,6 +192,7 @@ public abstract class BeliefSet<T extends Formula> implements BeliefBase, Collec
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.kr.BeliefBase#toString()
 	 */
+	@Override
 	public String toString() {
 		String s = "{ ";
 		Iterator<T> it = this.iterator();

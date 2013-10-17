@@ -33,6 +33,7 @@ public class ExistsQuantifiedFormula extends QuantifiedFormula {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula#substitute(net.sf.tweety.logics.firstorderlogic.syntax.Term, net.sf.tweety.logics.firstorderlogic.syntax.Term)
 	 */
+	@Override
 	public ExistsQuantifiedFormula substitute(Term<?> v, Term<?> t) throws IllegalArgumentException{
 		if(this.getQuantifierVariables().contains(v))
 			return new ExistsQuantifiedFormula(this.getFormula(),this.getQuantifierVariables());
@@ -60,6 +61,7 @@ public class ExistsQuantifiedFormula extends QuantifiedFormula {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#toString()
 	 */
+	@Override
 	public String toString(){
 		String s = LogicalSymbols.EXISTSQUANTIFIER() + " ";
 		Iterator<Variable> it = this.getQuantifierVariables().iterator();

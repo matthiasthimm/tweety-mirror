@@ -37,6 +37,7 @@ public class ForallQuantifiedFormula extends QuantifiedFormula{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula#substitute(net.sf.tweety.logics.firstorderlogic.syntax.Term, net.sf.tweety.logics.firstorderlogic.syntax.Term)
 	 */
+	@Override
 	public ForallQuantifiedFormula substitute(Term<?> v, Term<?> t) throws IllegalArgumentException{
 		if(this.getQuantifierVariables().contains(v))
 			return new ForallQuantifiedFormula(this.getFormula(),this.getQuantifierVariables());
@@ -65,6 +66,7 @@ public class ForallQuantifiedFormula extends QuantifiedFormula{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#toString()
 	 */
+	@Override
 	public String toString(){
 		String s = LogicalSymbols.FORALLQUANTIFIER() + " ";
 		Iterator<Variable> it = this.getQuantifierVariables().iterator();

@@ -18,7 +18,7 @@ public class UpdatePrinter<T> implements UpdateListener<T> {
 	
 	System.out.println("Updated aggregation result: "+ e.getResult());
 	System.out.println(e.getResult().getLevelingFunction());
-	System.out.println(e.getResult().getLevelingFunction().getLevelingFunction());	
+	System.out.println(e.getResult().getLevelingFunction().getRankingFunction());	
 	}
 
 }

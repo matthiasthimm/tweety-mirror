@@ -25,7 +25,8 @@ import net.sf.tweety.util.Triple;
  * TODO exception handling for invalid preference orders (total preorder)
  * 
  * @author Bastian Wolf
- * @param <T> the generic type used for this leveling function
+ * @param <T>
+ *            the generic type used for this leveling function
  * 
  */
 
@@ -34,11 +35,11 @@ public class LevelingFunction<T> extends Functions<T> {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * constructs a new, empty leveling function caller can use Map-method putAll
-	 * to fill this empty leveling function
+	 * constructs a new, empty leveling function caller can use Map-method
+	 * putAll to fill this empty leveling function
 	 */
 	public LevelingFunction() {
-		new HashMap<T, Integer>();
+		super();
 	}
 
 	/**
@@ -54,7 +55,8 @@ public class LevelingFunction<T> extends Functions<T> {
 		Map<T, IntegerVariable> intVar = new HashMap<T, IntegerVariable>();
 
 		// new optimization problem
-//		Set<Triple<IntegerVariable, IntegerVariable, Relation>> optIneq = new HashSet<Triple<IntegerVariable, IntegerVariable, Relation>>();
+		// Set<Triple<IntegerVariable, IntegerVariable, Relation>> optIneq = new
+		// HashSet<Triple<IntegerVariable, IntegerVariable, Relation>>();
 		OptimizationProblem opt = new OptimizationProblem(
 				OptimizationProblem.MINIMIZE);
 
@@ -95,8 +97,7 @@ public class LevelingFunction<T> extends Functions<T> {
 				continue;
 			}
 		}
-//		try{
-			
+		// try{
 
 		// setting the term for the solver
 		List<Term> terms = new LinkedList<Term>();
@@ -121,18 +122,17 @@ public class LevelingFunction<T> extends Functions<T> {
 		Map<Variable, Term> solution = solver.solve();
 		Map<T, Integer> sol = new HashMap<T, Integer>();
 		for (Entry<Variable, Term> e : solution.entrySet()) {
-			T key = (T) e.getKey();
+			T key = (T) e.getKey().toString();
 			Integer val = (int) e.getValue().doubleValue();
 			sol.put(key, val);
 		}
-		
+		this.clear();
 		this.putAll(sol);
-		
-//		} catch (StringIndexOutOfBoundsException e){
-//			System.err.println("You're input preference order seems to be invalid, please check it.");
-//		}
-		
-		
+
+		// } catch (StringIndexOutOfBoundsException e){
+		// System.err.println("You're input preference order seems to be invalid, please check it.");
+		// }
+
 	}
 
 	/**
@@ -203,8 +203,12 @@ public class LevelingFunction<T> extends Functions<T> {
 					lf.put(e.getKey(), e.getValue() + 1);
 				}
 			}
-		} else {
-			lf.put(element, this.get(element) + 1);
+		} else if (level == 1) {
+			for (Entry<T, Integer> f : this.entrySet()) {
+				if (f.getKey().toString().equals(element.toString())) {
+					lf.put(f.getKey(), f.getValue() + 1);
+				}
+			}
 		}
 	}
 
@@ -224,12 +228,16 @@ public class LevelingFunction<T> extends Functions<T> {
 			for (Entry<T, Integer> e : this.entrySet()) {
 				if (e.getValue() >= val
 						&& !e.getKey().toString().equals(element.toString())) {
-					lf.put(e.getKey(), e.getValue() + 1);
+					lf.put(e.getKey(), e.getValue() - 1);
 				}
 			}
-		} else {
-			lf.put(element, this.get(element) - 1);
+		} else if (level == 1) {
+			for (Entry<T, Integer> f : this.entrySet()) {
+				if (f.getKey().toString().equals(element.toString())) {
+					lf.put(f.getKey(), f.getValue() + 1);
+				}
+			}
+
 		}
 	}
-
 }

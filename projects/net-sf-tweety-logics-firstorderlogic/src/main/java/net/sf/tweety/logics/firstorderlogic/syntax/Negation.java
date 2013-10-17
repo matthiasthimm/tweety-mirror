@@ -22,6 +22,7 @@ public class Negation extends FolFormula{
 		this.folFormula = (FolFormula)formula;		
 	}
 	
+	@Override
 	public FolFormula getFormula(){
 		return this.folFormula;
 	}
@@ -29,6 +30,7 @@ public class Negation extends FolFormula{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getPredicates()
 	 */
+	@Override
 	public Set<? extends Predicate> getPredicates(){
 		return this.folFormula.getPredicates();
 	}
@@ -36,6 +38,7 @@ public class Negation extends FolFormula{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getFunctors()
 	 */
+	@Override
 	public Set<Functor> getFunctors(){
 		return this.folFormula.getFunctors();
 	}
@@ -43,6 +46,7 @@ public class Negation extends FolFormula{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getAtoms()
 	 */
+	@Override
 	public Set<FOLAtom> getAtoms(){
 		return this.folFormula.getAtoms();
 	}
@@ -50,6 +54,7 @@ public class Negation extends FolFormula{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#containsQuantifier()
 	 */
+	@Override
 	public boolean containsQuantifier(){
 		return this.folFormula.containsQuantifier();
 	}
@@ -57,6 +62,7 @@ public class Negation extends FolFormula{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#isClosed()
 	 */
+	@Override
 	public boolean isClosed(){
 		return this.folFormula.isClosed();
 	}
@@ -64,6 +70,7 @@ public class Negation extends FolFormula{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula#substitute(net.sf.tweety.logics.firstorderlogic.syntax.Term, net.sf.tweety.logics.firstorderlogic.syntax.Term)
 	 */
+	@Override
 	public Negation substitute(Term<?> v, Term<?> t) throws IllegalArgumentException {
 		return new Negation(this.folFormula.substitute(v, t));
 	}
@@ -71,6 +78,7 @@ public class Negation extends FolFormula{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#isClosed(java.util.Set)
 	 */
+	@Override
 	public boolean isClosed(Set<Variable> boundVariables){
 		return this.folFormula.isClosed(boundVariables);
 	}
@@ -78,6 +86,7 @@ public class Negation extends FolFormula{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getUnboundVariables()
 	 */
+	@Override
 	public Set<Variable> getUnboundVariables(){
 		return this.getTerms(Variable.class);
 	}
@@ -85,6 +94,7 @@ public class Negation extends FolFormula{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#isWellBound()
 	 */
+	@Override
 	public boolean isWellBound(){
 		return this.folFormula.isWellBound();
 	}
@@ -92,6 +102,7 @@ public class Negation extends FolFormula{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#isWellBound(java.util.Set)
 	 */
+	@Override
 	public boolean isWellBound(Set<Variable> boundVariables){
 		return this.folFormula.isWellBound(boundVariables);
 	}
@@ -107,6 +118,7 @@ public class Negation extends FolFormula{
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString(){
 		return LogicalSymbols.CLASSICAL_NEGATION() + this.folFormula;
 	}
@@ -147,6 +159,7 @@ public class Negation extends FolFormula{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#isDnf()
 	 */
+	@Override
 	public boolean isDnf() {
 		return (this.folFormula instanceof FOLAtom);
 	}

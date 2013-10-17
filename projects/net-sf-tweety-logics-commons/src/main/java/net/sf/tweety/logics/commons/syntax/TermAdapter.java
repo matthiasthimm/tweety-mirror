@@ -105,6 +105,7 @@ public abstract class TermAdapter<T> implements Term<T>{
 		return get().equals(other.get());
 	}
 	
+	@Override
 	public abstract TermAdapter<?> clone();
 
 	@Override

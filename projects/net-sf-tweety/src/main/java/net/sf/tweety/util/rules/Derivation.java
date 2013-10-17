@@ -144,6 +144,7 @@ public class Derivation<T extends Rule<?,?>> extends ArrayList<T>{
 	/* (non-Javadoc)
 	 * @see java.util.AbstractList#hashCode()
 	 */
+	@Override
 	public int hashCode(){
 		// for comparing a derivation is treated as a set
 		Set<T> thisSet = new HashSet<T>(this);

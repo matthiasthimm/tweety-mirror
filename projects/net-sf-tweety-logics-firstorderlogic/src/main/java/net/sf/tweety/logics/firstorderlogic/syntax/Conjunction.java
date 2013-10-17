@@ -41,6 +41,7 @@ public class Conjunction extends AssociativeFOLFormula {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#isDnf()
 	 */
+	@Override
 	public boolean isDnf(){
 		return this.getFormulas(Disjunction.class).isEmpty() && 
 				this.getFormulas(ForallQuantifiedFormula.class).isEmpty() &&

@@ -38,6 +38,7 @@ public class FloatConstant extends Constant {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#isInteger()
 	 */
+	@Override
 	public boolean isInteger(){
 		return false;
 	}
@@ -45,6 +46,7 @@ public class FloatConstant extends Constant {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#toString()
 	 */
+	@Override
 	public String toString(){
 		return String.valueOf(this.f);
 	}

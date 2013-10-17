@@ -42,6 +42,7 @@ public class Conjunction extends AssociativePropositionalFormula {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#collapseAssociativeFormulas()
 	 */
+	@Override
 	public PropositionalFormula collapseAssociativeFormulas(){
 		if(this.isEmpty())
 			return new Tautology();

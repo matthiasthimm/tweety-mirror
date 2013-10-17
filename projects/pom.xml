@@ -101,6 +101,11 @@
   	<module>
   		net-sf-tweety-logicprogramming-asplibrary-beliefdynamics
   	</module>
-  	<module>plugin</module>
+  	<module>
+  		net-sf-tweety-plugin
+  	</module>
+	<module>
+  		net-sf-tweety-logics-descriptionlogic
+  	</module>
   </modules>
 </project>

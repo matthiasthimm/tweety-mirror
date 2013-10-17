@@ -5,10 +5,11 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sf.tweety.cli.plugins.AbstractTweetyPlugin;
-import net.sf.tweety.cli.plugins.PluginOutput;
-import net.sf.tweety.cli.plugins.parameter.CommandParameter;
-import net.sf.tweety.cli.plugins.parameter.SelectionCommandParameter;
+import net.sf.tweety.plugin.AbstractTweetyPlugin;
+import net.sf.tweety.plugin.PluginOutput;
+import net.sf.tweety.plugin.parameter.CommandParameter;
+import net.sf.tweety.plugin.parameter.SelectionCommandParameter;
+import net.sf.tweety.plugin.parameter.FileListCommandParameter;
 import net.sf.tweety.preferences.PreferenceOrder;
 import net.sf.tweety.preferences.aggregation.BordaScoringPreferenceAggregator;
 import net.sf.tweety.preferences.aggregation.DynamicBordaScoringPreferenceAggregator;
@@ -18,6 +19,8 @@ import net.sf.tweety.preferences.aggregation.PluralityScoringPreferenceAggregato
 import net.sf.tweety.preferences.aggregation.VetoScoringPreferenceAggregator;
 import net.sf.tweety.preferences.io.POParser;
 import net.sf.tweety.preferences.io.ParseException;
+import net.sf.tweety.preferences.io.UPParser;
+import net.sf.tweety.preferences.update.Update;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 /**
@@ -31,6 +34,9 @@ public class PreferencesPlugin extends AbstractTweetyPlugin {
 
 	// the static identifier for this plugin
 	private static final String PREF__CALL_PARAMETER = "preferences";
+	
+	private static final String PREF__PLUGIN_DESCRIPTION = "";
+	
 
 	// preference aggregation
 	private static final String PREF__AGGR_IDENTIFIER = "-aggr";
@@ -48,13 +54,16 @@ public class PreferencesPlugin extends AbstractTweetyPlugin {
 	private static final String[] PREF__DYN_RULES = new String[] {
 			"dynplurality", "dynborda", "dynveto" };
 
-	// update for dynamic preference aggregation
+	// update for dynamic preference aggregation, never use without -dynaggr
 	private static final String PREF__UP_IDENTIFIER = "-up";
 
-	private static final String PREF__UP_DESCRIPTION = "-up <rule>, update for dynamic preference aggregation command with <rule>={weaken, strengthen}";
+	private static final String PREF__UP_DESCRIPTION = "-up <file>, update file for dynamic preference aggregation command with <rule>={weaken, strengthen}";
 
-	private static final String[] PREF__UP_RULES = new String[] { "weaken",
-			"strengthen" };
+//	private static final File[] PREF__UP_RULES = new String[] { "weaken",
+//			"strengthen" };
+	
+	// determine, if aggregation is dynamic and updates are possible
+	private boolean isDynamic = false;
 	
 	public String getCommand() {
 		return PREF__CALL_PARAMETER;
@@ -70,8 +79,8 @@ public class PreferencesPlugin extends AbstractTweetyPlugin {
 				PREF__AGGR_DESCRIPTION, PREF__AGGR_RULES));
 		this.addParameter(new SelectionCommandParameter(PREF__DYN_IDENTIFIER,
 				PREF__DYN_DESCRIPTION, PREF__DYN_RULES));
-		this.addParameter(new SelectionCommandParameter(PREF__UP_IDENTIFIER,
-				PREF__UP_DESCRIPTION, PREF__UP_RULES));
+		this.addParameter(new FileListCommandParameter(PREF__UP_IDENTIFIER,
+				PREF__UP_DESCRIPTION));
 	}
 	
 	// init command parameter
@@ -84,8 +93,8 @@ public class PreferencesPlugin extends AbstractTweetyPlugin {
 				PREF__AGGR_DESCRIPTION, PREF__AGGR_RULES));
 		this.addParameter(new SelectionCommandParameter(PREF__DYN_IDENTIFIER,
 				PREF__DYN_DESCRIPTION, PREF__DYN_RULES));
-		this.addParameter(new SelectionCommandParameter(PREF__UP_IDENTIFIER,
-				PREF__UP_DESCRIPTION, PREF__UP_RULES));
+		this.addParameter(new FileListCommandParameter(PREF__UP_IDENTIFIER,
+				PREF__UP_DESCRIPTION));
 	}
 	
 
@@ -142,6 +151,8 @@ public class PreferencesPlugin extends AbstractTweetyPlugin {
 
 			// if command parameter is for dynamic aggregation
 			if (tempComParam.getIdentifier().equals("-dynaggr")) {
+				// this aggregation is dynamic
+				isDynamic = true;
 				SelectionCommandParameter tmp = (SelectionCommandParameter) tempComParam;
 
 				// dynamic plurality scoring
@@ -163,7 +174,28 @@ public class PreferencesPlugin extends AbstractTweetyPlugin {
 
 			// if command parameter is for updates of dynamic aggregation
 			if (tempComParam.getIdentifier().equals("-up")) {
-
+				if(!isDynamic){
+					System.out.println("No Updates allowed within non-dynamic aggregation");
+				} else if(tempComParam instanceof FileListCommandParameter) {
+					
+					ArrayList< Update <String>> up = new ArrayList<Update<String>>();
+					File[] tmp = ((FileListCommandParameter) tempComParam).getValue();
+					// only one update file?
+					for(int k = 0; k < tmp.length; k++){
+						if(tmp[k].getAbsolutePath().endsWith(".up")){
+							try{
+							up = UPParser.parse(tmp[k].getAbsolutePath());
+							} catch (FileNotFoundException e){
+								e.printStackTrace();
+							} catch (ParseException e){
+								e.printStackTrace();
+							}
+						} else {
+							System.out.println("This is no correct formatted update file.");
+						}
+					}
+					
+				}
 			}
 		}
 		PluginOutput out = new PluginOutput(result.getLevelingFunction().toString());

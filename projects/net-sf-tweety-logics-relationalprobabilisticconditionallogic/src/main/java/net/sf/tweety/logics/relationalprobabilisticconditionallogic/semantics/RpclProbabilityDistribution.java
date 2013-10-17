@@ -87,10 +87,10 @@ public class RpclProbabilityDistribution extends ProbabilityDistribution<Herbran
 	 */
 	public Probability probability(RelationalConditional re){
 		if(!re.isClosed()) throw new IllegalArgumentException("Conditional '" + re + "' is not closed.");
-		FolFormula head = (FolFormula)re.getConclusion();
+		FolFormula head = re.getConclusion();
 		if(re.isFact())
 			return this.probability(head);
-		FolFormula body = (FolFormula)re.getPremise().iterator().next();		
+		FolFormula body = re.getPremise().iterator().next();		
 		return this.probability(head.combineWithAnd(body)).divide(this.probability(body));
 	}
 	

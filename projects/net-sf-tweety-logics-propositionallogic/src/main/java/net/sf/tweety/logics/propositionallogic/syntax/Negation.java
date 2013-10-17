@@ -36,6 +36,7 @@ public class Negation extends PropositionalFormula {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#collapseAssociativeFormulas()
 	 */
+	@Override
 	public PropositionalFormula collapseAssociativeFormulas(){
 		return new Negation(this.formula.collapseAssociativeFormulas());
 	}
@@ -52,6 +53,7 @@ public class Negation extends PropositionalFormula {
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString(){
 		if(this.formula instanceof AssociativePropositionalFormula || this.formula instanceof Negation)			
 			return LogicalSymbols.CLASSICAL_NEGATION() + "(" + this.formula + ")";

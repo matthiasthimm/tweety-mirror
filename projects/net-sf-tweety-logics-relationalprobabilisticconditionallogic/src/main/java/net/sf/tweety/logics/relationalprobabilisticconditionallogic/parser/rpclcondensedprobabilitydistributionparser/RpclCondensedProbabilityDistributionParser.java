@@ -62,7 +62,7 @@ public class RpclCondensedProbabilityDistributionParser implements RpclCondensed
                 try
                 {
                         RpclCondensedProbabilityDistributionParser theParser = new RpclCondensedProbabilityDistributionParser(reader);
-                        return theParser.Distribution(this.semantics, this.signature);
+                        return RpclCondensedProbabilityDistributionParser.Distribution(this.semantics, this.signature);
                 }catch(ParseException e){
                         throw new ParserException(e);
                 }
@@ -290,7 +290,7 @@ public class RpclCondensedProbabilityDistributionParser implements RpclCondensed
   /** Reinitialise. */
   static public void ReInit(java.io.InputStream stream, String encoding) {
     try { jj_input_stream.ReInit(stream, encoding, 1, 1); } catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }
-    token_source.ReInit(jj_input_stream);
+    RpclCondensedProbabilityDistributionParserTokenManager.ReInit(jj_input_stream);
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
@@ -317,7 +317,7 @@ public class RpclCondensedProbabilityDistributionParser implements RpclCondensed
   /** Reinitialise. */
   static public void ReInit(java.io.Reader stream) {
     jj_input_stream.ReInit(stream, 1, 1);
-    token_source.ReInit(jj_input_stream);
+    RpclCondensedProbabilityDistributionParserTokenManager.ReInit(jj_input_stream);
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
@@ -352,7 +352,7 @@ public class RpclCondensedProbabilityDistributionParser implements RpclCondensed
   static private Token jj_consume_token(int kind) throws ParseException {
     Token oldToken;
     if ((oldToken = token).next != null) token = token.next;
-    else token = token.next = token_source.getNextToken();
+    else token = token.next = RpclCondensedProbabilityDistributionParserTokenManager.getNextToken();
     jj_ntk = -1;
     if (token.kind == kind) {
       jj_gen++;
@@ -367,7 +367,7 @@ public class RpclCondensedProbabilityDistributionParser implements RpclCondensed
 /** Get the next Token. */
   static final public Token getNextToken() {
     if (token.next != null) token = token.next;
-    else token = token.next = token_source.getNextToken();
+    else token = token.next = RpclCondensedProbabilityDistributionParserTokenManager.getNextToken();
     jj_ntk = -1;
     jj_gen++;
     return token;
@@ -378,14 +378,14 @@ public class RpclCondensedProbabilityDistributionParser implements RpclCondensed
     Token t = token;
     for (int i = 0; i < index; i++) {
       if (t.next != null) t = t.next;
-      else t = t.next = token_source.getNextToken();
+      else t = t.next = RpclCondensedProbabilityDistributionParserTokenManager.getNextToken();
     }
     return t;
   }
 
   static private int jj_ntk() {
     if ((jj_nt=token.next) == null)
-      return (jj_ntk = (token.next=token_source.getNextToken()).kind);
+      return (jj_ntk = (token.next=RpclCondensedProbabilityDistributionParserTokenManager.getNextToken()).kind);
     else
       return (jj_ntk = jj_nt.kind);
   }

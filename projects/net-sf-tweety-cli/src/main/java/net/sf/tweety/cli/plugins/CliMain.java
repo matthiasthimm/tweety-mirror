@@ -66,9 +66,9 @@ public class CliMain {
 			try {
 				String line;
 				while ((line = bfrd.readLine()) != null) {
-					if (line.length() >= 1) {
+//					if (line.length() >= 1) {
 						System.out.println(line);
-					}
+//					}
 				}
 				bfrd.close();
 			} catch (IOException e) {

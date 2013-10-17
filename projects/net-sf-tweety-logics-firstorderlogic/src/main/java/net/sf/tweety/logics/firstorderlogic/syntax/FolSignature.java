@@ -48,6 +48,7 @@ public class FolSignature extends Signature{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.kr.Signature#isSubSignature(net.sf.tweety.kr.Signature)
 	 */
+	@Override
 	public boolean isSubSignature(Signature other){
 		if(!(other instanceof FolSignature))
 			return false;
@@ -62,6 +63,7 @@ public class FolSignature extends Signature{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.Signature#isOverlappingSignature(net.sf.tweety.Signature)
 	 */
+	@Override
 	public boolean isOverlappingSignature(Signature other){
 		if(!(other instanceof FolSignature))
 			return false;

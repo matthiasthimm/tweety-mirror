@@ -98,8 +98,7 @@ public class SelectionCommandParameter extends CommandParameter {
 	 * command parameter
 	 */
 	@Override
-	public CommandParameter instantiate(String s)
-			throws CloneNotSupportedException {
+	public CommandParameter instantiate(String s){
 		if (this.isValid(s)) {
 			SelectionCommandParameter newParameter = (SelectionCommandParameter) this
 					.clone();

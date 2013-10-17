@@ -80,6 +80,7 @@ public abstract class AssociativeOperation extends Term {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#isInteger()
 	 */
+	@Override
 	public boolean isInteger(){
 		for(Term t: this.terms)
 			if(!t.isInteger())
@@ -90,6 +91,7 @@ public abstract class AssociativeOperation extends Term {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#getVariables()
 	 */
+	@Override
 	public Set<Variable> getVariables(){
 		Set<Variable> variables = new HashSet<Variable>();
 		for(Term t: this.terms)
@@ -100,6 +102,7 @@ public abstract class AssociativeOperation extends Term {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#getProducts()
 	 */
+	@Override
 	public Set<Product> getProducts(){
 		Set<Product> products = new HashSet<Product>();
 		for(Term t: this.terms)
@@ -110,6 +113,7 @@ public abstract class AssociativeOperation extends Term {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#getProducts()
 	 */
+	@Override
 	public Set<Minimum> getMinimums(){
 		Set<Minimum> minimums = new HashSet<Minimum>();
 		for(Term t: this.terms)
@@ -120,6 +124,7 @@ public abstract class AssociativeOperation extends Term {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#getAbsoluteValues()
 	 */
+	@Override
 	public Set<AbsoluteValue> getAbsoluteValues(){
 		Set<AbsoluteValue> avs = new HashSet<AbsoluteValue>();
 		for(Term t: this.terms)
@@ -130,6 +135,7 @@ public abstract class AssociativeOperation extends Term {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#collapseAssociativeOperations()
 	 */
+	@Override
 	public void collapseAssociativeOperations(){
 		List<Term> terms = new LinkedList<Term>(this.getTerms());
 		for(Term t: terms){

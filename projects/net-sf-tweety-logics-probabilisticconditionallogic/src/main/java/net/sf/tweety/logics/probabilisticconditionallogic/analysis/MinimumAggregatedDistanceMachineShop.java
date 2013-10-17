@@ -67,7 +67,7 @@ public class MinimumAggregatedDistanceMachineShop implements BeliefBaseMachineSh
 				rightSide = new FloatConstant(pc.getProbability().getValue());
 			}else{				
 				PropositionalFormula body = pc.getPremise().iterator().next();
-				PropositionalFormula head_and_body = (PropositionalFormula) pc.getConclusion().combineWithAnd(body);
+				PropositionalFormula head_and_body = pc.getConclusion().combineWithAnd(body);
 				for(PossibleWorld w: worlds){
 					if(w.satisfies(head_and_body)){
 						if(leftSide == null)

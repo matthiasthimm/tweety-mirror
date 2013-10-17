@@ -49,6 +49,7 @@ public abstract class FolFormula extends RelationalFormula {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.kr.ClassicalFormula#complement()
 	 */
+	@Override
 	public RelationalFormula complement(){
 		if(this instanceof Negation) return ((Negation)this).getFormula();
 		return new Negation(this);
@@ -137,11 +138,12 @@ public abstract class FolFormula extends RelationalFormula {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula#getUniformProbability()
 	 */
+	@Override
 	public Probability getUniformProbability(){
 		Set<Variable> vars = this.getUnboundVariables();
 		Map<Variable,Constant> map = new HashMap<Variable,Constant>();
 		int i = 0;
-		FolSignature sig = (FolSignature) this.getSignature();
+		FolSignature sig = this.getSignature();
 		for(Variable var: vars){
 			Constant c = new Constant("d" + i++);
 			map.put(var, c);
@@ -163,7 +165,9 @@ public abstract class FolFormula extends RelationalFormula {
 	 */
 	public abstract boolean isDnf();
 	
+	@Override
 	public abstract FolFormula substitute(Term<?> v, Term<?> t) throws IllegalArgumentException;
 	
+	@Override
 	public abstract FolFormula clone();
 }

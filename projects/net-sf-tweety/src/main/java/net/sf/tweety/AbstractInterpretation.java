@@ -15,6 +15,7 @@ public abstract class AbstractInterpretation implements Interpretation {
 	 * @throws IllegalArgumentException if at least one formula does not correspond
 	 * 		to the expected language.
 	 */
+	@Override
 	public boolean satisfies(Collection<? extends Formula> formulas) throws IllegalArgumentException{
 		for(Formula f: formulas)
 			if(!this.satisfies(f))

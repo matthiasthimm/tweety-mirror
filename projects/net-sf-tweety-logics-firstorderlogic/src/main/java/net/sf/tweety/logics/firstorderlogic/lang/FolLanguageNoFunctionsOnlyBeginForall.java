@@ -21,6 +21,7 @@ public class FolLanguageNoFunctionsOnlyBeginForall extends FolLanguageNoFunction
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.lang.FolLanguageNoFunctions#isRepresentable(net.sf.tweety.kr.Formula)
 	 */
+	@Override
 	public boolean isRepresentable(Formula formula){
 		if(!super.isRepresentable(formula)) return false;
 		//either the formula contains no quantifier at all

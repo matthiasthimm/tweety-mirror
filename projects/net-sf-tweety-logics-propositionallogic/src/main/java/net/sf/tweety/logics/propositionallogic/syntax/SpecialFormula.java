@@ -14,6 +14,7 @@ public abstract class SpecialFormula extends PropositionalFormula {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#collapseAssociativeFormulas()
 	 */
+	@Override
 	public PropositionalFormula collapseAssociativeFormulas(){
 		return this;
 	}

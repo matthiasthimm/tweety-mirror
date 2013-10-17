@@ -64,7 +64,7 @@ public class CReasoner extends Reasoner {
 			return answer;			
 		}
 		if(query instanceof PropositionalFormula){
-			int rank = crepresentation.rank((PropositionalFormula)query);
+			int rank = crepresentation.rank(query);
 			Answer answer = new Answer(this.getKnowledgBase(),query);			
 			answer.setAnswer(rank==0);
 			answer.appendText("The rank of the query is " + rank + " (the query is " + ((rank==0)?(""):("not ")) + "believed)");

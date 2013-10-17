@@ -21,6 +21,7 @@ public class FolLanguagePropositional extends FolLanguage {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.lang.FolLanguage#isRepresentable(net.sf.tweety.kr.Formula)
 	 */
+	@Override
 	public boolean isRepresentable(Formula formula){
 		if(!super.isRepresentable(formula)) return false;
 		// it is sufficient to check whether there are predicates of arity greater zero.

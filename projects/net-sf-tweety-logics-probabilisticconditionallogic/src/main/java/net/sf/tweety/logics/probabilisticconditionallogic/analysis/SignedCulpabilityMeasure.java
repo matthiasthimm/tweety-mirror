@@ -16,6 +16,7 @@ public interface SignedCulpabilityMeasure extends CulpabilityMeasure {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.probabilisticconditionallogic.analysis.CulpabilityMeasure#culpabilityMeasure(net.sf.tweety.logics.probabilisticconditionallogic.PclBeliefSet, net.sf.tweety.logics.probabilisticconditionallogic.syntax.ProbabilisticConditional)
 	 */
+	@Override
 	public Double culpabilityMeasure(PclBeliefSet beliefSet, ProbabilisticConditional conditional);
 	
 	/**

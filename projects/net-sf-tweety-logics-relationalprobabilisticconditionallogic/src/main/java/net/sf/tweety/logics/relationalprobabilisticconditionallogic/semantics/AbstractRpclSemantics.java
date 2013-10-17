@@ -25,11 +25,13 @@ public abstract class AbstractRpclSemantics implements RpclSemantics {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.relationalprobabilisticconditionallogic.semantics.RpclSemantics#satisfies(net.sf.tweety.logics.probabilisticconditionallogic.semantics.ProbabilityDistribution, net.sf.tweety.logics.relationalprobabilisticconditionallogic.syntax.RelationalProbabilisticConditional)
 	 */
+	@Override
 	public abstract boolean satisfies(ProbabilityDistribution<?> p, RelationalProbabilisticConditional r);
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public abstract String toString();
 	
 	/* (non-Javadoc)

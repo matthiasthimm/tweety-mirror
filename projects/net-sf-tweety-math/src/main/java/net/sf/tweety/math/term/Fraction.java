@@ -109,6 +109,7 @@ public class Fraction extends Term {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#isContinuous(net.sf.tweety.math.term.Variable)
 	 */
+	@Override
 	public boolean isContinuous(Variable v){
 		return this.nominator.isContinuous(v) && this.denominator.isContinuous(v);		
 	}
@@ -124,6 +125,7 @@ public class Fraction extends Term {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#simplify()
 	 */
+	@Override
 	public Term simplify(){
 		Term nominator = this.nominator.simplify();
 		Term denominator = this.denominator.simplify();

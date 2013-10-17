@@ -83,6 +83,7 @@ public class AggregatingSemantics extends AbstractRpclSemantics {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.relationalprobabilisticconditionallogic.semantics.AbstractRpclSemantics#toString()
 	 */
+	@Override
 	public String toString(){
 		return "Aggregating Semantics";
 	}

@@ -19,16 +19,15 @@ import net.sf.tweety.util.Triple;
 // TODO: Equals-Methode schreiben
 
 public class PreferenceOrder<T> implements BinaryRelation<T> {
-	
-	
+
 	/**
 	 * a given set of Triples
 	 */
 	private Set<Triple<T, T, Relation>> relations;
-	
-// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	
-//------- Constructor ------------------------------------------------	
-	
+
+	// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	// ------- Constructor ------------------------------------------------
+
 	/**
 	 * Creates an empty HashSet of preference order.
 	 */
@@ -42,26 +41,26 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	 * @param elements
 	 *            the set of given element pairs
 	 */
-	public PreferenceOrder(Collection<? extends Triple<T, T, Relation>> relations) {
+	public PreferenceOrder(
+			Collection<? extends Triple<T, T, Relation>> relations) {
 		this.relations = new HashSet<Triple<T, T, Relation>>(relations);
 	}
 
-// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	
-//------- Getter & Setter --------------------------------------------
-		
+	// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	// ------- Getter & Setter --------------------------------------------
 
 	/**
 	 * returns the ranking function for this preference order
+	 * 
 	 * @return the ranking function for this preference order
 	 */
 	public LevelingFunction<T> getLevelingFunction() {
 		return new LevelingFunction<T>(this);
 	}
 
-	
-// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-//------- Methods ----------------------------------------------------
-	
+	// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	// ------- Methods ----------------------------------------------------
+
 	/**
 	 * adds a given pair of generic elements to the set.
 	 * 
@@ -73,7 +72,6 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	public boolean add(Triple<T, T, Relation> t) {
 		return this.relations.add(t);
 	}
-	
 
 	/**
 	 * adds two given (single) elements as pair into the set
@@ -93,12 +91,12 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	 */
 	public Set<T> getDomainElements() {
 		Set<T> domainElements = new HashSet<T>();
-		
-		for(Triple<T, T, Relation> t : relations){
+
+		for (Triple<T, T, Relation> t : relations) {
 			domainElements.add(t.getFirst());
 			domainElements.add(t.getSecond());
 		}
-		
+
 		return domainElements;
 	}
 
@@ -111,7 +109,7 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	 */
 	@Override
 	public boolean remove(Object o) {
-		if(this.contains(o))
+		if (this.contains(o))
 			return relations.remove(o);
 		else
 			return false;
@@ -135,11 +133,11 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	 *            the second element to be checked
 	 * @return true if related, false if not.
 	 */
-	
+
 	public boolean isRelated(T a, T b) {
-		for(Triple<T, T, Relation> t : relations){
-			if(t.getFirst() == a){
-				if(t.getSecond() == b){
+		for (Triple<T, T, Relation> t : relations) {
+			if (t.getFirst() == a) {
+				if (t.getSecond() == b) {
 					return true;
 				}
 			}
@@ -153,7 +151,8 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	 * @return an iterator over a set of pairs
 	 */
 
-	public Iterator<Triple<T, T, Relation>> iterator(Set<Triple<T, T, Relation>> s) {
+	public Iterator<Triple<T, T, Relation>> iterator(
+			Set<Triple<T, T, Relation>> s) {
 		return s.iterator();
 	}
 
@@ -165,10 +164,10 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	 * @return a pair if it exists, null otherwise
 	 */
 	public Triple<T, T, Relation> get(Triple<T, T, Relation> e) {
-		for(Triple<T, T, Relation> t : relations){
-			if(t.getFirst().toString().equals(e.getFirst().toString())){
-				if(t.getSecond().toString().equals(e.getSecond().toString())){
-					if(t.getThird().toString().equals(e.getThird().toString()))
+		for (Triple<T, T, Relation> t : relations) {
+			if (t.getFirst().toString().equals(e.getFirst().toString())) {
+				if (t.getSecond().toString().equals(e.getSecond().toString())) {
+					if (t.getThird().toString().equals(e.getThird().toString()))
 						return t;
 				}
 			}
@@ -186,9 +185,9 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	 * @return a pair if found, null if not
 	 */
 	public Triple<T, T, Relation> getTriple(T a, T b) {
-		for(Triple<T, T, Relation> t : relations){
-			if(t.getFirst() == a){
-				if(t.getSecond() == b){
+		for (Triple<T, T, Relation> t : relations) {
+			if (t.getFirst() == a) {
+				if (t.getSecond() == b) {
 					return t;
 				}
 			}
@@ -198,28 +197,33 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 
 	/**
 	 * checks whether this preference order contains a pair of given elements
-	 * @param a the first element
-	 * @param b the second element
+	 * 
+	 * @param a
+	 *            the first element
+	 * @param b
+	 *            the second element
 	 * @return true if pair is in this preference order, false if not
 	 */
-	public boolean containsRelation(T a, T b){
-		for(Triple<T, T, Relation> t : relations){
-			if(t.getFirst() == a){
-				if (t.getSecond() == b){
+	public boolean containsRelation(T a, T b) {
+		for (Triple<T, T, Relation> t : relations) {
+			if (t.getFirst() == a) {
+				if (t.getSecond() == b) {
 					return true;
 				}
 			}
 		}
 		return false;
 	}
-	
+
 	/**
 	 * checks whether this preference order contains a given pair
-	 * @param e the given pair
+	 * 
+	 * @param e
+	 *            the given pair
 	 * @return true if pair is in this preference order, false if not
 	 */
 	@Override
-	public boolean contains(Object o){
+	public boolean contains(Object o) {
 		return (relations.contains(o));
 	}
 
@@ -230,17 +234,18 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	 * @param relation
 	 * @return
 	 */
-	public boolean containsTriple(T firstElement, T secondElement, Relation relation){
-		for(Triple<T, T, Relation> e : relations)	
-			if(		e.getFirst().toString().equals(firstElement.toString())
-				&&	e.getSecond().toString().equals(secondElement.toString())
-				&&	e.getThird().toString().equals(relation.toString()))
-			{
+	public boolean containsTriple(T firstElement, T secondElement,
+			Relation relation) {
+		for (Triple<T, T, Relation> e : relations)
+			if (e.getFirst().toString().equals(firstElement.toString())
+					&& e.getSecond().toString()
+							.equals(secondElement.toString())
+					&& e.getThird().toString().equals(relation.toString())) {
 				return true;
 			}
 		return false;
 	}
-	
+
 	/**
 	 * returns the size of the set
 	 * 
@@ -261,37 +266,42 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 		Iterator<Triple<T, T, Relation>> it = iterator();
 		while (it.hasNext()) {
 			Triple<T, T, Relation> t = it.next();
-			if(it.hasNext()){
-				s += "("+ t.getFirst().toString() + "," + t.getSecond().toString()+ "), ";
+			if (it.hasNext()) {
+				s += "(" + t.getFirst().toString() + ","
+						+ t.getSecond().toString() + "), ";
 			} else {
-				s += "("+ t.getFirst().toString() + "," + t.getSecond().toString()+ ")";
+				s += "(" + t.getFirst().toString() + ","
+						+ t.getSecond().toString() + ")";
 			}
 		}
 		s += "}";
 		return s;
 
 	}
-	
+
 	/**
 	 * returns an array containing all objects
+	 * 
 	 * @return the Object[]-array
 	 */
-	public Object[] toArray(){
+	public Object[] toArray() {
 		Set<Triple<T, T, Relation>> elements = new HashSet<Triple<T, T, Relation>>();
 		elements.addAll(relations);
 		return elements.toArray();
 	}
-	
+
 	/**
 	 * returns all elements in an array
-	 * @param a is a given array
+	 * 
+	 * @param a
+	 *            is a given array
 	 * @return an array
 	 */
 	@Override
 	public <T> T[] toArray(T[] a) {
 		return this.getDomainElements().toArray(a);
 	}
-	
+
 	/**
 	 * checks whether the set is total or not
 	 * 
@@ -328,22 +338,25 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 
 	/**
 	 * checks whether the given set represents a valid preference order
+	 * 
 	 * @return true if valid, false if not
 	 */
-	public boolean isValid(){
+	public boolean isValid() {
 		return (isTotal() && isTransitive());
 	}
-	
+
 	/**
 	 * clears the current preference order element set
 	 */
 	@Override
 	public void clear() {
-		relations.clear();	
+		relations.clear();
 	}
 
 	/**
-	 * checks, whether all of the given elements are contained in the preference order
+	 * checks, whether all of the given elements are contained in the preference
+	 * order
+	 * 
 	 * @return true iff all elements are contained, false otherwise
 	 */
 	@Override
@@ -351,7 +364,7 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 		Iterator<?> it = c.iterator();
 		while (it.hasNext()) {
 			Object e = it.next();
-			if(!this.contains(e)){
+			if (!this.contains(e)) {
 				return false;
 			}
 		}
@@ -360,43 +373,46 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 
 	/**
 	 * removes all given elements from the preference order
+	 * 
 	 * @return true if elements-set has changed, false if not
 	 */
 	@Override
 	public boolean removeAll(Collection<?> c) {
 		Iterator<?> it = c.iterator();
-		Set<Triple<T,T,Relation>> tempRel = new HashSet<Triple<T,T,Relation>>();
-		while(it.hasNext()){
+		Set<Triple<T, T, Relation>> tempRel = new HashSet<Triple<T, T, Relation>>();
+		while (it.hasNext()) {
 			Object e = it.next();
-			for(Triple<T, T, Relation> a : relations){
-				if(!c.contains(a))
+			for (Triple<T, T, Relation> a : relations) {
+				if (!c.contains(a))
 					tempRel.add(a);
 			}
 		}
-		if (tempRel.equals(this.relations)){
+		if (tempRel.equals(this.relations)) {
 			return false;
 		}
 		this.relations = tempRel;
 		return true;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.util.Set#retainAll(java.util.Collection)
 	 */
 	// TODO equality-check testen
 	@Override
 	public boolean retainAll(Collection<?> c) {
 		Iterator<?> it = c.iterator();
-		Set<Triple<T,T,Relation>> tempRel = new HashSet<Triple<T,T,Relation>>();
-		while(it.hasNext()){
+		Set<Triple<T, T, Relation>> tempRel = new HashSet<Triple<T, T, Relation>>();
+		while (it.hasNext()) {
 			Object e = it.next();
-			for(Triple<T, T, Relation> a : relations){
-				if(a.toString().equals(e.toString())){
+			for (Triple<T, T, Relation> a : relations) {
+				if (a.toString().equals(e.toString())) {
 					tempRel.add(a);
 				}
 			}
-		}	
-		if (tempRel.equals(c)){
+		}
+		if (tempRel.equals(c)) {
 			return false;
 		}
 		relations = tempRel;
@@ -405,17 +421,18 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 
 	/**
 	 * adds all given elements to the preference order
+	 * 
 	 * @return true if element-set changed, false if not
 	 */
 	@Override
 	public boolean addAll(Collection<? extends Triple<T, T, Relation>> c) {
 		boolean changed = false;
-		Set<Triple<T,T,Relation>> tempRel = this.relations;
-		for(Triple<T,T,Relation> t : c){
-			if(!tempRel.contains(t)){
+		Set<Triple<T, T, Relation>> tempRel = this.relations;
+		for (Triple<T, T, Relation> t : c) {
+			if (!tempRel.contains(t)) {
 				tempRel.add(t);
 				changed = true;
-				}
+			}
 		}
 		return changed;
 	}
@@ -427,13 +444,13 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	public Iterator<Triple<T, T, Relation>> iterator() {
 		return relations.iterator();
 	}
-	
+
 	/**
 	 * 
 	 * @param po
 	 * @return
 	 */
-	public boolean equals(Object obj){
+	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)
@@ -441,68 +458,84 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 		if (!(obj instanceof PreferenceOrder))
 			return false;
 		PreferenceOrder<T> po = (PreferenceOrder<T>) obj;
-		if(!this.getClass().equals(po.getClass())){
+		if (!this.getClass().equals(po.getClass())) {
 			return false;
 		}
-		if(!this.getDomainElements().equals(po.getDomainElements())){
+		if (!this.getDomainElements().equals(po.getDomainElements())) {
 			return false;
 		}
-		if(!this.getLevelingFunction().equals(po.getLevelingFunction())){
+		if (!this.getLevelingFunction().equals(po.getLevelingFunction())) {
 			return false;
 		}
 		return true;
 	}
-	
+
 	/**
-	 * compares this preference order to another given one whether each relation is contained in both
-	 * @param po the preference order to compare with
+	 * compares this preference order to another given one whether each relation
+	 * is contained in both
+	 * 
+	 * @param po
+	 *            the preference order to compare with
 	 * @return true if both are equal, false if not
 	 */
-	public boolean compareEqualityWith(PreferenceOrder<T> po){
-		
-		for(Triple<T, T, Relation> f : po){
-				if(!(this.containsTriple(f.getFirst(), f.getSecond(), f.getThird()))){
-					return false;
-				}
+	public boolean compareEqualityWith(PreferenceOrder<T> po) {
+
+		for (Triple<T, T, Relation> f : po) {
+			if (!(this
+					.containsTriple(f.getFirst(), f.getSecond(), f.getThird()))) {
+				return false;
+			}
 		}
 		return true;
 	}
-	
+
 	/**
-	 * weakens the given element in this preference order in its leveling function
-	 * @param element the element to be weaken
+	 * weakens the given element in this preference order in its leveling
+	 * function
+	 * 
+	 * @param element
+	 *            the element to be weaken
 	 */
-	public void weakenElementInLF(T element){
+	public void weakenElementInLF(T element) {
 		LevelingFunction<T> tempLF = getLevelingFunction();
 		tempLF.weakenElement(element);
 		relations = tempLF.generatePreferenceOrder();
 	}
-	
+
 	/**
-	 * strengthens the given element in this preference order in its leveling function
-	 * @param element the element to be strengthen
+	 * strengthens the given element in this preference order in its leveling
+	 * function
+	 * 
+	 * @param element
+	 *            the element to be strengthen
 	 */
-	public void strengthenElementInLF(T element){
+	public void strengthenElementInLF(T element) {
 		LevelingFunction<T> tempLF = getLevelingFunction();
 		tempLF.strengthenElement(element);
 		relations = tempLF.generatePreferenceOrder();
 	}
 
 	/**
-	 * weakens the given element in this preference order in its ranking function
-	 * @param element the element to be weaken
+	 * weakens the given element in this preference order in its ranking
+	 * function
+	 * 
+	 * @param element
+	 *            the element to be weaken
 	 */
-	public void weakenElementInRF(T element){
+	public void weakenElementInRF(T element) {
 		RankingFunction<T> tempRF = getLevelingFunction().getRankingFunction();
 		tempRF.weakenElement(element);
 		relations = tempRF.generatePreferenceOrder();
 	}
-	
+
 	/**
-	 * strengthens the given element in this preference order in its ranking function
-	 * @param element the element to be strengthen
+	 * strengthens the given element in this preference order in its ranking
+	 * function
+	 * 
+	 * @param element
+	 *            the element to be strengthen
 	 */
-	public void strengthenElementInRF(T element){
+	public void strengthenElementInRF(T element) {
 		RankingFunction<T> tempRF = getLevelingFunction().getRankingFunction();
 		tempRF.strengthenElement(element);
 		relations = tempRF.generatePreferenceOrder();

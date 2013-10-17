@@ -73,6 +73,7 @@ public abstract class FunctionalTerm extends Term {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#getAbsoluteValues()
 	 */
+	@Override
 	public Set<AbsoluteValue> getAbsoluteValues(){
 		return this.term.getAbsoluteValues();		
 	}
@@ -88,6 +89,7 @@ public abstract class FunctionalTerm extends Term {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#toLinearForm()
 	 */
+	@Override
 	public Sum toLinearForm() throws IllegalArgumentException{
 		throw new IllegalArgumentException("The term '" + this + "' cannot be brought into linear form because it is non-linear.");
 	}
@@ -95,17 +97,20 @@ public abstract class FunctionalTerm extends Term {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#replaceTerm(net.sf.tweety.math.term.Term, net.sf.tweety.math.term.Term)
 	 */
+	@Override
 	public abstract Term replaceTerm(Term toSubstitute, Term substitution);
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#toString()
 	 */
+	@Override
 	public abstract String toString();
 
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#value()
 	 */
+	@Override
 	public abstract Constant value() throws IllegalArgumentException;
 
 }

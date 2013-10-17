@@ -7,7 +7,7 @@ import java.io.*;
  * 
  * @author Matthias Thimm
  */
-public abstract class Parser {
+public abstract class Parser<T extends BeliefBase> {
 
 	/**
 	 * Parses the file of the given filename into a belief base of the given type.
@@ -16,7 +16,7 @@ public abstract class Parser {
 	 * @throws FileNotFoundException if the file is not found 
 	 * @throws Exception some parsing exceptions may be added here.
 	 */
-	public BeliefBase parseBeliefBaseFromFile(String filename) throws FileNotFoundException, IOException, ParserException{
+	public T parseBeliefBaseFromFile(String filename) throws FileNotFoundException, IOException, ParserException{
 		return this.parseBeliefBase(new InputStreamReader(new java.io.FileInputStream(filename)));
 	}
 	
@@ -26,7 +26,7 @@ public abstract class Parser {
 	 * @return a belief base.
 	 * @throws Exception some parsing exceptions may be added here.
 	 */
-	public BeliefBase parseBeliefBase(String text) throws IOException, ParserException{
+	public T parseBeliefBase(String text) throws IOException, ParserException{
 		return this.parseBeliefBase(new StringReader(text));
 	}
 	
@@ -36,7 +36,7 @@ public abstract class Parser {
 	 * @return a belief base
 	 * @throws Exception some parsing exceptions may be added here.
 	 */
-	public abstract BeliefBase parseBeliefBase(Reader reader) throws IOException, ParserException;
+	public abstract T parseBeliefBase(Reader reader) throws IOException, ParserException;
 	
 	/**
 	 * Parses the file of the given filename into a formula of the given type.

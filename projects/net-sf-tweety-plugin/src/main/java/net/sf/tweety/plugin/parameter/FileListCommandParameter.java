@@ -53,7 +53,7 @@ public class FileListCommandParameter extends CommandParameter {
 	 */
 	@Override
 	public boolean isValid(String s) {
-		// validation criteria?
+		// check for valid path
 		return false;
 	}
 
@@ -61,16 +61,24 @@ public class FileListCommandParameter extends CommandParameter {
 	 * instantiates a new parameter iff the given value ist valid for this
 	 * command parameter
 	 */
-
 	@Override
-	public CommandParameter instantiate(String s) {
-
+	public CommandParameter instantiate(String filename) {
+		
 		return null;
 	}
 
+	
+	public CommandParameter instantiate(File[] files){
+		FileListCommandParameter fl = (FileListCommandParameter) this.clone();
+		fl.setValue(files);
+		
+		return fl;
+		
+	}
+	
+	
 	// TODO: implement ArrayList-Instantiation
-	public File[] instantiate(ArrayList<String> a)
-			throws CloneNotSupportedException {
+	public CommandParameter instantiate(ArrayList<String> a){
 		File[] out = new File[a.size()];
 
 		for (int i = 0; i < a.size(); i++) {
@@ -83,12 +91,11 @@ public class FileListCommandParameter extends CommandParameter {
 				.clone();
 		filelist.setValue(out);
 
-		return out;
+		return filelist;
 	}
 
 	@Override
 	public Object clone(){
-		
 		return new FileListCommandParameter(this.getIdentifier(), this.getDescription());
 	}
 }

@@ -18,8 +18,9 @@ import net.sf.tweety.logics.propositionallogic.syntax.*;
  * <br>PROPOSITION is a sequence of symbols from {a,...,z,A,...,Z,0,...,9,_} with a letter or "_" at the beginning.
  * 
  *  @author Matthias Thimm
+ *  @author Bastian Wolf
  */
-public class PlParser extends Parser {
+public class PlParser extends Parser<PlBeliefSet> {
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.kr.Parser#parseBeliefBase(java.io.Reader)

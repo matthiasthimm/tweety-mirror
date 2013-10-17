@@ -38,6 +38,7 @@ public class Logarithm extends FunctionalTerm {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#derive(net.sf.tweety.math.term.Variable)
 	 */
+	@Override
 	public Term derive(Variable v) throws NonDifferentiableException{
 		if(!this.getVariables().contains(v)) return new IntegerConstant(0);
 		return this.getTerm().derive(v).mult(new Fraction(new IntegerConstant(1),this.getTerm()));
@@ -46,6 +47,7 @@ public class Logarithm extends FunctionalTerm {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#simplify()
 	 */
+	@Override
 	public Term simplify(){
 		Term t = this.getTerm().simplify();
 		if(t instanceof Constant)
@@ -56,6 +58,7 @@ public class Logarithm extends FunctionalTerm {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#isContinuous(net.sf.tweety.math.term.Variable)
 	 */
+	@Override
 	public boolean isContinuous(Variable v){
 		return this.getTerm().isContinuous(v);		
 	}

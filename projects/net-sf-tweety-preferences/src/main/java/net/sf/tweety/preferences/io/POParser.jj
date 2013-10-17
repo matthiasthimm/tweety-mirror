@@ -6,6 +6,9 @@
  */options{  JDK_VERSION = "1.6";  STATIC = false;}PARSER_BEGIN(POParser)package net.sf.tweety.preferences.io;import java.io.File;
 import java.util.*;import net.sf.tweety.preferences.*;import net.sf.tweety.util.Triple;
 public class POParser{
+public POParser(){
+}
+  
   public static PreferenceOrder < String > parse(File file) throws ParseException, java.io.FileNotFoundException
   {
     POParser parser;

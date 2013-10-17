@@ -40,6 +40,7 @@ public class SetSignature<T> extends Signature implements Collection<T> {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.kr.Signature#isSubSignature(net.sf.tweety.kr.Signature)
 	 */
+	@Override
 	public boolean isSubSignature(Signature other){
 		if(!(other instanceof SetSignature<?>))
 			return false;
@@ -49,6 +50,7 @@ public class SetSignature<T> extends Signature implements Collection<T> {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.Signature#isOverlappingSignature(net.sf.tweety.Signature)
 	 */
+	@Override
 	public boolean isOverlappingSignature(Signature other){
 		if(!(other instanceof SetSignature<?>))
 			return false;
@@ -60,6 +62,7 @@ public class SetSignature<T> extends Signature implements Collection<T> {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.Signature#addSignature(net.sf.tweety.Signature)
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public void addSignature(Signature other){
 		if(!(other instanceof SetSignature<?>))
@@ -206,6 +209,7 @@ public class SetSignature<T> extends Signature implements Collection<T> {
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString(){
 		return this.formulas.toString();
 	}

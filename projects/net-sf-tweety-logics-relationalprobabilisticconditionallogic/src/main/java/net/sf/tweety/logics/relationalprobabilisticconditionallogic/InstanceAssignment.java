@@ -83,6 +83,7 @@ public class InstanceAssignment extends HashMap<Collection<? extends Constant>,I
 	/* (non-Javadoc)
 	 * @see java.util.AbstractMap#toString()
 	 */
+	@Override
 	public String toString(){
 		String result = "<" + this.predicate.toString() + ", {";
 		boolean first1 = true;

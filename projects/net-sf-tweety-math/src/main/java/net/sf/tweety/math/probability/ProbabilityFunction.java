@@ -203,6 +203,7 @@ public class ProbabilityFunction<T extends Comparable<T>> implements Map<T,Proba
 		/* (non-Javadoc)
 		 * @see java.lang.Object#toString()
 		 */
+		@Override
 		public String toString(){
 			return this.probabilities.toString();
 		}

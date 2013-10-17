@@ -103,7 +103,7 @@ Map<T, Integer> {
 		if (temp.hasNext()) {
 			while (temp.hasNext()) {
 				Entry<T, Integer> e = temp.next();
-				if (e.getKey().equals(key)) {
+				if (e.getKey().toString().equals(key.toString())) {
 					return e.getValue();
 				}
 			}

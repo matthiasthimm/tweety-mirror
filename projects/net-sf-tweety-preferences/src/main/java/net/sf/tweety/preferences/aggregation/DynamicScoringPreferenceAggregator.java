@@ -107,7 +107,7 @@ public abstract class DynamicScoringPreferenceAggregator<T> implements
 				T t = e.getKey();
 				Integer i = e.getValue();
 				int val = v.getWeight(i);
-				elem.put(t, elem.get(t) - val);
+				elem.put(e.getKey(), elem.get(t.toString()) - val);
 			}
 		}
 
@@ -129,23 +129,26 @@ public abstract class DynamicScoringPreferenceAggregator<T> implements
 	 *            the update element containing the changes to be applied
 	 */
 	public PreferenceOrder<T> update(Update<T> update,
-			List<PreferenceOrder<T>> input) {
+			List<PreferenceOrder<T>> input) throws IndexOutOfBoundsException,
+			NullPointerException {
 
 		// get the list-index of the po to be changed
-		PreferenceOrder<T> po = update.getPreferenceOrder();
-		int i = -1;
+		int i = update.getPreferenceOrderIndex();
+		PreferenceOrder<T> po = input.get(i);
 
-		for (PreferenceOrder<T> in : input) {
-			if (po.compareEqualityWith(in)) {
-				i = input.indexOf(po);
-				break;
-			}
-		}
+//		int i = -1;
+
+//		for (PreferenceOrder<T> in : input) {
+//			if (po.compareEqualityWith(in)) {
+//				i = input.indexOf(po);
+//				break;
+//			}
+//		}
 
 		Operation op = update.getOperation();
 		T element = update.getElement();
 
-		if (input.get(i).getDomainElements().contains(element)) {
+		if (po.getDomainElements().contains(element)) {
 			int amount = update.getAmount();
 			if (op == Operation.WEAKEN) {
 				while (amount > 0) {

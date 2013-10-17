@@ -328,6 +328,7 @@ public class OptimizationProblem extends ConstraintSatisfactionProblem {
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString(){
 		String s = (this.type == OptimizationProblem.MAXIMIZE)?("Maximize "):("Minimize ");
 		s += this.targetFunction + "\nSubject to:\n";
@@ -338,6 +339,7 @@ public class OptimizationProblem extends ConstraintSatisfactionProblem {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.opt.ConstraintSatisfactionProblem#clone()
 	 */
+	@Override
 	public OptimizationProblem clone(){
 		OptimizationProblem clone = new OptimizationProblem(this.type);
 		clone.addAll(this);

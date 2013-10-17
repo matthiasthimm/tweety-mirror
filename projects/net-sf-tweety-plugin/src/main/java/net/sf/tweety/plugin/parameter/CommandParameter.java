@@ -63,13 +63,6 @@ public abstract class CommandParameter implements Cloneable {
 	 * @param s the given argument string
 	 * @return 
 	 */
-	public abstract CommandParameter instantiate(String s) throws CloneNotSupportedException;
+	public abstract CommandParameter instantiate(String s);
 	
-	
-	/**
-	 * @throws CloneNotSupportedException 
-	 * 
-	 */
-	@Override
-	public abstract Object clone() throws CloneNotSupportedException;
 }

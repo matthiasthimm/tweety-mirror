@@ -40,6 +40,7 @@ public class Disjunction extends AssociativeFOLFormula{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#isDnf()
 	 */
+	@Override
 	public boolean isDnf(){
 		for(RelationalFormula f: this)
 			if(!((FolFormula)f).isDnf() && !(f instanceof Disjunction)) return false;

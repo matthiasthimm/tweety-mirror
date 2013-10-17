@@ -7,6 +7,10 @@ import net.sf.tweety.util.Triple;
 
 
 public class POParser implements POParserConstants {
+public POParser()
+{
+}
+
   public static PreferenceOrder < String > parse(File file) throws ParseException, java.io.FileNotFoundException
   {
     POParser parser;

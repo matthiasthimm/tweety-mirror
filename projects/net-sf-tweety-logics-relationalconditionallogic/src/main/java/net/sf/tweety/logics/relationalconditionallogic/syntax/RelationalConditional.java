@@ -108,6 +108,7 @@ public class RelationalConditional extends RelationalFormula implements Rule<Fol
 	 * has a tautological premise.
 	 * @return "true" iff this conditional is a fact.
 	 */
+	@Override
 	public boolean isFact(){
 		return (this.premise instanceof Tautology);
 	}
@@ -150,8 +151,8 @@ public class RelationalConditional extends RelationalFormula implements Rule<Fol
 	@Override
 	public RelationalFormula substitute(Term<?> v, Term<?> t)	throws IllegalArgumentException {
 		return new RelationalConditional(
-				(FolFormula)this.premise.substitute(v, t),
-				(FolFormula)this.conclusion.substitute(v, t));
+				this.premise.substitute(v, t),
+				this.conclusion.substitute(v, t));
 	}
 
 	/* (non-Javadoc)

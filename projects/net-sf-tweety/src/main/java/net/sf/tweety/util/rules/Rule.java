@@ -23,6 +23,7 @@ public interface Rule<C extends Formula, P extends Formula> extends Formula {
 	
 	public void addPremises(Collection<? extends P> premises);
 	
+	@Override
 	public Signature getSignature();
 	
 	/**

@@ -41,6 +41,7 @@ public class Proposition extends PropositionalFormula implements Atom, Comparabl
 	/**
 	 * @return the name of this proposition.
 	 */
+	@Override
 	public String getName(){
 		return this.predicate != null ? this.predicate.getName() : "";
 	}
@@ -57,10 +58,12 @@ public class Proposition extends PropositionalFormula implements Atom, Comparabl
 		return reval;
 	}
 	
+	@Override
 	public String toString(){
 		return getName();
 	}
 	
+	@Override
 	public PropositionalFormula collapseAssociativeFormulas(){
 		return this;
 	}

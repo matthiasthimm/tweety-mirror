@@ -34,6 +34,7 @@ public class RclBeliefSet extends BeliefSet<RelationalConditional> {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.kr.BeliefBase#getSignature()
 	 */
+	@Override
 	public Signature getSignature(){
 		FolSignature sig = new FolSignature();
 		for(Formula f: this){

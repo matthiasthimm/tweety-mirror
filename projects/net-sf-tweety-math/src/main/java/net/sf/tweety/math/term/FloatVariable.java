@@ -36,6 +36,7 @@ public class FloatVariable extends Variable{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#isInteger()
 	 */
+	@Override
 	public boolean isInteger(){
 		return false;
 	}
@@ -43,6 +44,7 @@ public class FloatVariable extends Variable{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Variable#hashCode()
 	 */
+	@Override
 	public int hashCode(){
 		return super.hashCode();
 	}
@@ -50,6 +52,7 @@ public class FloatVariable extends Variable{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Variable#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj){
 		return super.equals(obj);
 	}

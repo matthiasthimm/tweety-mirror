@@ -149,6 +149,7 @@ public class ConstraintSatisfactionProblem extends HashSet<Statement>{
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString(){
 		String s = "";
 		for(Statement c: this)
@@ -159,6 +160,7 @@ public class ConstraintSatisfactionProblem extends HashSet<Statement>{
 	/* (non-Javadoc)
 	 * @see java.util.HashSet#clone()
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public ConstraintSatisfactionProblem clone(){
 		return new ConstraintSatisfactionProblem((Set<Statement>)super.clone());

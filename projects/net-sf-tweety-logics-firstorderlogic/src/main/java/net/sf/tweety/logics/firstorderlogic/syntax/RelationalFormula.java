@@ -43,6 +43,7 @@ public abstract class RelationalFormula implements ClassicalFormula, QuantifiedF
 	/**
 	 * @return all atoms that appear in this formula.
 	 */
+	@Override
 	public abstract Set<FOLAtom> getAtoms();
 	
 	/**
@@ -63,6 +64,7 @@ public abstract class RelationalFormula implements ClassicalFormula, QuantifiedF
 	 *    (NOTE: this exception is only thrown when "v" actually appears in this
 	 *    formula).
 	 */
+	@Override
 	public abstract RelationalFormula substitute(Term<?> v, Term<?> t) throws IllegalArgumentException;
 		
 	/**
@@ -76,6 +78,7 @@ public abstract class RelationalFormula implements ClassicalFormula, QuantifiedF
 	 * @return a new relational formula with both "v" and "t" exchanged.
 	 * @throws IllegalArgumentException if "v" and "t" are of different sorts
 	 */
+	@Override
 	public RelationalFormula exchange(Term<?> v, Term<?> t) throws IllegalArgumentException{
 		if(!v.getSort().equals(t.getSort()))
 			throw new IllegalArgumentException("Terms '" + v + "' and '" + t + "' are of different sorts.");
@@ -99,6 +102,7 @@ public abstract class RelationalFormula implements ClassicalFormula, QuantifiedF
 	 *    (NOTE: this exception is only thrown when the variable actually appears in this
 	 *    formula).
 	 */
+	@Override
 	public RelationalFormula substitute(Map<? extends Term<?>,? extends Term<?>> map) throws IllegalArgumentException{
 		RelationalFormula f = this;
 		for(Term<?> v: map.keySet())
@@ -164,6 +168,7 @@ public abstract class RelationalFormula implements ClassicalFormula, QuantifiedF
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.ClassicalFormula#getUniformProbability()
 	 */
+	@Override
 	public abstract Probability getUniformProbability();
 	
 	/**
@@ -274,6 +279,7 @@ public abstract class RelationalFormula implements ClassicalFormula, QuantifiedF
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public abstract String toString();	
 	
 	@Override

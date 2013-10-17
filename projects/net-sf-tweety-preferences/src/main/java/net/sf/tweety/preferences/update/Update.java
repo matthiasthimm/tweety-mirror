@@ -16,7 +16,7 @@ public class Update<T> {
 	/**
 	 * The first element
 	 */
-	PreferenceOrder<T> po;
+	int index;
 	
 	/**
 	 * The second element
@@ -36,13 +36,13 @@ public class Update<T> {
 	/**
 	 * The constructor for update-elements
 	 * 
-	 * @param po the preference operation meant to be changed
+	 * @param index the preference operation index in the input set
 	 * @param op the operation that is going to be used (WEAKEN or STRENGTHEN)
 	 * @param amount the amount of operations to be used
 	 * @param element the element within the preference order to be affected
 	 */
-	public Update(PreferenceOrder<T> po, Operation op, Integer amount, T element) {
-		this.po = po;
+	public Update(int index, Operation op, Integer amount, T element) {
+		this.index = index;
 		this.op = op;
 		this.amount = amount;
 		this.element = element;
@@ -53,15 +53,15 @@ public class Update<T> {
 	 * returns the first element of this quadruple
 	 * @return the first element of this quadruple
 	 */
-	public PreferenceOrder<T> getPreferenceOrder() {
-		return po;
+	public int getPreferenceOrderIndex() {
+		return index;
 	}
 	/**
 	 * sets the first element of this triple
-	 * @param po an object of type E
+	 * @param index the index of the preference order in the input set
 	 */
-	public void setPreferenceOrder(PreferenceOrder<T> po) {
-		this.po = po;
+	public void setPreferenceOrderIndex(int index) {
+		this.index = index;
 	}
 	/**
 	 * returns the second element of this quadruple
@@ -113,7 +113,7 @@ public class Update<T> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((po == null) ? 0 : po.hashCode());
+		result = prime * result + ((index == 0) ? 0 : index);
 		result = prime * result + ((op == null) ? 0 : op.hashCode());
 		result = prime * result + ((amount == null) ? 0 : amount.hashCode());
 		result = prime * result + ((element == null) ? 0 : element.hashCode());

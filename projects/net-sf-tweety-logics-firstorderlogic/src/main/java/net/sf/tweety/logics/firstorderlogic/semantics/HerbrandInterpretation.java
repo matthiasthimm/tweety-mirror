@@ -45,6 +45,7 @@ public class HerbrandInterpretation extends InterpretationSet<FOLAtom> {
 	 * @return "true" if this interpretation satisfies "f".
 	 * @throws IllegalArgumentException if "f" is not closed.
 	 */
+	@Override
 	public boolean satisfies(Formula formula) throws IllegalArgumentException{
 		if(!(formula instanceof FolFormula)) throw new IllegalArgumentException("Formula " + formula + " is not a first-order formula.");
 		FolFormula f = (FolFormula) formula;
@@ -188,6 +189,7 @@ public class HerbrandInterpretation extends InterpretationSet<FOLAtom> {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.kr.Interpretation#satisfies(net.sf.tweety.kr.BeliefBase)
 	 */
+	@Override
 	public boolean satisfies(BeliefBase beliefBase) throws IllegalArgumentException{
 		if(!(beliefBase instanceof FolBeliefSet))
 			throw new IllegalArgumentException("First-order knowledge base expected.");
@@ -232,6 +234,7 @@ public class HerbrandInterpretation extends InterpretationSet<FOLAtom> {
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString(){
 		return super.toString();
 	}

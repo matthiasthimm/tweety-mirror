@@ -81,6 +81,7 @@ public class Lbfgs
 		private static final long serialVersionUID = 1L;
 		public int iflag;
 		public ExceptionWithIflag( int i, String s ) { super(s); iflag = i; }
+		@Override
 		public String toString() { return getMessage()+" (iflag == "+iflag+")"; }
 	}
 

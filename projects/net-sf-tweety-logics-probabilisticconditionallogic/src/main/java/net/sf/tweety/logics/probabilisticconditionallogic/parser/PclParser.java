@@ -63,6 +63,7 @@ public class PclParser extends Parser{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.propositionallogic.parser.PlParser#parseFormula(java.io.Reader)
 	 */
+	@Override
 	public ProbabilisticConditional parseFormula(Reader reader) throws IOException, ParserException {
 		// read into string
 		String s = "";

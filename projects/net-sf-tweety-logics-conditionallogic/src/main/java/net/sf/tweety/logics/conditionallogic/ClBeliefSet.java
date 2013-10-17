@@ -33,6 +33,7 @@ public class ClBeliefSet extends BeliefSet<Conditional> {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.kr.BeliefBase#getSignature()
 	 */
+	@Override
 	public Signature getSignature(){
 		PropositionalSignature sig = new PropositionalSignature();
 		for(Formula f: this){
@@ -43,6 +44,7 @@ public class ClBeliefSet extends BeliefSet<Conditional> {
 		return sig;
 	}
 
+	@Override
 	public ClBeliefSet clone(){
 		ClBeliefSet copy = new ClBeliefSet();
 		Iterator<Conditional> i = this.iterator();

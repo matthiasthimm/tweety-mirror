@@ -32,6 +32,7 @@ public class Minimum extends AssociativeOperation{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#value()
 	 */
+	@Override
 	public Constant value(){
 		Constant value = new IntegerConstant(1);
 		for(Term t: this.getTerms()){
@@ -52,6 +53,7 @@ public class Minimum extends AssociativeOperation{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#replaceTerm(net.sf.tweety.math.term.Term, net.sf.tweety.math.term.Term)
 	 */
+	@Override
 	public Term replaceTerm(Term toSubstitute, Term substitution){
 		if(toSubstitute == this)
 			return substitution;
@@ -74,6 +76,7 @@ public class Minimum extends AssociativeOperation{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#expandAssociativeOperations()
 	 */
+	@Override
 	public void expandAssociativeOperations(){
 		while(this.size() > 2){
 			Term t1 = this.getTerms().get(0);
@@ -88,6 +91,7 @@ public class Minimum extends AssociativeOperation{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#toLinearForm()
 	 */
+	@Override
 	public Sum toLinearForm() throws IllegalArgumentException{
 		throw new IllegalArgumentException("The term '" + this + "' cannot be brought into linear form because it is non-linear.");
 	}
@@ -95,6 +99,7 @@ public class Minimum extends AssociativeOperation{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#derive(net.sf.tweety.math.term.Variable)
 	 */
+	@Override
 	public Term derive(Variable v) throws NonDifferentiableException{
 		throw new NonDifferentiableException();
 	}
@@ -102,6 +107,7 @@ public class Minimum extends AssociativeOperation{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#simplify()
 	 */
+	@Override
 	public Term simplify(){
 		List<Term> terms =new ArrayList<Term>();
 		Constant c = null;
@@ -122,6 +128,7 @@ public class Minimum extends AssociativeOperation{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#isContinuous(net.sf.tweety.math.term.Variable)
 	 */
+	@Override
 	public boolean isContinuous(Variable v){
 		for(Term t: this.getTerms())
 			if(!t.isContinuous(v))
@@ -132,6 +139,7 @@ public class Minimum extends AssociativeOperation{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#toString()
 	 */
+	@Override
 	public String toString(){
 		String result = "";
 		for(Term t: this.getTerms())

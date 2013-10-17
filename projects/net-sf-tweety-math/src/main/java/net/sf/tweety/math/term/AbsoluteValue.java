@@ -42,6 +42,7 @@ public class AbsoluteValue extends FunctionalTerm {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#derive(net.sf.tweety.math.term.Variable)
 	 */
+	@Override
 	public Term derive(Variable v) throws NonDifferentiableException{
 		throw new NonDifferentiableException();
 	}
@@ -49,6 +50,7 @@ public class AbsoluteValue extends FunctionalTerm {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#simplify()
 	 */
+	@Override
 	public Term simplify(){
 		Term t = this.getTerm().simplify();
 		if(t instanceof Constant)
@@ -67,6 +69,7 @@ public class AbsoluteValue extends FunctionalTerm {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#isContinuous(net.sf.tweety.math.term.Variable)
 	 */
+	@Override
 	public boolean isContinuous(Variable v){
 		return this.getTerm().isContinuous(v);
 	}

@@ -198,6 +198,7 @@ public class AssociativeFormulaSupport<T extends SimpleLogicalFormula>
 		return false;
 	}
 	
+	@Override
 	public int hashCode() {
 		return formulas.hashCode();
 	}

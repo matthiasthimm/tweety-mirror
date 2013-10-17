@@ -59,8 +59,9 @@ public abstract class PropositionalFormula implements ClassicalFormula {
 	 * Returns this formula's probability in the uniform distribution. 
 	 * @return this formula's probability in the uniform distribution.
 	 */
+	@Override
 	public Probability getUniformProbability(){
-		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PropositionalSignature)this.getSignature());
+		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds(this.getSignature());
 		int cnt = 0;
 		for(PossibleWorld world: worlds)
 			if(world.satisfies(this))

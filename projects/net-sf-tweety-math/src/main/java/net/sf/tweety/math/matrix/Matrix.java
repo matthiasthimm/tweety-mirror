@@ -196,6 +196,7 @@ public class Matrix {
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString(){
 		String s = "";
 		for(int j = 0; j < this.getYDimension(); j++){

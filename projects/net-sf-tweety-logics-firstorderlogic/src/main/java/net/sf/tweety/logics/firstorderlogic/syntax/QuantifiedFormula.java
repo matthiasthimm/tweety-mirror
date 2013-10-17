@@ -55,6 +55,7 @@ public abstract class QuantifiedFormula extends FolFormula {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#isClosed()
 	 */
+	@Override
 	public boolean isClosed(){		
 		return this.folFormula.isClosed(this.quantifier_variables);		
 	}
@@ -62,6 +63,7 @@ public abstract class QuantifiedFormula extends FolFormula {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#isClosed(java.util.Set)
 	 */
+	@Override
 	public boolean isClosed(Set<Variable> boundVariables){
 		Set<Variable> variables = new HashSet<Variable>(this.quantifier_variables);
 		variables.addAll(boundVariables);
@@ -71,6 +73,7 @@ public abstract class QuantifiedFormula extends FolFormula {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#containsQuantifier()
 	 */
+	@Override
 	public boolean containsQuantifier(){
 		return true;
 	}
@@ -78,6 +81,7 @@ public abstract class QuantifiedFormula extends FolFormula {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#isWellBound()
 	 */
+	@Override
 	public boolean isWellBound(){
 		return this.folFormula.isWellBound(this.quantifier_variables);
 	}
@@ -85,6 +89,7 @@ public abstract class QuantifiedFormula extends FolFormula {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#isWellBound(java.util.Set)
 	 */
+	@Override
 	public boolean isWellBound(Set<Variable> boundVariables){
 		Set<Variable> intersection = new HashSet<Variable>(this.quantifier_variables);
 		intersection.retainAll(boundVariables);		
@@ -97,6 +102,7 @@ public abstract class QuantifiedFormula extends FolFormula {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getPredicates()
 	 */
+	@Override
 	public Set<? extends Predicate> getPredicates(){
 		return this.folFormula.getPredicates();
 	}
@@ -104,6 +110,7 @@ public abstract class QuantifiedFormula extends FolFormula {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getFunctors()
 	 */
+	@Override
 	public Set<Functor> getFunctors(){
 		return this.folFormula.getFunctors();
 	}
@@ -111,6 +118,7 @@ public abstract class QuantifiedFormula extends FolFormula {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getAtoms()
 	 */
+	@Override
 	public Set<FOLAtom> getAtoms(){
 		return this.folFormula.getAtoms();
 	}
@@ -118,6 +126,7 @@ public abstract class QuantifiedFormula extends FolFormula {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getUnboundVariables()
 	 */
+	@Override
 	public Set<Variable> getUnboundVariables(){
 		Set<Variable> variables = this.getTerms(Variable.class);
 		variables.removeAll(this.quantifier_variables);
@@ -128,6 +137,7 @@ public abstract class QuantifiedFormula extends FolFormula {
 	 * Returns the folFormula this quantified folFormula ranges over
 	 * @return the folFormula this quantified folFormula ranges over
 	 */
+	@Override
 	public FolFormula getFormula(){
 		return this.folFormula;
 	}
@@ -136,6 +146,7 @@ public abstract class QuantifiedFormula extends FolFormula {
 	 * Returns the variables of this quantified folFormula.
 	 * @return the variables of this quantified folFormula.
 	 */
+	@Override
 	public Set<Variable> getQuantifierVariables(){
 		return new HashSet<Variable>(this.quantifier_variables);
 	}
@@ -157,6 +168,7 @@ public abstract class QuantifiedFormula extends FolFormula {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#isDnf()
 	 */
+	@Override
 	public boolean isDnf(){
 		return false;
 	}
@@ -164,6 +176,7 @@ public abstract class QuantifiedFormula extends FolFormula {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#isLiteral()
 	 */
+	@Override
 	public boolean isLiteral(){
 		return false;
 	}

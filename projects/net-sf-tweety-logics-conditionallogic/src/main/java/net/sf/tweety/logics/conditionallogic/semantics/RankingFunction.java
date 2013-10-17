@@ -79,6 +79,7 @@ public class RankingFunction extends AbstractInterpretation {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logic.Interpretation#satisfies(net.sf.tweety.logic.Formula)
 	 */
+	@Override
 	public boolean satisfies(Formula formula) throws IllegalArgumentException{
 		if(!(formula instanceof Conditional))
 			throw new IllegalArgumentException("Formula " + formula + " is not a conditional expression.");		
@@ -91,6 +92,7 @@ public class RankingFunction extends AbstractInterpretation {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.kr.Interpretation#satisfies(net.sf.tweety.logic.KnowledgeBase)
 	 */
+	@Override
 	public boolean satisfies(BeliefBase beliefBase){
 		if(!(beliefBase instanceof ClBeliefSet))
 			throw new IllegalArgumentException("Knowledge base is not a conditional knowledge base.");
@@ -225,6 +227,7 @@ public class RankingFunction extends AbstractInterpretation {
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString(){
 		String s = "[\n";
 		Iterator<PossibleWorld> it = this.ranks.keySet().iterator();

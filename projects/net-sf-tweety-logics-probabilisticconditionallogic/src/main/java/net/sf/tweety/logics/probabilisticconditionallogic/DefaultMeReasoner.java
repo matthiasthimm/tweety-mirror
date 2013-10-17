@@ -108,7 +108,7 @@ public class DefaultMeReasoner extends Reasoner {
 				rightSide = new FloatConstant(pc.getProbability().getValue());
 			}else{				
 				PropositionalFormula body = pc.getPremise().iterator().next();
-				PropositionalFormula head_and_body = (PropositionalFormula) pc.getConclusion().combineWithAnd(body);
+				PropositionalFormula head_and_body = pc.getConclusion().combineWithAnd(body);
 				for(PossibleWorld w: worlds){
 					if(w.satisfies(head_and_body)){
 						if(leftSide == null)
@@ -178,7 +178,7 @@ public class DefaultMeReasoner extends Reasoner {
 		}
 		if(query instanceof PropositionalFormula){
 			Answer answer = new Answer(this.getKnowledgBase(),query);
-			Probability bAnswer = meDistribution.probability((PropositionalFormula)query);
+			Probability bAnswer = meDistribution.probability(query);
 			answer.setAnswer(bAnswer.doubleValue());
 			answer.appendText("The answer is: " + bAnswer);
 			return answer;

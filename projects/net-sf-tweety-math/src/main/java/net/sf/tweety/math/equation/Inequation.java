@@ -33,6 +33,7 @@ public class Inequation extends Statement{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.equation.Statement#replaceTerm(net.sf.tweety.math.term.Term, net.sf.tweety.math.term.Term)
 	 */
+	@Override
 	public Statement replaceTerm(Term toSubstitute, Term substitution){
 		return new Inequation(this.getLeftTerm().replaceTerm(toSubstitute, substitution),this.getRightTerm().replaceTerm(toSubstitute, substitution),this.type);
 	}
@@ -48,6 +49,7 @@ public class Inequation extends Statement{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.equation.Statement#isNormalized()
 	 */
+	@Override
 	public boolean isNormalized(){
 		if(this.type == Inequation.GREATER || this.type == Inequation.GREATER_EQUAL || this.type == Inequation.UNEQUAL)
 			if(this.getRightTerm() instanceof Constant){
@@ -66,6 +68,7 @@ public class Inequation extends Statement{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.equation.Statement#toNormalizedForm()
 	 */
+	@Override
 	public Statement toNormalizedForm(){
 		// Check whether it is already normalized
 		if(this.isNormalized()) return this;	
@@ -85,6 +88,7 @@ public class Inequation extends Statement{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.equation.Statement#toLinearForm()
 	 */
+	@Override
 	public Statement toLinearForm(){
 		Term left = this.getLeftTerm().toLinearForm();
 		Term right = (this.isNormalized())?(this.getRightTerm()):(this.getRightTerm().toLinearForm());
@@ -94,6 +98,7 @@ public class Inequation extends Statement{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.equation.Statement#getRelationSymbol()
 	 */
+	@Override
 	public String getRelationSymbol(){
 		if(this.type == Inequation.LESS)
 			return "<";

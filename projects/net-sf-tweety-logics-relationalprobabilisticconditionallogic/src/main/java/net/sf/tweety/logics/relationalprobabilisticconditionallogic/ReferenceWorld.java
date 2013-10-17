@@ -174,7 +174,7 @@ public class ReferenceWorld extends AbstractInterpretation implements Map<Predic
 			FOLAtom a = (FOLAtom) f;
 			result = (a.getPredicate().equals(p) && constants.contains(a.getArguments().get(0)) && positive)?(1):(0);
 		}else if(f instanceof Negation){
-			result = this.getNumberOfOccurences((FolFormula) ((Negation)f).getFormula(), p, constants, !positive);
+			result = this.getNumberOfOccurences(((Negation)f).getFormula(), p, constants, !positive);
 		}else if(f instanceof Conjunction){
 			result = 0;
 			for(RelationalFormula g: (Conjunction)f ){
@@ -362,6 +362,7 @@ public class ReferenceWorld extends AbstractInterpretation implements Map<Predic
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString(){
 		return this.assignments.toString();
 	}
