@@ -1,11 +1,17 @@
 package net.sf.tweety.argumentation.dung.test;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import net.sf.tweety.argumentation.dung.*;
 import net.sf.tweety.argumentation.dung.semantics.*;
 import net.sf.tweety.argumentation.dung.syntax.*;
 import net.sf.tweety.argumentation.util.DungTheoryGenerator;
 import net.sf.tweety.argumentation.util.IsoSafeEnumeratingDungTheoryGenerator;
 import net.sf.tweety.graphs.Graph;
+import net.sf.tweety.graphs.Node;
 import net.sf.tweety.graphs.util.GraphUtil;
 import net.sf.tweety.math.ComplexNumber;
 
@@ -92,10 +98,61 @@ public class AnalysisTest {
 		}
 	}
 	
+	/**
+	 * Inverted PageRank
+	 */
+	public static Double pageRankInverted(Graph<? extends Node> g, Node n, double dampingFactor, double precision){
+		Map<Node,Double> pageRanks = new HashMap<Node,Double>();
+		// init
+		double m = g.getNodes().size();
+		Set<Node> sinks = new HashSet<Node>();
+		for(Node v: g){
+			pageRanks.put(v,1/m);
+			if(g.getChildren(v).isEmpty())
+				sinks.add(v);
+		}
+		// iterate
+		double maxDiff;
+		double sum;
+		Map<Node,Double> pageRanks_tmp;		
+		do{			
+			System.out.println(pageRanks);
+			maxDiff = 0;
+			pageRanks_tmp = new HashMap<Node,Double>();			
+			for(Node v: g){
+				sum = 0;
+				for(Node w: g.getParents(v)){
+					sum -= pageRanks.get(w)/g.getChildren(w).size();
+				}
+				//for(Node w: sinks)
+				//	sum += pageRanks.get(w)/m;
+				pageRanks_tmp.put(v, ((1-dampingFactor)/m) + (dampingFactor * sum));						
+				maxDiff = Math.max(maxDiff, Math.abs(pageRanks.get(v)-pageRanks_tmp.get(v)));				
+			}
+			pageRanks = pageRanks_tmp;			
+		}while(maxDiff > precision);		
+		return pageRanks.get(n);
+	}
+	
+	public static void InvertedPageRankTest(){
+		
+		DungTheory theory = new DungTheory();
+		Argument prev = new Argument("A0");
+		theory.add(prev);
+		for(int j = 1; j <= 4; j++){
+			Argument next = new Argument("A"+j);
+			theory.add(next);
+			theory.add(new Attack(prev,next));
+			prev = next;
+		}
+		AnalysisTest.pageRankInverted(theory, prev, 0.75, 0.01);		
+	}
+	
 	public static void main(String[] args){
 		//AnalysisTest.EigenvalueTest();
 		//AnalysisTest.PageRankTest();
-		AnalysisTest.PageRankTest2();
+		//AnalysisTest.PageRankTest2();
+		AnalysisTest.InvertedPageRankTest();
 	}
 }
 
