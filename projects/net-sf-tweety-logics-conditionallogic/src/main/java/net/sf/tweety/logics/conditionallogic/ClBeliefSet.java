@@ -34,7 +34,7 @@ public class ClBeliefSet extends BeliefSet<Conditional> {
 	 * @see net.sf.tweety.kr.BeliefBase#getSignature()
 	 */
 	@Override
-	public Signature getSignature(){
+	public PropositionalSignature getSignature(){
 		PropositionalSignature sig = new PropositionalSignature();
 		for(Formula f: this){
 			Conditional c = (Conditional) f;

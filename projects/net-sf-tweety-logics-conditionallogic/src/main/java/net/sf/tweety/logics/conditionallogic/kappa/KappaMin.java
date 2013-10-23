@@ -1,16 +1,28 @@
 package net.sf.tweety.logics.conditionallogic.kappa;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+/**
+ * This class represents a minimum, its elements are {@link KappaTerm} instances although
+ * in c-representation this are sums of Kappas {@link KappaSum}. 
+ * 
+ * If it is empty it is evaluated to zero.
+ * 
+ * @author Tim Janus
+ */
 public class KappaMin implements KappaTerm {
 
 	int smallestGreaterEqual = Integer.MAX_VALUE;
 	
 	int smallestEvaluate = Integer.MAX_VALUE;
 	
+	/** The value of the kappa minimum, is -1 as long as it cannot be evaluated */
 	int value = -1;
 	
+	/** This list contains the elements of the minimum */
 	List<KappaTerm> elements = new ArrayList<KappaTerm>();
 	
 	@Override
@@ -18,21 +30,24 @@ public class KappaMin implements KappaTerm {
 		if(value != -1 || elements.isEmpty())
 			return true;
 		
+		// search the element with the smallest evaluation value 
 		for(KappaTerm kv : elements) {
 			if(kv.evaluate()) {
 				int cur = kv.value();
-				if(smallestEvaluate < cur) {
+				if(cur < smallestEvaluate) {
 					smallestEvaluate = cur;
 				}
 			} else {
 				int cur = kv.greaterEqualThan();
-				if(smallestGreaterEqual < cur) {
+				if(cur < smallestGreaterEqual) {
 					smallestGreaterEqual = cur;
 				}
 			}
 		}
 		
-		if(smallestGreaterEqual <= smallestEvaluate) {
+		// if the smallest evaluation value is less or equal than the smallest-greater-equal value
+		// then we can evaluate the value of this minimum:
+		if(smallestEvaluate <= smallestGreaterEqual) {
 			value = smallestEvaluate;
 			return true;
 		}
@@ -40,6 +55,9 @@ public class KappaMin implements KappaTerm {
 		return false;
 	}
 
+	/** 
+	 * The neutral element is zero, that means if the minimum is empty this method returns zero.
+	 */
 	@Override
 	public int value() {
 		return elements.isEmpty() ? 0 : value;
@@ -79,5 +97,14 @@ public class KappaMin implements KappaTerm {
 		*/
 		
 		return builder.toString();
+	}
+
+	@Override
+	public Set<KappaTerm> getSubTerms() {
+		Set<KappaTerm> reval = new HashSet<KappaTerm>();
+		for(KappaTerm kappa : elements) {
+			reval.addAll(kappa.getSubTerms());
+		}
+		return reval;
 	}
 }
