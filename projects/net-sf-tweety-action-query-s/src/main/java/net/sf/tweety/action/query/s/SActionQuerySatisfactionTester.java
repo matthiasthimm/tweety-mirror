@@ -44,7 +44,7 @@ import net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula;
 public class SActionQuerySatisfactionTester
   implements ActionQuerySatisfactionTester
 {
-  private AspInterface aspsolver;
+  //private AspInterface aspsolver;
   
   /**
    * Creates a new instance of this satisfaction tester using the given answer
@@ -54,7 +54,7 @@ public class SActionQuerySatisfactionTester
    */
   public SActionQuerySatisfactionTester( AspInterface aspsolver )
   {
-    this.aspsolver = aspsolver;
+   // this.aspsolver = aspsolver;
   }
   
   /*
@@ -64,12 +64,10 @@ public class SActionQuerySatisfactionTester
    * .action.description.transitionsystem.TransitionSystem,
    * net.sf.tweety.BeliefBase)
    */
-  public boolean isSatisfied( TransitionSystem transitionSystem,
-    BeliefBase actionQueries )
-  {
-    if ( transitionSystem == null )
-      return false;
-    
+  public boolean isSatisfied( TransitionSystem transitionSystem,  BeliefBase actionQueries ) {
+	 //TODO IMPLEMENT ME
+	  if ( transitionSystem == null )
+      return false;        
     String program = "";
     program += getTransitionSystemRules( transitionSystem );
     SActionQuerySet qset = (SActionQuerySet) actionQueries;
@@ -89,7 +87,8 @@ public class SActionQuerySatisfactionTester
       e.printStackTrace();
     }
     */
-    return result;
+    System.out.println(program);
+    return result;     
   }
   
   /*

@@ -36,7 +36,7 @@ public abstract class DynamicScoringPreferenceAggregator<T> implements
 	/**
 	 * The input list of preference orders
 	 */
-	private List<PreferenceOrder<T>> input;
+	//private List<PreferenceOrder<T>> input;
 
 	/**
 	 * The list containing the update listeners
@@ -60,7 +60,10 @@ public abstract class DynamicScoringPreferenceAggregator<T> implements
 	 */
 	public PreferenceOrder<T> aggregate(List<PreferenceOrder<T>> input) {
 		// PreferenceOrder<T> tempPO = new PreferenceOrder<T>();
-		this.input = input;
+
+		
+		// "this.input" is never used!
+		//this.input = input;
 		Map<T, Integer> elem = new HashMap<T, Integer>();
 
 		// all single elements are store in one HashMap

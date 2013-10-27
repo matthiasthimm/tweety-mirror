@@ -1,7 +1,6 @@
 package net.sf.tweety.preferences.update;
 
 import net.sf.tweety.preferences.Operation;
-import net.sf.tweety.preferences.PreferenceOrder;
 //import net.sf.tweety.preferences.Quadruple;
 
 /**

@@ -26,7 +26,7 @@ public class DeductiveEnvironment implements Environment, Perceivable {
 	/** The current dialogue trace. */
 	private DialogueTrace<PropositionalFormula,Collection<PropositionalFormula>> trace;
 	/** The universal propositional theory used for argumentation. */
-	private PlBeliefSet universalTheory;
+	//private PlBeliefSet universalTheory;
 	
 	/**
 	 * Creates a new grounded environment.
@@ -34,7 +34,7 @@ public class DeductiveEnvironment implements Environment, Perceivable {
 	 */
 	public DeductiveEnvironment(PlBeliefSet universalTheory){
 		this.trace = new DialogueTrace<PropositionalFormula,Collection<PropositionalFormula>>();
-		this.universalTheory = universalTheory;
+		//this.universalTheory = universalTheory;
 	}
 	
 	/* (non-Javadoc)

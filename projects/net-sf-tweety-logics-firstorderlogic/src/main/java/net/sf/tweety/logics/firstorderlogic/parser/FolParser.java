@@ -37,7 +37,7 @@ import net.sf.tweety.logics.firstorderlogic.syntax.*;
  * 
  * @author Matthias Thimm
  */
-public class FolParser extends Parser {
+public class FolParser extends Parser<FolBeliefSet> {
 
 	/**
 	 * forall-quantifier used in syntax 
@@ -63,7 +63,7 @@ public class FolParser extends Parser {
 	 * @see net.sf.tweety.kr.Parser#parseBeliefBase(java.io.Reader)
 	 */
 	@Override
-	public BeliefBase parseBeliefBase(Reader reader) throws IOException, ParserException {
+	public FolBeliefSet parseBeliefBase(Reader reader) throws IOException, ParserException {
 		FolBeliefSet beliefSet = new FolBeliefSet();
 		String s = "";
 		// for keeping track of the section of the file
@@ -83,8 +83,8 @@ public class FolParser extends Parser {
 						if(section == 2)
 							beliefSet.add((FolFormula)this.parseFormula(new StringReader(s)));
 						else if(section == 1)
-							this.parseTypeDeclaration(s);
-						else this.parseSortDeclaration(s);
+							this.parseTypeDeclaration(s,this.signature);
+						else this.parseSortDeclaration(s,this.signature);
 					}
 					s = "";
 				}else{
@@ -101,15 +101,16 @@ public class FolParser extends Parser {
 
 	/**
 	 * Parses a sort declaration of the form "SORTNAME "=" "{" (CONSTANTNAME ("," CONSTANTNAME)*)? "}""
-	 * and modifies the signature of this parser. 
+	 * and modifies the given signature accordingly. 
 	 * @param s a string
+	 * @param sig a signature
 	 */
-	protected void parseSortDeclaration(String s) throws ParserException{
+	public void parseSortDeclaration(String s, FolSignature sig) throws ParserException{
 		if(!s.contains("=")) throw new ParserException("Missing '=' in sort declaration '" + s + "'.");
 		String sortname = s.substring(0, s.indexOf("=")).trim();
-		if(this.signature.containsSort(sortname)) throw new ParserException("Multiple declarations of sort '" + sortname + "'.");
+		if(sig.containsSort(sortname)) throw new ParserException("Multiple declarations of sort '" + sortname + "'.");
 		Sort theSort = new Sort(sortname);
-		this.signature.add(new Sort(sortname));
+		sig.add(new Sort(sortname));
 		if(!s.contains("{")) throw new ParserException("Missing '{' in sort declaration '" + s + "',");
 		if(!s.contains("}")) throw new ParserException("Missing '}' in sort declaration '" + s + "',");		
 		String constants = s.substring(s.indexOf("{")+1, s.lastIndexOf("}"));
@@ -118,22 +119,22 @@ public class FolParser extends Parser {
 		String[] tokens = constants.split(",");
 		for(String token: tokens){
 			String c = token.trim();
-			if(signature.containsConstant(c))
-				throw new ParserException("Constant '" + c + "' has already been defined to be of sort '" + this.signature.getConstant(c).getSort() + "'.");
+			if(sig.containsConstant(c))
+				throw new ParserException("Constant '" + c + "' has already been defined to be of sort '" + sig.getConstant(c).getSort() + "'.");
 			if(c.matches("[a-z,A-Z]([a-z,A-Z,0-9])*"))
-				this.signature.add(new Constant(c, theSort));
+				sig.add(new Constant(c, theSort));
 			else throw new ParserException("Illegal characters in constant definition '" + c + "'; declartion must conform to [a-z,A-Z]([a-z,A-Z,0-9])*");
-		}
-		
+		}		
 	}
 	
 	/**
 	 * Parses a predicate declaration of the form "type" "(" PREDICATENAME "(" (SORTNAME ("," SORTNAME)*)? ")" ")"
 	 * or a functor declaration of the form "type" "(" SORTNAME "=" FUNCTORNAME "(" (SORTNAME ("," SORTNAME)*)? ")" ")"
-	 * and modifies the signature of this parser.
+	 * and modifies the given signature accordingly.
 	 * @param s a string
+	 * @param sig a signature
 	 */
-	protected void parseTypeDeclaration(String s) throws ParserException{
+	public void parseTypeDeclaration(String s, FolSignature sig) throws ParserException{
 		if(!s.startsWith("type")) throw new ParserException("Type declaration has to start with 'type'.");
 		if(!s.contains("(")) throw new ParserException("Missing '(' in type declaration.");
 		if(!s.contains(")")) throw new ParserException("Missing ')' in type declaration.");
@@ -141,13 +142,13 @@ public class FolParser extends Parser {
 		Sort targetSort = null;
 		if(dec.contains("=")){
 			String sortname = dec.substring(0, dec.indexOf("=")).trim();
-			if(!this.signature.containsSort(sortname))
+			if(!sig.containsSort(sortname))
 				throw new ParserException("Sort '" + sortname + "' has not been declared before.");
-			targetSort = this.signature.getSort(sortname);
+			targetSort = sig.getSort(sortname);
 		} else if(!dec.contains( "(" )) {
 		  if(dec.contains( ")")) throw new ParserException("Unexpected ')' in type declaration.");
       String name = dec.trim();
-      this.signature.add( new Predicate(name) );
+      sig.add( new Predicate(name) );
       return;
 		}
 		if(!dec.contains("(")) throw new ParserException("Missing '(' in type declaration.");
@@ -159,16 +160,16 @@ public class FolParser extends Parser {
   		String[] tokens = sorts.split(",");
   		for(String token: tokens){
   			String sort = token.trim();
-  			if(!this.signature.containsSort(sort))
+  			if(!sig.containsSort(sort))
   				throw new ParserException("Sort '" + sort + "' has not been declared before.");
-  			theSorts.add(this.signature.getSort(sort));
+  			theSorts.add(sig.getSort(sort));
   		}
 		}
 		if(targetSort == null)
-			this.signature.add(new Predicate(name,theSorts));
+			sig.add(new Predicate(name,theSorts));
 		else{
 			name = name.substring(name.indexOf("=")+1,name.length());
-			this.signature.add(new Functor(name,theSorts,targetSort));
+			sig.add(new Functor(name,theSorts,targetSort));
 		}
 	}
 	

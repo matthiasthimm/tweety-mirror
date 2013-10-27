@@ -5,7 +5,7 @@ import java.util.*;
 import net.sf.tweety.preferences.*;
 import net.sf.tweety.util.Triple;
 
-
+@SuppressWarnings("all")
 public class POParser implements POParserConstants {
 public POParser()
 {

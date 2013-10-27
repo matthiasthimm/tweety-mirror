@@ -41,6 +41,7 @@ public abstract class ScoringPreferenceAggregator<T> implements
 	 * 
 	 * @return the final, aggregated preference order
 	 */
+	@SuppressWarnings("unchecked")
 	public PreferenceOrder<T> aggregate(List<PreferenceOrder<T>> input) {
 		
 //		PreferenceOrder<T> tempPO = new PreferenceOrder<T>();
@@ -92,6 +93,8 @@ public abstract class ScoringPreferenceAggregator<T> implements
 				//TODO: implement new way to comparate used elements - priority
 				
 				int nw = elem.get(t.toString())-val;
+				
+				//TODO: check the following cast!
 				elem.put((T) t.toString(),nw);
 //				elem.put((T) t, elem.get((T) t)-val);
 //				elem.put(t, elem.get(t.toString())-val);

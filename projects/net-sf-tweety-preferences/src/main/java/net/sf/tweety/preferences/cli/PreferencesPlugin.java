@@ -19,8 +19,6 @@ import net.sf.tweety.preferences.aggregation.PluralityScoringPreferenceAggregato
 import net.sf.tweety.preferences.aggregation.VetoScoringPreferenceAggregator;
 import net.sf.tweety.preferences.io.POParser;
 import net.sf.tweety.preferences.io.ParseException;
-import net.sf.tweety.preferences.io.UPParser;
-import net.sf.tweety.preferences.update.Update;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 /**
@@ -35,7 +33,8 @@ public class PreferencesPlugin extends AbstractTweetyPlugin {
 	// the static identifier for this plugin
 	private static final String PREF__CALL_PARAMETER = "preferences";
 	
-	private static final String PREF__PLUGIN_DESCRIPTION = "";
+	// Unused!
+	//private static final String PREF__PLUGIN_DESCRIPTION = "";
 	
 
 	// preference aggregation
@@ -105,7 +104,8 @@ public class PreferencesPlugin extends AbstractTweetyPlugin {
 	public PluginOutput execute(File[] input, CommandParameter[] params) {
 		PreferenceOrder<String> result = new PreferenceOrder<String>();
 		// File-Handler
-		POParser parser;
+		//Unused!
+		//POParser parser;
 		// Parsing,...
 		List<PreferenceOrder<String>> poset = new ArrayList<PreferenceOrder<String>>();
 		for (int i = 0; i < input.length; i++) {
@@ -178,6 +178,9 @@ public class PreferencesPlugin extends AbstractTweetyPlugin {
 					System.out.println("No Updates allowed within non-dynamic aggregation");
 				} else if(tempComParam instanceof FileListCommandParameter) {
 					
+					throw new RuntimeException("Method not correctly implemented, please check source code");
+					/*
+					// TODO: check the following code. The variable "up" is never read!
 					ArrayList< Update <String>> up = new ArrayList<Update<String>>();
 					File[] tmp = ((FileListCommandParameter) tempComParam).getValue();
 					// only one update file?
@@ -193,7 +196,7 @@ public class PreferencesPlugin extends AbstractTweetyPlugin {
 						} else {
 							System.out.println("This is no correct formatted update file.");
 						}
-					}
+					}*/
 					
 				}
 			}

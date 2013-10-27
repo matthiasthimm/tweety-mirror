@@ -2,14 +2,12 @@ package net.sf.tweety.cli.plugins;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import net.sf.tweety.cli.plugins.parameter.CommandParameter;
@@ -51,9 +49,9 @@ public class CliMain {
 	/** the list of input files */
 	private static File[] inputFiles = new File[1];
 	/** the output file */
-	private static String outputFile = null;
+	//private static String outputFile = null;
 	/** the optional plugin parameters */
-	private static CommandParameter[] pluginParams = null;
+	//private static CommandParameter[] pluginParams = null;
 
 	/**
 	 * prints help text if cli is called with parameter "--help" or empty argument array
@@ -107,10 +105,12 @@ public class CliMain {
 		// TODO: Verhalten bei leeren Feldern prüfen
 		Iterator<String> it = tweetyXmlConfig.getKeys("plugin");
 
-		ArrayList<String> pluginPath = (ArrayList<String>) tweetyXmlConfig
-				.getProperty(it.next());
-		ArrayList<String> pluginName = (ArrayList<String>) tweetyXmlConfig
-				.getProperty(it.next());
+		
+		//TODO fix the casts!
+		@SuppressWarnings("unchecked")
+		ArrayList<String> pluginPath = (ArrayList<String>) tweetyXmlConfig.getProperty(it.next());
+		@SuppressWarnings("unchecked")
+		ArrayList<String> pluginName = (ArrayList<String>) tweetyXmlConfig.getProperty(it.next());
 
 		for (int i = 0; i < pluginPath.size(); i++) {
 			loadablePlugins.put(pluginName.get(i), pluginPath.get(i));
@@ -182,12 +182,14 @@ public class CliMain {
 			System.exit(0);
 		}
 
-		TweetyPlugin tweetyPlugin;
+		// Unused!
+		//TweetyPlugin tweetyPlugin;
 		PluginManager pm = PluginManagerFactory.createPluginManager();
 		PluginManagerUtil pmu = new PluginManagerUtil(pm);
 		System.out.println(pmu.getPlugins());
 		ArrayList<ArrayList<String>> collectedparams = new ArrayList<ArrayList<String>>();
-		List<CommandParameter> inParams = new ArrayList<CommandParameter>();
+		// Unused!
+		//List<CommandParameter> inParams = new ArrayList<CommandParameter>();
 
 		Map<String, String> availablePlugins = new HashMap<String, String>();
 
@@ -238,7 +240,8 @@ public class CliMain {
 			// output file
 			else if (args[i].equals(ARG__OUTPUT_FILE)
 					|| args[i].equals(ARG__OUTPUT_FILE_SHORT)) {
-				outputFile = args[++i];
+				//outputFile not used!
+				//outputFile = args[++i];
 			}
 
 			// collecting given command parameters
@@ -282,7 +285,8 @@ public class CliMain {
 				// each input parameter is checked against the called plugin
 				// whether it is valid
 				ArrayList<CommandParameter> ip = new ArrayList<CommandParameter>();
-				tweetyPlugin = tp;
+				//Unused!
+				//tweetyPlugin = tp;
 				try {
 					ip.addAll(instantiateParameters(tp, collectedparams));
 				} catch (CloneNotSupportedException e) {

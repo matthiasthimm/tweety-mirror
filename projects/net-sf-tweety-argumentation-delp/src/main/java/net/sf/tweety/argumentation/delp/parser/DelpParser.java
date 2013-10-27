@@ -5,9 +5,8 @@ import net.sf.tweety.*;
 import net.sf.tweety.argumentation.delp.*;
 import net.sf.tweety.argumentation.delp.syntax.*;
 import net.sf.tweety.logics.firstorderlogic.syntax.*;
+import net.sf.tweety.logics.commons.syntax.interfaces.*;
 import net.sf.tweety.logics.commons.syntax.*;
-import net.sf.tweety.logics.commons.syntax.interfaces.Term;
-
 import java.io.*;
 import java.util.*;
 import java.util.regex.*;
@@ -31,7 +30,8 @@ import java.util.regex.*;
   * <br>VARIABALE is a sequence of symbols from {a,...,z,A,...,Z,0,...,9,_,-} with an uppercase letter at the beginning.
   * <br>CONSTANT is  a sequence of symbols from {a,...,z,A,...,Z,0,...,9,_,-} with an lowercase letter at the beginning.
   */
-public class DelpParser extends Parser implements DelpParserConstants {
+@SuppressWarnings("all")
+public class DelpParser extends Parser<DefeasibleLogicProgram> implements DelpParserConstants {
 
         private FolSignature signature = new FolSignature();
 
@@ -41,8 +41,8 @@ public class DelpParser extends Parser implements DelpParserConstants {
         public DefeasibleLogicProgram parseBeliefBase(Reader reader) throws ParserException{
                 try
                 {
-                        DelpParser theParser = new DelpParser(reader);
-                        return theParser.Theory(this.signature);
+                        //DelpParser theParser = new DelpParser(reader);
+                        return DelpParser.Theory(this.signature);
                 }catch(ParseException e){
                         throw new ParserException(e);
                 }

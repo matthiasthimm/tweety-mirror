@@ -25,13 +25,23 @@ import net.sf.tweety.logics.relationalconditionallogic.syntax.*;
  * 
  *  @author Matthias Thimm
  */
-public class RclParser extends FolParser {
+public class RclParser extends Parser<RclBeliefSet> {
 
+	/** For parsing FOL fragments. */
+	private FolParser folParser;
+	
+	/**
+	  Creates a new RCL Parser
+	 */
+	public RclParser(){
+		folParser = new FolParser();
+	}
+	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.kr.Parser#parseBeliefBase(java.io.Reader)
 	 */
 	@Override
-	public BeliefBase parseBeliefBase(Reader reader) throws IOException, ParserException {
+	public RclBeliefSet parseBeliefBase(Reader reader) throws IOException, ParserException {
 		RclBeliefSet beliefSet = new RclBeliefSet();
 		String s = "";
 		// for keeping track of the section of the file
@@ -50,8 +60,8 @@ public class RclParser extends FolParser {
 						if(section == 2)
 							beliefSet.add(this.parseFormula(new StringReader(s)));
 						else if(section == 1)
-							this.parseTypeDeclaration(s);
-						else this.parseSortDeclaration(s);
+							this.folParser.parseTypeDeclaration(s,this.folParser.getSignature());
+						else this.folParser.parseSortDeclaration(s,this.folParser.getSignature());
 					}
 					s = "";
 				}else{
@@ -65,8 +75,8 @@ public class RclParser extends FolParser {
 				if(section == 2)
 					beliefSet.add(this.parseFormula(new StringReader(s)));
 				else if(section == 1)
-					this.parseTypeDeclaration(s);
-				else this.parseSortDeclaration(s);
+					this.folParser.parseTypeDeclaration(s,this.folParser.getSignature());
+				else this.folParser.parseSortDeclaration(s,this.folParser.getSignature());
 			}
 		}catch(Exception e){
 			throw new ParserException(e);
@@ -99,17 +109,25 @@ public class RclParser extends FolParser {
 			idx += 2;
 		}		
 		FolParser parser = new FolParser();
-		parser.setSignature(this.getSignature());
+		parser.setSignature(this.folParser.getSignature());
 		if(idx == -1){
 			RelationalConditional r = new RelationalConditional((FolFormula)parser.parseFormula(condString.substring(0, condString.length())));
-			this.setSignature(parser.getSignature());
+			this.folParser.setSignature(parser.getSignature());
 			return r;
 		}
 		// check whether variables have the correct sort wrt. the scope of the whole conditional		
 		RelationalConditional cond = new RelationalConditional((FolFormula)parser.parseFormula(condString.substring(idx+1, condString.length())),(FolFormula)parser.parseFormula(condString.substring(0, idx)));
-		this.setSignature(parser.getSignature());
+		this.folParser.setSignature(parser.getSignature());
 		parser.parseFormula(condString.substring(idx+1, condString.length()) + " && " + condString.substring(0, idx));
 		return cond;
+	}
+	
+	/**
+	 * Returns the signature of this parser.
+	 * @return the signature of this parser.
+	 */
+	public FolSignature getSignature(){
+		return this.folParser.getSignature();
 	}
 	
 }

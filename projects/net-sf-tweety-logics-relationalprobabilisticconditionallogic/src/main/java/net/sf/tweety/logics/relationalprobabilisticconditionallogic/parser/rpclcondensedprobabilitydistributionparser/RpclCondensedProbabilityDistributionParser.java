@@ -26,6 +26,7 @@ import net.sf.tweety.math.probability.*;
  * <br>CONSTANT is a sequence of symbols from {a,...,z,A,...,Z,0,...,9} with a lowercase letter at the beginning.<br>
  * <br>MULTIPLICATOR is a natural number.<br>
  */
+@SuppressWarnings("all")
 public class RpclCondensedProbabilityDistributionParser implements RpclCondensedProbabilityDistributionParserConstants {
 
         /**

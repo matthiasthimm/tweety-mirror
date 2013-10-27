@@ -27,13 +27,23 @@ import net.sf.tweety.math.probability.*;
  * 
  *  @author Matthias Thimm
  */
-public class RpclParser extends FolParser {
+public class RpclParser extends Parser<RpclBeliefSet> {
 
+	/** For parsing FOL fragments. */
+	private FolParser folParser;
+	
+	/**
+	  Creates a new RPCL Parser
+	 */
+	public RpclParser(){
+		folParser = new FolParser();
+	}
+	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.kr.Parser#parseBeliefBase(java.io.Reader)
 	 */
 	@Override
-	public BeliefBase parseBeliefBase(Reader reader) throws IOException, ParserException {
+	public RpclBeliefSet parseBeliefBase(Reader reader) throws IOException, ParserException {
 		RpclBeliefSet beliefSet = new RpclBeliefSet();
 		String s = "";
 		// for keeping track of the section of the file
@@ -52,8 +62,8 @@ public class RpclParser extends FolParser {
 						if(section == 2)
 							beliefSet.add(this.parseFormula(new StringReader(s)));
 						else if(section == 1)
-							this.parseTypeDeclaration(s);
-						else this.parseSortDeclaration(s);
+							this.folParser.parseTypeDeclaration(s,this.folParser.getSignature());
+						else this.folParser.parseSortDeclaration(s,this.folParser.getSignature());
 					}
 					s = "";
 				}else{
@@ -67,8 +77,8 @@ public class RpclParser extends FolParser {
 				if(section == 2)
 					beliefSet.add(this.parseFormula(new StringReader(s)));
 				else if(section == 1)
-					this.parseTypeDeclaration(s);
-				else this.parseSortDeclaration(s);
+					this.folParser.parseTypeDeclaration(s,this.folParser.getSignature());
+				else this.folParser.parseSortDeclaration(s,this.folParser.getSignature());
 			}
 		}catch(Exception e){
 			throw new ParserException(e);
@@ -114,14 +124,21 @@ public class RpclParser extends FolParser {
 		parser.setSignature(this.getSignature());
 		if(idx == -1){
 			RelationalProbabilisticConditional r = new RelationalProbabilisticConditional((FolFormula)parser.parseFormula(condString.substring(0, condString.length())),prob);
-			this.setSignature(parser.getSignature());
+			this.folParser.setSignature(parser.getSignature());
 			return r;
 		}
 		// check whether variables have the correct sort wrt. the scope of the whole conditional		
 		RelationalProbabilisticConditional cond = new RelationalProbabilisticConditional((FolFormula)parser.parseFormula(condString.substring(idx+1, condString.length())),(FolFormula)parser.parseFormula(condString.substring(0, idx)),prob);
-		this.setSignature(parser.getSignature());
+		this.folParser.setSignature(parser.getSignature());
 		parser.parseFormula(condString.substring(idx+1, condString.length()) + " && " + condString.substring(0, idx));
 		return cond;
 	}
 	
+	/**
+	 * Returns the signature of this parser.
+	 * @return the signature of this parser.
+	 */
+	public FolSignature getSignature(){
+		return this.folParser.getSignature();
+	}
 }

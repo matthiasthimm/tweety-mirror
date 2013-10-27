@@ -297,6 +297,7 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	 *            is a given array
 	 * @return an array
 	 */
+	@SuppressWarnings("hiding")
 	@Override
 	public <T> T[] toArray(T[] a) {
 		return this.getDomainElements().toArray(a);
@@ -378,6 +379,9 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	 */
 	@Override
 	public boolean removeAll(Collection<?> c) {
+		throw new RuntimeException("Method not correctly implemented, please check source code");
+		//Check the following code! In the while loop the element "e" from the iterator is not used.
+		/*
 		Iterator<?> it = c.iterator();
 		Set<Triple<T, T, Relation>> tempRel = new HashSet<Triple<T, T, Relation>>();
 		while (it.hasNext()) {
@@ -391,7 +395,7 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 			return false;
 		}
 		this.relations = tempRel;
-		return true;
+		return true;*/
 	}
 
 	/*
@@ -457,7 +461,7 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 			return false;
 		if (!(obj instanceof PreferenceOrder))
 			return false;
-		PreferenceOrder<T> po = (PreferenceOrder<T>) obj;
+		PreferenceOrder<?> po = (PreferenceOrder<?>) obj;
 		if (!this.getClass().equals(po.getClass())) {
 			return false;
 		}

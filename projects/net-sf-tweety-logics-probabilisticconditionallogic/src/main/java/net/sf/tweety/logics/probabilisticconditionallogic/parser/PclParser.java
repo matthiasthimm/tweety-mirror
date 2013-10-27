@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
  * 
  *  @author Matthias Thimm
  */
-public class PclParser extends Parser{
+public class PclParser extends Parser<PclBeliefSet>{
 
 	/**
 	 * Logger.

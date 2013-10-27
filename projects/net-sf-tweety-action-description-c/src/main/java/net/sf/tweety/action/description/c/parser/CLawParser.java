@@ -5,7 +5,6 @@ import java.io.Reader;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.BeliefBase;
 import net.sf.tweety.Formula;
 import net.sf.tweety.Parser;
 import net.sf.tweety.ParserException;
@@ -41,8 +40,7 @@ import net.sf.tweety.logics.firstorderlogic.syntax.Tautology;
  * 
  * @author Sebastian Homann
  */
-public class CLawParser
-  extends Parser {
+public class CLawParser extends Parser<CActionDescription> {
 
   protected ActionSignature signature;
 
@@ -59,7 +57,7 @@ public class CLawParser
    * @see net.sf.tweety.Parser#parseBeliefBase(java.io.Reader)
    */
   @Override
-  public BeliefBase parseBeliefBase( Reader reader )
+  public CActionDescription parseBeliefBase( Reader reader )
     throws ParserException {
     CActionDescription actionDescription = new CActionDescription();
 

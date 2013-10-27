@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.io.Reader;
 
 
-import net.sf.tweety.BeliefBase;
 import net.sf.tweety.Formula;
 import net.sf.tweety.Parser;
 import net.sf.tweety.ParserException;
+import net.sf.tweety.action.description.c.CActionDescription;
 import net.sf.tweety.action.signature.ActionSignature;
 import net.sf.tweety.action.signature.parser.ActionSignatureParser;
 
@@ -20,7 +20,7 @@ import net.sf.tweety.action.signature.parser.ActionSignatureParser;
  * @author Sebastian Homann
  */
 public class CParser
-  extends Parser {
+  extends Parser<CActionDescription> {
   protected ActionSignature signature;
   
   /*
@@ -28,7 +28,7 @@ public class CParser
    * @see net.sf.tweety.Parser#parseBeliefBase(java.io.Reader)
    */
   @Override
-  public BeliefBase parseBeliefBase( Reader reader )
+  public CActionDescription parseBeliefBase( Reader reader )
     throws IOException, ParserException {
     // State 0 : initialize
     // State 1 : read signature

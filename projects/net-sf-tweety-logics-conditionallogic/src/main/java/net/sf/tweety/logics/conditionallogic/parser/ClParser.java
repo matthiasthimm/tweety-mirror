@@ -20,7 +20,7 @@ import net.sf.tweety.logics.propositionallogic.syntax.*;
  * 
  *  @author Matthias Thimm
  */
-public class ClParser extends Parser {
+public class ClParser extends Parser<ClBeliefSet> {
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.kr.Parser#parseBeliefBase(java.io.Reader)

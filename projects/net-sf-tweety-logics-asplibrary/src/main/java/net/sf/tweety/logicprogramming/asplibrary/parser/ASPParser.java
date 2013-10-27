@@ -32,6 +32,7 @@ import net.sf.tweety.logicprogramming.asplibrary.util.*;
  *	- LETTER		:= ["_","a"-"z","A"-"Z"]
  *	- DIGIT			:= ["0"-"9"]
  */
+@SuppressWarnings("all")
 public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPParserConstants {/*@bgen(jjtree)*/
   protected JJTASPParserState jjtree = new JJTASPParserState();private static ASPParser oneThreadParser = new ASPParser(new StringReader(""));
 

@@ -12,7 +12,6 @@ import net.sf.tweety.TweetyLogging;
 import net.sf.tweety.Writer;
 import net.sf.tweety.logics.firstorderlogic.parser.FolParser;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
-import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 import net.sf.tweety.logics.probabilisticconditionallogic.semantics.ProbabilityDistribution;
 import net.sf.tweety.logics.relationalprobabilisticconditionallogic.CondensedProbabilityDistribution;
 import net.sf.tweety.logics.relationalprobabilisticconditionallogic.RpclBeliefSet;

@@ -5,6 +5,7 @@ import net.sf.tweety.logicprogramming.asplibrary.syntax.*;
 import net.sf.tweety.logicprogramming.asplibrary.util.*;
 
 /** Token Manager. */
+@SuppressWarnings("all")
 public class ASPParserTokenManager implements ASPParserConstants
 {
 

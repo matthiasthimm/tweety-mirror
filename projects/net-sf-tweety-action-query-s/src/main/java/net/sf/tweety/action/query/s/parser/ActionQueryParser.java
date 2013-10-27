@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
-import net.sf.tweety.BeliefBase;
 import net.sf.tweety.Parser;
 import net.sf.tweety.ParserException;
 import net.sf.tweety.action.grounding.GroundingRequirement;
@@ -60,7 +59,7 @@ import net.sf.tweety.logics.propositionallogic.syntax.Tautology;
  * @author Tim Janus (change constant LogicalSymbols to dynamic)
  */
 public class ActionQueryParser
-  extends Parser {
+  extends Parser<SActionQuerySet> {
   private ActionSignature signature;
   
   public ActionQueryParser(ActionSignature signature) {
@@ -72,7 +71,7 @@ public class ActionQueryParser
    * @see net.sf.tweety.Parser#parseBeliefBase(java.io.Reader)
    */
   @Override
-  public BeliefBase parseBeliefBase( Reader reader ) {
+  public SActionQuerySet parseBeliefBase( Reader reader ) {
     SActionQuerySet beliefSet = new SActionQuerySet();
     String s = "";
     // read from the reader and separate formulas by "\n"

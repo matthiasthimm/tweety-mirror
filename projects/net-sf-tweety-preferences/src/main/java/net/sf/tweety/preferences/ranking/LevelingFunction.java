@@ -122,6 +122,8 @@ public class LevelingFunction<T> extends Functions<T> {
 		Map<Variable, Term> solution = solver.solve();
 		Map<T, Integer> sol = new HashMap<T, Integer>();
 		for (Entry<Variable, Term> e : solution.entrySet()) {
+			//TODO: check the following cast
+			@SuppressWarnings("unchecked")
 			T key = (T) e.getKey().toString();
 			Integer val = (int) e.getValue().doubleValue();
 			sol.put(key, val);

@@ -10,7 +10,6 @@ import net.sf.tweety.beliefdynamics.LeviMultipleBaseRevisionOperator;
 import net.sf.tweety.beliefdynamics.MultipleBaseRevisionOperator;
 import net.sf.tweety.beliefdynamics.kernels.KernelContractionOperator;
 import net.sf.tweety.beliefdynamics.kernels.RandomIncisionFunction;
-import net.sf.tweety.logics.propositionallogic.ClassicalEntailment;
 import net.sf.tweety.logics.propositionallogic.PlBeliefSet;
 import net.sf.tweety.logics.propositionallogic.Sat4jEntailment;
 import net.sf.tweety.logics.propositionallogic.semantics.PossibleWorld;

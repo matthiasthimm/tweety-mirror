@@ -67,7 +67,7 @@ public class DlSignature extends Signature {
 	
 	public void addAll(Collection<?> c) throws IllegalArgumentException{
 		for(Object obj: c){
-			this.add(c);
+			this.add(obj);
 		}
 	}
 	

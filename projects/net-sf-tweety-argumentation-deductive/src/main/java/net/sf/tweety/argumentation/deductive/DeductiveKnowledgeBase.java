@@ -7,7 +7,6 @@ import java.util.Set;
 import net.sf.tweety.argumentation.deductive.semantics.DeductiveArgument;
 import net.sf.tweety.logics.propositionallogic.ClassicalEntailment;
 import net.sf.tweety.logics.propositionallogic.PlBeliefSet;
-import net.sf.tweety.logics.propositionallogic.semantics.*;
 import net.sf.tweety.logics.propositionallogic.syntax.Conjunction;
 import net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula;
 import net.sf.tweety.util.SetTools;

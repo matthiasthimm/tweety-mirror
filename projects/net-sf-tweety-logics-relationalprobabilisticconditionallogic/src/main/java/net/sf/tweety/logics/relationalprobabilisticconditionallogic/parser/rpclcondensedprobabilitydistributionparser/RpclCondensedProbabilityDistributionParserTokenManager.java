@@ -2,6 +2,7 @@
 package net.sf.tweety.logics.relationalprobabilisticconditionallogic.parser.rpclcondensedprobabilitydistributionparser;
 
 /** Token Manager. */
+@SuppressWarnings("all")
 public class RpclCondensedProbabilityDistributionParserTokenManager implements RpclCondensedProbabilityDistributionParserConstants
 {
 
