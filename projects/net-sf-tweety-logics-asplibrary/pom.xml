@@ -27,7 +27,7 @@
     </dependency>
     <dependency>
     	<groupId>net.sf.tweety</groupId>
-    	<artifactId>beliefsdynamics</artifactId>
+    	<artifactId>beliefdynamics</artifactId>
     	<version>0.2.0-SNAPSHOT</version>
     </dependency>
   </dependencies>
