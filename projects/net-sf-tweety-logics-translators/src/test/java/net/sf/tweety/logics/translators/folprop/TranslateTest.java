@@ -4,10 +4,10 @@ import static org.junit.Assert.assertEquals;
 import net.sf.tweety.logics.commons.error.LanguageException;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.logics.firstorderlogic.syntax.Conjunction;
-import net.sf.tweety.logics.firstorderlogic.syntax.Disjunction;
-import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
-import net.sf.tweety.logics.propositionallogic.syntax.Proposition;
+import net.sf.tweety.logics.fol.syntax.Conjunction;
+import net.sf.tweety.logics.fol.syntax.Disjunction;
+import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.pl.syntax.Proposition;
 
 import org.junit.Test;
 
@@ -45,7 +45,7 @@ public class TranslateTest {
 		Disjunction dis = new Disjunction();
 		dis.add(new FOLAtom(new Predicate("a")));
 		dis.add(new FOLAtom(new Predicate("b")));
-		net.sf.tweety.logics.propositionallogic.syntax.Disjunction td = translator.toPropositional(dis);
+		net.sf.tweety.logics.pl.syntax.Disjunction td = translator.toPropositional(dis);
 		assertEquals(2, td.size());
 		assertEquals(true, td.contains(new Proposition("a")));
 		assertEquals(true, td.contains(new Proposition("b")));
@@ -53,9 +53,9 @@ public class TranslateTest {
 	
 	@Test
 	public void testNestedConjunction() {
-		net.sf.tweety.logics.propositionallogic.syntax.Conjunction con = new net.sf.tweety.logics.propositionallogic.syntax.Conjunction();
+		net.sf.tweety.logics.pl.syntax.Conjunction con = new net.sf.tweety.logics.pl.syntax.Conjunction();
 		con.add(new Proposition("a"));
-		net.sf.tweety.logics.propositionallogic.syntax.Disjunction nested = new net.sf.tweety.logics.propositionallogic.syntax.Disjunction();
+		net.sf.tweety.logics.pl.syntax.Disjunction nested = new net.sf.tweety.logics.pl.syntax.Disjunction();
 		nested.add(new Proposition("b"));
 		nested.add(new Proposition("c"));
 		con.add(nested);

@@ -4,10 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.sf.tweety.logics.translators.Translator;
-import net.sf.tweety.logics.firstorderlogic.syntax.Conjunction;
-import net.sf.tweety.logics.firstorderlogic.syntax.Disjunction;
-import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
-import net.sf.tweety.logics.propositionallogic.syntax.Proposition;
+import net.sf.tweety.logics.fol.syntax.Conjunction;
+import net.sf.tweety.logics.fol.syntax.Disjunction;
+import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.util.Pair;
 
 /**
@@ -43,7 +43,7 @@ public class FOLPropTranslator extends Translator {
 	 * @param disjuntion	
 	 * @return	The FOL Disjunction
 	 */
-	public Disjunction toFOL(net.sf.tweety.logics.propositionallogic.syntax.Disjunction disjuntion) {
+	public Disjunction toFOL(net.sf.tweety.logics.pl.syntax.Disjunction disjuntion) {
 		return (Disjunction) this.translateAssociative(disjuntion, Disjunction.class);
 	}
 	
@@ -54,9 +54,9 @@ public class FOLPropTranslator extends Translator {
 	 * 						is thrown.
 	 * @return	The propositional Disjunction
 	 */
-	public net.sf.tweety.logics.propositionallogic.syntax.Disjunction toPropositional(Disjunction disjunction) {
-		return (net.sf.tweety.logics.propositionallogic.syntax.Disjunction)
-				this.translateAssociative(disjunction, net.sf.tweety.logics.propositionallogic.syntax.Disjunction.class);
+	public net.sf.tweety.logics.pl.syntax.Disjunction toPropositional(Disjunction disjunction) {
+		return (net.sf.tweety.logics.pl.syntax.Disjunction)
+				this.translateAssociative(disjunction, net.sf.tweety.logics.pl.syntax.Disjunction.class);
 	}
 	
 	/**
@@ -64,7 +64,7 @@ public class FOLPropTranslator extends Translator {
 	 * @param conjunction	
 	 * @return	The FOL Conjunction
 	 */
-	public Conjunction toFOL(net.sf.tweety.logics.propositionallogic.syntax.Conjunction conjunction) {
+	public Conjunction toFOL(net.sf.tweety.logics.pl.syntax.Conjunction conjunction) {
 		return (Conjunction) this.translateAssociative(conjunction, Conjunction.class);
 	}
 	
@@ -75,9 +75,9 @@ public class FOLPropTranslator extends Translator {
 	 * 						is thrown.
 	 * @return	The propositional Conjunction
 	 */
-	public net.sf.tweety.logics.propositionallogic.syntax.Conjunction toPropositional(Conjunction conjunction) {
-		return (net.sf.tweety.logics.propositionallogic.syntax.Conjunction)
-				this.translateAssociative(conjunction, net.sf.tweety.logics.propositionallogic.syntax.Conjunction.class);
+	public net.sf.tweety.logics.pl.syntax.Conjunction toPropositional(Conjunction conjunction) {
+		return (net.sf.tweety.logics.pl.syntax.Conjunction)
+				this.translateAssociative(conjunction, net.sf.tweety.logics.pl.syntax.Conjunction.class);
 	}
 	
 	@Override
@@ -87,13 +87,13 @@ public class FOLPropTranslator extends Translator {
 		tmap.put(Proposition.class, new Pair<Integer, Class<?>>(TT_ATOM, FOLAtom.class));
 		
 		tmap.put(Disjunction.class, new Pair<Integer, Class<?>>(
-				TT_ASSOC, net.sf.tweety.logics.propositionallogic.syntax.Disjunction.class));
-		tmap.put(net.sf.tweety.logics.propositionallogic.syntax.Disjunction.class, 
+				TT_ASSOC, net.sf.tweety.logics.pl.syntax.Disjunction.class));
+		tmap.put(net.sf.tweety.logics.pl.syntax.Disjunction.class, 
 				new Pair<Integer, Class<?>>(TT_ASSOC, Disjunction.class));
 		
 		tmap.put(Conjunction.class, new Pair<Integer, Class<?>>(
-				TT_ASSOC, net.sf.tweety.logics.propositionallogic.syntax.Conjunction.class));
-		tmap.put(net.sf.tweety.logics.propositionallogic.syntax.Conjunction.class, 
+				TT_ASSOC, net.sf.tweety.logics.pl.syntax.Conjunction.class));
+		tmap.put(net.sf.tweety.logics.pl.syntax.Conjunction.class, 
 				new Pair<Integer, Class<?>>(TT_ASSOC, Conjunction.class));
 		
 		return tmap;

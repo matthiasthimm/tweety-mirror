@@ -10,9 +10,9 @@ import net.sf.tweety.beliefdynamics.kernels.*;
 import net.sf.tweety.beliefdynamics.mas.*;
 import net.sf.tweety.beliefdynamics.operators.*;
 import net.sf.tweety.graphs.orders.*;
-import net.sf.tweety.logics.propositionallogic.ClassicalEntailment;
-import net.sf.tweety.logics.propositionallogic.parser.*;
-import net.sf.tweety.logics.propositionallogic.syntax.*;
+import net.sf.tweety.logics.pl.ClassicalEntailment;
+import net.sf.tweety.logics.pl.parser.*;
+import net.sf.tweety.logics.pl.syntax.*;
 
 public class CrMasTest {
 

@@ -2,13 +2,13 @@ package net.sf.tweety.beliefdynamics.operators;
 
 import java.util.*;
 
-import net.sf.tweety.argumentation.deductive.accumulator.*;
+import net.sf.tweety.arg.deductive.accumulator.*;
 import net.sf.tweety.beliefdynamics.*;
 import net.sf.tweety.beliefdynamics.mas.*;
 import net.sf.tweety.beliefdynamics.selectiverevision.*;
 import net.sf.tweety.beliefdynamics.selectiverevision.argumentative.*;
-import net.sf.tweety.logics.propositionallogic.*;
-import net.sf.tweety.logics.propositionallogic.syntax.*;
+import net.sf.tweety.logics.pl.*;
+import net.sf.tweety.logics.pl.syntax.*;
 
 /**
  * This class is an exemplary instantiation of a revision operator based on deductive argumentation and credibilities where

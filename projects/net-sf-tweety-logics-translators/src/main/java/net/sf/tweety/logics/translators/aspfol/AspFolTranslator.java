@@ -3,17 +3,13 @@ package net.sf.tweety.logics.translators.aspfol;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPAtom;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPElement;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPHead;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPLiteral;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPNeg;
+import net.sf.tweety.lp.asp.syntax.*;
 import net.sf.tweety.logics.commons.syntax.interfaces.SimpleLogicalFormula;
 import net.sf.tweety.logics.translators.Translator;
-import net.sf.tweety.logics.firstorderlogic.syntax.Disjunction;
-import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
-import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
-import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
+import net.sf.tweety.logics.fol.syntax.Disjunction;
+import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
+import net.sf.tweety.logics.fol.syntax.Negation;
 import net.sf.tweety.util.Pair;
 
 /**

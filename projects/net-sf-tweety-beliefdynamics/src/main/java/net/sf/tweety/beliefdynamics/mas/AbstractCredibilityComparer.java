@@ -4,7 +4,7 @@ import java.util.*;
 
 import net.sf.tweety.agents.*;
 import net.sf.tweety.graphs.orders.*;
-import net.sf.tweety.logics.propositionallogic.syntax.*;
+import net.sf.tweety.logics.pl.syntax.*;
 
 /**
  * This class provides for auxiliary functions used to compare

@@ -8,7 +8,7 @@ import java.util.Set;
 
 import net.sf.tweety.action.ActionName;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
-import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FOLAtom;
 
 /**
  * An action is a truth-valued function on the set of action names, which is

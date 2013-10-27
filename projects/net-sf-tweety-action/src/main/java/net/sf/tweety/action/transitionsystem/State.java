@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.sf.tweety.action.signature.FolFluentName;
-import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FOLAtom;
 
 /**
  * Represents a state in an action transition system, which is a representation

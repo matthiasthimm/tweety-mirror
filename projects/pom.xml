@@ -58,52 +58,50 @@
   </build>
   
   <modules>
-  	<module>net-sf-tweety-logics-asplibrary</module>
+  	<module>net-sf-tweety-lp-asp</module>
   	<module>net-sf-tweety-logics-commons</module>
-  	<module>net-sf-tweety-logics-conditionallogic</module>
-  	<module>net-sf-tweety-logics-firstorderlogic</module>
+  	<module>net-sf-tweety-logics-cl</module>
+  	<module>net-sf-tweety-logics-fol</module>
   	<module>net-sf-tweety-math</module>
-  	<module>net-sf-tweety-logics-propositionallogic</module>
+  	<module>net-sf-tweety-logics-pl</module>
   	<module>net-sf-tweety</module>
   	<module>net-sf-tweety-action</module>
-  	<module>net-sf-tweety-action-description-c</module>
-  	<module>net-sf-tweety-action-query-s</module>
   	<module>net-sf-tweety-agents</module>
   	<module>net-sf-tweety-beliefdynamics</module>
   	<module>net-sf-tweety-cli</module>
-  	<module>net-sf-tweety-argumentation-deductive</module>
-  	<module>net-sf-tweety-argumentation-delp</module>
+  	<module>net-sf-tweety-arg-deductive</module>
+  	<module>net-sf-tweety-arg-delp</module>
   	<module>net-sf-tweety-agents-dialoguesystems</module>
-  	<module>net-sf-tweety-argumentation-dung</module>
+  	<module>net-sf-tweety-arg-dung</module>
   	<module>net-sf-tweety-graphs</module>
-  	<module>net-sf-tweety-logics-markovlogic</module>
-  	<module>net-sf-tweety-logics-modallogic</module>
+  	<module>net-sf-tweety-logics-ml</module>
+  	<module>net-sf-tweety-logics-el</module>
   	<module>net-sf-tweety-preferences</module>
-  	<module>net-sf-tweety-argumentation-probabilistic</module>
+  	<module>net-sf-tweety-arg-prob</module>
   	<module>
-  		net-sf-tweety-logics-probabilisticconditionallogic
+  		net-sf-tweety-logics-pcl
   	</module>
-  	<module>net-sf-tweety-logics-relationalconditionallogic</module>
+  	<module>net-sf-tweety-logics-rcl</module>
   	<module>
-  		net-sf-tweety-logics-relationalprobabilisticconditionallogic
+  		net-sf-tweety-logics-rpcl
   	</module>
   	<module>
-  		net-sf-tweety-argumentation-structuredargumentationframeworks
+  		net-sf-tweety-arg-saf
   	</module>
   	<module>../deploy</module>  	
-  	<module>net-sf-tweety-logicprogramming-nestedlogicprograms</module>
+  	<module>net-sf-tweety-lp-nlp</module>
   	<module>net-sf-tweety-logics-translators</module>  	
   	<module>
-  		net-sf-tweety-argumentation-parameterisedhierarchy
+  		net-sf-tweety-arg-lp
   	</module>
   	<module>
-  		net-sf-tweety-logicprogramming-asplibrary-beliefdynamics
+  		net-sf-tweety-lp-asp-beliefdynamics
   	</module>
   	<module>
   		net-sf-tweety-plugin
   	</module>
 	<module>
-  		net-sf-tweety-logics-descriptionlogic
+  		net-sf-tweety-logics-dl
   	</module>
   </modules>
 </project>

@@ -7,7 +7,7 @@ import java.util.Set;
 
 import net.sf.tweety.action.signature.ActionSignature;
 import net.sf.tweety.action.signature.FolFluentName;
-import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FOLAtom;
 import net.sf.tweety.util.Pair;
 
 /**

@@ -2,12 +2,12 @@ package net.sf.tweety.beliefdynamics.selectiverevision.argumentative;
 
 import java.util.*;
 
-import net.sf.tweety.argumentation.deductive.*;
-import net.sf.tweety.argumentation.deductive.accumulator.*;
-import net.sf.tweety.argumentation.deductive.categorizer.*;
+import net.sf.tweety.arg.deductive.*;
+import net.sf.tweety.arg.deductive.accumulator.*;
+import net.sf.tweety.arg.deductive.categorizer.*;
 import net.sf.tweety.beliefdynamics.selectiverevision.*;
-import net.sf.tweety.logics.propositionallogic.*;
-import net.sf.tweety.logics.propositionallogic.syntax.*;
+import net.sf.tweety.logics.pl.*;
+import net.sf.tweety.logics.pl.syntax.*;
 
 /**
  * This class implements the argumentative transformation functions proposed in [Krümpelmann:2011].

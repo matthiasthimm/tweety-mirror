@@ -1,21 +1,21 @@
 package net.sf.tweety.beliefdynamics.test;
 
 import net.sf.tweety.BeliefBase;
-import net.sf.tweety.argumentation.dung.CompleteReasoner;
-import net.sf.tweety.argumentation.dung.DungTheory;
-import net.sf.tweety.argumentation.dung.syntax.Argument;
-import net.sf.tweety.argumentation.dung.syntax.Attack;
+import net.sf.tweety.arg.dung.CompleteReasoner;
+import net.sf.tweety.arg.dung.DungTheory;
+import net.sf.tweety.arg.dung.syntax.Argument;
+import net.sf.tweety.arg.dung.syntax.Attack;
 import net.sf.tweety.beliefdynamics.DefaultMultipleBaseExpansionOperator;
 import net.sf.tweety.beliefdynamics.LeviMultipleBaseRevisionOperator;
 import net.sf.tweety.beliefdynamics.MultipleBaseRevisionOperator;
 import net.sf.tweety.beliefdynamics.kernels.KernelContractionOperator;
 import net.sf.tweety.beliefdynamics.kernels.RandomIncisionFunction;
-import net.sf.tweety.logics.propositionallogic.PlBeliefSet;
-import net.sf.tweety.logics.propositionallogic.Sat4jEntailment;
-import net.sf.tweety.logics.propositionallogic.semantics.PossibleWorld;
-import net.sf.tweety.logics.propositionallogic.syntax.Proposition;
-import net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula;
-import net.sf.tweety.logics.propositionallogic.syntax.PropositionalSignature;
+import net.sf.tweety.logics.pl.PlBeliefSet;
+import net.sf.tweety.logics.pl.Sat4jEntailment;
+import net.sf.tweety.logics.pl.semantics.PossibleWorld;
+import net.sf.tweety.logics.pl.syntax.Proposition;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 
 public class AbstractArgumentationTest {
 	public static void main(String[] args){

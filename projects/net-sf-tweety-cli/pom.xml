@@ -16,7 +16,7 @@
   	<dependency>
   		<groupId>net.sf.tweety.logics</groupId>
   		<artifactId>
-  			relationalprobabilisticconditionallogic
+  			rpcl
   		</artifactId>
   		<version>0.2.0-SNAPSHOT</version>
   	</dependency>

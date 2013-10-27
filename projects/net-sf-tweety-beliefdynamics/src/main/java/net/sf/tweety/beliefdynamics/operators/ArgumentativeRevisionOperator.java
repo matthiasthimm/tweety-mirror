@@ -2,16 +2,16 @@ package net.sf.tweety.beliefdynamics.operators;
 
 import java.util.Collection;
 
-import net.sf.tweety.argumentation.deductive.accumulator.SimpleAccumulator;
-import net.sf.tweety.argumentation.deductive.categorizer.ClassicalCategorizer;
+import net.sf.tweety.arg.deductive.accumulator.SimpleAccumulator;
+import net.sf.tweety.arg.deductive.categorizer.ClassicalCategorizer;
 import net.sf.tweety.beliefdynamics.DefaultMultipleBaseExpansionOperator;
 import net.sf.tweety.beliefdynamics.LeviMultipleBaseRevisionOperator;
 import net.sf.tweety.beliefdynamics.MultipleBaseRevisionOperator;
 import net.sf.tweety.beliefdynamics.selectiverevision.MultipleSelectiveRevisionOperator;
 import net.sf.tweety.beliefdynamics.selectiverevision.MultipleTransformationFunction;
 import net.sf.tweety.beliefdynamics.selectiverevision.argumentative.ArgumentativeTransformationFunction;
-import net.sf.tweety.logics.propositionallogic.PlBeliefSet;
-import net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.PlBeliefSet;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**
  * This class is an exemplary instantiation of a revision operator based on deductive argumentation [Krümpelmann:2011] where
