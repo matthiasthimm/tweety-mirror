@@ -2,12 +2,12 @@
 package net.sf.tweety.logics.fol.parser;
 
 import java.util.*;
+import net.sf.tweety.logics.fol.syntax.*;
 import net.sf.tweety.logics.commons.syntax.*;
 import net.sf.tweety.logics.commons.syntax.interfaces.*;
 import net.sf.tweety.util.Pair;
 
 import net.sf.tweety.logics.fol.FolBeliefSet;
-import net.sf.tweety.logics.fol.syntax.*;
 
 @SuppressWarnings("all")
 /**
@@ -253,19 +253,18 @@ public class FolParserB implements FolParserBConstants {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case AND:
         jj_consume_token(AND);
-        form = formula(signature);
-        status = 1;
+                status = 1;
         break;
       case OR:
         jj_consume_token(OR);
-        form = formula(signature);
-        status = 2;
+                                       status = 2;
         break;
       default:
         jj_la1[3] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
+      form = formula(signature);
       break;
     default:
       jj_la1[4] = jj_gen;
@@ -590,6 +589,16 @@ public class FolParserB implements FolParserBConstants {
     finally { jj_save(1, xla); }
   }
 
+  private boolean jj_3R_9() {
+    Token xsp;
+    if (jj_3_2()) return true;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3_2()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
   private boolean jj_3R_10() {
     Token xsp;
     xsp = jj_scanpos;
@@ -611,16 +620,6 @@ public class FolParserB implements FolParserBConstants {
     return false;
   }
 
-  private boolean jj_3R_9() {
-    Token xsp;
-    if (jj_3_2()) return true;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3_2()) { jj_scanpos = xsp; break; }
-    }
-    return false;
-  }
-
   /** Generated Token Manager. */
   public FolParserBTokenManager token_source;
   SimpleCharStream jj_input_stream;
@@ -638,7 +637,7 @@ public class FolParserB implements FolParserBConstants {
       jj_la1_init_0();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x100,0x181e0c0,0x181e0c0,0x1800,0x1800,0x20000000,0x10000,0x20000000,0x10000,0x1c00000,0x1800000,0x20000000,0x30400,0x20000000,0x10000,0x20000000,};
+      jj_la1_0 = new int[] {0x100,0x181e0c0,0x181e0c0,0x1800,0x1800,0x10000000,0x10000,0x10000000,0x10000,0x1c00000,0x1800000,0x10000000,0x30400,0x10000000,0x10000,0x10000000,};
    }
   final private JJCalls[] jj_2_rtns = new JJCalls[2];
   private boolean jj_rescan = false;
@@ -824,7 +823,7 @@ public class FolParserB implements FolParserBConstants {
   /** Generate ParseException. */
   public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[31];
+    boolean[] la1tokens = new boolean[30];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
@@ -838,7 +837,7 @@ public class FolParserB implements FolParserBConstants {
         }
       }
     }
-    for (int i = 0; i < 31; i++) {
+    for (int i = 0; i < 30; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;

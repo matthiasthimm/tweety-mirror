@@ -55,11 +55,9 @@ public interface FolParserBConstants {
   /** RegularExpression Id. */
   int UCHAR = 27;
   /** RegularExpression Id. */
-  int BLANK = 28;
+  int COMMA = 28;
   /** RegularExpression Id. */
-  int COMMA = 29;
-  /** RegularExpression Id. */
-  int DIGIT = 30;
+  int DIGIT = 29;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -94,7 +92,6 @@ public interface FolParserBConstants {
     "<SYMBOL>",
     "<LCHAR>",
     "<UCHAR>",
-    "\"_\"",
     "\",\"",
     "<DIGIT>",
   };

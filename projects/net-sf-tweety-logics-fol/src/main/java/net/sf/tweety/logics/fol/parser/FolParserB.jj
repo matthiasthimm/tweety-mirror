@@ -8,15 +8,15 @@ options
 }
 
 PARSER_BEGIN(FolParserB)
-package net.sf.tweety.logics.firstorderlogic.parser;
+package net.sf.tweety.logics.fol.parser;
 
 import java.util.*;
-import net.sf.tweety.logics.firstorderlogic.syntax.*;
+import net.sf.tweety.logics.fol.syntax.*;
 import net.sf.tweety.logics.commons.syntax.*;
 import net.sf.tweety.logics.commons.syntax.interfaces.*;
 import net.sf.tweety.util.Pair;
 
-import net.sf.tweety.logics.firstorderlogic.FolBeliefSet;
+import net.sf.tweety.logics.fol.FolBeliefSet;
 
 @SuppressWarnings("all")
 /**
@@ -173,7 +173,6 @@ TOKEN :
 | < SYMBOL: (< LCHAR >|< UCHAR >|< DIGIT >|"_") >
 | < LCHAR : ["a"-"z"]>
 | < UCHAR : ["A"-"Z"]>
-| < BLANK : "_" >
 | < COMMA : "," >
 | < DIGIT : [ "0"-"9" ] >
 }
@@ -259,16 +258,9 @@ Pair<Integer, FolFormula> formulaex(FolSignature signature) :
   FolFormula form = null;
   Pair<Integer, FolFormula> reval = new Pair<Integer, FolFormula>();}
 {
-  (
-    (   
-      < AND > form = formula(signature)
-      {        status = 1;
-      }    )
-    |
-    (
-      < OR > form = formula(signature)
-      {        status = 2;
-      }    )
+  (LOOKAHEAD(1)
+    ( < AND > { status = 1;} | < OR > {status = 2;} )
+    form = formula(signature)  
   )?
   {
     reval.setFirst(status);
@@ -291,7 +283,7 @@ FOLAtom atom(FolSignature signature) :
     type = getArgumentType(p, count++);
     if(p==null && this.forceDefinitions)    {
       throw new ParseException("Predicate '" + identifier + "' was not defined. Do not set the force flag for definitions or define the predicate beforehand.");    }  }
-  (
+  ( LOOKAHEAD(1)
     < LBRA >
   	t = term(signature, type)  	{
   	  terms.add(t);
