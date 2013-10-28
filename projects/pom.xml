@@ -71,7 +71,7 @@
   	<module>net-sf-tweety-cli</module>
   	<module>net-sf-tweety-arg-deductive</module>
   	<module>net-sf-tweety-arg-delp</module>
-  	<module>net-sf-tweety-agents-dialoguesystems</module>
+  	<module>net-sf-tweety-agents-dialogues</module>
   	<module>net-sf-tweety-arg-dung</module>
   	<module>net-sf-tweety-graphs</module>
   	<module>net-sf-tweety-logics-ml</module>
