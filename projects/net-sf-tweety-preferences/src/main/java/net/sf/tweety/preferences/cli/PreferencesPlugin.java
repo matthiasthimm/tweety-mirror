@@ -20,8 +20,6 @@ import net.sf.tweety.preferences.aggregation.PluralityScoringPreferenceAggregato
 import net.sf.tweety.preferences.aggregation.VetoScoringPreferenceAggregator;
 import net.sf.tweety.preferences.io.POParser;
 import net.sf.tweety.preferences.io.ParseException;
-import net.sf.tweety.preferences.io.UPParser;
-import net.sf.tweety.preferences.update.Update;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 /**
@@ -178,8 +176,8 @@ public class PreferencesPlugin extends AbstractTweetyPlugin {
 //					throw new RuntimeException("Method not correctly implemented, please check source code");
 					
 					// TODO: check the following code. The variable "up" is never read!
-					ArrayList< Update <String>> up = new ArrayList<Update<String>>();
-					File[] tmp = ((FileListCommandParameter) tempComParam).getValue();
+//					ArrayList< Update <String>> up = new ArrayList<Update<String>>();
+					/*File[] tmp = ((FileListCommandParameter) tempComParam).getValue();
 					// only one update file?
 					if(tmp.length == 1){
 						if(tmp[0].getAbsolutePath().endsWith(".up")){
@@ -193,7 +191,7 @@ public class PreferencesPlugin extends AbstractTweetyPlugin {
 						} else {
 							System.out.println("This is no correctly formatted update file.");
 						}
-					} 
+					} */
 					
 				}
 			}
