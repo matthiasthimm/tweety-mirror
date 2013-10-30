@@ -87,7 +87,7 @@ public class CliMain {
 	 */
 	public static Map<String, String> configCLI()
 			throws ConfigurationException, FileNotFoundException {
-		// TODO : fehlermeldung bei falscher/leerer config-datei und null-werten
+		// TODO : exception handling for empty/erroneous configuration
 		Map<String, String> loadablePlugins = new HashMap<String, String>();
 
 		XMLConfiguration tweetyXmlConfig = new XMLConfiguration();
@@ -276,8 +276,8 @@ public class CliMain {
 		}
 
 		// Testausgabe aller Plugins
-		// System.out.println(pm.getPlugin(TweetyPlugin.class));
-		// System.out.println(pmu.getPlugins());
+		 System.out.println(pm.getPlugin(TweetyPlugin.class));
+		 System.out.println(pmu.getPlugins());
 
 		//
 		for (TweetyPlugin tp : pmu.getPlugins(TweetyPlugin.class)) {

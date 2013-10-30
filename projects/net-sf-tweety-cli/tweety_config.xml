@@ -8,4 +8,8 @@
 	<plugin name="rpcl">
 		<path> plugins/rcpl.jar </path>
 	</plugin>
+
+	<plugin name="propositionallogic">
+		<path>  plugins/propositionallogic.jar  </path>
+	</plugin>
 </plugins>

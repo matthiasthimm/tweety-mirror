@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import net.sf.tweety.plugin.AbstractTweetyPlugin;
 import net.sf.tweety.plugin.PluginOutput;
 import net.sf.tweety.plugin.parameter.CommandParameter;
@@ -19,6 +20,8 @@ import net.sf.tweety.preferences.aggregation.PluralityScoringPreferenceAggregato
 import net.sf.tweety.preferences.aggregation.VetoScoringPreferenceAggregator;
 import net.sf.tweety.preferences.io.POParser;
 import net.sf.tweety.preferences.io.ParseException;
+import net.sf.tweety.preferences.io.UPParser;
+import net.sf.tweety.preferences.update.Update;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 /**
@@ -73,13 +76,7 @@ public class PreferencesPlugin extends AbstractTweetyPlugin {
 	 * @param args
 	 */
 	public PreferencesPlugin(String[] args){
-		super();
-		this.addParameter(new SelectionCommandParameter(PREF__AGGR_IDENTIFIER,
-				PREF__AGGR_DESCRIPTION, PREF__AGGR_RULES));
-		this.addParameter(new SelectionCommandParameter(PREF__DYN_IDENTIFIER,
-				PREF__DYN_DESCRIPTION, PREF__DYN_RULES));
-		this.addParameter(new FileListCommandParameter(PREF__UP_IDENTIFIER,
-				PREF__UP_DESCRIPTION));
+		this();
 	}
 	
 	// init command parameter
@@ -176,27 +173,27 @@ public class PreferencesPlugin extends AbstractTweetyPlugin {
 			if (tempComParam.getIdentifier().equals("-up")) {
 				if(!isDynamic){
 					System.out.println("No Updates allowed within non-dynamic aggregation");
-				} else if(tempComParam instanceof FileListCommandParameter) {
+				} else if((isDynamic) && (tempComParam instanceof FileListCommandParameter)) {
 					
-					throw new RuntimeException("Method not correctly implemented, please check source code");
-					/*
+//					throw new RuntimeException("Method not correctly implemented, please check source code");
+					
 					// TODO: check the following code. The variable "up" is never read!
 					ArrayList< Update <String>> up = new ArrayList<Update<String>>();
 					File[] tmp = ((FileListCommandParameter) tempComParam).getValue();
 					// only one update file?
-					for(int k = 0; k < tmp.length; k++){
-						if(tmp[k].getAbsolutePath().endsWith(".up")){
+					if(tmp.length == 1){
+						if(tmp[0].getAbsolutePath().endsWith(".up")){
 							try{
-							up = UPParser.parse(tmp[k].getAbsolutePath());
+							up = UPParser.parse(tmp[0].getAbsolutePath());
 							} catch (FileNotFoundException e){
 								e.printStackTrace();
 							} catch (ParseException e){
 								e.printStackTrace();
 							}
 						} else {
-							System.out.println("This is no correct formatted update file.");
+							System.out.println("This is no correctly formatted update file.");
 						}
-					}*/
+					} 
 					
 				}
 			}

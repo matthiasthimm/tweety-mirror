@@ -6,7 +6,6 @@ import net.sf.tweety.preferences.*;
 import net.sf.tweety.util.Triple;
 
 /** Token Manager. */
-@SuppressWarnings("all")
 public class POParserTokenManager implements POParserConstants
 {
 

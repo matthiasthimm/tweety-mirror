@@ -25,7 +25,7 @@ public class Update<T> {
 	/**
 	 * The third element
 	 */
-	Integer amount;
+	Integer amount;	
 	
 	/**
 	 * The fourth element

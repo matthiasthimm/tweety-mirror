@@ -17,7 +17,6 @@ e.g. (1, -2, a)  where
 -(/+) is equal to WEAKEN(/STRENGTHEN)
 and 2 is the amount
 */
-@SuppressWarnings("all")
 public class UPParser implements UPParserConstants {
         public UPParser()
         {
