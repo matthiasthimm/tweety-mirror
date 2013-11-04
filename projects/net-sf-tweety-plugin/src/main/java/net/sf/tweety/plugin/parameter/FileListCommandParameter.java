@@ -5,12 +5,15 @@ import java.util.ArrayList;
 
 /**
  * This parameter holds a file-list of possible arguments
- * 
+ *
  * @author Bastian Wolf
  * 
  */
 
 public class FileListCommandParameter extends CommandParameter {
+
+	// private String regex =
+	// "(/?([a-zA-Z0-9])(/[a-zA-Z0-9_\\-\\.])*(.[a-z]+))";
 
 	/**
 	 * the value each instantiated needs, has to be in selections
@@ -54,37 +57,37 @@ public class FileListCommandParameter extends CommandParameter {
 	@Override
 	public boolean isValid(String s) {
 		// check for valid path
+		if (new File(s).isFile()) {
+			return true;
+		}
 		return false;
 	}
 
 	/**
 	 * instantiates a new parameter iff the given value ist valid for this
-	 * command parameter
+	 * command parameter (for special case with one file);
 	 */
 	@Override
 	public CommandParameter instantiate(String filename) {
-		
-		return null;
+		File[] out = new File[1];
+			if(isValid(filename)){
+				out[0] = new File(filename.toString()).getAbsoluteFile();
+			}
+			FileListCommandParameter file = (FileListCommandParameter) this
+					.clone();
+			file.setValue(out);
+		return file;
 	}
 
-	
-	public CommandParameter instantiate(File[] files){
-		FileListCommandParameter fl = (FileListCommandParameter) this.clone();
-		fl.setValue(files);
-		
-		return fl;
-		
-	}
-	
-	
+
 	// TODO: implement ArrayList-Instantiation
-	public CommandParameter instantiate(ArrayList<String> a){
+	public CommandParameter instantiate(ArrayList<String> a) {
 		File[] out = new File[a.size()];
 
 		for (int i = 0; i < a.size(); i++) {
-			// if(this.isValid(a.get(i))){
+			if(this.isValid(a.get(i))){
 			out[i] = new File(a.get(i).toString()).getAbsoluteFile();
-			// }
+			 }
 		}
 
 		FileListCommandParameter filelist = (FileListCommandParameter) this
@@ -94,8 +97,19 @@ public class FileListCommandParameter extends CommandParameter {
 		return filelist;
 	}
 
+	/*
+	public CommandParameter instantiate(File[] files) {
+		FileListCommandParameter fl = (FileListCommandParameter) this.clone();
+		fl.setValue(files);
+
+		return fl;
+
+	}
+	*/
+	
 	@Override
-	public Object clone(){
-		return new FileListCommandParameter(this.getIdentifier(), this.getDescription());
+	public Object clone() {
+		return new FileListCommandParameter(this.getIdentifier(),
+				this.getDescription());
 	}
 }
