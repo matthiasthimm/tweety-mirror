@@ -2,6 +2,7 @@ package net.sf.tweety.math.norm;
 
 import java.util.Vector;
 
+import net.sf.tweety.math.func.EntropyFunction;
 import net.sf.tweety.math.probability.ProbabilityFunction;
 import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.Fraction;
@@ -12,21 +13,17 @@ import net.sf.tweety.math.term.Term;
  * The entropy norm. Uses the entropy of a vector of doubles
  * (=probability function) as a measure of norm and the relative entropy of two 
  * probability distributions as distance.
- * Note that entropy is not a actually a norm!
+ * Note that entropy is not actually a norm!
  * @author Matthias Thimm
  */
-public class EntropyNorm<T extends Comparable<T>> implements RealVectorNorm{
+public class EntropyNorm<T extends Comparable<T>> extends EntropyFunction implements RealVectorNorm{
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.norm.Norm#norm(java.lang.Object)
 	 */
 	@Override
 	public double norm(Vector<Double> obj) {
-		double norm = 0;
-		for(double d: obj)
-			if(d != 0)
-				norm -= d * Math.log(d);
-		return norm;
+		return this.eval(obj);		
 	}
 	
 	/* (non-Javadoc)
@@ -62,10 +59,7 @@ public class EntropyNorm<T extends Comparable<T>> implements RealVectorNorm{
 	 */
 	@Override
 	public Term normTerm(Vector<Term> obj) {
-		Term norm = new FloatConstant(0);
-		for(Term t: obj)
-			norm = norm.minus(t.mult(new Logarithm(t)));
-		return norm;
+		return this.getTerm(obj);		
 	}
 
 	/* (non-Javadoc)

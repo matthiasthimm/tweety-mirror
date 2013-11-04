@@ -7,8 +7,6 @@ import java.util.Set;
 import java.util.Vector;
 
 import net.sf.tweety.InconsistencyMeasure;
-import net.sf.tweety.TweetyConfiguration;
-import net.sf.tweety.TweetyLogging;
 import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.prob.PartialProbabilityAssignment;
@@ -103,16 +101,16 @@ public class PAInconsistencyMeasure implements InconsistencyMeasure<PartialProba
 		// Target function
 		problem.setTargetFunction(this.norm.distanceTerm(varsCompVector,varsSemVector));		
 		// Do the optimization
-		TweetyLogging.logLevel = TweetyConfiguration.LogLevel.FATAL;
-		TweetyLogging.initLogging();
-		System.out.println(problem);
+//		TweetyLogging.logLevel = TweetyConfiguration.LogLevel.FATAL;
+//		TweetyLogging.initLogging();
+//		System.out.println(problem);
 		try{			
 			OpenOptSolver solver = new OpenOptSolver(problem);
 			solver.solver = "ralg";
 			solver.contol = 0.0001;
 			Map<Variable,Term> solution = solver.solve();
-			for(Variable v: solution.keySet())
-				System.out.println(v + "\t" + solution.get(v));
+			//for(Variable v: solution.keySet())
+			//	System.out.println(v + "\t" + solution.get(v));
 			return problem.getTargetFunction().replaceAllTerms(solution).value().doubleValue();
 		}catch (GeneralMathException ex){
 			// This should not happen as the optimization problem is guaranteed to be feasible
