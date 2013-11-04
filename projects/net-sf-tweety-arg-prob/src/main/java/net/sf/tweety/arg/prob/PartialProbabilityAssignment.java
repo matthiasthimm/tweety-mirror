@@ -6,6 +6,7 @@ import net.sf.tweety.BeliefBase;
 import net.sf.tweety.Signature;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungSignature;
+import net.sf.tweety.arg.prob.semantics.ProbabilisticExtension;
 import net.sf.tweety.math.probability.Probability;
 
 /**

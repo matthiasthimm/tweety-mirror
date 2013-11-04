@@ -1,4 +1,4 @@
-package net.sf.tweety.arg.prob.test;
+package net.sf.tweety.arg.prob.test.deductive;
 
 import java.io.IOException;
 
@@ -7,8 +7,6 @@ import net.sf.tweety.Reasoner;
 import net.sf.tweety.TweetyConfiguration;
 import net.sf.tweety.TweetyLogging;
 import net.sf.tweety.arg.deductive.semantics.attacks.*;
-import net.sf.tweety.arg.prob.DeductiveArgMeReasoner;
-import net.sf.tweety.arg.prob.DeductiveProbabilisticKnowledgebase;
 import net.sf.tweety.logics.pl.parser.PlParser;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 import net.sf.tweety.math.probability.Probability;

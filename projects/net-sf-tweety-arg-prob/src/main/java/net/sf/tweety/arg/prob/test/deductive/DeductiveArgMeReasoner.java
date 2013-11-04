@@ -1,4 +1,4 @@
-package net.sf.tweety.arg.prob;
+package net.sf.tweety.arg.prob.test.deductive;
 
 import java.util.HashMap;
 import java.util.Map;

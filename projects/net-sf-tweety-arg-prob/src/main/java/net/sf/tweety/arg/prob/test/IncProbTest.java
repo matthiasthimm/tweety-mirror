@@ -5,11 +5,13 @@ import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
 import net.sf.tweety.arg.prob.PartialProbabilityAssignment;
 import net.sf.tweety.arg.prob.analysis.PAInconsistencyMeasure;
-import net.sf.tweety.math.norm.ManhattanNorm;
+import net.sf.tweety.arg.prob.semantics.*;
+import net.sf.tweety.math.norm.*;
 import net.sf.tweety.math.probability.Probability;
 
 public class IncProbTest {
 	public static void main(String[] args){
+
 		DungTheory theory = new DungTheory();
 		Argument a = new Argument("A");
 		Argument b = new Argument("B");
@@ -22,10 +24,10 @@ public class IncProbTest {
 		theory.add(new Attack(a,c));
 		
 		PartialProbabilityAssignment ppa = new PartialProbabilityAssignment();
-		ppa.put(b, new Probability(0.7));
-		ppa.put(c, new Probability(0.6));
+		ppa.put(a, new Probability(0.9));
 		
-		PAInconsistencyMeasure mes = new PAInconsistencyMeasure(new ManhattanNorm(), theory, PAInconsistencyMeasure.DISTANCE_WRT_JUSTIFIABILITY, PAInconsistencyMeasure.NOT_IMPOSE_RATIONALITY);
+		
+		PAInconsistencyMeasure mes = new PAInconsistencyMeasure(new PNorm(2), theory, new SemiOptimisticPASemantics());
 		
 		System.out.println(mes.inconsistencyMeasure(ppa));
 	}

@@ -1,4 +1,4 @@
-package net.sf.tweety.arg.prob;
+package net.sf.tweety.arg.prob.semantics;
 
 import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.semantics.AbstractArgumentationInterpretation;
@@ -6,7 +6,6 @@ import net.sf.tweety.arg.dung.semantics.ArgumentStatus;
 import net.sf.tweety.arg.dung.semantics.Extension;
 import net.sf.tweety.arg.dung.semantics.Labeling;
 import net.sf.tweety.arg.dung.syntax.Argument;
-import net.sf.tweety.arg.dung.syntax.Attack;
 import net.sf.tweety.math.probability.*;
 
 /**
@@ -45,51 +44,6 @@ public class ProbabilisticExtension extends ProbabilityFunction<Extension>{
 		for(Extension ex: this.keySet())
 			e.addAll(ex);
 		return e;
-	}
-	
-	/**
-	 * Checks whether this probabilistic extension is rational, i.e.
-	 * whether for all A->B we have that P(A)>0.5 implies P(B)<=0.5.
-	 * @param theory some Dung theory.
-	 * @return "true" iff theory is rational.
-	 */
-	public boolean isRational(DungTheory theory){
-		for(Attack att: theory.getAttacks())
-			if(this.probability(att.getAttacker()).getValue() > 0.5)
-				if(this.probability(att.getAttacked()).getValue() > 0.5)
-					return false;
-		return true;
-	}
-	
-	/**
-	 * Checks whether this probabilistic extension is coherent, i.e.
-	 * whether P(B)<= 1-P(A) for every A attacking B.
-	 * @param theory some Dung theory.
-	 * @return "true" iff theory is coherent.
-	 */
-	public boolean isCoherent(DungTheory theory){
-		for(Attack att: theory.getAttacks())
-			if(this.probability(att.getAttacker()).getValue() + this.probability(att.getAttacked()).getValue() > 1 + Probability.PRECISION)
-				return false;
-		return true;
-	}
-	
-	/** Checks whether this probabilistic extension is justifiable, i.e.
-	 * whether it is rational and P(B)>=1-P(A1)-...-P(An) for
-	 * A1,...An attacking B.
-	 * @param theory some Dung theory.
-	 * @return "true" iff theory is justifiable.
-	 */
-	public boolean isJustifiable(DungTheory theory){
-		if(!this.isCoherent(theory)) return false;
-		for(Argument argument: theory){
-			double allProbs = 0;
-			for(Argument attacker: theory.getAttackers(argument))
-				allProbs += this.probability(attacker).doubleValue();
-			if(this.probability(argument).doubleValue() < 1 - allProbs - Probability.PRECISION)
-				return false;
-		}		
-		return true;	
 	}
 	
 	/** Returns the upper cut of this probabilistic extension wrt. delta, i.e.
