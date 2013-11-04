@@ -5,7 +5,7 @@ import java.util.*;
 import net.sf.tweety.preferences.*;
 import net.sf.tweety.util.Triple;
 
-
+@SuppressWarnings("all")
 public class POParser implements POParserConstants {
 public POParser()
 {
@@ -44,8 +44,7 @@ public POParser()
     }
   }
 
-  @SuppressWarnings("unused")
-final public PreferenceOrder < String > StringPreferenceOrder() throws ParseException {
+  final public PreferenceOrder < String > StringPreferenceOrder() throws ParseException {
   Token t;
   Token t0, t1, t2;
   Set < String > singleElements = new HashSet < String > ();

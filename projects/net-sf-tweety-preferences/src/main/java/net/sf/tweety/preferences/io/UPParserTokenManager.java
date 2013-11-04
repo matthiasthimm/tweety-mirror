@@ -6,6 +6,7 @@ import net.sf.tweety.preferences.update.Update;
 import net.sf.tweety.preferences.Operation;
 
 /** Token Manager. */
+@SuppressWarnings("all")
 public class UPParserTokenManager implements UPParserConstants
 {
 

@@ -13,7 +13,8 @@ to
 e.g. (1, -2, a)  where
 -(/+) is equal to WEAKEN(/STRENGTHEN)
 and 2 is the amount
-*/public class UPParser{
+*/
+@SuppressWarnings("all")public class UPParser{
 	public UPParser()	{
 		}
 
