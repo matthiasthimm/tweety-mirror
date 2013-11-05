@@ -7,12 +7,12 @@ options {
 }
 
 PARSER_BEGIN(DungParser)
-package net.sf.tweety.argumentation.dung.parser;
+package net.sf.tweety.arg.dung.parser;
 
 import java.io.*;
 import net.sf.tweety.*;
-import net.sf.tweety.argumentation.dung.*;
-import net.sf.tweety.argumentation.dung.syntax.*;
+import net.sf.tweety.arg.dung.*;
+import net.sf.tweety.arg.dung.syntax.*;
 
 /**
   * This class implements a parser for dung argumentation theories. The BNF for dung abstract
@@ -25,6 +25,7 @@ import net.sf.tweety.argumentation.dung.syntax.*;
   * <br>
   * <br>ARGUMENT_NAME is a sequence of symbols from {a,...,z,A,...,Z,0,...,9,_,-,(,),[,],{,},~,<,>,.} with a letter at the beginning.
   */
+@SuppressWarnings("all")
 public class DungParser extends Parser {
 
 	public DungParser(){		
@@ -119,7 +120,7 @@ Attack SingleAttack() :
 	"attack(" attackerName=<ARGUMENT_NAME> "," attackedName=<ARGUMENT_NAME> ")" | "(" attackerName=<ARGUMENT_NAME> "," attackedName=<ARGUMENT_NAME> ")" 
 	{
 		Argument attacker = new Argument(attackerName.image);
-		Argument attacked = new Argument(attackerName.image);
+		Argument attacked = new Argument(attackedName.image);
 		return new Attack(attacker,attacked);
 	}
 }
@@ -133,7 +134,7 @@ void Attack(DungTheory dungTheory) :
 	"attack(" attackerName=<ARGUMENT_NAME> "," attackedName=<ARGUMENT_NAME> ")."
 	{
 		Argument attacker = new Argument(attackerName.image);
-		Argument attacked = new Argument(attackerName.image);
+		Argument attacked = new Argument(attackedName.image);
 		if(!dungTheory.contains(attacker) || !dungTheory.contains(attacked))
 			throw new ParseException("undefined argument in attack relation.");
 		dungTheory.add(new Attack(attacker,attacked));
