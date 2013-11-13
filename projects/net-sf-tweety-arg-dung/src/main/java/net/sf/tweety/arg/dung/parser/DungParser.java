@@ -7,15 +7,25 @@ import net.sf.tweety.arg.dung.*;
 import net.sf.tweety.arg.dung.syntax.*;
 
 /**
+
   * This class implements a parser for dung argumentation theories. The BNF for dung abstract
+
   * argumentation theory files is given by (start symbol is THEORY)
+
   * <br>
+
   * <br>THEORY 			::== (EXPRESSION)*
+
   * <br>EXPRESSION		::== ARGUMENT | ATTACK
+
   * <br>ARGUMENT		::== "argument(" + ARGUMENT_NAME + ")."
+
   * <br>ATTACK			::== "attack(" + ARGUMENT_NAME + "," + ARGUMENT_NAME + ")."
+
   * <br>
+
   * <br>ARGUMENT_NAME is a sequence of symbols from {a,...,z,A,...,Z,0,...,9,_,-,(,),[,],{,},~,<,>,.} with a letter at the beginning.
+
   */
 @SuppressWarnings("all")
 public class DungParser extends Parser implements DungParserConstants {
@@ -144,7 +154,7 @@ public class DungParser extends Parser implements DungParserConstants {
       attackedName = jj_consume_token(ARGUMENT_NAME);
       jj_consume_token(8);
                 Argument attacker = new Argument(attackerName.image);
-                Argument attacked = new Argument(attackerName.image);
+                Argument attacked = new Argument(attackedName.image);
                 {if (true) return new Attack(attacker,attacked);}
       break;
     default:
@@ -164,7 +174,7 @@ public class DungParser extends Parser implements DungParserConstants {
     attackedName = jj_consume_token(ARGUMENT_NAME);
     jj_consume_token(7);
                 Argument attacker = new Argument(attackerName.image);
-                Argument attacked = new Argument(attackerName.image);
+                Argument attacked = new Argument(attackedName.image);
                 if(!dungTheory.contains(attacker) || !dungTheory.contains(attacked))
                         {if (true) throw new ParseException("undefined argument in attack relation.");}
                 dungTheory.add(new Attack(attacker,attacked));
@@ -317,7 +327,7 @@ public class DungParser extends Parser implements DungParserConstants {
       return (jj_ntk = jj_nt.kind);
   }
 
-  static private java.util.List jj_expentries = new java.util.ArrayList();
+  static private java.util.List<int[]> jj_expentries = new java.util.ArrayList<int[]>();
   static private int[] jj_expentry;
   static private int jj_kind = -1;
 
@@ -347,7 +357,7 @@ public class DungParser extends Parser implements DungParserConstants {
     }
     int[][] exptokseq = new int[jj_expentries.size()][];
     for (int i = 0; i < jj_expentries.size(); i++) {
-      exptokseq[i] = (int[])jj_expentries.get(i);
+      exptokseq[i] = jj_expentries.get(i);
     }
     return new ParseException(token, exptokseq, tokenImage);
   }
