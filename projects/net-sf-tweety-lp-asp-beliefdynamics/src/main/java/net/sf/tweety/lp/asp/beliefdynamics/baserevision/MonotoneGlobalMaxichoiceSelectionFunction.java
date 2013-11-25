@@ -7,8 +7,7 @@ import net.sf.tweety.lp.asp.syntax.Rule;
 
 /**
  * This class implements a monotone global maxichoise selection function
- * for remainder sets of extended logic programs as introduced in [KKI12]. A selection
- * function is monotone if it treats 
+ * for remainder sets of extended logic programs as introduced in [KKI12].
  * 
  *  [KKI12] Krümpelmann, Patrick und Gabriele Kern-Isberner: 
  * 	Belief Base Change Operations for Answer Set Programming. 
@@ -38,7 +37,7 @@ public class MonotoneGlobalMaxichoiceSelectionFunction implements SelectionFunct
 
 	/*
 	 * (non-Javadoc)
-	 * @see net.sf.tweety.lp.asp.beliefdynamics.baserevision.SelectionFunction#select(net.sf.tweety.lp.asp.beliefdynamics.baserevision.RemainderSets)
+	 * @see net.sf.tweety.logicprogramming.asplibrary.beliefdynamics.baserevision.SelectionFunction#select(net.sf.tweety.logicprogramming.asplibrary.beliefdynamics.baserevision.RemainderSets)
 	 */
 	@Override
 	public Collection<Rule> select(RemainderSets<Rule> remainderSets) {

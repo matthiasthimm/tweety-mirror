@@ -41,7 +41,7 @@ public class ParameterisedArgumentativeSelectiveRevisionOperator extends
 		MultipleBaseRevisionOperator<Rule> {
 	
 	public enum TransformationType {
-		SCEPTICAL, NAIVE, CRITICAL;
+		SCEPTICAL, NAIVE;
 		
 		@Override
 		public String toString() {
@@ -88,9 +88,6 @@ public class ParameterisedArgumentativeSelectiveRevisionOperator extends
 		switch(transformationType) {
 			case NAIVE:
 				transformationFunction = new NaiveLiteralTransformationFunction(base, attackRelation, defenseRelation);
-				break;
-			case CRITICAL:
-				transformationFunction = new CriticalTransformationFunction(base, attackRelation, defenseRelation);
 				break;
 			case SCEPTICAL:
 			default:
