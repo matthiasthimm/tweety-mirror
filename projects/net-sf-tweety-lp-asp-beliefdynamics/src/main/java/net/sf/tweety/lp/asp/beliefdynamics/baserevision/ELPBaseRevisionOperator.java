@@ -49,8 +49,7 @@ public class ELPBaseRevisionOperator extends MultipleBaseRevisionOperator<Rule> 
 		try {
 			result = consolidationOperator.consolidate(union);
 		} catch (SolverException e) {
-			e.printStackTrace();
-			return null;
+			throw new RuntimeException(e);
 		}
 		return result;
 	}

@@ -92,7 +92,7 @@ public class AspInterface
     	if(reval == -1073741515)
     		this.errorData.add("process did not exit normally: a dll is missing. - To determine which dll try to start '" + cmd.get(0) + "' from the command line and read the error message.");
     	else
-    		this.errorData.add("prcoess did not exit normally: " + reval);
+    		this.errorData.add("process did not exit normally: " + reval);
     }
     
   }

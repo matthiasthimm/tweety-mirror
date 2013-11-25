@@ -61,8 +61,7 @@ public class ScreenedMaxichoiceConsolidation implements ConsolidationOperator<Ru
 			try {
 				return consolidate((Program) p);
 			} catch (SolverException e) {
-				e.printStackTrace();
-				return null;
+				throw new RuntimeException(e);
 			}
 		}
 		Program program = new Program();

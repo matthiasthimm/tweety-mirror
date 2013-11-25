@@ -10,7 +10,6 @@ import java.util.Collection;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
@@ -18,6 +17,7 @@ import javax.swing.filechooser.FileFilter;
 import net.sf.tweety.beliefdynamics.BaseRevisionOperator;
 import net.sf.tweety.lp.asp.parser.ParseException;
 import net.sf.tweety.lp.asp.syntax.Rule;
+//import javax.swing.JOptionPane;
 
 /**
  * This class couples the SimpleRevisionCompare View and Model, it needs to know the implementation used to
@@ -102,13 +102,13 @@ public class SimpleRevisionComparePresenter implements ItemListener, ChangeListe
 			for(File chosenFile : chosenFiles) {
 				Reader beliefBase = fileHandler.load(chosenFile);
 				if(beliefBase == null) {
-					JOptionPane.showMessageDialog(view, "Cannot load '" + chosenFile.getPath() + "' using the file handler: '"
-							+ fileHandler.getClass().getName() + "'.");
+//					JOptionPane.showMessageDialog(view, "Cannot load '" + chosenFile.getPath() + "' using the file handler: '"
+//							+ fileHandler.getClass().getName() + "'.");
 				} else {
 					try {
 						model.setBeliefbase(beliefBase);
 					} catch (ParseException e) {
-						JOptionPane.showMessageDialog(view, "Parser Error", "Parser Error", JOptionPane.ERROR_MESSAGE);
+//						JOptionPane.showMessageDialog(view, "Parser Error", "Parser Error", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			}
@@ -124,13 +124,13 @@ public class SimpleRevisionComparePresenter implements ItemListener, ChangeListe
 			for(File choosenFile : choosenFiles) {
 				Reader beliefBase = fileHandler.load(choosenFile);
 				if(beliefBase == null) {
-					JOptionPane.showMessageDialog(view, "Cannot load '" + choosenFile.getPath() + "' using the file handler: '"
-							+ fileHandler.getClass().getName() + "'.");
+//					JOptionPane.showMessageDialog(view, "Cannot load '" + choosenFile.getPath() + "' using the file handler: '"
+//							+ fileHandler.getClass().getName() + "'.");
 				} else {
 					try {
 						model.setNewBeliefs(beliefBase);
 					} catch (ParseException e) {
-						JOptionPane.showMessageDialog(view, "Parser Error", "Parser Error", JOptionPane.ERROR_MESSAGE);
+//						JOptionPane.showMessageDialog(view, "Parser Error", "Parser Error", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			}
@@ -138,7 +138,7 @@ public class SimpleRevisionComparePresenter implements ItemListener, ChangeListe
 			try {
 				model.setBeliefbase(view.txtBeliefBase.getText());
 			} catch (ParseException e) {
-				JOptionPane.showMessageDialog(view, "Parser Error", "Parser Error", JOptionPane.ERROR_MESSAGE);
+//				JOptionPane.showMessageDialog(view, "Parser Error", "Parser Error", JOptionPane.ERROR_MESSAGE);
 				e.printStackTrace();
 				return;
 			}
@@ -146,7 +146,7 @@ public class SimpleRevisionComparePresenter implements ItemListener, ChangeListe
 				String bel = view.txtNewBeliefs.getText();
 				model.setNewBeliefs(bel);
 			} catch (ParseException e) {
-				JOptionPane.showMessageDialog(view, "Parser Error", "Parser Error", JOptionPane.ERROR_MESSAGE);
+//				JOptionPane.showMessageDialog(view, "Parser Error", "Parser Error", JOptionPane.ERROR_MESSAGE);
 				e.printStackTrace();
 				return;
 			}
@@ -154,6 +154,7 @@ public class SimpleRevisionComparePresenter implements ItemListener, ChangeListe
 			model.setRightOperator((BaseRevisionOperator<?>) view.cbOperatorRight.getSelectedItem());
 			
 			model.runRevisions();
+
 			model.calculateResultingAnswersets();
 		}
 	}
