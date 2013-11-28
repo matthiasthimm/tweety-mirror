@@ -18,10 +18,10 @@ import net.sf.tweety.lp.asp.beliefdynamics.baserevision.SelectionFunction;
  *  from [1] for the inner revision and the sceptical argumentative transformation 
  *  function from [2]. The selective revision operator is parameterised by two
  *  notions of attack used by the argumentation framework utilised by the transformation
- *  function. In [2] it is shown that there are exactly 4 classes
- *  of distinct plausible instantiations of this operator: a/a, d/d, sa/sa and sa/a,
- *  where "a" stands for Attack, "d" for Defeat, and "sa" for Strong Attack.
- *  For further information see the parameterisedhierarchy tweety project and [2]. 
+ *  function. In [2] it is shown that there are at least 5 classes
+ *  of distinct plausible instantiations of this operator: a/a, d/d, sa/sa, sa/a, and ca/ca
+ *  where "a" stands for Attack, "d" for Defeat, "sa" for Strong Attack and "ca" for Confident
+ *  Attack. For further details see the parameterisedhierarchy tweety project and [2]. 
  * 
  * [1] Krümpelmann, Patrick und Gabriele Kern-Isberner: 
  * 	Belief Base Change Operations for Answer Set Programming. 
@@ -32,7 +32,7 @@ import net.sf.tweety.lp.asp.beliefdynamics.baserevision.SelectionFunction;
  * 
  * [2] Homann, Sebastian:
  *  Master thesis: Argumentationsbasierte selektive Revision von erweiterten logischen
- *  Programmen. t.a.
+ *  Programmen. 2013
  * 
  * @author Sebastian Homann
  *
