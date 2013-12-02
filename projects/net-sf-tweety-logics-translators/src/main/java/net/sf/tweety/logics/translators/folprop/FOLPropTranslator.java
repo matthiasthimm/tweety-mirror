@@ -7,7 +7,12 @@ import net.sf.tweety.logics.translators.Translator;
 import net.sf.tweety.logics.fol.syntax.Conjunction;
 import net.sf.tweety.logics.fol.syntax.Disjunction;
 import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
+import net.sf.tweety.logics.pl.syntax.Contradiction;
+import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.Proposition;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.Tautology;
 import net.sf.tweety.util.Pair;
 
 /**
@@ -78,6 +83,57 @@ public class FOLPropTranslator extends Translator {
 	public net.sf.tweety.logics.pl.syntax.Conjunction toPropositional(Conjunction conjunction) {
 		return (net.sf.tweety.logics.pl.syntax.Conjunction)
 				this.translateAssociative(conjunction, net.sf.tweety.logics.pl.syntax.Conjunction.class);
+	}
+	
+	public FolFormula toFOL(PropositionalFormula propFormula) {
+		if(propFormula instanceof Tautology) {
+			return new net.sf.tweety.logics.fol.syntax.Tautology();
+		}
+		if(propFormula instanceof Contradiction) {
+			return new net.sf.tweety.logics.fol.syntax.Contradiction();
+		}
+		if(propFormula instanceof Negation) {
+			Negation neg = (Negation) propFormula;
+			return new net.sf.tweety.logics.fol.syntax.Negation(toFOL(neg.getFormula()));
+		}
+		if(propFormula instanceof Proposition) {
+			Proposition prop = (Proposition) propFormula;
+			return toFOL(prop);
+		}
+		if(propFormula instanceof net.sf.tweety.logics.pl.syntax.Conjunction) {
+			net.sf.tweety.logics.pl.syntax.Conjunction conj = (net.sf.tweety.logics.pl.syntax.Conjunction) propFormula;
+			return toFOL(conj);
+		}
+		if(propFormula instanceof net.sf.tweety.logics.pl.syntax.Disjunction) {
+			net.sf.tweety.logics.pl.syntax.Disjunction disj = (net.sf.tweety.logics.pl.syntax.Disjunction) propFormula;
+			return toFOL(disj);
+		}
+		return null;
+	}
+	
+	public PropositionalFormula toPropositional(FolFormula folFormula) {
+		if(folFormula instanceof net.sf.tweety.logics.fol.syntax.Contradiction) {
+			return new Contradiction();
+		}
+		if(folFormula instanceof net.sf.tweety.logics.fol.syntax.Tautology) {
+			return new Tautology();
+		}
+		if(folFormula instanceof net.sf.tweety.logics.fol.syntax.Negation) {
+			net.sf.tweety.logics.fol.syntax.Negation neg = (net.sf.tweety.logics.fol.syntax.Negation) folFormula;
+			return new Negation(toPropositional(neg.getFormula()));
+		}
+		if(folFormula instanceof FOLAtom) {
+			return toPropositional(((FOLAtom) folFormula));
+		}
+		if(folFormula instanceof Conjunction) {
+			Conjunction conj = (Conjunction) folFormula;
+			return toPropositional(conj);
+		}
+		if(folFormula instanceof Disjunction) {
+			Disjunction disj = (Disjunction) folFormula;
+			return toPropositional(disj);
+		}
+		return null;
 	}
 	
 	@Override
