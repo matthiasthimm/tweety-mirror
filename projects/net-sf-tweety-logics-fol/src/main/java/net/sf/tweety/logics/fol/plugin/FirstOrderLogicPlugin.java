@@ -33,7 +33,7 @@ public class FirstOrderLogicPlugin extends AbstractTweetyPlugin {
 	
 	// the static identifier for this plugin
 	private static final String FOLOGIC__CALL_PARAMETER = "firstorderlogic";
-	
+		
 //	private static final String FOL__PLUGIN_DESCRIPTION = "";
 	
 	// reasoner enum command parameter
@@ -114,7 +114,7 @@ public class FirstOrderLogicPlugin extends AbstractTweetyPlugin {
 			// if parameter identifier is for a solver
 			if(tempComParam.getIdentifier().equals("-reasoner")){
 				SelectionCommandParameter tmp = (SelectionCommandParameter) tempComParam;
-				if(tmp.getValue().equalsIgnoreCase("classical")){
+				if(tmp.getValue().equalsIgnoreCase("classic")){
 					reasoner = new ClassicalInference(folbs);
 				}
 			} 
