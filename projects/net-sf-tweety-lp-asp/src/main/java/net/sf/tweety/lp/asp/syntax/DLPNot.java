@@ -43,13 +43,28 @@ public class DLPNot extends DLPElementAdapter implements DLPElement {
 	}
 	
 	@Override
-	public boolean equals(Object o) {
-		if (o instanceof DLPNot) {
-			DLPNot on = (DLPNot) o;
-			return on.lit.equals(this.lit);
-		} else {
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((lit == null) ? 0 : lit.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
 			return false;
-		}
+		if (getClass() != obj.getClass())
+			return false;
+		DLPNot other = (DLPNot) obj;
+		if (lit == null) {
+			if (other.lit != null)
+				return false;
+		} else if (!lit.equals(other.lit))
+			return false;
+		return true;
 	}
 
 	@Override
