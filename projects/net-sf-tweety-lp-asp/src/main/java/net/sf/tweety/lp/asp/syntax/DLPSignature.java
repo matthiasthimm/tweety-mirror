@@ -60,13 +60,34 @@ public class DLPSignature extends Signature {
 
 	@Override
 	public int hashCode() {
-		// TODO Auto-generated method stub
-		return 0;
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((constants == null) ? 0 : constants.hashCode());
+		result = prime * result
+				+ ((predicates == null) ? 0 : predicates.hashCode());
+		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		// TODO Auto-generated method stub
-		return false;
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DLPSignature other = (DLPSignature) obj;
+		if (constants == null) {
+			if (other.constants != null)
+				return false;
+		} else if (!constants.equals(other.constants))
+			return false;
+		if (predicates == null) {
+			if (other.predicates != null)
+				return false;
+		} else if (!predicates.equals(other.predicates))
+			return false;
+		return true;
 	}
 }

@@ -25,6 +25,9 @@ import net.sf.tweety.lp.asp.util.AnswerSet;
 import net.sf.tweety.lp.asp.util.AnswerSetList;
 import net.sf.tweety.util.Pair;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * The implementation orients on the diploma thesis of Mirja Böhmer
@@ -43,6 +46,9 @@ import net.sf.tweety.util.Pair;
  * @author Tim Janus
  **/
 public class PreferenceHandling extends CredibilityRevisionIterative<Rule> {
+	
+	/** reference to the logback logger instance */
+	private Logger LOG = LoggerFactory.getLogger(PreferenceHandling.class);
 	
 	private int maxInt;
 	
@@ -82,7 +88,7 @@ public class PreferenceHandling extends CredibilityRevisionIterative<Rule> {
 		Program combined = new Program();
 		Program concat = new Program();
 		
-		// Defaultication of given programs.
+		// Defaultification of given programs.
 		Program pd1 = Program.defaultification(p1);
 		Program pd2 = Program.defaultification(p2);
 		
@@ -108,14 +114,14 @@ public class PreferenceHandling extends CredibilityRevisionIterative<Rule> {
 			conflicts.add(new Pair<Rule, Rule>(pr1.get(index1), pr2.get(index2)));
 		}
 		
-		// get answerset of combined defaultificated programs.
+		// get answer sets of combined defaultificated programs.
 		concat.add(pd1);
 		concat.add(pd2);
 		AnswerSetList asDefault;
 		try {
 			asDefault = solver.computeModels(concat, maxInt);
 		} catch (SolverException e) {
-			// TODO Auto-generated catch block
+			LOG.error("Cannot solve combined program:\n{}", concat.toString());
 			e.printStackTrace();
 			return null;
 		}
@@ -128,8 +134,8 @@ public class PreferenceHandling extends CredibilityRevisionIterative<Rule> {
 		
 		// proof which rules can be removed from concat:
 		// Let the rule R be the higher prioritized Rule in a conflict pair.
-		// First test if the body of R is in the answerset but the head is not in the answerset.
-		// If this is true mark the lower priorizied rule for remove.
+		// First test if the body of R is in the answer set but the head is not in the answer set.
+		// If this is true mark the lower prioritized rule for remove.
 		Set<Rule> toRemoveCollection = new HashSet<Rule>();
 		for(Pair<Rule, Rule> conflict : conflicts) {
 			for(AnswerSet as : asDefault) {

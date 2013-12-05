@@ -2,6 +2,7 @@ package net.sf.tweety.lp.asp.solver;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.Arrays;
 import java.util.List;
 
 import net.sf.tweety.lp.asp.parser.ASPParser;
@@ -124,7 +125,7 @@ public class DLVComplex extends SolverBase {
 		} catch (Exception e) {
 			System.err.println("dlvcomplex::parseAnswerSet error");
 			System.err.println(e);
-			System.err.println(e.getStackTrace());
+			System.err.println(Arrays.toString(e.getStackTrace()));
 		}
 		
 		return ret;
