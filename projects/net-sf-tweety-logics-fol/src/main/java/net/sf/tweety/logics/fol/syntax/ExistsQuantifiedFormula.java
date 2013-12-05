@@ -69,7 +69,7 @@ public class ExistsQuantifiedFormula extends QuantifiedFormula {
 			s += it.next();
 		while(it.hasNext())
 			s += "," + it.next();
-		s += ":" + this.getFormula();
+		s += ": (" + this.getFormula() + ")";
 		return s;
 	}
 
