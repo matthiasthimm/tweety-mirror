@@ -89,7 +89,7 @@ public class FirstOrderLogicPlugin extends AbstractTweetyPlugin {
 		
 		FolBeliefSet folbs = new FolBeliefSet();
 		
-		FolParserB parser;
+		FolParser parser = new FolParser();
 		
 		ClassicalInference reasoner = null;
 		
@@ -100,11 +100,14 @@ public class FirstOrderLogicPlugin extends AbstractTweetyPlugin {
 			if(input[i].getAbsolutePath().endsWith(".fologic")) {
 				try {
 					FileReader fr = new FileReader(input[i].getAbsolutePath());
-					parser = new FolParserB(fr);
-					folbs = parser.KB();
+					folbs = parser.parseBeliefBase(fr);
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
-				} catch (ParseException e) {
+				} catch (ParserException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -124,14 +127,11 @@ public class FirstOrderLogicPlugin extends AbstractTweetyPlugin {
 				StringListCommandParameter tmp = (StringListCommandParameter) tempComParam;
 				// re-initialize queries with correct length
 				queries = new FolFormula[tmp.getValue().length];
-				// new parser for formulae
-				FolParser p = new FolParser();
 				// parse in all queries
 				for(int i = 0; i<tmp.getValue().length; i++){
 					try {
-						queries[i] = (FolFormula) p.parseFormula(tmp.getValue()[i]);
+						queries[i] = (FolFormula) parser.parseFormula(tmp.getValue()[i]);
 						
-					
 					} catch (ParserException e) {
 						
 						e.printStackTrace();
