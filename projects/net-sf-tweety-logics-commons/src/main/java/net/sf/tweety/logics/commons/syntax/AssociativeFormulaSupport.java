@@ -375,17 +375,17 @@ public class AssociativeFormulaSupport<T extends SimpleLogicalFormula>
 
 	@Override
 	public T remove(int index) {
-		return this.remove(index);
+		return this.formulas.remove(index);
 	}
 
 	@Override
 	public T set(int index, T element) {
-		return this.set(index, element);
+		return this.formulas.set(index, element);
 	}
 
 	@Override
 	public List<T> subList(int fromIndex, int toIndex) {
-		return this.subList(fromIndex, toIndex);
+		return this.formulas.subList(fromIndex, toIndex);
 	}
 	
 	//-------------------------------------------------------------------------

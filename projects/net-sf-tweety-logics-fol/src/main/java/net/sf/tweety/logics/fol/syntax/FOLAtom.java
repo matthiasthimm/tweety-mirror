@@ -275,7 +275,7 @@ public class FOLAtom extends FolFormula implements Atom {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;		
-		if (getClass() != obj.getClass())
+		if (obj == null || getClass() != obj.getClass())
 			return false;
 		FOLAtom other = (FOLAtom) obj;
 		if(!other.isWellFormed()) throw new IllegalArgumentException("FolFormula not well-formed.");

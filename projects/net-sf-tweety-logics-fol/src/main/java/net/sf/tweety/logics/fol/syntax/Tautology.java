@@ -37,7 +37,7 @@ public class Tautology extends SpecialFormula {
 	public boolean equals(Object obj){
 		if (this == obj)
 			return true;		
-		if (getClass() != obj.getClass())
+		if (obj == null || getClass() != obj.getClass())
 			return false;		
 		return true;
 	}
