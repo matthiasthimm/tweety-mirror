@@ -131,13 +131,21 @@ public class DefaultGraph<T extends Node> implements Graph<T>{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.graphs.Graph#areAdjacent(net.sf.tweety.graphs.Node, net.sf.tweety.graphs.Node)
 	 */
-	public boolean areAdjacent(T a, T b){
+	public boolean areAdjacent(T a, T b){		
+		return this.getEdge(a, b) != null;
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.graphs.Graph#getEdge(net.sf.tweety.graphs.Node, net.sf.tweety.graphs.Node)
+	 */
+	@Override
+	public Edge<T> getEdge(T a, T b) {
 		for(Edge<T> edge: this.edges){
 			if(edge.getNodeA().equals(a) || (edge instanceof UndirectedEdge && edge.getNodeB().equals(a)))
 				if(edge.getNodeB().equals(b) || (edge instanceof UndirectedEdge && edge.getNodeA().equals(b)))
-					return true;
+					return edge;
 		}
-		return false;
+		return null;
 	}
 	
 	/* (non-Javadoc)
@@ -216,5 +224,16 @@ public class DefaultGraph<T extends Node> implements Graph<T>{
 			if(this.areAdjacent(node1, node1))
 				return true;
 		return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.graphs.Graph#isWeightedGraph()
+	 */
+	@Override
+	public boolean isWeightedGraph() {
+		for(Edge<T> e: this.edges)
+			if(!(e instanceof WeightedEdge))
+				return false;
+		return true;
 	}
 }

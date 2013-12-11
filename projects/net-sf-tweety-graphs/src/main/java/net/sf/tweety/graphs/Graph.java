@@ -59,6 +59,15 @@ public interface Graph<T extends Node> extends Iterable<T>{
 	 * from a to b or an undirected edge.
 	 */
 	public boolean areAdjacent(T a, T b);
+
+	/**
+	 * Returns the corresponding edge (a,b) if a and b are adjacent.
+	 * Otherwise it returns null.
+	 * @param a some node
+	 * @param b some node
+	 * @return the edge (a,b) or null.
+	 */
+	public Edge<T> getEdge(T a, T b);
 	
 	/**
 	 * Returns the edges of this graph.
@@ -137,6 +146,12 @@ public interface Graph<T extends Node> extends Iterable<T>{
 	 * @return  "true" iff the graph has a self loop (an edge from a node to itself).
 	 */
 	public boolean hasSelfLoops();
+	
+	/**
+	 * Checks whether this graph only contains weighted edges.
+	 * @return "true" if all edges are weighted in this graph.
+	 */
+	public boolean isWeightedGraph();
 	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
