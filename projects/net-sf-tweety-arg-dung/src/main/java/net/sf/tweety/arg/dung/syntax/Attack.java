@@ -3,6 +3,7 @@ package net.sf.tweety.arg.dung.syntax;
 import java.util.*;
 
 import net.sf.tweety.*;
+import net.sf.tweety.graphs.DirectedEdge;
 
 /**
  * This class models an attack between two arguments. It comprises of two attributes of <source>Argument</source> and is mainly used by
@@ -11,12 +12,7 @@ import net.sf.tweety.*;
  * @author Matthias Thimm
  *
  */
-public class Attack implements Formula {
-	/**
-	 * The two arguments that stand in the attack-relation
-	 */
-	private Argument attacker;
-	private Argument attacked;
+public class Attack extends DirectedEdge<Argument> implements Formula {
 
 	/**
 	 * Default constructor; initializes the two arguments used in this attack relation
@@ -24,8 +20,7 @@ public class Attack implements Formula {
 	 * @param attacked the attacked argument
 	 */
 	public Attack(Argument attacker, Argument attacked){
-		this.attacker = attacker;
-		this.attacked = attacked;
+		super(attacker,attacked);
 	}
 
 	/**
@@ -37,11 +32,11 @@ public class Attack implements Formula {
 		Iterator<? extends Argument> it = arguments.iterator();
 		while(it.hasNext()){
 			Argument arg = (Argument) it.next();
-			if(arg.equals(attacker)){
+			if(arg.equals(this.getAttacker())){
 				Iterator<? extends Argument> it2 = arguments.iterator();
 				while(it2.hasNext()){
 					Argument arg2 = (Argument) it2.next();
-					if(arg2.equals(attacked))
+					if(arg2.equals(this.getAttacked()))
 						return false;
 				}
 			}
@@ -54,15 +49,7 @@ public class Attack implements Formula {
 	 * @return the attacked argument of this attack relation.
 	 */
 	public Argument getAttacked() {
-		return attacked;
-	}
-
-	/**
-	 * sets the attacked argument of this attack relation.
-	 * @param attacked the attacked argument of this attack relation.
-	 */
-	public void setAttacked(Argument attacked) {
-		this.attacked = attacked;
+		return this.getNodeA();
 	}
 
 	/**
@@ -70,16 +57,9 @@ public class Attack implements Formula {
 	 * @return the attacking argument of this attack relation.
 	 */
 	public Argument getAttacker() {
-		return attacker;
+		return this.getNodeB();
 	}
 
-	/**
-	 * sets the attacking argument of this attack relation.
-	 * @param attacker the attacking argument of this attack relation.
-	 */
-	public void setAttacker(Argument attacker) {
-		this.attacker = attacker;
-	}
 	
 	/**
 	 * Return true if the given argument is in this attack relation.
@@ -87,7 +67,7 @@ public class Attack implements Formula {
 	 * @return true if the given argument is in this attack relation.
 	 */
 	public boolean contains(Argument argument){
-		return this.attacked.equals(argument) || this.attacker.equals(argument);
+		return this.getAttacked().equals(argument) || this.getAttacker().equals(argument);
 	}
 
 	
@@ -96,8 +76,8 @@ public class Attack implements Formula {
 	 */
 	public Signature getSignature(){
 		DungSignature sig = new DungSignature();
-		sig.add(attacked);
-		sig.add(attacker);
+		sig.add(this.getAttacked());
+		sig.add(this.getAttacker());
 		return sig;
 	}
 
@@ -105,7 +85,7 @@ public class Attack implements Formula {
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString(){
-		return "("+attacker.toString()+","+attacked.toString()+")";
+		return "("+this.getAttacker().toString()+","+this.getAttacked().toString()+")";
 	}
 
 	/* (non-Javadoc)
@@ -113,8 +93,8 @@ public class Attack implements Formula {
 	 */
 	public boolean equals(Object o){
 		if(!o.getClass().equals(this.getClass())) return false;
-		if(!attacker.equals(((Attack)o).getAttacker())) return false;
-		if(!attacked.equals(((Attack)o).getAttacked())) return false;
+		if(!this.getAttacker().equals(((Attack)o).getAttacker())) return false;
+		if(!this.getAttacked().equals(((Attack)o).getAttacked())) return false;
 		return true;
 	}
 	
@@ -122,7 +102,7 @@ public class Attack implements Formula {
 	 * @see java.lang.Object#hashCode()
 	 */
 	public int hashCode(){
-		return this.attacked.hashCode() + 7 * this.attacker.hashCode();
+		return this.getAttacked().hashCode() + 7 * this.getAttacker().hashCode();
 	}
 
 }

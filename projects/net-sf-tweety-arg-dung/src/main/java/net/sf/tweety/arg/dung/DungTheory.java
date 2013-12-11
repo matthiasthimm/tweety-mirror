@@ -534,4 +534,22 @@ public class DungTheory extends BeliefSet<Argument> implements Graph<Argument> {
 				return true;
 		return false;
 	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.graphs.Graph#getEdge(net.sf.tweety.graphs.Node, net.sf.tweety.graphs.Node)
+	 */
+	@Override
+	public Edge<Argument> getEdge(Argument a, Argument b) {
+		if(this.isAttackedBy(b, a))
+			return new Attack(a, b);
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.graphs.Graph#isWeightedGraph()
+	 */
+	@Override
+	public boolean isWeightedGraph() {
+		return false;
+	}
 }
