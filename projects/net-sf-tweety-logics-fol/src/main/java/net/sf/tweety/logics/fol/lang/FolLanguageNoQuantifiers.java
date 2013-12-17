@@ -11,7 +11,7 @@ public class FolLanguageNoQuantifiers extends FolLanguage{
 	
 	/**
 	 * Creates a new language on the given signature.
-	 * @param folSignature a signature.
+	 * @param signature a signature.
 	 */
 	public FolLanguageNoQuantifiers(Signature signature){
 		super(signature);

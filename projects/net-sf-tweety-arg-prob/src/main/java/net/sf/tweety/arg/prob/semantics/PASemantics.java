@@ -28,7 +28,7 @@ public interface PASemantics {
 	 * Returns the mathematical statement corresponding to the satisfaction
 	 * of the given theory wrt. this semantics.
 	 * @param theory an argumentation theory.
-	 * @param a map mapping the (probabilities of the) extensions to mathematical variables (for constructing the statement).
+	 * @param worlds2vars a map mapping the (probabilities of the) extensions to mathematical variables (for constructing the statement).
 	 * @return the mathematical statement corresponding to the satisfaction
 	 * of the given theory wrt. this semantics.
 	 */

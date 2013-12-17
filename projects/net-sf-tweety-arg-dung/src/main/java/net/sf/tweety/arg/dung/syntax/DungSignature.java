@@ -22,7 +22,7 @@ public class DungSignature extends SetSignature<Argument>{
 
 	/**
 	 * Creates a new signature with the single given argument.
-	 * @param arguments an argument.
+	 * @param argument an argument.
 	 */
 	public DungSignature(Argument argument){
 		super(argument);

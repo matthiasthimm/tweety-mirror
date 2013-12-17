@@ -21,7 +21,6 @@ public class AccessibilityRelation {
 	
 	/**
 	 * TODO
-	 * @return
 	 */
 	public Set<Interpretation> getNodes(){
 		Set<Interpretation> interpretations = new HashSet<Interpretation>();
@@ -35,7 +34,6 @@ public class AccessibilityRelation {
 	/**
 	 * TODO
 	 * @param i
-	 * @return
 	 */
 	public Set<Interpretation> getSuccessors(Interpretation i){
 		Set<Interpretation> successors = new HashSet<Interpretation>();

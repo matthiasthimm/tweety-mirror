@@ -12,7 +12,7 @@ public class FolLanguageNoFunctionsOnlyBeginForall extends FolLanguageNoFunction
 	
 	/**
 	 * Creates a new language on the given signature.
-	 * @param folSignature a signature.
+	 * @param signature a signature.
 	 */
 	public FolLanguageNoFunctionsOnlyBeginForall(Signature signature){
 		super(signature);

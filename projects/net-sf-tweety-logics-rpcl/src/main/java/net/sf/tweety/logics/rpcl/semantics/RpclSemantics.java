@@ -31,7 +31,7 @@ public interface RpclSemantics {
 	 * of the given conditional wrt. this semantics and the given signature.
 	 * @param r a relational probabilistic conditional
 	 * @param signature a fol signature
-	 * @param a map mapping the interpretations of the fol to mathematical variables.
+	 * @param worlds2vars a map mapping the interpretations of the fol to mathematical variables.
 	 * @return the mathematical statement corresponding to the satisfaction
 	 * of the given conditional wrt. this semantics and the given signature.
 	 */

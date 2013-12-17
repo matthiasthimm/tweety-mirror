@@ -29,7 +29,6 @@ public abstract class ClassificationTester<S extends Observation, T extends Cate
 	 * observations. 
 	 * @param classifier some classifier.
 	 * @param trainingSet some training set.
-	 * @return
 	 */
 	public double test(Classifier classifier, TrainingSet<S,T> trainingSet){
 		int correctPredictions = 0;

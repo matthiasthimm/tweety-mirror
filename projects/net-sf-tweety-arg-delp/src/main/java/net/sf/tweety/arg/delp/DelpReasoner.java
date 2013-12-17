@@ -60,7 +60,6 @@ public class DelpReasoner extends Reasoner {
 	
 	/**
 	 * Computes the subset of the arguments of this program, that are warrants.
-	 * @param delp a grounded delp.
 	 * @return a set of <source>DelpArgument</source>
 	 */
 	public Set<DelpArgument> getWarrants(){

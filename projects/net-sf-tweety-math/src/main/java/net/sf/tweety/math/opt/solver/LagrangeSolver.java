@@ -33,7 +33,7 @@ public class LagrangeSolver extends Solver {
 	 * Creates a new Lagrange solver for the given 
 	 * optimization problem
 	 * @param problem an optimization problem
-	 * @param The starting point for finding the optimum.
+	 * @param startingPoint The starting point for finding the optimum.
 	 */
 	public LagrangeSolver(OptimizationProblem problem, Map<Variable,Term> startingPoint){
 		super(problem);
@@ -48,7 +48,7 @@ public class LagrangeSolver extends Solver {
 	 * Creates a new Lagrange solver for the given 
 	 * optimization problem
 	 * @param problem an optimization problem
-	 * @param Some starting points for finding the optimum.
+	 * @param startingPoints Some starting points for finding the optimum.
 	 */
 	public LagrangeSolver(OptimizationProblem problem, Set<Map<Variable,Term>> startingPoints){
 		super(problem);

@@ -179,7 +179,6 @@ public class RelationalBruteForceCReasoner extends Reasoner {
 	 * for every possible world w set<br>
 	 * k(w)=k0 + \sum_{w verifies ri} ki+ + \sum_{w falsifies ri} kj-
 	 * @param kappa
-	 * @return
 	 */
 	private RelationalRankingFunction constructRankingFunction(Integer[] kappa){
 		RelationalRankingFunction candidate = new RelationalRankingFunction(this.signature);

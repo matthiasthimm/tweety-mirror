@@ -35,7 +35,6 @@ public class ArgumentationKnowledgeBase extends BeliefSet<Argument> {
 	
 	/**
 	 * Returns all minimal arguments constructible from the extended logic program 
-	 * @return
 	 */
 	public Set<Argument> getArguments() {
 		Set<Argument> result = new HashSet<Argument>();
@@ -84,7 +83,6 @@ public class ArgumentationKnowledgeBase extends BeliefSet<Argument> {
 	 * Returns the set of non-default-negated literals that are part of the premise
 	 * of some rule but not the conclusion of some other rule
 	 * @param rules a set of rules
-	 * @return
 	 */
 	private Set<DLPLiteral> getOpenLiterals(Collection<Rule> rules) {
 		Set<DLPLiteral> result = new HashSet<DLPLiteral>();
@@ -128,11 +126,10 @@ public class ArgumentationKnowledgeBase extends BeliefSet<Argument> {
 	}
 	
 	/**
-	 * True iff each non-default-negated literal in the premise
+	 * Returns true iff each non-default-negated literal in the premise
 	 * of rule is contained in the set of literals
 	 * @param rule an elp rule
 	 * @param literals a set of literals
-	 * @return 
 	 */
 	private boolean isTrue(Rule rule, Set<DLPLiteral> literals) {
 		for(DLPElement element : rule.getPremise()) {

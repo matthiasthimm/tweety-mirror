@@ -48,7 +48,7 @@ public class DefaultMeReasoner extends Reasoner {
 	/**
 	 * Creates a new default ME-reasoner for the given knowledge base.
 	 * @param beliefBase a pcl belief set. 
-	 * @param name another signature (if the probability distribution should be defined 
+	 * @param signature another signature (if the probability distribution should be defined 
 	 * on that one (that one should subsume the signature of the belief base)
 	 */
 	public DefaultMeReasoner(BeliefBase beliefBase, Signature signature){

@@ -22,7 +22,7 @@ public class SingleValeWeightVector implements WeightVector {
 	
 	/**
 	 * returns the weight of the element
-	 * @ return 1 if element is least ranked, 0 otherwise
+	 * @return 1 if element is least ranked, 0 otherwise
 	 */
 	@Override
 	public int getWeight(int n) {

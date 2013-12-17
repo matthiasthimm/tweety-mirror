@@ -64,7 +64,7 @@ public class FunctionalTerm extends TermAdapter<Pair<Functor, List<Term<?>>>> {
 	/**
 	 * Appends the given argument to this term's
 	 * arguments and returns itself.
-	 * @param arg an argument to be added
+	 * @param term an argument to be added
 	 * @return the term itself.
 	 * @throws IllegalArgumentException if the given term does not correspond
 	 *   to the expected sort or the argument list is complete.

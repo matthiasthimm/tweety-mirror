@@ -111,7 +111,6 @@ public abstract class Translator {
 	 * thats type is given by the parameter assocCls
 	 * @param source	The 
 	 * @param assocCls
-	 * @return
 	 */
 	public <A extends AssociativeFormula<? extends SimpleLogicalFormula>> 
 		AssociativeFormula<?> translateAssociative(A source, Class<?> assocCls) {

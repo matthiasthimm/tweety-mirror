@@ -42,7 +42,7 @@ public abstract class QuantifiedFormula extends FolFormula {
 	/**
 	 * Creates a new quantified folFormula with the given folFormula and variable.
 	 * @param folFormula the folFormula this quantified folFormula ranges over.
-	 * @param quantifier_variables the variable of this quantified folFormula.
+	 * @param variable the variable of this quantified folFormula.
 	 */
 	public QuantifiedFormula(FolFormula folFormula, Variable variable){
 		Set<Variable> variables = new HashSet<Variable>();

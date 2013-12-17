@@ -45,7 +45,7 @@ public class ProbabilityFunction<T extends Comparable<T>> implements Map<T,Proba
 		
 		/**
 		 * Gets the probability of the given object.
-		 * @param w some object.
+		 * @param objects some object.
 		 * @return the probability of the given object.
 		 */
 		public Probability probability(Collection<? extends T> objects) throws IllegalArgumentException{
@@ -166,8 +166,7 @@ public class ProbabilityFunction<T extends Comparable<T>> implements Map<T,Proba
 		/**
 		 * Returns the uniform distribution on the given interpretations.
 		 * @param <S> The interpretation class
-		 * @param interpretations some interpretations.
-		 * @param sig a signature
+		 * @param objects set of interpretations of type S.
 		 * @return the uniform distribution on the given interpretations.
 		 */
 		public static <S extends Comparable<S>> ProbabilityFunction<S> getUniformDistribution(Set<S> objects){

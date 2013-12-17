@@ -35,6 +35,11 @@
             </configuration>
           </execution>
         </executions>
+        <configuration>
+          <archiverConfig>
+  		    <duplicateBehavior>skip</duplicateBehavior>
+		  </archiverConfig>
+        </configuration>
       </plugin>
     </plugins>
   </build>

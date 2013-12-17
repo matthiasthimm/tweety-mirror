@@ -19,8 +19,7 @@ public abstract interface BinaryRelation<T> extends Set<Triple<T, T, Relation>> 
 	
 	/**
 	 * adds a new triple containing two elements and its relation 
-	 * @param e 
-	 * @param relation the relation between those two elements (LESS or LESS_EQUAL)
+	 * @param t the relation between those two elements (LESS or LESS_EQUAL)
 	 * @return true if successful, false if not (e.g.: relation already exists)
 	 */
 	public abstract boolean add(Triple<T, T, Relation> t);

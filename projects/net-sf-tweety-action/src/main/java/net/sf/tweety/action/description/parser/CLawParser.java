@@ -478,8 +478,7 @@ public class CLawParser extends Parser<CActionDescription> {
   /**
    * Returns the set of forbidden keywords, that are contained in a string. This is used
    * for error recognition in input strings.
-   * @param s 
-   * @return
+   * @param s
    */
   protected Set<String> containedKeywords(String s) {
     final String[] keywords = {"caused ", " if ", " after ", " requires ", "inertial ", "default ", " causes ", "always ", "nonexecutable ", " may cause " };

@@ -12,7 +12,7 @@ import net.sf.tweety.Formula;
  * 
  * @author Tim Janus
  *
- * @param <TBeliefBase>	The type of the belief bases
+ * @param <T>	The type of the belief bases
  */
 public abstract class CredibilityRevisionIterative<T extends Formula> 
 	extends CredibilityRevision<T> {

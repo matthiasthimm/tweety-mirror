@@ -21,7 +21,7 @@ public interface DynamicPreferenceAggregator<T>{
 	 * Abstract class for implementation of dynamic preference aggregation
 	 * 
 	 * @param input the array of preference orders to be aggregated
-	 * @returns the final result as a preference order
+	 * @return the final result as a preference order
 	 */
 	public PreferenceOrder<T> aggregate(List<PreferenceOrder<T>> input);
 	

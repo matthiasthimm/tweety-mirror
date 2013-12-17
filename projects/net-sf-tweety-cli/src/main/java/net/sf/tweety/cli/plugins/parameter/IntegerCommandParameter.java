@@ -93,10 +93,6 @@ public class IntegerCommandParameter extends CommandParameter {
 		return null;
 	}
 	
-	/**
-	 * @throws CloneNotSupportedException 
-	 * 
-	 */
 	@Override
 	public Object clone(){
 		return new IntegerCommandParameter(this.getIdentifier(), this.getDescription(), this.getInterval());

@@ -51,7 +51,7 @@ public class MlnFormula extends RelationalFormula {
 	 * ratio of the number of worlds not satisfying the formula and the
 	 * worlds satisfying the formula. 
 	 * @param formula the first-order formula.
-	 * @param probability the intended probability of the formula.
+	 * @param p the intended probability of the formula.
 	 */
 	public MlnFormula(FolFormula formula, Probability p){
 		this.formula = formula;

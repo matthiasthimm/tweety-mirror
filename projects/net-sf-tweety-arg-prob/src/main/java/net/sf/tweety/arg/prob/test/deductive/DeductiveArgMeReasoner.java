@@ -66,7 +66,6 @@ public class DeductiveArgMeReasoner extends Reasoner {
 	 * Returns the sum (as a term) of all variables of worlds satisfying the first formula.
 	 * @param f
 	 * @param worlds2vars
-	 * @return
 	 */
 	private Term getSumOfWorlds(PropositionalFormula f, Map<PossibleWorld,Variable> worlds2vars){
 		Term t = new FloatConstant(0f);

@@ -22,7 +22,6 @@ public interface CompatibilityMeasure {
 	 * @param mlns a list of MLNs.
 	 * @param reasoner some reasoner.
 	 * @param signatures a set of signatures, one for each MLN.
-	 * @return
 	 */
 	public abstract double compatibility(List<MarkovLogicNetwork> mlns, Reasoner reasoner, List<FolSignature> signatures);
 	

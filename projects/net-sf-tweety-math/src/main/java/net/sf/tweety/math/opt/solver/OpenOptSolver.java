@@ -81,7 +81,7 @@ public class OpenOptSolver extends Solver {
 	/**
 	 * Creates a new solver for the given problem.
 	 * @param problem a csp.
-	 * @param a starting point.
+	 * @param startingPoint a starting point.
 	 */
 	public OpenOptSolver(OptimizationProblem problem, Map<Variable,Term> startingPoint) {
 		super(problem.clone());

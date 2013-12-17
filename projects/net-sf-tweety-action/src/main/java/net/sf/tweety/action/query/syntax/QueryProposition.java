@@ -39,8 +39,6 @@ public abstract class QueryProposition
   /**
    * Returns the inner formula of this query proposition, e.g. "F" in the case
    * of a holds F proposition.
-   * 
-   * @return
    */
   public FolFormula getInnerFormula()
   {

@@ -281,7 +281,6 @@ public class ActionQueryParser
    * Parses a simple formula as a list of string tokens or formulas into an action query.
    * This method expects a list of requirements at the end of the list.
    * @param l a list of objects, either String tokens, objects of type PropositionalFormula or a list of requirements
-   * @return
    * @throws ParserException
    */
   private SActionQuery parseActionFormula(Stack<Object> stack ) throws ParserException {

@@ -56,7 +56,7 @@ public class RuleBasedCReasoner extends Reasoner {
 		
 		/** 
 		 * Applies the rule
-		 * @return
+		 * @return true if a change occured, false otherwise
 		 */
 		boolean apply();
 	}

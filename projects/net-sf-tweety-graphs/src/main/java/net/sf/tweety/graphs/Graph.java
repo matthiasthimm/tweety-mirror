@@ -33,7 +33,7 @@ public interface Graph<T extends Node> extends Iterable<T>{
 	 * Adds the given edge to this graph. If at least one
 	 * of the nodes the given edge connects is not in the
 	 * graph, an illegal argument exception is thrown.
-	 * @param node some edge.
+	 * @param edge some edge.
 	 * @return "true" iff the edge has been added successfully.
 	 */
 	public boolean add(Edge<T> edge);
@@ -84,7 +84,7 @@ public interface Graph<T extends Node> extends Iterable<T>{
 	/** 
 	 * Returns "true" when this graph contains the given
 	 * node or edge.
-	 * @param some object
+	 * @param obj an object
 	 * @return "true" if this graph contains the given
 	 * node or edge.
 	 */
@@ -133,10 +133,12 @@ public interface Graph<T extends Node> extends Iterable<T>{
 	 * on the same set of vertices as this graph that connects two
 	 * vertices v and w with an edge if and only if v and w are not
 	 * connected in this graph.
-	 * @param How to deal with selfloops:<br/>
+	 * 
+	 * @param selfloops Indicates how to deal with selfloops:<br/>
 	 * 	IGNORE_SELFLOOPS - ignore self loops (don't add and don't remove)<br/> 
 	 *  INVERT_SELFLOOPS - deal with self loops like ordinary edges (add if not present and remove if present)<br/>	
 	 *  REMOVE_SELFLOOPS - simple remove self loops, but don't add new ones.<br/>	
+	 *  
 	 * @return the complement graph of this graph.
 	 */
 	public Graph<T> getComplementGraph(int selfloops);

@@ -114,7 +114,6 @@ public class SActionQuerySatisfactionTester
    * question. Each query is identified by an atom in the resulting program.
    * 
    * @param queries a set of queries for which C_q should be constructed.
-   * @return
    */
   private String getConstraints( Collection< ? extends SActionQuery > queries )
   {
@@ -466,7 +465,6 @@ public class SActionQuerySatisfactionTester
    * version of the atoms in a logic program or in a resulting stable model.
    * 
    * @param s
-   * @return
    */
   public String regainIllegalCharacters( String s )
   {

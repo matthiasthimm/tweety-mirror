@@ -23,7 +23,7 @@ public abstract class GroundedGameAgentGenerator implements AgentGenerator<Argui
 	
 	/**
 	 * Creates a new agent generator.
-	 * @param type the type of the agents to be generated.
+	 * @param faction the type of the agents to be generated.
 	 */
 	public GroundedGameAgentGenerator(GroundedGameSystem.AgentFaction faction){
 		this.faction = faction;

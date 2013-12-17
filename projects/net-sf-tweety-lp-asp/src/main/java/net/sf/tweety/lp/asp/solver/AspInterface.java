@@ -36,9 +36,6 @@ public class AspInterface
    * @param cmd A string array consisting of the path to the executable and a
    *          set of parameters.
    * @param input An input string which is handed over to the executed program.
-   * @return a pair of strings, where the first element equals to the stdout
-   *         read during execution and the second element equals the errout read
-   *         during execution.
    * @throws IOException
    */
   public void executeProgram( List<String> cmd, String input )

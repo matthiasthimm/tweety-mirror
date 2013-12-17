@@ -156,7 +156,6 @@ public abstract class Term {
 	 * Evaluates each function in the given list with the given values for variables.
 	 * @param functions
 	 * @param mapping
-	 * @return
 	 */
 	public static List<Double> evaluateVector(List<Term> functions, Map<Variable,? extends Term> mapping){
 		List<Double> result = new LinkedList<Double>();
@@ -170,7 +169,6 @@ public abstract class Term {
 	 * @param functions
 	 * @param values the values of the variables
 	 * @param variables the (ordered) list of variables
-	 * @return
 	 */
 	public static double[] evaluateVector(List<Term> functions, double[] values, List<Variable> variables){
 		double[] result = new double[functions.size()];
@@ -185,7 +183,6 @@ public abstract class Term {
 	 * @param functions
 	 * @param values the values of the variables
 	 * @param variables the (ordered) list of variables
-	 * @return
 	 */
 	public static double[][] evaluateMatrix(List<List<Term>> functions, double[] values, List<Variable> variables){
 		double[][] result = new double[functions.size()][functions.size()];
@@ -197,7 +194,8 @@ public abstract class Term {
 	
 	/**
 	 * Replaces terms according to the given map.
-	 * @param substitutes a map.
+	 * @param values an array of values.
+	 * @param variables A list of variables that shall be substituted by the given values
 	 * @return a term.
 	 */
 	public Term replaceAllTerms(double[] values, List<Variable> variables){

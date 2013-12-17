@@ -70,8 +70,7 @@ public class FOLAtom extends FolFormula implements Atom {
 	/**
 	 * Appends the given argument to this atom's
 	 * arguments and returns itself.
-	 * @param arg an argument to be added
-	 * @return the atom itself.
+	 * @param term an argument to be added
 	 * @throws IllegalArgumentException if the given term does not correspond
 	 *   to the expected sort or the argument list is complete.
 	 */

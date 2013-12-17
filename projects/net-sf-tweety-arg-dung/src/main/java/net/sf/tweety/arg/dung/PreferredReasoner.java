@@ -44,7 +44,6 @@ public class PreferredReasoner extends AbstractExtensionReasoner {
 	/**
 	 * Auxiliary method to compute the set of all preferred extensions.
 	 * @param arguments
-	 * @return
 	 */
 	private Set<Extension> getPreferredExtensions(Extension ext){
 		Set<Extension> extensions = new HashSet<Extension>();

@@ -148,8 +148,6 @@ public class LevelingFunction<T> extends Functions<T> {
 
 	/**
 	 * returns a new RankingFunction based on this LevelingFunction
-	 * 
-	 * @return
 	 */
 	public RankingFunction<T> getRankingFunction() {
 		return new RankingFunction<T>(this);
@@ -158,7 +156,7 @@ public class LevelingFunction<T> extends Functions<T> {
 	/**
 	 * this method returns a preference order made out of this leveling function
 	 * 
-	 * @returns a preference order out of a given leveling function
+	 * @return a preference order out of a given leveling function
 	 */
 	public PreferenceOrder<T> generatePreferenceOrder() {
 		Set<Triple<T, T, Relation>> tempPO = new HashSet<Triple<T, T, Relation>>();

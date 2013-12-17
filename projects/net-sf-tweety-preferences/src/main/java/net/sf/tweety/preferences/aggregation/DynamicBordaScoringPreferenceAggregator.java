@@ -13,7 +13,7 @@ public class DynamicBordaScoringPreferenceAggregator<T> extends
 	/**
 	 * constructor for a new veto aggregator
 	 * 
-	 * @param min
+	 * @param size
 	 *            the minimum rank, marking the element with the fewest vetos
 	 */
 	public DynamicBordaScoringPreferenceAggregator(int size) {

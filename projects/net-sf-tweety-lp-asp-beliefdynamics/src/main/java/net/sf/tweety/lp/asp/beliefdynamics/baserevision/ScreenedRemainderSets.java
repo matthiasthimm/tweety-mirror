@@ -108,7 +108,6 @@ public class ScreenedRemainderSets extends RemainderSets<Rule> {
 	 * than bruteforce calculating all possible combinations, as consistent subsets are
 	 * pruned.
 	 * @param p
-	 * @return
 	 * @throws SolverException
 	 */
 	private Set<Program> calculateRemainderSetCandidates(Program p) throws SolverException {

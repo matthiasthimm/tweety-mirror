@@ -120,7 +120,6 @@ public class NewtonRootFinder extends RootFinder {
 	 * Computes the midpoint of the two maps
 	 * @param m1
 	 * @param m2
-	 * @return
 	 */
 	private Map<Variable,Term> midpoint(Map<Variable,Term> m1, Map<Variable,Term> m2){
 		Map<Variable,Term> result = new HashMap<Variable,Term>();
@@ -173,7 +172,6 @@ public class NewtonRootFinder extends RootFinder {
 	 * the given values for variables.
 	 * @param functions
 	 * @param mapping
-	 * @return
 	 */
 	private List<List<Double>> evaluateMatrix(List<List<Term>> functions, Map<Variable,? extends Term> mapping){
 		List<List<Double>> result = new LinkedList<List<Double>>();

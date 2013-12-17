@@ -7,8 +7,21 @@
   <packaging>pom</packaging>
   
   <name>Parent-Tweety</name>
-  <description>Parent project of all Tweety projects</description>
+  <description>Multi module maven project that contains all Tweety libraries</description>
   <url>http://sourceforge.net/projects/tweety/</url>
+  
+  <scm>
+  	<url>https://svn.code.sf.net/p/tweety/code</url>
+  	<connection>https://svn.code.sf.net/p/tweety/code</connection>
+  </scm>
+  
+  <licenses>
+    <license>
+      <name>The General Public License, Version 3.0</name>
+      <url>http://www.gnu.org/licenses/gpl-3.0.html</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
   
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -28,9 +41,9 @@
     </plugins>
   </reporting>
   
-  <!-- Set Java to version 1.7 -->
   <build>
     <plugins>
+      <!-- Set Java Compiler version to 1.6 -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -40,6 +53,49 @@
           <target>1.6</target>
         </configuration>
       </plugin>
+      
+      <!-- Generate jar containing the sources of the project: -->
+      <plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-source-plugin</artifactId>
+			<version>2.2.1</version>
+			<executions>
+				<execution>
+					<id>attach-sources</id>
+					<goals>
+						<goal>jar</goal>
+					</goals>
+				</execution>
+			</executions>
+		</plugin>
+		
+		<!-- Generate Jar containing java-docs -->
+		<plugin>
+		  <groupId>org.apache.maven.plugins</groupId>
+		  <artifactId>maven-javadoc-plugin</artifactId>
+		  <version>2.9.1</version>
+		  <executions>
+		    <execution>
+		      <id>attach-javadocs</id>
+		      <goals>
+		        <goal>jar</goal>
+		      </goals>
+		    </execution>
+		  </executions>
+		  <configuration>
+		    <quiet>true</quiet>
+		    <tags>
+			  <tag>
+			    <name>todo</name>
+			    <placement>X</placement>
+			  </tag>
+			  <tag>
+			    <name>remark</name>
+			    <placement>X</placement>
+			  </tag>
+			</tags>
+		  </configuration>
+		</plugin>
     </plugins>
     
     <pluginManagement>
@@ -91,4 +147,5 @@
   	<module>net-sf-tweety-agents</module>
   	<module>net-sf-tweety-agents-dialogues</module>
   </modules>
+  
 </project>

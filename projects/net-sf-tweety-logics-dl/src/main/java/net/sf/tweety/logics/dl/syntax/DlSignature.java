@@ -39,7 +39,6 @@ public class DlSignature extends Signature {
 	/**
 	 * 
 	 * @param other
-	 * @return
 	 */
 	@Override
 	public boolean isSubSignature(Signature other) {

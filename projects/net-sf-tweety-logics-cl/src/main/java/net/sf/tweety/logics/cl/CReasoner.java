@@ -39,8 +39,7 @@ public class CReasoner extends Reasoner {
 	
 	/**
 	 * Creates a new c-representation reasoner for the given knowledge base.
-	 * @param beliefBase a knowledge base.	
-	 * @param beliefBase
+	 * @param beliefBase a knowledge base.
 	 */
 	public CReasoner(BeliefBase beliefBase){
 		super(beliefBase);
@@ -187,7 +186,6 @@ public class CReasoner extends Reasoner {
 	 * @param ranki the rank (an integer variable) of interpretation "i".
 	 * @param kappa_pos the positive penalties for interpretations.
 	 * @param kappa_min the negative penalties for interpretations.
-	 * @return
 	 */
 	private Statement getRankConstraint(PossibleWorld w, IntegerVariable ranki, Map<Conditional,IntegerVariable> kappa_pos, Map<Conditional,IntegerVariable> kappa_neg){		
 		// construct ride side of the inequation

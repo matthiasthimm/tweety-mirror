@@ -63,7 +63,7 @@ public class Matrix {
 	 * Multiply this matrix with the given one.
 	 * @param other a matrix
 	 * @return the product of the two matrices.
-	 * @throw IllegalArgumentException if the x dimension of this matrix
+	 * @throws IllegalArgumentException if the x dimension of this matrix
 	 * 	does not equal the y dimension of the other matrix
 	 */
 	public Matrix mult(Matrix other) throws IllegalArgumentException{
@@ -120,7 +120,7 @@ public class Matrix {
 	 * Adds the given matrix to this one and returns the result.
 	 * @param other a matrix
 	 * @return the sum of the two matrices.
-	 * @throw IllegalArgumentException if the dimensions of the matrices
+	 * @throws IllegalArgumentException if the dimensions of the matrices
 	 * 	do not correspond.
 	 */
 	public Matrix add(Matrix other) throws IllegalArgumentException{
@@ -137,7 +137,7 @@ public class Matrix {
 	 * Makes a subtraction of the given matrix from this one and returns the result.
 	 * @param other a matrix
 	 * @return the subtraction of the two matrices.
-	 * @throw IllegalArgumentException if the dimensions of the matrices
+	 * @throws IllegalArgumentException if the dimensions of the matrices
 	 * 	do not correspond.
 	 */
 	public Matrix minus(Matrix other)throws IllegalArgumentException{

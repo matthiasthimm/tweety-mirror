@@ -19,7 +19,7 @@ public interface DungTheoryGenerator {
 	/**
 	 * Generates a new Dung theory where the given argument
 	 * is enforced to be in the grounded extension
-	 * @param Argument arg an argument that is enforced
+	 * @param arg an argument that is enforced
 	 *  to be in the grounded extension of the generated theory.
 	 * @return a Dung theory,
 	 */

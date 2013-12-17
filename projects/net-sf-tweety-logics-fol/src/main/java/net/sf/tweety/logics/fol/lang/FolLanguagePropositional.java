@@ -12,7 +12,7 @@ import net.sf.tweety.logics.fol.syntax.*;
 public class FolLanguagePropositional extends FolLanguage {
 	/**
 	 * Creates a new language on the given signature.
-	 * @param folSignature a signature.
+	 * @param signature a signature.
 	 */
 	public FolLanguagePropositional(Signature signature){
 		super(signature);

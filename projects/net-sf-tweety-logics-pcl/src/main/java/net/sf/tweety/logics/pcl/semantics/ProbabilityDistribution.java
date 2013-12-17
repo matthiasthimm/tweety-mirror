@@ -88,7 +88,7 @@ public class ProbabilityDistribution<T extends Interpretation> extends AbstractI
 	}
 	
 	/** Returns the probability of the given conditional
-	 * @param f a conditional
+	 * @param c a conditional
 	 * @return a probability.
 	 */
 	public Probability probability(Conditional c){

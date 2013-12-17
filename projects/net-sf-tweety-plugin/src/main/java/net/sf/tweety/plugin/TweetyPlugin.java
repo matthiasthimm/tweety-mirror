@@ -26,7 +26,6 @@ public interface TweetyPlugin extends Plugin {
 	 * passes by the arguments given with the call to the called plugin
 	 * 
 	 * @param input files to be used within the plugin
-	 * @param cop compute operations performed on the given input files
 	 * @param params parameter handled in the plugin (e.g. desired output file, iterations...)
 	 * @return the output resulted after the execution
 	 */

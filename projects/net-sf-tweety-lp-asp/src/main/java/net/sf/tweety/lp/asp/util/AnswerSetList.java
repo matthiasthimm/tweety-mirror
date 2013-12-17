@@ -60,9 +60,13 @@ public class AnswerSetList extends ArrayList<AnswerSet> {
 	 * this method returns true if at least one
 	 * answer set support q.
 	 * @param q
-	 * @return
 	 */
 	public boolean	holdsOne( DLPLiteral q ) {
+		for(AnswerSet as : this) {
+			if(as.contains(q)) {
+				return true;
+			}
+		}
 		return false;
 	}
 	
@@ -70,10 +74,14 @@ public class AnswerSetList extends ArrayList<AnswerSet> {
 	 * this method returns ture iff all
 	 * answer sets support q.
 	 * @param q
-	 * @return
 	 */
 	public boolean	holdsAll( DLPLiteral q ) {
-		return false;
+		for(AnswerSet as : this) {
+			if(!as.contains(q)) {
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	@Override

@@ -62,7 +62,7 @@ public class ApproximateNaiveMlnReasoner extends AbstractMlnReasoner{
 	/**
 	 * Creates a new ApproximateNaiveMlnReasoner for the given Markov logic network.
 	 * @param beliefBase a Markov logic network. 
-	 * @param name another signature (if the probability distribution should be defined 
+	 * @param signature another signature (if the probability distribution should be defined 
 	 * on that one (that one should subsume the signature of the Markov logic network)
 	 * @param maxNumberOfSelectedInterpretations the maximum number of interpretations selected from the whole
 	 * set of interpretations. Is -1 if all interpretations are to be selected.

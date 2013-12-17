@@ -61,7 +61,7 @@ public abstract class CommandParameter implements Cloneable {
 	/**
 	 * instantiate the command with the given argument string if valid
 	 * @param s the given argument string
-	 * @return 
+	 * @return The CommandParameter instance or null if the given string is not valid.
 	 */
 	public abstract CommandParameter instantiate(String s);
 	

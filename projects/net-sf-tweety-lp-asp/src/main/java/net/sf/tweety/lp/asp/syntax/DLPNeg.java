@@ -36,7 +36,8 @@ public class DLPNeg extends DLPElementAdapter implements DLPLiteral {
 	 * and a list of terms. size of terms determines arity of
 	 * functor.
 	 * 
-	 * @param atomexpr
+	 * @param symbol the functor name
+	 * @param terms the terms (arguments) of the atom
 	 */
 	public DLPNeg(String symbol, List<Term<?>> terms) {
 		atom = new DLPAtom(symbol, terms);

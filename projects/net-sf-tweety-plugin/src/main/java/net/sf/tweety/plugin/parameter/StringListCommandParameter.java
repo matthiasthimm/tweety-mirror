@@ -61,7 +61,6 @@ public class StringListCommandParameter extends CommandParameter {
 	/**
 	 * instantiates a list of arguments if valid 
 	 * @param s
-	 * @return
 	 */
 	public CommandParameter instantiate(String[] s){
 		

@@ -48,7 +48,7 @@ public class ProbabilisticExtension extends ProbabilityFunction<Extension>{
 	
 	/** Returns the upper cut of this probabilistic extension wrt. delta, i.e.
 	 * all arguments that have probability >= delta.
-	 * @param a Dung theory.
+	 * @param theory a Dung theory.
 	 * @param delta some threshold.
 	 * @return the set of arguments that have probability >= delta.
 	 */
@@ -62,7 +62,7 @@ public class ProbabilisticExtension extends ProbabilityFunction<Extension>{
 	
 	/** Returns the lower cut of this probabilistic extension wrt. delta, i.e.
 	 * all arguments that have probability <= delta.
-	 * @param a Dung theory.
+	 * @param theory a Dung theory.
 	 * @param delta some threshold.
 	 * @return the set of arguments that have probability <= delta.
 	 */
@@ -78,7 +78,6 @@ public class ProbabilisticExtension extends ProbabilityFunction<Extension>{
 	 * Checks whether the given labeling is congruent to this probabilistic extension,
 	 * i.e. whether l(A)=in <=> P(A)=1, l(A)=out <=> P(A)=0, l(A)=undec <=> P(A)=0.5  
 	 * @param l
-	 * @return
 	 */
 	public boolean isCongruent(Labeling l){
 		for(Argument a: l.keySet())

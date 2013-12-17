@@ -16,7 +16,7 @@ import net.sf.tweety.util.Triple;
  * elements in the preference order. 2.: the sum of all ranks for each element
  * in O is minimal
  * 
- * TODO exception handling for invalid preference orders (total preorder)
+ * @todo exception handling for invalid preference orders (total preorder)
  * @author Bastian Wolf
  * @param <T>
  * 
@@ -38,7 +38,7 @@ public class RankingFunction<T> extends Functions<T>{
 	 * this constructor creates a ranking function using a given preference
 	 * order
 	 * 
-	 * @param po
+	 * @param lf
 	 *            the given preference order
 	 */
 	public RankingFunction(LevelingFunction<T> lf) {
@@ -69,7 +69,7 @@ public class RankingFunction<T> extends Functions<T>{
 	/**
 	 * this method returns a preference order made out of an ranking function
 	 * 
-	 * @returns a preference order out of a given ranking function
+	 * @return a preference order out of a given ranking function
 	 */
 	public PreferenceOrder<T> generatePreferenceOrder() {
 		Set<Triple<T, T, Relation>> tempPO = new HashSet<Triple<T, T, Relation>>();

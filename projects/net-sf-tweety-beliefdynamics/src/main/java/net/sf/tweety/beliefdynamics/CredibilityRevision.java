@@ -13,8 +13,7 @@ import net.sf.tweety.Formula;
  * 
  * @author Tim Janus
  *
- * @tparam <T>	The type of formulas of the belief bases
- * @tparam <TBeliefBase> The type of the belief bases used for revision
+ * @param <T>	The type of formulas of the belief bases
  */
 public abstract class CredibilityRevision<T extends Formula> 
 	extends MultipleBaseRevisionOperator<T> {

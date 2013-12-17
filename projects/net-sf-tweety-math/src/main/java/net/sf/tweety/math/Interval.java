@@ -42,7 +42,6 @@ public class Interval<S extends Number> implements NumberSet<S> {
 	
 	/**
 	 * 
-	 * @return
 	 */
 	public S getLowerBound() {
 		return lowerBound;
@@ -81,7 +80,6 @@ public class Interval<S extends Number> implements NumberSet<S> {
 	/**
 	 * checks, whether an element is within this interval
 	 * @param a
-	 * @return
 	 */
 	public boolean isElementOf(S a){
 		

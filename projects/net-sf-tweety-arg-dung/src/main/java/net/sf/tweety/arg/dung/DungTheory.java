@@ -46,7 +46,7 @@ public class DungTheory extends BeliefSet<Argument> implements Graph<Argument> {
 
 	/**
 	 * returns true if <source>arguments</source> attack all other arguments in the theory
-	 * @param arguments a set of arguments
+	 * @param ext An extension contains a set of arguments.
 	 * @return true if <source>arguments</source> attack all other arguments in the theory
 	 */
 	public boolean isAttackingAllOtherArguments(Extension ext){
@@ -280,7 +280,6 @@ public class DungTheory extends BeliefSet<Argument> implements Graph<Argument> {
 
 	
 	/** Pretty print of the theory.
-	 * @return
 	 */
 	public String prettyPrint(){
 		String output = new String();

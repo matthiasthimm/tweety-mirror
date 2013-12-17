@@ -9,7 +9,7 @@ import net.sf.tweety.*;
 public class FolLanguageNoQuantifiersNoFunctions extends FolLanguageNoQuantifiers{
 	/**
 	 * Creates a new language on the given signature.
-	 * @param folSignature a signature.
+	 * @param signature a signature.
 	 */
 	public FolLanguageNoQuantifiersNoFunctions(Signature signature){
 		super(signature);

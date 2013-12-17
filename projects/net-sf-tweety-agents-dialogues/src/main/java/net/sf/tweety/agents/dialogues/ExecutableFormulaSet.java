@@ -24,7 +24,7 @@ public class ExecutableFormulaSet extends HashSet<PropositionalFormula> implemen
 	
 	/**
 	 * Creates a new set for the given formulas.
-	 * @param arguments a collection of arguments.
+	 * @param formulas a collection of arguments.
 	 */
 	public ExecutableFormulaSet(Collection<? extends PropositionalFormula> formulas) {
 		super(formulas);

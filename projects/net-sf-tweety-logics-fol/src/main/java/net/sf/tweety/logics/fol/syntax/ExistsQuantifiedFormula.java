@@ -20,7 +20,7 @@ public class ExistsQuantifiedFormula extends QuantifiedFormula {
 	/**
 	 * Creates a new exists-quantified formula with the given formula and variable.
 	 * @param folFormula the formula this for-all-quantified formula ranges over.
-	 * @param variables the variable of this for-all-quantified formula.
+	 * @param variable the variable of this for-all-quantified formula.
 	 */
 	public ExistsQuantifiedFormula(FolFormula folFormula, Variable variable){
 		super(folFormula,variable);

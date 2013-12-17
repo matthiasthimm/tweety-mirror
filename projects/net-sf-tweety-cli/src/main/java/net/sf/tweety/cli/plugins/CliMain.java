@@ -82,7 +82,7 @@ public class CliMain {
 	/**
 	 * This method is meant to load the tweety plugin pathes on startup
 	 * 
-	 * @returns an object with one or more pluginpathes
+	 * @return an object with one or more pluginpathes
 	 * @throws ConfigurationException
 	 */
 	public static Map<String, String> configCLI()
@@ -135,7 +135,7 @@ public class CliMain {
 	 *            the called Tweety-Plugin Implementation
 	 * @param inparams
 	 *            the parameter given as input
-	 * @returns an ArrayList of instantiated CommandParameter
+	 * @return an ArrayList of instantiated CommandParameter
 	 * @throws CloneNotSupportedException
 	 *             if the CommandParameter does not implement Cloneable
 	 */

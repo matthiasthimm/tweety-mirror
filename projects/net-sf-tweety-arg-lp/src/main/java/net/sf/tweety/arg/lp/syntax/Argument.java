@@ -73,7 +73,6 @@ public class Argument extends LinkedList<Rule> implements Formula {
 	 * An argument may only contain nonempty ground rules (i.e. no constraints).
 	 * Also, for an argument A = [r1, r2, ..., rn] for each literal Lj in the body
 	 * of a rule ri there has to be a rule rk with k>i with head(rk) = Lj.  
-	 * @return
 	 */
 	public boolean checkValid() {
 		Set<DLPLiteral> foundLiterals = new HashSet<DLPLiteral>();

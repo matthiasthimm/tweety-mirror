@@ -65,7 +65,7 @@ public class AspNlpTranslator extends AspFolTranslator
 	 * for every element of the conjunction in the head is generated. Those
 	 * rules share the same body.
 	 * @param rule
-	 * @return
+	 * @return The ASP program that represens the rule given as parameter.
 	 */
 	public Program toASP(NLPRule rule) {
 		Program reval = new Program();

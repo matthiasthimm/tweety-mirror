@@ -38,7 +38,7 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	/**
 	 * generates a preference order with a given set of elements
 	 * 
-	 * @param elements
+	 * @param relations
 	 *            the set of given element pairs
 	 */
 	public PreferenceOrder(
@@ -64,8 +64,7 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	/**
 	 * adds a given pair of generic elements to the set.
 	 * 
-	 * @param e
-	 *            the given set
+	 * @param t the given set
 	 * @return true if successful, false if not
 	 */
 	@Override
@@ -103,7 +102,7 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	/**
 	 * removes specific pair of the set
 	 * 
-	 * @param e
+	 * @param o
 	 *            the pair to be removed
 	 * @return true if successful, false if not
 	 */
@@ -218,7 +217,7 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	/**
 	 * checks whether this preference order contains a given pair
 	 * 
-	 * @param e
+	 * @param o
 	 *            the given pair
 	 * @return true if pair is in this preference order, false if not
 	 */
@@ -232,7 +231,6 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	 * @param firstElement
 	 * @param secondElement
 	 * @param relation
-	 * @return
 	 */
 	public boolean containsTriple(T firstElement, T secondElement,
 			Relation relation) {
@@ -451,8 +449,7 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 
 	/**
 	 * 
-	 * @param po
-	 * @return
+	 * @param obj
 	 */
 	public boolean equals(Object obj) {
 		if (this == obj)

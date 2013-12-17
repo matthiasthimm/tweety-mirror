@@ -24,7 +24,7 @@ public class ForallQuantifiedFormula extends QuantifiedFormula{
 	/**
 	 * Creates a new for-all-quantified formula with the given formula and variable.
 	 * @param folFormula the formula this for-all-quantified formula ranges over.
-	 * @param variables the variable of this for-all-quantified formula.
+	 * @param variable the variable of this for-all-quantified formula.
 	 */
 	public ForallQuantifiedFormula(FolFormula folFormula, Variable variable){
 		super(folFormula,variable);

@@ -41,7 +41,7 @@ public class HerbrandInterpretation extends InterpretationSet<FOLAtom> {
 	/**
 	 * Checks whether this Herbrand interpretation satisfies
 	 * the given formula.
-	 * @param f a formula.
+	 * @param formula a formula.
 	 * @return "true" if this interpretation satisfies "f".
 	 * @throws IllegalArgumentException if "f" is not closed.
 	 */

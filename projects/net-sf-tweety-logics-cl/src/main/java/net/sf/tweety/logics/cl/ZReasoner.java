@@ -61,8 +61,7 @@ public class ZReasoner extends Reasoner {
 	
 	/**
 	 * Creates a new System Z reasoner for the given knowledge base.
-	 * @param beliefBase a knowledge base.	
-	 * @param beliefBase
+	 * @param beliefBase a knowledge base.
 	 */
 	public ZReasoner(BeliefBase beliefBase){
 		super(beliefBase);

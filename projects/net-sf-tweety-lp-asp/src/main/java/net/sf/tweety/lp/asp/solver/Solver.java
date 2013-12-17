@@ -18,7 +18,7 @@ public interface Solver {
 	 * 
 	 * @param p
 	 * @param maxModels
-	 * @return
+	 * @return A list of answer sets representing the models of the given program
 	 * @throws SolverException
 	 */
 	public AnswerSetList	computeModels(Program p, int maxModels) throws SolverException;
@@ -27,7 +27,7 @@ public interface Solver {
 	 * this method computes at most maxModels answer sets for a given program as a flat string.
 	 * @param s
 	 * @param maxModels
-	 * @return
+	 * @return A list of answer sets representing the models of the given program
 	 * @throws SolverException
 	 */
 	public AnswerSetList	computeModels(String s, int maxModels ) throws SolverException;
@@ -36,11 +36,10 @@ public interface Solver {
 	 * this method computes at most maxModels for a given program, a collection of facts,
 	 * and an arbitrary number of additional programs as a file resource.
 	 * 
-	 * @param p
-	 * @param facts
 	 * @param files
 	 * @param maxModels
-	 * @return
+	 * @return A list of answer sets representing the models of union of the programs that are stored
+	 * 			in the given files.
 	 * @throws SolverException
 	 */
 	public AnswerSetList	computeModels(List<String> files, int maxModels) throws SolverException;

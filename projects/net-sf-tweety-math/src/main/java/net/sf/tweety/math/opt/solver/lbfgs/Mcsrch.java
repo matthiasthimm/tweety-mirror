@@ -22,6 +22,10 @@ package net.sf.tweety.math.opt.solver.lbfgs;
   * This file is a translation of Fortran code written by Jorge Nocedal.
   * It is distributed as part of the RISO project. See comments in the file
   * <tt>LBFGS.java</tt> for more information.
+  *  
+  * @author Original Fortran version by Jorge J. More' and David J. Thuente
+  * as part of the Minpack project, June 1983, Argonne National 
+  * Laboratory. Java translation by Robert Dodier, August 1997.
   */
 public class Mcsrch
 {
@@ -75,10 +79,6 @@ public class Mcsrch
 	  * conditions, then the algorithm usually stops when rounding
 	  * errors prevent further progress. In this case <code>stp</code> only
 	  * satisfies the sufficient decrease condition.<p>
-	  *
-	  * @author Original Fortran version by Jorge J. More' and David J. Thuente
-	  *	  as part of the Minpack project, June 1983, Argonne National 
-	  *   Laboratory. Java translation by Robert Dodier, August 1997.
 	  *
 	  * @param n The number of variables.
 	  *
@@ -361,10 +361,6 @@ public class Mcsrch
 	  *   If <code>info</code> is 1, 2, 3, or 4, then the step has been
 	  *   computed successfully. Otherwise <code>info</code> = 0, and this
 	  *   indicates improper input parameters.
-	  *
-	  * @author Jorge J. More, David J. Thuente: original Fortran version,
-	  *   as part of Minpack project. Argonne Nat'l Laboratory, June 1983.
-	  *   Robert Dodier: Java translation, August 1997.
 	  */
 	public static void mcstep ( double[] stx , double[] fx , double[] dx , double[] sty , double[] fy , double[] dy , double[] stp , double fp , double dp , boolean[] brackt , double stpmin , double stpmax , int[] info )
 	{

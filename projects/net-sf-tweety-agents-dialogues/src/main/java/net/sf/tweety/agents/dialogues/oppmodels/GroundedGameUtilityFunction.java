@@ -39,7 +39,7 @@ public class GroundedGameUtilityFunction extends UtilityFunction<Argument,Extens
 	 * 
 	 * @param theory A Dung theory
 	 * @param argument the argument which is played for or against.
-	 * @param type the type of this utility function.
+	 * @param faction the type of this utility function.
 	 */
 	public GroundedGameUtilityFunction(DungTheory theory, Argument argument, GroundedGameSystem.AgentFaction faction) {
 		this.theory = theory;

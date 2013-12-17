@@ -151,7 +151,7 @@ public class ActionSignature
    * Returns true iff the given fluentName is contained in this action
    * signature.
    * 
-   * @param fluent a fluent name
+   * @param fluentName a fluent name
    * @return true iff fluentName is contained in this action signature.
    */
   public boolean containsFluentName( String fluentName )

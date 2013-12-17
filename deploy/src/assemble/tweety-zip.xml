@@ -54,9 +54,16 @@
 		
 	  </includes>
       <binaries>
-        <outputDirectory>modules/</outputDirectory>
+        <outputDirectory>lib/</outputDirectory>
         <unpack>false</unpack>
+        <outputFileNameMapping>${module.groupId}-${module.artifactId}-${module.version}${dashClassifier?}.${module.extension}</outputFileNameMapping>
       </binaries>
+      
+      <!--
+      <sources>
+        <outputDirectory>src/</outputDirectory>
+      </sources>
+      -->
     </moduleSet>
   </moduleSets>
 </assembly>

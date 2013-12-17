@@ -13,8 +13,6 @@ import net.sf.tweety.logics.pl.syntax.*;
  * This class implements the argumentative transformation functions proposed in [Krümpelmann:2011].
  * 
  * @author Matthias Thimm
- *
- * @param <T> The type of formulas used by this transformation function.
  */
 public class ArgumentativeTransformationFunction implements MultipleTransformationFunction<PropositionalFormula> {
 

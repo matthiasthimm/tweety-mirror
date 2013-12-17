@@ -56,7 +56,7 @@ Map<T, Integer> {
 	/**
 	 * this method returns a preference order made out of an ranking function
 	 * 
-	 * @returns a preference order out of a given ranking function
+	 * @return a preference order out of a given ranking function
 	 */
 	public abstract PreferenceOrder<T> generatePreferenceOrder();
 	

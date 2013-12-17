@@ -23,7 +23,7 @@ public class ArguingAgent extends Agent {
 	
 	/**
 	 * Create a new agent with the given name and belief state.
-	 * @param type the type of the agent.
+	 * @param faction the type of the agent.
 	 * @param beliefState a belief state
 	 */
 	public ArguingAgent(GroundedGameSystem.AgentFaction faction, BeliefState beliefState) {

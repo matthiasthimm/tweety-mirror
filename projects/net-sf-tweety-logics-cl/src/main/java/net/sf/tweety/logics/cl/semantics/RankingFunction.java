@@ -181,9 +181,8 @@ public class RankingFunction extends AbstractInterpretation {
 	}
 	
 	/**
-	 * The signature of the first-order language this ranking function
+	 * Returns the signature of the first-order language this ranking function
 	 * is defined on.
-	 * @return
 	 */
 	public PropositionalSignature getSignature(){
 		return this.signature;

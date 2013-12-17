@@ -59,7 +59,7 @@ public class EvaluateRule extends RuleAdapter {
 	/**
 	 * Updates the progressMap and also checks if a change to one kappa value is occurred sicnge the last application of
 	 * this rule.
-	 * @return
+	 * @return true if a change occured and false otherwise
 	 */
 	private boolean changeOccurred() {
 		boolean reval = false;
