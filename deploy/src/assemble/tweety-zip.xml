@@ -15,31 +15,43 @@
       <!-- Now, select which projects to include in this module-set. -->
       <includes>
         <include>net.sf:tweety</include>
-        <include>net.sf.tweety:math</include>
-        <include>net.sf.tweety:graphs</include>
-		<include>net.sf.tweety.logics:commons</include>
-		<include>net.sf.tweety:action</include>
-		<include>net.sf.tweety.action.description:c</include>
-		<include>net.sf.tweety.action.query:s</include>
+        
+        <include>net.sf.tweety:action</include>
 		<include>net.sf.tweety:agents</include>
-		<include>net.sf.tweety.agents:argumentation</include>
-		<include>net.sf.tweety:beliefsdynamics</include>
+		<include>net.sf.tweety.agents:dialogues</include>
+		
+		<include>net.sf.tweety.arg:deductive</include>
+		<include>net.sf.tweety.arg:delp</include>
+		<include>net.sf.tweety.arg:dung</include>
+		<include>net.sf.tweety.arg:prob</include>
+		<include>net.sf.tweety.arg:lp</include>
+		<include>net.sf.tweety.arg:saf</include>
+		
+		<include>net.sf.tweety:beliefdynamics</include>
 		<include>net.sf.tweety:cli</include>
-		<include>net.sf.tweety.logics:propositionallogic</include>
-		<include>net.sf.tweety.logics:conditionallogic</include>
-		<include>net.sf.tweety.logics:firstorderlogic</include>
-		<include>net.sf.tweety.logics:markovlogic</include>
-		<include>net.sf.tweety.logics:modallogic</include>
-		<include>net.sf.tweety.logics:probablisticconditionallogic</include>
-		<include>net.sf.tweety.logics:relationalconditionallogic</include>
-		<include>net.sf.tweety.logics:relationalprobabilisticconditionallogic</include>
-		<include>net.sf.tweety.logicprogramming:asp</include>
-		<include>net.sf.tweety.argumentation:deductive</include>
-		<include>net.sf.tweety.argumentation:delp</include>
-		<include>net.sf.tweety.argumentation:dung</include>
-		<include>net.sf.tweety.argumentation:probabilistic</include>
-		<include>net.sf.tweety.argumentation:structuredargumentationframeworks</include>
+		<include>net.sf.tweety:graphs</include>
+		
+		<include>net.sf.tweety.logics:cl</include>
+		<include>net.sf.tweety.logics:commons</include>
+		<include>net.sf.tweety.logics:dl</include>
+		<include>net.sf.tweety.logics:el</include>
+		<include>net.sf.tweety.logics:fol</include> 
+		<include>net.sf.tweety.logics:ml</include>
+		<include>net.sf.tweety.logics:pcl</include>
+		<include>net.sf.tweety.logics:pl</include>
+		<include>net.sf.tweety.logics:rcl</include>
+		<include>net.sf.tweety.logics:rpcl</include>
+		<include>net.sf.tweety.logics:translators</include>
+		
+		<include>net.sf.tweety.lp:asp</include>
+		<include>net.sf.tweety.lp.asp:beliefdynamics</include>
+		<include>net.sf.tweety.lp:nlp</include>
+		
+		<include>net.sf.tweety:machinelearning</include>
+		<include>net.sf.tweety:math</include>
+        <include>net.sf.tweety:plugin</include>
 		<include>net.sf.tweety:preferences</include>
+		
 	  </includes>
       <binaries>
         <outputDirectory>modules/</outputDirectory>
