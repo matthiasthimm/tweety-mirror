@@ -110,7 +110,7 @@ public class FolParser extends Parser<FolBeliefSet> {
 		String sortname = s.substring(0, s.indexOf("=")).trim();
 		if(sig.containsSort(sortname)) throw new ParserException("Multiple declarations of sort '" + sortname + "'.");
 		Sort theSort = new Sort(sortname);
-		sig.add(new Sort(sortname));
+		sig.add(theSort);
 		if(!s.contains("{")) throw new ParserException("Missing '{' in sort declaration '" + s + "',");
 		if(!s.contains("}")) throw new ParserException("Missing '}' in sort declaration '" + s + "',");		
 		String constants = s.substring(s.indexOf("{")+1, s.lastIndexOf("}"));
