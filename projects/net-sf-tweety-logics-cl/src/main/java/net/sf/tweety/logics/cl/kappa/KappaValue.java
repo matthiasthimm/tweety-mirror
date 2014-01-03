@@ -41,7 +41,7 @@ public class KappaValue implements KappaTerm {
 	boolean evaluateProcessing;
 	
 	/** A flag used to store if this kappa-value is processing its sub-terms */
-	boolean subtermsProcessing;
+	static boolean subtermsProcessing;
 	
 	/**
 	 * Ctor: Generates a kappa value for the given {@link Conditional} with the given index.
