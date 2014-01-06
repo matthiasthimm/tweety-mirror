@@ -34,6 +34,30 @@ public class EntropyNorm<T extends Comparable<T>> extends EntropyFunction implem
 	}
 
 	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.norm.RealVectorNorm#normTerm(net.sf.tweety.math.term.Term[])
+	 */
+	public Term normTerm(Term[] obj){
+		Vector<Term> v = new Vector<Term>();
+		for(Term t: obj)
+			v.add(t);
+		return this.normTerm(v);
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.norm.RealVectorNorm#distanceTerm(net.sf.tweety.math.term.Term[], net.sf.tweety.math.term.Term[])
+	 */
+	public Term distanceTerm(Term[] obj1, Term[] obj2){
+		Vector<Term> v1 = new Vector<Term>();
+		for(Term t: obj1)
+			v1.add(t);
+		Vector<Term> v2 = new Vector<Term>();
+		for(Term t: obj2)
+			v2.add(t);
+		return this.distanceTerm(v1,v2);
+		
+	}
+	
+	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.norm.Norm#distance(java.lang.Object, java.lang.Object)
 	 */
 	@Override

@@ -9,7 +9,7 @@ import net.sf.tweety.math.term.Term;
  * The Manhattan norm.
  * @author Matthias Thimm
  */
-public class ManhattanNorm implements RealVectorNorm{
+public class ManhattanNorm extends AbstractRealVectorNorm{
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.norm.Norm#norm(java.lang.Object)

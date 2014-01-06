@@ -13,7 +13,7 @@ import net.sf.tweety.math.term.Term;
  * 
  * @author Matthias Thimm
  */
-public class PNorm implements RealVectorNorm{
+public class PNorm extends AbstractRealVectorNorm{
 	
 	/** The parameter of this p-norm. */
 	private int p;
