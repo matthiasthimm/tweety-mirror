@@ -16,6 +16,7 @@ import net.sf.tweety.math.equation.Equation;
 import net.sf.tweety.math.norm.RealVectorNorm;
 import net.sf.tweety.math.opt.OptimizationProblem;
 import net.sf.tweety.math.opt.solver.OpenOptSolver;
+import net.sf.tweety.math.opt.solver.OpenOptWebSolver;
 import net.sf.tweety.math.probability.Probability;
 import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.FloatVariable;
@@ -50,9 +51,6 @@ public class MinimumViolationMachineShop implements BeliefBaseMachineShop {
 		if(!(beliefBase instanceof PclBeliefSet))
 			throw new IllegalArgumentException("Belief base of type 'PclBeliefSet' expected.");
 		PclBeliefSet beliefSet = (PclBeliefSet) beliefBase;
-		PclDefaultConsistencyTester tester = new PclDefaultConsistencyTester();
-		if(tester.isConsistent(beliefSet))
-			return beliefSet;		
 		// Create variables for the probability of each possible world and
 		// set up the optimization problem for computing the minimal violation.
 		OptimizationProblem problem = new OptimizationProblem(OptimizationProblem.MINIMIZE);
@@ -92,10 +90,11 @@ public class MinimumViolationMachineShop implements BeliefBaseMachineShop {
 		Term targetFunction = this.norm.normTerm(vio.values().toArray(new Term[0]));
 		problem.setTargetFunction(targetFunction);
 		try{			
-			OpenOptSolver solver = new OpenOptSolver(problem);
+			OpenOptSolver solver = new OpenOptWebSolver(problem);
 			solver.solver = "ralg";
 			solver.contol = 1e-4;			
 			solver.ignoreNotFeasibleError = true;
+			//System.out.println(solver.getOpenOptCode());
 			Map<Variable,Term> solution = solver.solve();
 			// prepare probability function
 			ProbabilityDistribution<PossibleWorld> p = new ProbabilityDistribution<PossibleWorld>(beliefSet.getSignature());

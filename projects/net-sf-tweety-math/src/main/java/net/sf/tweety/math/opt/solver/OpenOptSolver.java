@@ -147,11 +147,7 @@ public class OpenOptSolver extends Solver {
 		// parser output
 		this.log.info("Parsing solution from OpenOpt.");
 		try{
-			double[] values = this.parseOutput(output, this.idx2newVars.keySet().size());
-			Map<Variable,Term> result = new HashMap<Variable,Term>();
-			for(Integer i: this.idx2newVars.keySet())
-				result.put(this.newVars2oldVars.get(this.idx2newVars.get(i)), new FloatConstant(values[i]));
-			return result;
+			return this.parseOutput(output);
 		}catch(Exception e){
 			this.log.error(e.getMessage());
 			throw new GeneralMathException(e.getMessage());
@@ -265,23 +261,26 @@ public class OpenOptSolver extends Solver {
 	 * This method parses the output data of an OpenOpt run
 	 * @param output a string.
 	 * @params length the length of the array to be parsed.
-	 * @return an array of double
+	 * @return a map from variable to terms
 	 */
-	private double[] parseOutput(String output, int length){
+	protected Map<Variable,Term> parseOutput(String output){
 		try{
 			int valuesBegin = output.lastIndexOf("[");
 			int valuesEnd = output.lastIndexOf("]");
 			String values = output.substring(valuesBegin+1, valuesEnd);
 			String[] tokens = values.split(" ");
-			double[] result = new double[length];
+			double[] r = new double[this.idx2newVars.keySet().size()];
 			int i = 0;
 			for(String token : tokens){
 				if(token.trim().equals(""))
 					continue;
-				result[i] = new Double(token.trim());
+				r[i] = new Double(token.trim());
 				i++;
-				if(i==length) break;
+				if(i==this.idx2newVars.keySet().size()) break;
 			}
+			Map<Variable,Term> result = new HashMap<Variable,Term>();
+			for(Integer j: this.idx2newVars.keySet())
+				result.put(this.newVars2oldVars.get(this.idx2newVars.get(j)), new FloatConstant(r[j]));
 			return result;
 		}catch(Exception e){
 			this.log.error(e.getMessage());
