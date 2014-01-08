@@ -14,7 +14,7 @@ public class RepairTest {
 
 	public static void main(String[] args) throws ParserException, IOException{
 		// configure web service 
-		OpenOptWebSolver.openopt_webservice_url = "http://141.26.24.135/opt/openopt/solve.php";		
+		OpenOptWebSolver.openopt_webservice_url = "http://141.26.24.199/opt/openopt/solve.php";		
 		OpenOptWebSolver.openopt_webservice_apikey = "Please request an API key from Matthias (thimm@uni-koblenz.de) or set up your own web service with the file OpenOptWebSolver.php (OpenOpt has to be installed on the server)";
 		
 		// some inconsistent belief base
