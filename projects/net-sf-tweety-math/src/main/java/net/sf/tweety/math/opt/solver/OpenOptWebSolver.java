@@ -76,9 +76,12 @@ public class OpenOptWebSolver extends OpenOptSolver {
 		    wr.flush();
 		    // Parse response 
 		    BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-		    String line;
+		    // omit the last line, that one is duplicated for whatever reason
+		    String line, previousLine = null;
 		    while ((line = rd.readLine()) != null) {
-		    	output += line + "\n"; 
+		    	if(previousLine != null)
+		    		output += previousLine + "\n";
+		    	previousLine = line;
 		    }
 		    wr.close();
 		    rd.close();
