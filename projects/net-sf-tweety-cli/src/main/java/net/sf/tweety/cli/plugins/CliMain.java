@@ -10,7 +10,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import net.sf.tweety.cli.plugins.parameter.CommandParameter;
+import net.sf.tweety.plugin.*;
+import net.sf.tweety.plugin.parameter.CommandParameter;
 import net.xeoh.plugins.base.PluginManager;
 import net.xeoh.plugins.base.impl.PluginManagerFactory;
 import net.xeoh.plugins.base.util.PluginManagerUtil;
@@ -113,6 +114,7 @@ public class CliMain {
 		ArrayList<String> pluginName = (ArrayList<String>) tweetyXmlConfig.getProperty(it.next());
 
 		for (int i = 0; i < pluginPath.size(); i++) {
+			System.out.println(pluginName.get(i) + pluginPath.get(i));
 			loadablePlugins.put(pluginName.get(i), pluginPath.get(i));
 		}
 		return loadablePlugins;

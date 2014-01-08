@@ -12,4 +12,8 @@
 	<plugin name="propositionallogic">
 		<path>  plugins/propositionallogic.jar  </path>
 	</plugin>
+
+	<plugin name="firstorderlogic">
+		<path>  plugins/firstorderlogic.jar  </path>
+	</plugin>
 </plugins>

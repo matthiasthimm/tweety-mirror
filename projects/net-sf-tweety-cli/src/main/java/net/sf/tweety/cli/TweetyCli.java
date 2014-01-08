@@ -97,7 +97,7 @@ public class TweetyCli {
 	private static String query = null;
 	
 
-	
+// TODO: Plugin für RPCL erstellen mit dieser Funktionalität, danach hier streichen:	
 	/**
 	 * Program entry.<br>
 	 * <br>
