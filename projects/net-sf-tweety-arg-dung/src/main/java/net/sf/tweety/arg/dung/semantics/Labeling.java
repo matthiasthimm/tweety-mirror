@@ -166,4 +166,36 @@ public class Labeling extends AbstractArgumentationInterpretation implements Map
 		return this.labeling.toString();
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((labeling == null) ? 0 : labeling.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Labeling other = (Labeling) obj;
+		if (labeling == null) {
+			if (other.labeling != null)
+				return false;
+		} else if (!labeling.equals(other.labeling))
+			return false;
+		return true;
+	}
+
 }

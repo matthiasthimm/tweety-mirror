@@ -49,7 +49,7 @@ public class Attack extends DirectedEdge<Argument> implements Formula {
 	 * @return the attacked argument of this attack relation.
 	 */
 	public Argument getAttacked() {
-		return this.getNodeA();
+		return this.getNodeB();
 	}
 
 	/**
@@ -57,7 +57,7 @@ public class Attack extends DirectedEdge<Argument> implements Formula {
 	 * @return the attacking argument of this attack relation.
 	 */
 	public Argument getAttacker() {
-		return this.getNodeB();
+		return this.getNodeA();
 	}
 
 	
