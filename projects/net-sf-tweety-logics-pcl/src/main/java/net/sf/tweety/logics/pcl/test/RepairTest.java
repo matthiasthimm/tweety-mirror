@@ -4,8 +4,11 @@ import java.io.IOException;
 
 import net.sf.tweety.ParserException;
 import net.sf.tweety.logics.pcl.PclBeliefSet;
+import net.sf.tweety.logics.pcl.analysis.MinimalViolationEuclideanMachineShop;
+import net.sf.tweety.logics.pcl.analysis.MinimalViolationEuclideanMachineShopOjAlgoExpression;
+import net.sf.tweety.logics.pcl.analysis.MinimalViolationEuclideanMachineShopOjAlgoMatrix;
 import net.sf.tweety.logics.pcl.analysis.MinimumViolationMachineShop;
-import net.sf.tweety.logics.pcl.parser.*;
+import net.sf.tweety.logics.pcl.parser.PclParser;
 import net.sf.tweety.logics.pcl.syntax.ProbabilisticConditional;
 import net.sf.tweety.math.norm.PNorm;
 import net.sf.tweety.math.opt.solver.OpenOptWebSolver;
@@ -28,5 +31,14 @@ public class RepairTest {
 		MinimumViolationMachineShop ms = new MinimumViolationMachineShop(new PNorm(2));
 		System.out.println(ms.repair(kb));
 		
+
+		MinimalViolationEuclideanMachineShop ms2 = new MinimalViolationEuclideanMachineShopOjAlgoExpression();
+		System.out.println("\n\n\nEuclidean OjAlgo expression implementation (good numerical performance, but maybe slow)");
+		System.out.println(ms2.repair(kb));
+		
+
+		ms2 = new MinimalViolationEuclideanMachineShopOjAlgoMatrix();
+		System.out.println("\n\n\nEuclidean OjAlgo matrix implementation (can currently suffer from bad numerical performance)");
+		System.out.println(ms2.repair(kb));
 	}
 }
