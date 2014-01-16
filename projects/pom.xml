@@ -15,6 +15,77 @@
   	<connection>https://svn.code.sf.net/p/tweety/code</connection>
   </scm>
   
+  <distributionManagement>
+    <repository>
+      <id>nexus-angerona</id>
+      <name>Angerona/Tweety Releases</name>
+      <url>http://ls1-www.cs.tu-dortmund.de/nexus/content/repositories/angerona-releases</url>
+      <layout>default</layout>
+    </repository>
+    <snapshotRepository>
+      <id>nexus-angerona</id>
+      <name>Angerona/Tweety Snapshots</name>
+      <url>http://ls1-www.cs.tu-dortmund.de/nexus/content/repositories/angerona-snapshots</url>
+      <layout>default</layout>
+    </snapshotRepository>
+  </distributionManagement>
+  
+  <profiles>
+    <profile>
+      <id>FULL-Release</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      
+      <build>
+        <plugins>
+          <!-- Generate jar containing the sources of the project: -->
+          <plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-source-plugin</artifactId>
+			<version>2.2.1</version>
+			<executions>
+				<execution>
+					<id>attach-sources</id>
+					<goals>
+						<goal>jar</goal>
+					</goals>
+				</execution>
+			</executions>
+		  </plugin>
+		
+		<!-- Generate Jar containing java-docs -->
+		<plugin>
+		  <groupId>org.apache.maven.plugins</groupId>
+		  <artifactId>maven-javadoc-plugin</artifactId>
+		  <version>2.9.1</version>
+		  <executions>
+		    <execution>
+		      <id>attach-javadocs</id>
+		      <goals>
+		        <goal>jar</goal>
+		      </goals>
+		    </execution>
+		  </executions>
+		  <configuration>
+		    <quiet>true</quiet>
+		    <tags>
+			  <tag>
+			    <name>todo</name>
+			    <placement>X</placement>
+			  </tag>
+			  <tag>
+			    <name>remark</name>
+			    <placement>X</placement>
+			  </tag>
+			</tags>
+		  </configuration>
+		</plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+  
   <licenses>
     <license>
       <name>The General Public License, Version 3.0</name>
@@ -53,49 +124,6 @@
           <target>1.6</target>
         </configuration>
       </plugin>
-      
-      <!-- Generate jar containing the sources of the project: -->
-      <plugin>
-			<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-source-plugin</artifactId>
-			<version>2.2.1</version>
-			<executions>
-				<execution>
-					<id>attach-sources</id>
-					<goals>
-						<goal>jar</goal>
-					</goals>
-				</execution>
-			</executions>
-		</plugin>
-		
-		<!-- Generate Jar containing java-docs -->
-		<plugin>
-		  <groupId>org.apache.maven.plugins</groupId>
-		  <artifactId>maven-javadoc-plugin</artifactId>
-		  <version>2.9.1</version>
-		  <executions>
-		    <execution>
-		      <id>attach-javadocs</id>
-		      <goals>
-		        <goal>jar</goal>
-		      </goals>
-		    </execution>
-		  </executions>
-		  <configuration>
-		    <quiet>true</quiet>
-		    <tags>
-			  <tag>
-			    <name>todo</name>
-			    <placement>X</placement>
-			  </tag>
-			  <tag>
-			    <name>remark</name>
-			    <placement>X</placement>
-			  </tag>
-			</tags>
-		  </configuration>
-		</plugin>
     </plugins>
     
     <pluginManagement>
@@ -109,6 +137,16 @@
             </descriptors>
           </configuration>
         </plugin>
+        
+        <plugin>
+		  <groupId>org.apache.maven.plugins</groupId>
+		  <artifactId>maven-release-plugin</artifactId>
+		  <version>2.4.2</version>
+		  <configuration>
+		    <goals>deploy</goals>
+		    <autoversionsubmodules>true</autoversionsubmodules>
+		  </configuration>
+		</plugin>
       </plugins>
     </pluginManagement>
   </build>

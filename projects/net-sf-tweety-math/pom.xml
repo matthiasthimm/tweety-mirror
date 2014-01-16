@@ -3,7 +3,6 @@
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>math</artifactId>
-  <version>0.2.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>Tweety (Math)</name>
@@ -23,7 +22,7 @@
     <dependency>
     	<groupId>net.sf</groupId>
     	<artifactId>tweety</artifactId>
-    	<version>0.2.0-SNAPSHOT</version>
+    	<version>1.0.0-SNAPSHOT</version>
     </dependency>
     <dependency>
     	<groupId>org.apache.commons</groupId>

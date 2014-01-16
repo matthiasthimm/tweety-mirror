@@ -3,7 +3,6 @@
   
   <groupId>net.sf.tweety.logics</groupId>
   <artifactId>pcl</artifactId>
-  <version>0.2.0-SNAPSHOT</version>
   
   <name>Tweety (Probabilistic Conditional Logic Library)</name>
 
@@ -17,7 +16,7 @@
   	<dependency>
   		<groupId>net.sf.tweety.logics</groupId>
   		<artifactId>cl</artifactId>
-  		<version>0.2.0-SNAPSHOT</version>
+  		<version>1.0.0-SNAPSHOT</version>
   	</dependency>
   </dependencies>
 </project>
