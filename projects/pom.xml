@@ -144,7 +144,7 @@
 		  <version>2.4.2</version>
 		  <configuration>
 		    <goals>deploy</goals>
-		    <autoversionsubmodules>true</autoversionsubmodules>
+		    <autoVersionSubmodules>true</autoVersionSubmodules>
 		  </configuration>
 		</plugin>
       </plugins>
