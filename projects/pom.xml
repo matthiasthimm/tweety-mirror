@@ -12,7 +12,7 @@
   
   <scm>
   	<url>https://svn.code.sf.net/p/tweety/code</url>
-  	<connection>https://svn.code.sf.net/p/tweety/code</connection>
+  	<connection>scm:svn:https://svn.code.sf.net/p/tweety/code</connection>
   </scm>
   
   <distributionManagement>
