@@ -2,28 +2,80 @@ package net.sf.tweety.logics.pcl.analysis;
 
 import java.util.Set;
 
+import lpsolve.LpSolve;
+import lpsolve.LpSolveException;
 import net.sf.tweety.InconsistencyMeasure;
 import net.sf.tweety.logics.pcl.PclBeliefSet;
 import net.sf.tweety.logics.pcl.syntax.ProbabilisticConditional;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
 /**
- * This class models the minimal violation inconsistency measure.
+ * MinimalViolationInconsistencyMeasureLPSolve serves as a superclass for minimal violation
+ * measure implementations based on LPSolve.
  * 
  * @author Nico Potyka
  */
-public abstract class MinimalViolationInconsistencyMeasure implements InconsistencyMeasure<PclBeliefSet> {
+public abstract class MinimalViolationInconsistencyMeasureLPSolve implements InconsistencyMeasure<PclBeliefSet> {
 
+	
+	
 	/**
 	 * Logger.
 	 */
-	static protected Logger log = LoggerFactory.getLogger(MinimalViolationInconsistencyMeasure.class);
+	static protected Logger log = LoggerFactory.getLogger(MinimalViolationInconsistencyMeasureLPSolve.class);
 
+
+	
+
+
+	@Override
+	public Double inconsistencyMeasure(PclBeliefSet beliefBase) {
+
+		log.info("Compute inconsistency value.");
+		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PropositionalSignature) beliefBase.getSignature());
+
+		
+		double inc = -1;
+
+		try {
+
+			log.debug("Create LP.");
+			LpSolve solver = createLP(beliefBase, worlds);
+
+
+			log.debug("Solve LP.");
+		    //TODO check code returned by solve
+			long time = System.currentTimeMillis();
+		    solver.solve();
+			log.info("Computation time: "+(System.currentTimeMillis()-time));
+		    
+		    inc = solver.getObjective();
+			log.debug("Inconsistency value: "+inc);
+		    
+		    solver.deleteLp();
+			
+		}
+		catch(Exception e)
+		{
+			log.error("Exception while computing inconsistency measure.", e);
+		}
+		
+		return inc;
+	}
+	
+	
+	
+	
+	protected abstract LpSolve createLP(PclBeliefSet beliefBase, Set<PossibleWorld> worlds) throws LpSolveException;
+
+
+	
 	/**
 	 * Set world constraints (1-p, -p, 0) in variable vector for current conditional c. 
 	 * @param worlds
@@ -32,7 +84,7 @@ public abstract class MinimalViolationInconsistencyMeasure implements Inconsiste
 	 */
 	protected void setWorldConstraints(Set<PossibleWorld> worlds, ProbabilisticConditional c, double[] variableVector) {
 		
-		log.debug("<Call> setWorldConstraints(worlds, "+c.toString()+", variableVector)");
+		log.debug("Set constraint for "+c.toString()+".");
 		
 		int i = 1; //LPSolve starts indexing at 1
 		double p = c.getProbability().doubleValue();
@@ -40,8 +92,6 @@ public abstract class MinimalViolationInconsistencyMeasure implements Inconsiste
 		
 		
 		if(c.isFact()) {
-			
-			log.debug(c.toString()+" is fact.");
 			
 			for(PossibleWorld w: worlds) {
 				if(w.satisfies(conclusion)) {
@@ -56,8 +106,6 @@ public abstract class MinimalViolationInconsistencyMeasure implements Inconsiste
 			
 		}
 		else {
-			
-			log.debug(c.toString()+" is conditional.");
 			
 			PropositionalFormula premise = c.getPremise().iterator().next();
 			
@@ -81,9 +129,6 @@ public abstract class MinimalViolationInconsistencyMeasure implements Inconsiste
 				i++;
 			}
 		}
-		
-
-		log.debug("<Leave> setWorldConstraints(worlds, "+c.toString()+", variableVector)");
 		
 	}
 
